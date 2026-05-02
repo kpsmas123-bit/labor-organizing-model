@@ -4,116 +4,154 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>National Labor Organizing Strategic Prioritization Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/topojson.v3.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; }
 
-  #header { padding: 16px 24px; background: #1a1d27; border-bottom: 1px solid #2d3748; display: flex; align-items: center; gap: 16px; }
-  #header h1 { font-size: 18px; font-weight: 600; color: #fff; }
-  #header .subtitle { font-size: 12px; color: #718096; }
+  #header { padding: 14px 24px; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; display: flex; align-items: center; gap: 16px; }
+  #header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: 700; color: #2C2C2C; letter-spacing: -0.01em; }
+  #header .subtitle { font-size: 11px; color: #7A6F64; margin-top: 1px; }
 
-  #layout { display: flex; height: calc(100vh - 57px); }
+  #layout { display: flex; height: calc(100vh - 55px); }
 
-  #sidebar { width: 300px; min-width: 260px; background: #1a1d27; border-right: 1px solid #2d3748; overflow-y: auto; padding: 16px; flex-shrink: 0; }
-  #sidebar h2 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #718096; margin-bottom: 12px; }
+  #sidebar { width: 300px; min-width: 260px; background: #F0EBE3; border-right: 1px solid #DDD5C8; overflow-y: auto; padding: 16px; flex-shrink: 0; }
+  #sidebar h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #7A6F64; margin-bottom: 10px; }
 
-  .filter-group { margin-bottom: 20px; }
-  .filter-group label { display: block; font-size: 12px; color: #a0aec0; margin-bottom: 6px; }
-  .filter-group select, .filter-group input[type=range] { width: 100%; background: #2d3748; border: 1px solid #4a5568; color: #e2e8f0; border-radius: 6px; padding: 6px 10px; font-size: 13px; }
-  .filter-group .range-val { font-size: 11px; color: #718096; text-align: right; }
+  .filter-group { margin-bottom: 18px; }
+  .filter-group > label { display: block; font-size: 11px; font-weight: 500; color: #7A6F64; margin-bottom: 6px; }
+  .filter-group select { width: 100%; background: #FAF7F2; border: 1px solid #C8BFB5; color: #2C2C2C; border-radius: 5px; padding: 6px 10px; font-size: 12px; font-family: 'Inter', system-ui, sans-serif; }
+  .filter-group select:focus { outline: none; border-color: #E8732A; }
+  .filter-group input[type=range] { width: 100%; accent-color: #E8732A; }
 
   .seg-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
-  .seg-btn { flex: 1; padding: 6px 4px; border: 1px solid #4a5568; border-radius: 6px; background: #2d3748; color: #a0aec0; font-size: 11px; cursor: pointer; transition: all 0.15s; text-align: center; white-space: nowrap; }
-  .seg-btn.active { background: #3182ce; border-color: #3182ce; color: #fff; }
-  .seg-btn.goal-pres.active { background: #c53030; border-color: #c53030; }
-  .seg-btn.goal-state.active { background: #b7791f; border-color: #b7791f; }
-  .seg-btn.goal-cong.active { background: #276749; border-color: #276749; }
+  .seg-btn { flex: 1; padding: 6px 4px; border: 1px solid #C8BFB5; border-radius: 5px; background: #FAF7F2; color: #7A6F64; font-size: 11px; font-family: 'Inter', system-ui, sans-serif; cursor: pointer; transition: all 0.12s; text-align: center; white-space: nowrap; }
+  .seg-btn:hover { border-color: #A09385; color: #2C2C2C; }
+  .seg-btn.active { background: #2C2C2C; border-color: #2C2C2C; color: #FAF7F2; }
+  .seg-btn.goal-pres.active { background: #8B3A1A; border-color: #8B3A1A; }
+  .seg-btn.goal-state.active { background: #6B4A1A; border-color: #6B4A1A; }
+  .seg-btn.goal-cong.active { background: #3A4A2A; border-color: #3A4A2A; }
 
-  .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; border-radius: 6px; }
-  .toggle-btn input { width: 14px; height: 14px; }
+  .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 12px; color: #2C2C2C; }
+  .toggle-btn input { accent-color: #E8732A; width: 14px; height: 14px; }
 
-  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  #view-tabs { display: flex; gap: 0; background: #1a1d27; border-bottom: 1px solid #2d3748; }
-  .view-tab { padding: 10px 20px; font-size: 13px; cursor: pointer; color: #718096; border-bottom: 2px solid transparent; transition: all 0.15s; }
-  .view-tab.active { color: #3182ce; border-bottom-color: #3182ce; }
+  /* Intervention type legend cards */
+  .int-type-cards { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .int-type-card { border-radius: 6px; padding: 8px 10px; border: 1px solid; }
+  .int-type-card.card-a { background: rgba(245,200,66,0.12); border-color: rgba(245,200,66,0.4); }
+  .int-type-card.card-b { background: rgba(232,115,42,0.10); border-color: rgba(232,115,42,0.35); }
+  .int-type-card.card-c { background: rgba(196,81,42,0.10); border-color: rgba(196,81,42,0.35); }
+  .int-type-card .card-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .int-type-card .card-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .card-a .card-dot { background: #C4A020; }
+  .card-b .card-dot { background: #E8732A; }
+  .card-c .card-dot { background: #C4512A; }
+  .int-type-card .card-name { font-size: 11px; font-weight: 600; color: #2C2C2C; }
+  .int-type-card .card-desc { font-size: 10px; color: #7A6F64; line-height: 1.45; }
+  .int-type-card .card-tag { font-size: 9px; color: #A09385; font-style: italic; margin-top: 3px; }
+
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #FAF7F2; }
+  #view-tabs { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; }
+  .view-tab { padding: 10px 20px; font-size: 12px; font-weight: 500; cursor: pointer; color: #7A6F64; border-bottom: 2px solid transparent; transition: all 0.12s; }
+  .view-tab:hover { color: #2C2C2C; }
+  .view-tab.active { color: #2C2C2C; border-bottom-color: #E8732A; }
 
   #views { flex: 1; overflow: hidden; }
-  #map-view { width: 100%; height: 100%; position: relative; }
+  #map-view { width: 100%; height: 100%; position: relative; background: #FAF7F2; }
   #map-svg { width: 100%; height: 100%; }
 
   #table-view { display: none; height: 100%; overflow-y: auto; padding: 16px; }
-  #table-view table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  #table-view th { background: #2d3748; padding: 10px 12px; text-align: left; font-weight: 600; color: #a0aec0; cursor: pointer; position: sticky; top: 0; }
-  #table-view th:hover { color: #e2e8f0; }
-  #table-view td { padding: 8px 12px; border-bottom: 1px solid #2d3748; }
-  #table-view tr:hover td { background: #1e2535; }
-  .sort-indicator { color: #3182ce; margin-left: 4px; }
+  #table-view table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  #table-view th { background: #F0EBE3; padding: 9px 12px; text-align: left; font-weight: 600; font-size: 11px; color: #7A6F64; cursor: pointer; position: sticky; top: 0; border-bottom: 1px solid #DDD5C8; }
+  #table-view th:hover { color: #2C2C2C; }
+  #table-view td { padding: 7px 12px; border-bottom: 1px solid #EDE7DF; color: #2C2C2C; }
+  #table-view tr:hover td { background: #F5F0E8; }
+  .sort-indicator { color: #E8732A; margin-left: 4px; }
 
   #detail-panel {
     position: absolute; right: 16px; top: 16px; width: 290px;
-    background: #1a1d27; border: 1px solid #2d3748; border-radius: 10px;
-    padding: 16px; display: none; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    background: #FAF7F2; border: 1px solid #DDD5C8; border-radius: 10px;
+    padding: 16px; display: none; z-index: 100;
+    box-shadow: 0 4px 24px rgba(44,34,24,0.12);
   }
-  #detail-panel h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-  #detail-panel .state-label { font-size: 11px; color: #718096; margin-bottom: 10px; }
+  #detail-panel h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700; margin-bottom: 2px; color: #2C2C2C; }
+  #detail-panel .state-label { font-size: 11px; color: #7A6F64; margin-bottom: 10px; }
 
   .opp-score-display { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
-  .opp-score-number { font-size: 36px; font-weight: 700; color: #3182ce; line-height: 1; }
-  .opp-score-label { font-size: 11px; color: #718096; }
+  .opp-score-number { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: #C4512A; line-height: 1; }
+  .opp-score-label { font-size: 10px; color: #7A6F64; line-height: 1.4; }
 
   .badge-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-  .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-  .badge-int-a { background: rgba(239,68,68,0.15); color: #fc8181; border: 1px solid rgba(239,68,68,0.3); }
-  .badge-int-b { background: rgba(237,137,54,0.15); color: #f6ad55; border: 1px solid rgba(237,137,54,0.3); }
-  .badge-int-c { background: rgba(72,187,120,0.15); color: #68d391; border: 1px solid rgba(72,187,120,0.3); }
-  .badge-tier-a { background: rgba(239,68,68,0.1); color: #feb2b2; border: 1px solid rgba(239,68,68,0.2); }
-  .badge-tier-b { background: rgba(237,137,54,0.1); color: #fbd38d; border: 1px solid rgba(237,137,54,0.2); }
-  .badge-tier-c { background: rgba(66,153,225,0.1); color: #90cdf4; border: 1px solid rgba(66,153,225,0.2); }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: 'Inter', system-ui, sans-serif; }
+  .badge-int-a { background: rgba(245,200,66,0.2); color: #7A5A00; border: 1px solid rgba(196,160,32,0.4); }
+  .badge-int-b { background: rgba(232,115,42,0.15); color: #8B3A00; border: 1px solid rgba(232,115,42,0.4); }
+  .badge-int-c { background: rgba(196,81,42,0.15); color: #7A2000; border: 1px solid rgba(196,81,42,0.4); }
+  .badge-tier-a { background: rgba(44,44,44,0.08); color: #2C2C2C; border: 1px solid rgba(44,44,44,0.2); }
+  .badge-tier-b { background: rgba(44,44,44,0.05); color: #5A5A5A; border: 1px solid rgba(44,44,44,0.15); }
+  .badge-tier-c { background: rgba(44,44,44,0.04); color: #7A7A7A; border: 1px solid rgba(44,44,44,0.12); }
 
   .score-bars { margin-bottom: 12px; }
   .score-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 11px; }
-  .score-bar-label { width: 90px; color: #a0aec0; flex-shrink: 0; }
-  .score-bar-label.highlighted { color: #e2e8f0; font-weight: 600; }
-  .score-bar-track { flex: 1; height: 5px; background: #2d3748; border-radius: 3px; overflow: hidden; }
-  .score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .score-bar-val { width: 28px; text-align: right; color: #718096; }
-  .score-bar-val.highlighted { color: #e2e8f0; font-weight: 600; }
+  .score-bar-label { width: 90px; color: #7A6F64; flex-shrink: 0; font-size: 10px; }
+  .score-bar-label.highlighted { color: #2C2C2C; font-weight: 600; }
+  .score-bar-track { flex: 1; height: 4px; background: #DDD5C8; border-radius: 2px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+  .score-bar-val { width: 28px; text-align: right; color: #A09385; font-size: 10px; }
+  .score-bar-val.highlighted { color: #2C2C2C; font-weight: 600; }
 
   .detail-section { margin-bottom: 10px; }
-  .detail-section h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: #4a5568; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #2d3748; }
+  .detail-section h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 0.09em; color: #A09385; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #EDE7DF; }
   .detail-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
-  .detail-row .label { color: #718096; }
-  .detail-row .val { font-weight: 500; color: #e2e8f0; }
-  #close-detail { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #718096; cursor: pointer; font-size: 16px; }
-  #close-detail:hover { color: #e2e8f0; }
+  .detail-row .label { color: #7A6F64; }
+  .detail-row .val { font-weight: 500; color: #2C2C2C; }
+  #close-detail { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #A09385; cursor: pointer; font-size: 18px; line-height: 1; }
+  #close-detail:hover { color: #2C2C2C; }
 
-  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(26,29,39,0.92); border: 1px solid #2d3748; border-radius: 8px; padding: 12px; }
-  .legend-title { font-size: 11px; color: #718096; margin-bottom: 8px; }
-  .legend-gradient { height: 10px; border-radius: 4px; margin-bottom: 4px; background: linear-gradient(to right, #1e3a5f, #3b82f6, #f97316, #ef4444); }
-  .legend-labels { display: flex; justify-content: space-between; font-size: 10px; color: #718096; }
+  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.95); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; }
+  .legend-title { font-size: 10px; font-weight: 500; color: #7A6F64; margin-bottom: 6px; }
+  .legend-gradient { height: 8px; border-radius: 3px; margin-bottom: 4px; }
+  .legend-labels { display: flex; justify-content: space-between; font-size: 9px; color: #A09385; }
 
-  #status-bar { padding: 8px 16px; background: #1a1d27; border-top: 1px solid #2d3748; font-size: 11px; color: #718096; display: flex; justify-content: space-between; align-items: center; }
-  .loading { color: #3182ce; }
+  #status-bar { padding: 6px 16px; background: #F0EBE3; border-top: 1px solid #DDD5C8; font-size: 10px; color: #A09385; display: flex; justify-content: space-between; align-items: center; }
 
-  #export-btn { padding: 6px 14px; background: #2d3748; border: 1px solid #4a5568; border-radius: 6px; color: #e2e8f0; font-size: 12px; cursor: pointer; }
-  #export-btn:hover { background: #3182ce; border-color: #3182ce; }
+  #export-btn { padding: 6px 14px; background: #2C2C2C; border: 1px solid #2C2C2C; border-radius: 5px; color: #FAF7F2; font-size: 11px; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; cursor: pointer; transition: background 0.12s; }
+  #export-btn:hover { background: #E8732A; border-color: #E8732A; }
 
-  .county-path { stroke: #1a1d27; stroke-width: 0.3; cursor: pointer; transition: opacity 0.1s; }
-  .county-path:hover { opacity: 0.8; stroke-width: 1; stroke: #fff; }
-  .state-boundary { fill: none; stroke: #4a5568; stroke-width: 0.8; pointer-events: none; }
+  .loading { color: #E8732A; font-size: 11px; }
+
+  .county-path { stroke: #FAF7F2; stroke-width: 0.3; cursor: pointer; transition: opacity 0.08s; }
+  .county-path:hover { opacity: 0.75; stroke-width: 1.2; stroke: #2C2C2C; }
+  .state-boundary { fill: none; stroke: #8C7B6E; stroke-width: 0.9; pointer-events: none; }
 
   .tooltip {
-    position: absolute; background: #2d3748; border: 1px solid #4a5568; border-radius: 6px;
-    padding: 8px 12px; font-size: 12px; pointer-events: none; opacity: 0;
-    transition: opacity 0.1s; z-index: 200; white-space: nowrap;
+    position: absolute; background: #FAF7F2; border: 1px solid #C8BFB5; border-radius: 6px;
+    padding: 8px 12px; font-size: 12px; font-family: 'Inter', system-ui, sans-serif;
+    pointer-events: none; opacity: 0; transition: opacity 0.08s; z-index: 200; white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(44,34,24,0.1); color: #2C2C2C;
   }
-  .tooltip .tt-opp { font-size: 14px; font-weight: 700; color: #3182ce; }
+  .tooltip strong { font-weight: 600; }
+  .tooltip .tt-opp { font-size: 14px; font-weight: 700; color: #C4512A; font-family: 'Playfair Display', Georgia, serif; }
 
-  .int-type-a { color: #fc8181; }
-  .int-type-b { color: #f6ad55; }
-  .int-type-c { color: #68d391; }
+  .int-type-a { color: #7A5A00; }
+  .int-type-b { color: #8B3A00; }
+  .int-type-c { color: #7A2000; }
+
+  hr.divider { border: none; border-top: 1px solid #DDD5C8; margin: 14px 0; }
+
+  #summary-stats { font-size: 12px; line-height: 1.9; color: #7A6F64; }
+  #summary-stats .stat-label { color: #7A6F64; }
+  #summary-stats .stat-a { color: #7A5A00; font-weight: 600; }
+  #summary-stats .stat-b { color: #8B3A00; font-weight: 600; }
+  #summary-stats .stat-c { color: #7A2000; font-weight: 600; }
+  #summary-stats .stat-total { color: #2C2C2C; font-weight: 600; }
+
+  #top10-list .top10-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #EDE7DF; cursor: pointer; font-size: 11px; }
+  #top10-list .top10-row:hover { color: #E8732A; }
+  #top10-list .top10-name { color: #2C2C2C; }
+  #top10-list .top10-score { font-weight: 600; }
 </style>
 </head>
 <body>
@@ -143,7 +181,7 @@
       </div>
     </div>
 
-    <hr style="border-color:#2d3748; margin: 4px 0 16px;">
+    <hr class="divider">
     <h2>Filters</h2>
 
     <div class="filter-group">
@@ -166,14 +204,37 @@
 
     <div class="filter-group">
       <label>Intervention Type</label>
-      <div class="seg-buttons">
+      <div class="seg-buttons" style="margin-bottom:8px;">
         <div class="seg-btn active" data-inttype="all">All</div>
         <div class="seg-btn" data-inttype="Type A">A</div>
         <div class="seg-btn" data-inttype="Type B">B</div>
         <div class="seg-btn" data-inttype="Type C">C</div>
       </div>
-      <div style="font-size:10px; color:#4a5568; margin-top:5px; line-height:1.5;">
-        A=Build infra · B=Mixed · C=Partnership
+      <div class="int-type-cards">
+        <div class="int-type-card card-a">
+          <div class="card-header">
+            <div class="card-dot"></div>
+            <div class="card-name">A — Build New Power</div>
+          </div>
+          <div class="card-desc">Few or no unions here. High potential for new organizing. Start from scratch, find the leaders, build the structure.</div>
+          <div class="card-tag">Low infrastructure, high opportunity</div>
+        </div>
+        <div class="int-type-card card-b">
+          <div class="card-header">
+            <div class="card-dot"></div>
+            <div class="card-name">B — Wake the Giant</div>
+          </div>
+          <div class="card-desc">Unions exist but aren't punching their weight politically. The organized power is there — it needs activation.</div>
+          <div class="card-tag">Moderate–high infrastructure, low political alignment</div>
+        </div>
+        <div class="int-type-card card-c">
+          <div class="card-header">
+            <div class="card-dot"></div>
+            <div class="card-name">C — Move Together</div>
+          </div>
+          <div class="card-desc">Strong unions, politically engaged. Best terrain for coordinated campaigns and electoral leverage.</div>
+          <div class="card-tag">High infrastructure, high alignment</div>
+        </div>
       </div>
     </div>
 
@@ -188,19 +249,19 @@
       </label>
     </div>
 
-    <hr style="border-color:#2d3748; margin: 16px 0;">
+    <hr class="divider">
     <h2>Summary</h2>
-    <div id="summary-stats" style="font-size:12px; line-height:1.9; color:#a0aec0;">
-      <div>Total counties: <span id="stat-total" style="color:#e2e8f0">–</span></div>
-      <div>Type A (build): <span id="stat-inta" style="color:#fc8181">–</span></div>
-      <div>Type B (mixed): <span id="stat-intb" style="color:#f6ad55">–</span></div>
-      <div>Type C (partner): <span id="stat-intc" style="color:#68d391">–</span></div>
-      <div>Visible: <span id="stat-visible" style="color:#e2e8f0">–</span></div>
+    <div id="summary-stats">
+      <div><span class="stat-label">Total counties: </span><span class="stat-total" id="stat-total">–</span></div>
+      <div><span class="stat-label">A — Build New Power: </span><span class="stat-a" id="stat-inta">–</span></div>
+      <div><span class="stat-label">B — Wake the Giant: </span><span class="stat-b" id="stat-intb">–</span></div>
+      <div><span class="stat-label">C — Move Together: </span><span class="stat-c" id="stat-intc">–</span></div>
+      <div><span class="stat-label">Visible: </span><span class="stat-total" id="stat-visible">–</span></div>
     </div>
 
-    <hr style="border-color:#2d3748; margin: 16px 0;">
+    <hr class="divider">
     <h2>Top 10 Counties</h2>
-    <div id="top10-list" style="font-size:12px;"></div>
+    <div id="top10-list"></div>
   </div>
 
   <div id="main">
@@ -231,32 +292,32 @@
           <div class="score-bars" id="dp-score-bars">
             <div class="score-bar-row">
               <div class="score-bar-label" id="lbl-bar-org">Organizing</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-org" style="background:#dd6b20"></div></div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-org" style="background:#E8732A"></div></div>
               <div class="score-bar-val" id="val-org">–</div>
             </div>
             <div class="score-bar-row">
               <div class="score-bar-label" id="lbl-bar-sect">Sectoral</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-sect" style="background:#d69e2e"></div></div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-sect" style="background:#F5C842"></div></div>
               <div class="score-bar-val" id="val-sect">–</div>
             </div>
             <div class="score-bar-row">
               <div class="score-bar-label" id="lbl-bar-pres">Presidential</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-pres" style="background:#e53e3e"></div></div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-pres" style="background:#8B3A1A"></div></div>
               <div class="score-bar-val" id="val-pres">–</div>
             </div>
             <div class="score-bar-row">
               <div class="score-bar-label" id="lbl-bar-state">Statewide</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-state" style="background:#b7791f"></div></div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-state" style="background:#6B4A1A"></div></div>
               <div class="score-bar-val" id="val-state">–</div>
             </div>
             <div class="score-bar-row">
               <div class="score-bar-label" id="lbl-bar-cong">Congressional</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-cong" style="background:#276749"></div></div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-cong" style="background:#3A4A2A"></div></div>
               <div class="score-bar-val" id="val-cong">–</div>
             </div>
             <div class="score-bar-row">
               <div class="score-bar-label">Infrastructure</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-infra" style="background:#38a169"></div></div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-infra" style="background:#A09385"></div></div>
               <div class="score-bar-val" id="val-infra">–</div>
             </div>
           </div>
@@ -365,11 +426,13 @@ function getDisplayScore(c) {
   return c.organizing_opportunity_score;
 }
 
-// Built after data loads — quantile scales so the full color range is used
+// Warm palette — quantile scales built after data loads
 let oppColorScale, electoralColorScales = {};
 
-const OPP_PALETTE      = ["#1e3a5f","#2d6a9f","#4a9eca","#f97316","#ef4444"];
-const ELECTORAL_PALETTE = ["#1a2942","#374151","#6366f1","#f59e0b","#ef4444"];
+const OPP_PALETTE      = ["#D8CFC4","#F5C842","#E8A020","#E8732A","#C4512A"];
+const ELECTORAL_PALETTE = ["#D8CFC4","#DDB870","#C49940","#A06820","#7A3F10"];
+const NO_DATA_COLOR    = "#D8CFC4";
+const FILTERED_COLOR   = "#EDE7DF";
 
 function buildColorScales() {
   const quantile = (vals, palette) =>
@@ -385,9 +448,9 @@ function buildColorScales() {
 }
 
 function scoreColor(score, scoreKey) {
-  if (score === null || score === undefined) return "#2d3748";
+  if (score === null || score === undefined) return NO_DATA_COLOR;
   if (scoreKey && electoralColorScales[scoreKey]) return electoralColorScales[scoreKey](score);
-  return oppColorScale ? oppColorScale(score) : "#2d3748";
+  return oppColorScale ? oppColorScale(score) : NO_DATA_COLOR;
 }
 
 function quantileLabels(scale) {
@@ -397,8 +460,12 @@ function quantileLabels(scale) {
 }
 
 function updateLegend() {
-  const titles = { opp: "Organizing Opportunity Score (quantile)", presidential: "Presidential Score (quantile)",
-                   statewide: "Statewide Score (quantile)", congressional: "Congressional Score (quantile)" };
+  const titles = {
+    opp: "Organizing Opportunity Score",
+    presidential: "Presidential Score",
+    statewide: "Statewide Score",
+    congressional: "Congressional Score"
+  };
   document.getElementById("legend-title").textContent = titles[goalFilter] || "Score";
 
   const palette = goalFilter === "opp" ? OPP_PALETTE : ELECTORAL_PALETTE;
@@ -424,8 +491,7 @@ let g;
 
 async function initMap() {
   // us-atlas counties-albers-10m.json is already projected in a 960×600 Albers pixel space.
-  // Applying geoAlbersUsa() on top re-projects pixels as lat/lon and garbles the shapes.
-  // Use geoIdentity + fitSize to map the native 960×600 space into the SVG viewport.
+  // Use geoIdentity + fitSize — applying geoAlbersUsa() on top garbles shapes into lines.
   const W = 960, H = 600;
   svg.attr("viewBox", `0 0 ${W} ${H}`).attr("preserveAspectRatio", "xMidYMid meet");
   g = svg.append("g");
@@ -438,7 +504,6 @@ async function initMap() {
     const counties = topojson.feature(us, us.objects.counties);
     const stateMesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
 
-    // Identity projection fitted to the native 960×600 coordinate space of this TopoJSON
     const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], counties));
 
     const countyByFips = {};
@@ -452,7 +517,7 @@ async function initMap() {
       .attr("d", path)
       .attr("fill", d => {
         const c = countyByFips[d.id];
-        if (!c) return "#2d3748";
+        if (!c) return NO_DATA_COLOR;
         const score = getDisplayScore(c);
         const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
         return scoreColor(score, key);
@@ -494,8 +559,8 @@ function updateMapColors() {
   g && g.selectAll(".county-path").attr("fill", function() {
     const fips = this.dataset.fips;
     const c = countyByFips[fips];
-    if (!c) return "#2d3748";
-    if (!visibleFips.has(fips)) return "#1a1d27";
+    if (!c) return NO_DATA_COLOR;
+    if (!visibleFips.has(fips)) return FILTERED_COLOR;
     const score = getDisplayScore(c);
     const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
     return scoreColor(score, key);
@@ -587,12 +652,11 @@ function updateTop10() {
     .slice(0, 10);
   const container = document.getElementById("top10-list");
   container.innerHTML = top.map((c, i) => {
-    const intColor = (c.intervention_type || "").startsWith("Type A") ? "#fc8181"
-                   : (c.intervention_type || "").startsWith("Type B") ? "#f6ad55" : "#68d391";
-    return `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #2d3748; cursor:pointer"
-         onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')})">
-      <span style="color:#a0aec0">${i+1}. ${c.county_name}, ${c.state}</span>
-      <span style="color:${intColor}">${c.organizing_opportunity_score}</span>
+    const scoreColor = (c.intervention_type || "").startsWith("Type A") ? "#7A5A00"
+                     : (c.intervention_type || "").startsWith("Type B") ? "#8B3A00" : "#7A2000";
+    return `<div class="top10-row" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')})">
+      <span class="top10-name">${i+1}. ${c.county_name}, ${c.state}</span>
+      <span class="top10-score" style="color:${scoreColor}">${c.organizing_opportunity_score}</span>
     </div>`;
   }).join("");
 }
@@ -664,15 +728,15 @@ function renderTable() {
 
   tbody.innerHTML = sorted.map((c, i) => {
     const oppScore = c.organizing_opportunity_score ?? 0;
-    const oppColor = oppScore >= 60 ? "#fc8181" : oppScore >= 40 ? "#f6ad55" : "#90cdf4";
-    const intColor = (c.intervention_type || "").startsWith("Type A") ? "#fc8181"
-                   : (c.intervention_type || "").startsWith("Type B") ? "#f6ad55" : "#68d391";
+    const oppCol = oppScore >= 60 ? "#C4512A" : oppScore >= 40 ? "#E8732A" : oppScore >= 20 ? "#C49940" : "#7A6F64";
+    const intCol = (c.intervention_type || "").startsWith("Type A") ? "#7A5A00"
+                 : (c.intervention_type || "").startsWith("Type B") ? "#8B3A00" : "#7A2000";
     return `<tr style="cursor:pointer" onclick="showDetail(${JSON.stringify(c).replace(/"/g,'&quot;')})">
-      <td style="color:#4a5568">${i+1}</td>
-      <td>${c.county_name}</td>
+      <td style="color:#A09385">${i+1}</td>
+      <td style="font-weight:500">${c.county_name}</td>
       <td>${c.state}</td>
-      <td style="color:${oppColor}; font-weight:600">${fmt(c.organizing_opportunity_score)}</td>
-      <td style="color:${intColor}">${c.intervention_type || "–"}</td>
+      <td style="color:${oppCol}; font-weight:600">${fmt(c.organizing_opportunity_score)}</td>
+      <td style="color:${intCol}; font-size:11px">${c.intervention_type || "–"}</td>
       <td>${fmt(c.presidential_score)}</td>
       <td>${fmt(c.statewide_score)}</td>
       <td>${fmt(c.congressional_score)}</td>
