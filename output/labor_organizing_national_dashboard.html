@@ -423,14 +423,11 @@ const svg = d3.select("#map-svg");
 let g;
 
 async function initMap() {
-  const container = document.getElementById("map-view");
-  const W = container.clientWidth;
-  const H = container.clientHeight;
-
-  const projection = d3.geoAlbersUsa().scale(1000).translate([W / 2, H / 2]);
-  const path = d3.geoPath().projection(projection);
-
-  svg.attr("viewBox", `0 0 ${W} ${H}`);
+  // us-atlas counties-albers-10m.json is already projected in a 960×600 Albers pixel space.
+  // Applying geoAlbersUsa() on top re-projects pixels as lat/lon and garbles the shapes.
+  // Use geoIdentity + fitSize to map the native 960×600 space into the SVG viewport.
+  const W = 960, H = 600;
+  svg.attr("viewBox", `0 0 ${W} ${H}`).attr("preserveAspectRatio", "xMidYMid meet");
   g = svg.append("g");
 
   const zoom = d3.zoom().scaleExtent([1, 12]).on("zoom", e => g.attr("transform", e.transform));
@@ -440,6 +437,9 @@ async function initMap() {
     const us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json");
     const counties = topojson.feature(us, us.objects.counties);
     const stateMesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+
+    // Identity projection fitted to the native 960×600 coordinate space of this TopoJSON
+    const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], counties));
 
     const countyByFips = {};
     allCounties.forEach(c => { countyByFips[c.fips] = c; });
@@ -462,8 +462,8 @@ async function initMap() {
         const c = countyByFips[d.id];
         if (!c) return;
         const score = getDisplayScore(c);
-        const intClass = c.intervention_type === "Type A" ? "int-type-a"
-                       : c.intervention_type === "Type B" ? "int-type-b" : "int-type-c";
+        const intClass = (c.intervention_type || "").startsWith("Type A") ? "int-type-a"
+                       : (c.intervention_type || "").startsWith("Type B") ? "int-type-b" : "int-type-c";
         const tt = document.getElementById("tooltip");
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
@@ -515,8 +515,8 @@ function showDetail(c) {
 
   const intBadge = document.getElementById("dp-int-badge");
   intBadge.textContent = c.intervention_type || "–";
-  intBadge.className = "badge " + (c.intervention_type === "Type A" ? "badge-int-a"
-                                 : c.intervention_type === "Type B" ? "badge-int-b" : "badge-int-c");
+  intBadge.className = "badge " + ((c.intervention_type || "").startsWith("Type A") ? "badge-int-a"
+                                 : (c.intervention_type || "").startsWith("Type B") ? "badge-int-b" : "badge-int-c");
 
   const tier = (c.priority_tier || "").charAt(0);
   const tierBadge = document.getElementById("dp-tier-badge");
@@ -561,7 +561,7 @@ function applyFilters() {
   filteredCounties = allCounties.filter(c => {
     if (filters.state && c.state !== filters.state) return false;
     if (filters.region && c.region !== filters.region) return false;
-    if (filters.interventionType !== "all" && c.intervention_type !== filters.interventionType) return false;
+    if (filters.interventionType !== "all" && !(c.intervention_type || "").startsWith(filters.interventionType)) return false;
     if ((c.organizing_opportunity_score ?? 0) < filters.minScore) return false;
     if (filters.swingOnly && !c.swing_state) return false;
     return true;
@@ -575,9 +575,9 @@ function applyFilters() {
 
 function updateStats() {
   document.getElementById("stat-total").textContent = allCounties.length.toLocaleString();
-  document.getElementById("stat-inta").textContent = allCounties.filter(c => c.intervention_type === "Type A").length.toLocaleString();
-  document.getElementById("stat-intb").textContent = allCounties.filter(c => c.intervention_type === "Type B").length.toLocaleString();
-  document.getElementById("stat-intc").textContent = allCounties.filter(c => c.intervention_type === "Type C").length.toLocaleString();
+  document.getElementById("stat-inta").textContent = allCounties.filter(c => (c.intervention_type || "").startsWith("Type A")).length.toLocaleString();
+  document.getElementById("stat-intb").textContent = allCounties.filter(c => (c.intervention_type || "").startsWith("Type B")).length.toLocaleString();
+  document.getElementById("stat-intc").textContent = allCounties.filter(c => (c.intervention_type || "").startsWith("Type C")).length.toLocaleString();
   document.getElementById("stat-visible").textContent = filteredCounties.length.toLocaleString();
 }
 
@@ -587,8 +587,8 @@ function updateTop10() {
     .slice(0, 10);
   const container = document.getElementById("top10-list");
   container.innerHTML = top.map((c, i) => {
-    const intColor = c.intervention_type === "Type A" ? "#fc8181"
-                   : c.intervention_type === "Type B" ? "#f6ad55" : "#68d391";
+    const intColor = (c.intervention_type || "").startsWith("Type A") ? "#fc8181"
+                   : (c.intervention_type || "").startsWith("Type B") ? "#f6ad55" : "#68d391";
     return `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #2d3748; cursor:pointer"
          onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')})">
       <span style="color:#a0aec0">${i+1}. ${c.county_name}, ${c.state}</span>
@@ -665,8 +665,8 @@ function renderTable() {
   tbody.innerHTML = sorted.map((c, i) => {
     const oppScore = c.organizing_opportunity_score ?? 0;
     const oppColor = oppScore >= 60 ? "#fc8181" : oppScore >= 40 ? "#f6ad55" : "#90cdf4";
-    const intColor = c.intervention_type === "Type A" ? "#fc8181"
-                   : c.intervention_type === "Type B" ? "#f6ad55" : "#68d391";
+    const intColor = (c.intervention_type || "").startsWith("Type A") ? "#fc8181"
+                   : (c.intervention_type || "").startsWith("Type B") ? "#f6ad55" : "#68d391";
     return `<tr style="cursor:pointer" onclick="showDetail(${JSON.stringify(c).replace(/"/g,'&quot;')})">
       <td style="color:#4a5568">${i+1}</td>
       <td>${c.county_name}</td>
