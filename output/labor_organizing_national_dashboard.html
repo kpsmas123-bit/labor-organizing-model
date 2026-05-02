@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Labor Organizing Strategic Prioritization Dashboard</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/topojson.v3.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+
+  #header { padding: 16px 24px; background: #1a1d27; border-bottom: 1px solid #2d3748; display: flex; align-items: center; gap: 16px; }
+  #header h1 { font-size: 18px; font-weight: 600; color: #fff; }
+  #header .subtitle { font-size: 12px; color: #718096; }
+
+  #layout { display: flex; height: calc(100vh - 57px); }
+
+  #sidebar { width: 300px; min-width: 260px; background: #1a1d27; border-right: 1px solid #2d3748; overflow-y: auto; padding: 16px; flex-shrink: 0; }
+  #sidebar h2 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #718096; margin-bottom: 12px; }
+
+  .filter-group { margin-bottom: 20px; }
+  .filter-group label { display: block; font-size: 12px; color: #a0aec0; margin-bottom: 6px; }
+  .filter-group select, .filter-group input[type=range] { width: 100%; background: #2d3748; border: 1px solid #4a5568; color: #e2e8f0; border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+  .filter-group .range-val { font-size: 11px; color: #718096; text-align: right; }
+
+  .seg-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
+  .seg-btn { flex: 1; padding: 6px 4px; border: 1px solid #4a5568; border-radius: 6px; background: #2d3748; color: #a0aec0; font-size: 11px; cursor: pointer; transition: all 0.15s; text-align: center; white-space: nowrap; }
+  .seg-btn.active { background: #3182ce; border-color: #3182ce; color: #fff; }
+  .seg-btn.goal-pres.active { background: #c53030; border-color: #c53030; }
+  .seg-btn.goal-state.active { background: #b7791f; border-color: #b7791f; }
+  .seg-btn.goal-cong.active { background: #276749; border-color: #276749; }
+
+  .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; border-radius: 6px; }
+  .toggle-btn input { width: 14px; height: 14px; }
+
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #view-tabs { display: flex; gap: 0; background: #1a1d27; border-bottom: 1px solid #2d3748; }
+  .view-tab { padding: 10px 20px; font-size: 13px; cursor: pointer; color: #718096; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .view-tab.active { color: #3182ce; border-bottom-color: #3182ce; }
+
+  #views { flex: 1; overflow: hidden; }
+  #map-view { width: 100%; height: 100%; position: relative; }
+  #map-svg { width: 100%; height: 100%; }
+
+  #table-view { display: none; height: 100%; overflow-y: auto; padding: 16px; }
+  #table-view table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  #table-view th { background: #2d3748; padding: 10px 12px; text-align: left; font-weight: 600; color: #a0aec0; cursor: pointer; position: sticky; top: 0; }
+  #table-view th:hover { color: #e2e8f0; }
+  #table-view td { padding: 8px 12px; border-bottom: 1px solid #2d3748; }
+  #table-view tr:hover td { background: #1e2535; }
+  .sort-indicator { color: #3182ce; margin-left: 4px; }
+
+  #detail-panel {
+    position: absolute; right: 16px; top: 16px; width: 290px;
+    background: #1a1d27; border: 1px solid #2d3748; border-radius: 10px;
+    padding: 16px; display: none; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  #detail-panel h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  #detail-panel .state-label { font-size: 11px; color: #718096; margin-bottom: 10px; }
+
+  .opp-score-display { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .opp-score-number { font-size: 36px; font-weight: 700; color: #3182ce; line-height: 1; }
+  .opp-score-label { font-size: 11px; color: #718096; }
+
+  .badge-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge-int-a { background: rgba(239,68,68,0.15); color: #fc8181; border: 1px solid rgba(239,68,68,0.3); }
+  .badge-int-b { background: rgba(237,137,54,0.15); color: #f6ad55; border: 1px solid rgba(237,137,54,0.3); }
+  .badge-int-c { background: rgba(72,187,120,0.15); color: #68d391; border: 1px solid rgba(72,187,120,0.3); }
+  .badge-tier-a { background: rgba(239,68,68,0.1); color: #feb2b2; border: 1px solid rgba(239,68,68,0.2); }
+  .badge-tier-b { background: rgba(237,137,54,0.1); color: #fbd38d; border: 1px solid rgba(237,137,54,0.2); }
+  .badge-tier-c { background: rgba(66,153,225,0.1); color: #90cdf4; border: 1px solid rgba(66,153,225,0.2); }
+
+  .score-bars { margin-bottom: 12px; }
+  .score-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 11px; }
+  .score-bar-label { width: 90px; color: #a0aec0; flex-shrink: 0; }
+  .score-bar-label.highlighted { color: #e2e8f0; font-weight: 600; }
+  .score-bar-track { flex: 1; height: 5px; background: #2d3748; border-radius: 3px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .score-bar-val { width: 28px; text-align: right; color: #718096; }
+  .score-bar-val.highlighted { color: #e2e8f0; font-weight: 600; }
+
+  .detail-section { margin-bottom: 10px; }
+  .detail-section h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: #4a5568; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #2d3748; }
+  .detail-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
+  .detail-row .label { color: #718096; }
+  .detail-row .val { font-weight: 500; color: #e2e8f0; }
+  #close-detail { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #718096; cursor: pointer; font-size: 16px; }
+  #close-detail:hover { color: #e2e8f0; }
+
+  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(26,29,39,0.92); border: 1px solid #2d3748; border-radius: 8px; padding: 12px; }
+  .legend-title { font-size: 11px; color: #718096; margin-bottom: 8px; }
+  .legend-gradient { height: 10px; border-radius: 4px; margin-bottom: 4px; background: linear-gradient(to right, #1e3a5f, #3b82f6, #f97316, #ef4444); }
+  .legend-labels { display: flex; justify-content: space-between; font-size: 10px; color: #718096; }
+
+  #status-bar { padding: 8px 16px; background: #1a1d27; border-top: 1px solid #2d3748; font-size: 11px; color: #718096; display: flex; justify-content: space-between; align-items: center; }
+  .loading { color: #3182ce; }
+
+  #export-btn { padding: 6px 14px; background: #2d3748; border: 1px solid #4a5568; border-radius: 6px; color: #e2e8f0; font-size: 12px; cursor: pointer; }
+  #export-btn:hover { background: #3182ce; border-color: #3182ce; }
+
+  .county-path { stroke: #1a1d27; stroke-width: 0.3; cursor: pointer; transition: opacity 0.1s; }
+  .county-path:hover { opacity: 0.8; stroke-width: 1; stroke: #fff; }
+  .state-boundary { fill: none; stroke: #4a5568; stroke-width: 0.8; pointer-events: none; }
+
+  .tooltip {
+    position: absolute; background: #2d3748; border: 1px solid #4a5568; border-radius: 6px;
+    padding: 8px 12px; font-size: 12px; pointer-events: none; opacity: 0;
+    transition: opacity 0.1s; z-index: 200; white-space: nowrap;
+  }
+  .tooltip .tt-opp { font-size: 14px; font-weight: 700; color: #3182ce; }
+
+  .int-type-a { color: #fc8181; }
+  .int-type-b { color: #f6ad55; }
+  .int-type-c { color: #68d391; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <h1>National Labor Organizing Strategic Prioritization</h1>
+    <div class="subtitle">3,144 US Counties · McAlevey Framework · Organizing Opportunity Score</div>
+  </div>
+  <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+    <button id="export-btn">Export Top 50 CSV</button>
+    <div id="loading-indicator" class="loading" style="display:none">Loading data…</div>
+  </div>
+</div>
+
+<div id="layout">
+  <div id="sidebar">
+    <h2>Map Goal</h2>
+
+    <div class="filter-group">
+      <label>Color map by electoral goal</label>
+      <div class="seg-buttons">
+        <div class="seg-btn active" data-goal="opp">OPP Score</div>
+        <div class="seg-btn goal-pres" data-goal="presidential">Presidential</div>
+        <div class="seg-btn goal-state" data-goal="statewide">Statewide</div>
+        <div class="seg-btn goal-cong" data-goal="congressional">Congressional</div>
+      </div>
+    </div>
+
+    <hr style="border-color:#2d3748; margin: 4px 0 16px;">
+    <h2>Filters</h2>
+
+    <div class="filter-group">
+      <label>State</label>
+      <select id="filter-state">
+        <option value="">All States</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Region</label>
+      <select id="filter-region">
+        <option value="">All Regions</option>
+        <option>Northeast</option>
+        <option>Midwest</option>
+        <option>South</option>
+        <option>West</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Intervention Type</label>
+      <div class="seg-buttons">
+        <div class="seg-btn active" data-inttype="all">All</div>
+        <div class="seg-btn" data-inttype="Type A">A</div>
+        <div class="seg-btn" data-inttype="Type B">B</div>
+        <div class="seg-btn" data-inttype="Type C">C</div>
+      </div>
+      <div style="font-size:10px; color:#4a5568; margin-top:5px; line-height:1.5;">
+        A=Build infra · B=Mixed · C=Partnership
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Min OPP Score: <span id="min-score-val">0</span></label>
+      <input type="range" id="filter-score" min="0" max="100" value="0" step="1">
+    </div>
+
+    <div class="filter-group">
+      <label class="toggle-btn">
+        <input type="checkbox" id="filter-swing"> Swing States Only
+      </label>
+    </div>
+
+    <hr style="border-color:#2d3748; margin: 16px 0;">
+    <h2>Summary</h2>
+    <div id="summary-stats" style="font-size:12px; line-height:1.9; color:#a0aec0;">
+      <div>Total counties: <span id="stat-total" style="color:#e2e8f0">–</span></div>
+      <div>Type A (build): <span id="stat-inta" style="color:#fc8181">–</span></div>
+      <div>Type B (mixed): <span id="stat-intb" style="color:#f6ad55">–</span></div>
+      <div>Type C (partner): <span id="stat-intc" style="color:#68d391">–</span></div>
+      <div>Visible: <span id="stat-visible" style="color:#e2e8f0">–</span></div>
+    </div>
+
+    <hr style="border-color:#2d3748; margin: 16px 0;">
+    <h2>Top 10 Counties</h2>
+    <div id="top10-list" style="font-size:12px;"></div>
+  </div>
+
+  <div id="main">
+    <div id="view-tabs">
+      <div class="view-tab active" data-view="map">Map View</div>
+      <div class="view-tab" data-view="table">Table View</div>
+    </div>
+
+    <div id="views">
+      <div id="map-view">
+        <svg id="map-svg"></svg>
+
+        <div id="detail-panel">
+          <button id="close-detail">×</button>
+          <h3 id="dp-name">County Name</h3>
+          <div class="state-label" id="dp-state">State · Region</div>
+
+          <div class="opp-score-display">
+            <div class="opp-score-number" id="dp-opp">–</div>
+            <div class="opp-score-label">Organizing<br>Opportunity</div>
+          </div>
+
+          <div class="badge-row">
+            <span class="badge" id="dp-int-badge">–</span>
+            <span class="badge" id="dp-tier-badge">–</span>
+          </div>
+
+          <div class="score-bars" id="dp-score-bars">
+            <div class="score-bar-row">
+              <div class="score-bar-label" id="lbl-bar-org">Organizing</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-org" style="background:#dd6b20"></div></div>
+              <div class="score-bar-val" id="val-org">–</div>
+            </div>
+            <div class="score-bar-row">
+              <div class="score-bar-label" id="lbl-bar-sect">Sectoral</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-sect" style="background:#d69e2e"></div></div>
+              <div class="score-bar-val" id="val-sect">–</div>
+            </div>
+            <div class="score-bar-row">
+              <div class="score-bar-label" id="lbl-bar-pres">Presidential</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-pres" style="background:#e53e3e"></div></div>
+              <div class="score-bar-val" id="val-pres">–</div>
+            </div>
+            <div class="score-bar-row">
+              <div class="score-bar-label" id="lbl-bar-state">Statewide</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-state" style="background:#b7791f"></div></div>
+              <div class="score-bar-val" id="val-state">–</div>
+            </div>
+            <div class="score-bar-row">
+              <div class="score-bar-label" id="lbl-bar-cong">Congressional</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-cong" style="background:#276749"></div></div>
+              <div class="score-bar-val" id="val-cong">–</div>
+            </div>
+            <div class="score-bar-row">
+              <div class="score-bar-label">Infrastructure</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-infra" style="background:#38a169"></div></div>
+              <div class="score-bar-val" id="val-infra">–</div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4>Electoral Context</h4>
+            <div class="detail-row"><span class="label">2024 Margin</span><span class="val" id="dp-margin24">–</span></div>
+            <div class="detail-row"><span class="label">2020 Margin</span><span class="val" id="dp-margin20">–</span></div>
+            <div class="detail-row"><span class="label">Swing State</span><span class="val" id="dp-swing">–</span></div>
+          </div>
+
+          <div class="detail-section">
+            <h4>Infrastructure Detail</h4>
+            <div class="detail-row"><span class="label">Organized Scale</span><span class="val" id="dp-scale">–</span></div>
+            <div class="detail-row"><span class="label">Union Culture</span><span class="val" id="dp-culture">–</span></div>
+          </div>
+
+          <div class="detail-section">
+            <h4>County Info</h4>
+            <div class="detail-row"><span class="label">Population</span><span class="val" id="dp-pop">–</span></div>
+            <div class="detail-row"><span class="label">Rural/Urban</span><span class="val" id="dp-rurban">–</span></div>
+          </div>
+        </div>
+
+        <div class="legend" id="map-legend">
+          <div class="legend-title" id="legend-title">Organizing Opportunity Score</div>
+          <div class="legend-gradient" id="legend-gradient"></div>
+          <div class="legend-labels"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+        </div>
+
+        <div class="tooltip" id="tooltip"></div>
+      </div>
+
+      <div id="table-view">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th data-col="rank">#</th>
+              <th data-col="county_name">County</th>
+              <th data-col="state">ST</th>
+              <th data-col="organizing_opportunity_score">OPP<span class="sort-indicator">↓</span></th>
+              <th data-col="intervention_type">Type</th>
+              <th data-col="presidential_score">Pres</th>
+              <th data-col="statewide_score">State</th>
+              <th data-col="congressional_score">Cong</th>
+              <th data-col="organizing_score">Org</th>
+              <th data-col="sectoral_score">Sect</th>
+              <th data-col="infra_score">Infra</th>
+              <th data-col="margin_2024">2024</th>
+              <th data-col="swing_state">Swing</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="status-bar">
+      <span id="status-msg">Ready</span>
+      <span id="data-timestamp"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────────────────────
+let allCounties = [];
+let filteredCounties = [];
+let currentView = "map";
+let sortCol = "organizing_opportunity_score";
+let sortAsc = false;
+let goalFilter = "opp";
+let filters = { state: "", region: "", interventionType: "all", minScore: 0, swingOnly: false };
+
+// ──────────────────────────────────────────────────────────────
+// Data loading
+// ──────────────────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById("loading-indicator").style.display = "block";
+  setStatus("Loading county data…");
+  const localUrl = "../data/county_scores.json";
+  try {
+    const resp = await fetch(localUrl);
+    if (resp.ok) {
+      const data = await resp.json();
+      allCounties = data.filter(c => c.organizing_opportunity_score !== null);
+      setStatus(`Loaded ${allCounties.length} scored counties`);
+      document.getElementById("loading-indicator").style.display = "none";
+      return;
+    }
+  } catch (e) { /* fall through */ }
+  allCounties = [];
+  setStatus("Could not load data/county_scores.json — run export_county_scores.py first");
+  document.getElementById("loading-indicator").style.display = "none";
+}
+
+// ──────────────────────────────────────────────────────────────
+// Score display helpers
+// ──────────────────────────────────────────────────────────────
+function getDisplayScore(c) {
+  if (goalFilter === "presidential") return c.presidential_score;
+  if (goalFilter === "statewide")    return c.statewide_score;
+  if (goalFilter === "congressional") return c.congressional_score;
+  return c.organizing_opportunity_score;
+}
+
+// Built after data loads — quantile scales so the full color range is used
+let oppColorScale, electoralColorScales = {};
+
+const OPP_PALETTE      = ["#1e3a5f","#2d6a9f","#4a9eca","#f97316","#ef4444"];
+const ELECTORAL_PALETTE = ["#1a2942","#374151","#6366f1","#f59e0b","#ef4444"];
+
+function buildColorScales() {
+  const quantile = (vals, palette) =>
+    d3.scaleQuantile().domain(vals).range(palette);
+
+  const oppScores = allCounties.map(c => c.organizing_opportunity_score).filter(v => v != null);
+  oppColorScale = quantile(oppScores, OPP_PALETTE);
+
+  for (const key of ["presidential_score","statewide_score","congressional_score"]) {
+    const vals = allCounties.map(c => c[key]).filter(v => v != null);
+    electoralColorScales[key] = quantile(vals, ELECTORAL_PALETTE);
+  }
+}
+
+function scoreColor(score, scoreKey) {
+  if (score === null || score === undefined) return "#2d3748";
+  if (scoreKey && electoralColorScales[scoreKey]) return electoralColorScales[scoreKey](score);
+  return oppColorScale ? oppColorScale(score) : "#2d3748";
+}
+
+function quantileLabels(scale) {
+  const q = scale.quantiles();
+  return [scale.domain()[0], ...q, scale.domain()[scale.domain().length - 1]]
+    .map(v => Math.round(v));
+}
+
+function updateLegend() {
+  const titles = { opp: "Organizing Opportunity Score (quantile)", presidential: "Presidential Score (quantile)",
+                   statewide: "Statewide Score (quantile)", congressional: "Congressional Score (quantile)" };
+  document.getElementById("legend-title").textContent = titles[goalFilter] || "Score";
+
+  const palette = goalFilter === "opp" ? OPP_PALETTE : ELECTORAL_PALETTE;
+  const scale = goalFilter === "opp" ? oppColorScale
+    : electoralColorScales[goalFilter + "_score"];
+
+  const swatchW = 100 / palette.length;
+  document.getElementById("legend-gradient").style.background =
+    `linear-gradient(to right, ${palette.map((c,i) => `${c} ${i*swatchW}%, ${c} ${(i+1)*swatchW}%`).join(", ")})`;
+
+  if (scale) {
+    const breaks = quantileLabels(scale);
+    const labels = document.querySelector(".legend-labels");
+    labels.innerHTML = breaks.map(v => `<span>${v}</span>`).join("");
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Map
+// ──────────────────────────────────────────────────────────────
+const svg = d3.select("#map-svg");
+let g;
+
+async function initMap() {
+  const container = document.getElementById("map-view");
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+
+  const projection = d3.geoAlbersUsa().scale(1000).translate([W / 2, H / 2]);
+  const path = d3.geoPath().projection(projection);
+
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+  g = svg.append("g");
+
+  const zoom = d3.zoom().scaleExtent([1, 12]).on("zoom", e => g.attr("transform", e.transform));
+  svg.call(zoom);
+
+  try {
+    const us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json");
+    const counties = topojson.feature(us, us.objects.counties);
+    const stateMesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
+
+    const countyByFips = {};
+    allCounties.forEach(c => { countyByFips[c.fips] = c; });
+
+    g.append("g")
+      .selectAll("path")
+      .data(counties.features)
+      .join("path")
+      .attr("class", "county-path")
+      .attr("d", path)
+      .attr("fill", d => {
+        const c = countyByFips[d.id];
+        if (!c) return "#2d3748";
+        const score = getDisplayScore(c);
+        const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
+        return scoreColor(score, key);
+      })
+      .attr("data-fips", d => d.id)
+      .on("mousemove", (event, d) => {
+        const c = countyByFips[d.id];
+        if (!c) return;
+        const score = getDisplayScore(c);
+        const intClass = c.intervention_type === "Type A" ? "int-type-a"
+                       : c.intervention_type === "Type B" ? "int-type-b" : "int-type-c";
+        const tt = document.getElementById("tooltip");
+        tt.style.opacity = "1";
+        tt.style.left = (event.offsetX + 12) + "px";
+        tt.style.top = (event.offsetY - 10) + "px";
+        tt.innerHTML = `<strong>${c.county_name}, ${c.state}</strong><br>
+          <span class="tt-opp">OPP ${c.organizing_opportunity_score ?? "–"}</span>
+          &nbsp;<span class="${intClass}">${c.intervention_type ?? ""}</span>
+          ${goalFilter !== "opp" ? `<br>${goalFilter.charAt(0).toUpperCase() + goalFilter.slice(1)}: ${score ?? "–"}` : ""}`;
+      })
+      .on("mouseleave", () => { document.getElementById("tooltip").style.opacity = "0"; })
+      .on("click", (event, d) => {
+        const c = countyByFips[d.id];
+        if (c) showDetail(c);
+      });
+
+    g.append("path").datum(stateMesh).attr("class", "state-boundary").attr("d", path);
+    setStatus(`Map loaded · ${allCounties.length} counties`);
+  } catch (e) {
+    setStatus("Map topology failed to load. Check internet connection.");
+    console.error(e);
+  }
+}
+
+function updateMapColors() {
+  const visibleFips = new Set(filteredCounties.map(c => c.fips));
+  const countyByFips = {};
+  allCounties.forEach(c => { countyByFips[c.fips] = c; });
+  g && g.selectAll(".county-path").attr("fill", function() {
+    const fips = this.dataset.fips;
+    const c = countyByFips[fips];
+    if (!c) return "#2d3748";
+    if (!visibleFips.has(fips)) return "#1a1d27";
+    const score = getDisplayScore(c);
+    const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
+    return scoreColor(score, key);
+  });
+}
+
+// ──────────────────────────────────────────────────────────────
+// Detail panel
+// ──────────────────────────────────────────────────────────────
+function showDetail(c) {
+  const panel = document.getElementById("detail-panel");
+  panel.style.display = "block";
+
+  document.getElementById("dp-name").textContent = c.county_name;
+  document.getElementById("dp-state").textContent = `${c.state} · ${c.region || "–"}`;
+  document.getElementById("dp-opp").textContent = c.organizing_opportunity_score ?? "–";
+
+  const intBadge = document.getElementById("dp-int-badge");
+  intBadge.textContent = c.intervention_type || "–";
+  intBadge.className = "badge " + (c.intervention_type === "Type A" ? "badge-int-a"
+                                 : c.intervention_type === "Type B" ? "badge-int-b" : "badge-int-c");
+
+  const tier = (c.priority_tier || "").charAt(0);
+  const tierBadge = document.getElementById("dp-tier-badge");
+  tierBadge.textContent = c.priority_tier ? `Tier ${tier}` : "–";
+  tierBadge.className = "badge " + (tier === "A" ? "badge-tier-a" : tier === "B" ? "badge-tier-b" : "badge-tier-c");
+
+  function setBar(barId, valId, lblId, score, highlighted) {
+    const pct = score !== null && score !== undefined ? Math.min(100, Math.max(0, score)) : 0;
+    document.getElementById(barId).style.width = pct + "%";
+    document.getElementById(valId).textContent = score ?? "–";
+    document.getElementById(valId).className = "score-bar-val" + (highlighted ? " highlighted" : "");
+    document.getElementById(lblId).className = "score-bar-label" + (highlighted ? " highlighted" : "");
+  }
+
+  setBar("bar-org",   "val-org",   "lbl-bar-org",  c.organizing_score,    false);
+  setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sectoral_score,      false);
+  setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.presidential_score,  goalFilter === "presidential");
+  setBar("bar-state", "val-state", "lbl-bar-state",c.statewide_score,     goalFilter === "statewide");
+  setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.congressional_score, goalFilter === "congressional");
+  setBar("bar-infra", "val-infra", "lbl-bar-infra",c.infra_score,         false);
+
+  const fmtMargin = v => v === null || v === undefined ? "–" :
+    (v >= 0 ? `D+${Math.abs(v).toFixed(1)}` : `R+${Math.abs(v).toFixed(1)}`);
+
+  document.getElementById("dp-margin24").textContent = fmtMargin(c.margin_2024);
+  document.getElementById("dp-margin20").textContent = fmtMargin(c.margin_2020);
+  document.getElementById("dp-swing").textContent = c.swing_state ? "Yes" : "No";
+  document.getElementById("dp-scale").textContent = c.organized_scale_score ?? "–";
+  document.getElementById("dp-culture").textContent = c.union_culture_score ?? "–";
+  document.getElementById("dp-pop").textContent = c.population ? c.population.toLocaleString() : "–";
+  document.getElementById("dp-rurban").textContent = c.rural_urban || "–";
+}
+
+document.getElementById("close-detail").addEventListener("click", () => {
+  document.getElementById("detail-panel").style.display = "none";
+});
+
+// ──────────────────────────────────────────────────────────────
+// Filters
+// ──────────────────────────────────────────────────────────────
+function applyFilters() {
+  filteredCounties = allCounties.filter(c => {
+    if (filters.state && c.state !== filters.state) return false;
+    if (filters.region && c.region !== filters.region) return false;
+    if (filters.interventionType !== "all" && c.intervention_type !== filters.interventionType) return false;
+    if ((c.organizing_opportunity_score ?? 0) < filters.minScore) return false;
+    if (filters.swingOnly && !c.swing_state) return false;
+    return true;
+  });
+
+  updateStats();
+  updateTop10();
+  updateMapColors();
+  if (currentView === "table") renderTable();
+}
+
+function updateStats() {
+  document.getElementById("stat-total").textContent = allCounties.length.toLocaleString();
+  document.getElementById("stat-inta").textContent = allCounties.filter(c => c.intervention_type === "Type A").length.toLocaleString();
+  document.getElementById("stat-intb").textContent = allCounties.filter(c => c.intervention_type === "Type B").length.toLocaleString();
+  document.getElementById("stat-intc").textContent = allCounties.filter(c => c.intervention_type === "Type C").length.toLocaleString();
+  document.getElementById("stat-visible").textContent = filteredCounties.length.toLocaleString();
+}
+
+function updateTop10() {
+  const top = [...filteredCounties]
+    .sort((a, b) => (b.organizing_opportunity_score ?? 0) - (a.organizing_opportunity_score ?? 0))
+    .slice(0, 10);
+  const container = document.getElementById("top10-list");
+  container.innerHTML = top.map((c, i) => {
+    const intColor = c.intervention_type === "Type A" ? "#fc8181"
+                   : c.intervention_type === "Type B" ? "#f6ad55" : "#68d391";
+    return `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #2d3748; cursor:pointer"
+         onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')})">
+      <span style="color:#a0aec0">${i+1}. ${c.county_name}, ${c.state}</span>
+      <span style="color:${intColor}">${c.organizing_opportunity_score}</span>
+    </div>`;
+  }).join("");
+}
+
+function populateStateFilter() {
+  const states = [...new Set(allCounties.map(c => c.state).filter(Boolean))].sort();
+  const sel = document.getElementById("filter-state");
+  states.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s; opt.textContent = s;
+    sel.appendChild(opt);
+  });
+}
+
+document.getElementById("filter-state").addEventListener("change", e => { filters.state = e.target.value; applyFilters(); });
+document.getElementById("filter-region").addEventListener("change", e => { filters.region = e.target.value; applyFilters(); });
+document.getElementById("filter-score").addEventListener("input", e => {
+  filters.minScore = +e.target.value;
+  document.getElementById("min-score-val").textContent = e.target.value;
+  applyFilters();
+});
+document.getElementById("filter-swing").addEventListener("change", e => { filters.swingOnly = e.target.checked; applyFilters(); });
+
+document.querySelectorAll("[data-inttype]").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll("[data-inttype]").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    filters.interventionType = this.dataset.inttype;
+    applyFilters();
+  });
+});
+
+document.querySelectorAll("[data-goal]").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll("[data-goal]").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    goalFilter = this.dataset.goal;
+    updateLegend();
+    updateMapColors();
+  });
+});
+
+// ──────────────────────────────────────────────────────────────
+// Table view
+// ──────────────────────────────────────────────────────────────
+function renderTable() {
+  const sorted = [...filteredCounties].sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (sortCol === "intervention_type") {
+      va = va || ""; vb = vb || "";
+      return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    }
+    va = va ?? -Infinity; vb = vb ?? -Infinity;
+    return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+
+  document.querySelectorAll("#results-table th .sort-indicator").forEach(el => el.remove());
+  const activeTh = document.querySelector(`#results-table th[data-col="${sortCol}"]`);
+  if (activeTh) {
+    const ind = document.createElement("span");
+    ind.className = "sort-indicator";
+    ind.textContent = sortAsc ? "↑" : "↓";
+    activeTh.appendChild(ind);
+  }
+
+  const tbody = document.getElementById("table-body");
+  const fmtMargin = v => v == null ? "–" : (v >= 0 ? `D+${Math.abs(v).toFixed(1)}` : `R+${Math.abs(v).toFixed(1)}`);
+  const fmt = v => v ?? "–";
+
+  tbody.innerHTML = sorted.map((c, i) => {
+    const oppScore = c.organizing_opportunity_score ?? 0;
+    const oppColor = oppScore >= 60 ? "#fc8181" : oppScore >= 40 ? "#f6ad55" : "#90cdf4";
+    const intColor = c.intervention_type === "Type A" ? "#fc8181"
+                   : c.intervention_type === "Type B" ? "#f6ad55" : "#68d391";
+    return `<tr style="cursor:pointer" onclick="showDetail(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+      <td style="color:#4a5568">${i+1}</td>
+      <td>${c.county_name}</td>
+      <td>${c.state}</td>
+      <td style="color:${oppColor}; font-weight:600">${fmt(c.organizing_opportunity_score)}</td>
+      <td style="color:${intColor}">${c.intervention_type || "–"}</td>
+      <td>${fmt(c.presidential_score)}</td>
+      <td>${fmt(c.statewide_score)}</td>
+      <td>${fmt(c.congressional_score)}</td>
+      <td>${fmt(c.organizing_score)}</td>
+      <td>${fmt(c.sectoral_score)}</td>
+      <td>${fmt(c.infra_score)}</td>
+      <td>${fmtMargin(c.margin_2024)}</td>
+      <td>${c.swing_state ? "✓" : ""}</td>
+    </tr>`;
+  }).join("");
+}
+
+document.querySelectorAll("#results-table th").forEach(th => {
+  th.addEventListener("click", function() {
+    const col = this.dataset.col;
+    if (col === "rank") return;
+    if (sortCol === col) sortAsc = !sortAsc;
+    else { sortCol = col; sortAsc = false; }
+    renderTable();
+  });
+});
+
+// ──────────────────────────────────────────────────────────────
+// View switching
+// ──────────────────────────────────────────────────────────────
+document.querySelectorAll(".view-tab").forEach(tab => {
+  tab.addEventListener("click", function() {
+    document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+    this.classList.add("active");
+    currentView = this.dataset.view;
+    document.getElementById("map-view").style.display = currentView === "map" ? "block" : "none";
+    document.getElementById("table-view").style.display = currentView === "table" ? "block" : "none";
+    if (currentView === "table") renderTable();
+  });
+});
+
+// ──────────────────────────────────────────────────────────────
+// Export
+// ──────────────────────────────────────────────────────────────
+document.getElementById("export-btn").addEventListener("click", () => {
+  const top50 = [...filteredCounties]
+    .sort((a, b) => (b.organizing_opportunity_score ?? 0) - (a.organizing_opportunity_score ?? 0))
+    .slice(0, 50);
+  const headers = ["rank","fips","county_name","state","region","organizing_opportunity_score",
+    "intervention_type","presidential_score","statewide_score","congressional_score",
+    "organizing_score","sectoral_score","infra_score","organized_scale_score","union_culture_score",
+    "margin_2024","swing_state","population","rural_urban","priority_tier"];
+  const rows = top50.map((c, i) => headers.map(h => {
+    if (h === "rank") return i + 1;
+    const v = c[h];
+    return v === null || v === undefined ? "" : v;
+  }).join(","));
+  const csv = [headers.join(","), ...rows].join("\n");
+  const a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  a.download = "top50_labor_organizing_counties.csv";
+  a.click();
+});
+
+// ──────────────────────────────────────────────────────────────
+// Utility
+// ──────────────────────────────────────────────────────────────
+function setStatus(msg) { document.getElementById("status-msg").textContent = msg; }
+
+// ──────────────────────────────────────────────────────────────
+// Boot
+// ──────────────────────────────────────────────────────────────
+(async () => {
+  await loadData();
+  buildColorScales();
+  filteredCounties = [...allCounties];
+  populateStateFilter();
+  updateStats();
+  updateTop10();
+  updateLegend();
+  await initMap();
+  applyFilters();
+  document.getElementById("data-timestamp").textContent = `Data: ${new Date().toLocaleDateString()}`;
+})();
+</script>
+</body>
+</html>

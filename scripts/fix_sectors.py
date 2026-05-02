@@ -1,0 +1,235 @@
+"""
+Re-codes all 20 SECTORS entries with the corrected rubric from the April 27 handoff doc.
+Applies corrected booleans, Organizability, Strategic Value Score, Employer Type, and Notes.
+"""
+
+import json, time, requests
+from pathlib import Path
+
+_config = json.loads((Path(__file__).parent.parent / "config.json").read_text())
+API_KEY = _config["notion"]["api_key"]
+HEADERS = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Notion-Version": "2022-06-28",
+    "Content-Type": "application/json",
+}
+
+def calc_score(chokepoint, crisis, mcalevey, community, non_off):
+    base = (25 if chokepoint else 0) + (20 if crisis else 0) + \
+           (20 if mcalevey else 0) + (15 if community else 0) + (10 if non_off else 0)
+    if chokepoint and community:
+        base = base * 1.15
+    return min(100, round(base, 1))
+
+def mcalevey(non_off, org, crisis):
+    return non_off and org in ("High", "Medium") and crisis
+
+def notes(org, close_calls="", warehouse_note=False, mixed_et=False):
+    parts = [f"Organizability: {org} — draft rating, pending deeper theoretical validation"]
+    if warehouse_note:
+        parts.append("Post-Amazon workforce may lack organic networks typical of older logistics workplaces — Organizability Medium flagged for review")
+    if mixed_et:
+        parts.append("Employer Type: Mixed — coding logic may need to move to locals layer in future")
+    if close_calls:
+        parts.append(close_calls)
+    return "\n".join(parts)
+
+# ── Sector definitions ────────────────────────────────────────────────────────
+# (page_id, chokepoint, community, crisis, non_off, org, employer_type, close_call_note)
+
+SECTORS = [
+    {
+        "page_id": "34f70288-8cd1-813b-a14f-c04bba467b59",
+        "name": "Healthcare - Hospitals",
+        "chokepoint": True, "community": True, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Mixed",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-811d-bd4f-c1d4dbf384c3",
+        "name": "Healthcare - Nursing Homes",
+        "chokepoint": True, "community": True, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Mixed",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-81ad-9828-ea5615891254",
+        "name": "Healthcare - Home Health",
+        "chokepoint": False, "community": True, "crisis": True, "non_off": True,
+        "org": "Low", "employer_type": "Private",
+        "close_call": "Crisis-Creating: borderline — care is dispersed across individual homes, but vulnerable patients face immediate harm without daily visits. Coded YES. Chokepoint: NO — individual care can be rearranged without single-node failure.",
+    },
+    {
+        "page_id": "34f70288-8cd1-817b-8666-c38ca641120d",
+        "name": "Healthcare - Ambulatory",
+        "chokepoint": False, "community": True, "crisis": False, "non_off": True,
+        "org": "Low", "employer_type": "Mixed",
+        "close_call": "Community-Facing: borderline per rubric — patients have ongoing provider relationships but practices vary widely. Coded YES with flag.",
+    },
+    {
+        "page_id": "34f70288-8cd1-81a8-af42-ca91ec53d3a9",
+        "name": "K-12 Education",
+        "chokepoint": True, "community": True, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Public",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-8174-a767-f55dc609dd37",
+        "name": "Higher Ed - Universities",
+        "chokepoint": False, "community": True, "crisis": True, "non_off": True,
+        "org": "Medium", "employer_type": "Mixed",
+        "close_call": "Chokepoint: borderline — university medical centers attached to major research universities would qualify; sector-level coding NO because the majority of the sector does not meet the days-threshold. Flagged for review at locals layer.",
+    },
+    {
+        "page_id": "34f70288-8cd1-81af-94bb-caaeac91e131",
+        "name": "Higher Ed - Community Colleges",
+        "chokepoint": False, "community": True, "crisis": True, "non_off": True,
+        "org": "Medium", "employer_type": "Public",
+        "close_call": "Organizability Medium: campus co-location and stability present, but heavy reliance on contingent adjunct faculty weakens organic networks.",
+    },
+    {
+        "page_id": "34f70288-8cd1-8119-8aed-c13a1a6a356f",
+        "name": "Public Admin - Federal",
+        "chokepoint": True, "community": False, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Public",
+        "close_call": "Chokepoint: coded YES but highly heterogeneous — ATC, TSA, VA, Social Security qualify clearly; other agencies are more diffuse. Recommend disaggregating at locals layer.",
+    },
+    {
+        "page_id": "34f70288-8cd1-818c-bd05-d9c4b3a08b49",
+        "name": "Public Admin - State",
+        "chokepoint": True, "community": False, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Public",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-81e8-843a-ec7c1fee4512",
+        "name": "Public Admin - Local",
+        "chokepoint": True, "community": True, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Public",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-814e-a164-eb4049676575",
+        "name": "Warehousing",
+        "chokepoint": True, "community": False, "crisis": True, "non_off": True,
+        "org": "Medium", "employer_type": "Private",
+        "close_call": "",
+        "warehouse": True,
+    },
+    {
+        "page_id": "34f70288-8cd1-81ca-ad4b-cd9c734a5601",
+        "name": "Trucking",
+        "chokepoint": True, "community": False, "crisis": True, "non_off": True,
+        "org": "Medium", "employer_type": "Private",
+        "close_call": "Organizability Medium: stable employment and some terminal co-location, but drivers are not co-located during work.",
+    },
+    {
+        "page_id": "34f70288-8cd1-8179-bd6a-fbfc7aaeb413",
+        "name": "Couriers",
+        "chokepoint": True, "community": False, "crisis": True, "non_off": True,
+        "org": "Medium", "employer_type": "Private",
+        "close_call": "Organizability Medium: UPS/FedEx hubs provide co-location and stability, but gig-classified workers (e.g. Amazon DSPs) reduce sector-level organic networks.",
+    },
+    {
+        "page_id": "34f70288-8cd1-8193-9e34-e54c9211f078",
+        "name": "Ports/Transportation Support",
+        "chokepoint": True, "community": False, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Mixed",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-81af-82a0-c6240846d8cd",
+        "name": "Hospitality - Hotels",
+        "chokepoint": False, "community": False, "crisis": False, "non_off": True,
+        "org": "Medium", "employer_type": "Private",
+        "close_call": "Community-Facing: considered but coded NO — hotel guests are transient, not a community with ongoing dependency or trust relationship with the specific workforce.",
+    },
+    {
+        "page_id": "34f70288-8cd1-8162-a92d-ee4a6753d344",
+        "name": "Hospitality - Food Service",
+        "chokepoint": False, "community": False, "crisis": False, "non_off": True,
+        "org": "Low", "employer_type": "Private",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-8188-8270-d0494942ce94",
+        "name": "Building Trades - Construction",
+        "chokepoint": False, "community": False, "crisis": False, "non_off": True,
+        "org": "Medium", "employer_type": "Private",
+        "close_call": "Chokepoint: borderline for critical infrastructure projects. Coded NO at sector level — project delays cascade over weeks/months, not days. Review at project-type level.",
+    },
+    {
+        "page_id": "34f70288-8cd1-817d-a5a7-c6c96b72dc71",
+        "name": "Manufacturing - Durable Goods",
+        "chokepoint": True, "community": False, "crisis": False, "non_off": False,
+        "org": "Medium", "employer_type": "Private",
+        "close_call": "Crisis-Creating: corrected from YES to NO — supply chain cascades take months to materialize and are not immediately visible or attributable. Non-Offshoreable: NO — meaningful portions of durable goods manufacturing have relocated offshore historically.",
+    },
+    {
+        "page_id": "34f70288-8cd1-81e0-9817-ff984b029efc",
+        "name": "Retail - General",
+        "chokepoint": False, "community": False, "crisis": False, "non_off": True,
+        "org": "Low", "employer_type": "Private",
+        "close_call": "",
+    },
+    {
+        "page_id": "34f70288-8cd1-8127-a496-da9f7617a513",
+        "name": "Utilities",
+        "chokepoint": True, "community": True, "crisis": True, "non_off": True,
+        "org": "High", "employer_type": "Mixed",
+        "close_call": "",
+    },
+]
+
+def update_sector(s):
+    mp = mcalevey(s["non_off"], s["org"], s["crisis"])
+    score = calc_score(s["chokepoint"], s["crisis"], mp, s["community"], s["non_off"])
+    note_text = notes(
+        s["org"],
+        close_calls=s.get("close_call", ""),
+        warehouse_note=s.get("warehouse", False),
+        mixed_et=(s["employer_type"] == "Mixed"),
+    )
+
+    props = {
+        "Chokepoint Potential": {"checkbox": s["chokepoint"]},
+        "Community-Facing": {"checkbox": s["community"]},
+        "Crisis-Creating": {"checkbox": s["crisis"]},
+        "Non-Offshoreable": {"checkbox": s["non_off"]},
+        "McAlevey Priority": {"checkbox": mp},
+        "Strategic Value Score": {"number": score},
+        "Organizability": {"select": {"name": s["org"]}},
+        "Employer Type": {"select": {"name": s["employer_type"]}},
+        "Notes": {"rich_text": [{"text": {"content": note_text[:2000]}}]},
+    }
+
+    resp = requests.patch(
+        f"https://api.notion.com/v1/pages/{s['page_id']}",
+        headers=HEADERS,
+        json={"properties": props},
+        timeout=30,
+    )
+    if resp.status_code == 200:
+        print(f"  ✓ {s['name']:40s} score={score:5.1f}  MP={str(mp):5}  {s['employer_type']}")
+    else:
+        print(f"  ✗ {s['name']:40s} ERROR {resp.status_code}: {resp.json().get('message','')}")
+
+print("Updating 20 sectors with corrected rubric...\n")
+for s in SECTORS:
+    update_sector(s)
+    time.sleep(0.4)
+
+print("\nSpot-checks:")
+checks = [
+    ("Healthcare - Hospitals",       True,  True,  True,  True,  True,  100),
+    ("K-12 Education",               True,  True,  True,  True,  True,  100),
+    ("Ports/Transportation Support", True,  False, True,  True,  True,   75),
+    ("Retail - General",             False, False, False, True,  False,  10),
+    ("Manufacturing - Durable Goods",True,  False, False, False, False,  25),
+]
+for name, chk, comm, cris, no, _, expected in checks:
+    s = next(x for x in SECTORS if x["name"] == name)
+    mp = mcalevey(s["non_off"], s["org"], s["crisis"])
+    got = calc_score(s["chokepoint"], s["crisis"], mp, s["community"], s["non_off"])
+    status = "✓" if got == expected else f"✗ (got {got})"
+    print(f"  {status}  {name}: expected {expected}")
