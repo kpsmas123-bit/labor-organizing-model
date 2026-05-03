@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology — Labor Organizing Strategic Terrain Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── VARIABLES ───────────────────────────── */
+:root {
+  --bg:         #0f1117;
+  --bg-card:    #181c27;
+  --bg-el:      #1e2333;
+  --text:       #f0ede6;
+  --muted:      #8b8578;
+  --accent:     #e8c547;
+  --accent-dim: rgba(232,197,71,0.11);
+  --type-a:     #d4a017;
+  --type-b:     #4a7fc1;
+  --type-c:     #3a8c5c;
+  --border:     rgba(240,237,230,0.10);
+  --danger:     #c45c3a;
+}
+
+/* ── RESET ───────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── TOP NAV ─────────────────────────────── */
+#top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(15,17,23,0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 0;
+}
+.nav-back {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding-right: 18px;
+  margin-right: 18px;
+  border-right: 1px solid var(--border);
+  transition: color .2s;
+  white-space: nowrap;
+}
+.nav-back:hover { color: var(--accent); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 11px;
+  border-radius: 5px;
+  transition: color .18s, background .18s;
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+/* ── PAGE HERO ───────────────────────────── */
+.page-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 32px 40px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-eyebrow {
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.06;
+  margin-bottom: 18px;
+}
+.hero-meta {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.hero-meta span { margin-right: 16px; }
+.hero-meta span::before { content: '· '; margin-right: 4px; }
+.hero-meta span:first-child::before { content: ''; margin-right: 0; }
+
+/* ── LAYOUT ──────────────────────────────── */
+main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
+
+.section { padding: 68px 0 36px; }
+.section + .section { border-top: 1px solid var(--border); }
+.section-eyebrow {
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.section-intro {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 680px;
+  margin-bottom: 44px;
+}
+
+/* ── FLOW DIAGRAM ────────────────────────── */
+.flow-wrap {
+  max-width: 560px;
+  margin: 0 auto 48px;
+}
+.flow-node {
+  border-radius: 10px;
+  padding: 18px 22px;
+  border: 1px solid;
+}
+.flow-node--input     { background: rgba(240,237,230,0.03); border-color: rgba(240,237,230,0.17); }
+.flow-node--org       { background: rgba(232,197,71,0.06);  border-color: rgba(232,197,71,0.28);  }
+.flow-node--interv    { background: rgba(58,140,92,0.06);   border-color: rgba(58,140,92,0.28);   }
+.flow-node--elec      { background: rgba(74,127,193,0.06);  border-color: rgba(74,127,193,0.28);  }
+.flow-node--output    { background: rgba(240,237,230,0.04); border-color: rgba(240,237,230,0.22); }
+.flow-label {
+  font-size: 10px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.flow-node--input  .flow-label { color: var(--muted); }
+.flow-node--org    .flow-label { color: var(--accent); }
+.flow-node--interv .flow-label { color: #5dba80; }
+.flow-node--elec   .flow-label { color: #7ab3e8; }
+.flow-node--output .flow-label { color: var(--text); }
+.flow-formula {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.flow-subs {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+.flow-subs-2 { grid-template-columns: 1fr 1fr; }
+.flow-subs-3 { grid-template-columns: 1fr 1fr 1fr; }
+.flow-sub {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+.flow-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.flow-connector-line {
+  width: 1px;
+  height: 22px;
+  background: rgba(240,237,230,0.16);
+}
+.flow-connector-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid rgba(240,237,230,0.16);
+}
+
+/* ── WHAT IT DOES / DOESN'T ─────────────── */
+.desc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+.desc-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 24px;
+}
+.desc-block h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.desc-block p { font-size: 13.5px; color: var(--muted); line-height: 1.72; }
+
+/* ── PULL QUOTE ──────────────────────────── */
+.pull-quote {
+  border-left: 3px solid var(--accent);
+  padding: 16px 24px;
+  background: var(--accent-dim);
+  border-radius: 0 8px 8px 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.pull-quote p {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* ── CELL GRID (12 scoring components) ────── */
+.cell-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.cell-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 20px 38px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  text-align: left;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
+}
+.cell-card:hover {
+  border-color: rgba(232,197,71,0.55);
+  background: rgba(232,197,71,0.025);
+}
+.cell-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cell-icon { font-size: 22px; line-height: 1; }
+.cell-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+.cell-desc { font-size: 12.5px; color: var(--muted); line-height: 1.55; flex: 1; }
+.cell-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.cell-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.cell-badge--theory { background: rgba(139,133,120,0.12); color: var(--muted); }
+.cell-badge--danger { background: rgba(196,92,58,0.12); color: #dd7055; }
+.cell-source { font-size: 10px; color: rgba(139,133,120,0.65); font-style: italic; text-align: right; }
+.cell-expand-hint {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  font-size: 9.5px;
+  color: rgba(232,197,71,0.3);
+  transition: color .2s;
+  pointer-events: none;
+}
+.cell-card:hover .cell-expand-hint { color: rgba(232,197,71,0.7); }
+.modal-data-src { display: none; }
+
+/* ── DATA SOURCE GRID ────────────────────── */
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+a.source-cell {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 16px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color .2s, background .2s;
+}
+a.source-cell:hover {
+  border-color: rgba(232,197,71,0.5);
+  background: rgba(232,197,71,0.025);
+}
+.src-icon { font-size: 19px; margin-bottom: 10px; }
+.src-name { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+.src-powers { font-size: 11px; color: var(--muted); line-height: 1.5; flex: 1; }
+.src-arrow { font-size: 10px; color: var(--accent); margin-top: 12px; }
+
+/* ── LIMITATIONS LIST ────────────────────── */
+.limit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 52px;
+}
+.limit-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--danger);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  display: flex;
+  gap: 16px;
+}
+.limit-num { font-size: 11px; font-weight: 700; color: var(--danger); min-width: 18px; padding-top: 2px; }
+.limit-title { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.limit-desc { font-size: 12.5px; color: var(--muted); line-height: 1.65; }
+.limit-phase {
+  display: inline-block;
+  margin-top: 7px;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(74,127,193,0.15);
+  color: #7ab3e8;
+}
+
+/* ── REPLICATION SECTION ─────────────────── */
+.repro-section { border-top: 1px solid var(--border); padding-top: 52px; }
+.repro-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem,2.5vw,1.9rem);
+  font-weight: 800;
+  margin-bottom: 28px;
+}
+.repo-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 18px;
+}
+.repo-card h3 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+a.repo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent);
+  text-decoration: none;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(232,197,71,0.25);
+  padding-bottom: 1px;
+  margin-bottom: 14px;
+  transition: border-color .2s;
+}
+a.repo-link:hover { border-color: var(--accent); }
+.repo-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+.repo-oneliner {
+  font-size: 13.5px;
+  color: var(--text);
+  font-style: italic;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.repro-quote {
+  background: rgba(240,237,230,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 18px;
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.7;
+}
+.ai-card {
+  background: rgba(74,127,193,0.06);
+  border: 1px solid rgba(74,127,193,0.18);
+  border-radius: 10px;
+  padding: 24px 28px;
+}
+.ai-card h3 {
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #7ab3e8;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.ai-card p { font-size: 13px; color: var(--muted); line-height: 1.75; }
+
+/* ── MODAL ───────────────────────────────── */
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(8,9,13,0.88);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  padding: 32px 20px;
+  overflow-y: auto;
+}
+#modal-overlay.is-open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box {
+  max-width: 740px;
+  margin: 0 auto;
+  background: #1a1f2e;
+  border: 1px solid rgba(240,237,230,0.12);
+  border-radius: 14px;
+  padding: 40px 44px;
+  position: relative;
+}
+#modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color .18s, border-color .18s, background .18s;
+  font-family: inherit;
+}
+#modal-close:hover { color: var(--text); border-color: rgba(240,237,230,0.3); background: rgba(255,255,255,0.05); }
+
+/* Modal typography — applied to dynamic content */
+.m-eyebrow {
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.m-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  padding-right: 32px;
+}
+.m-section { margin-top: 22px; }
+.m-section-label {
+  font-size: 10px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.m-p { font-size: 13.5px; color: var(--muted); line-height: 1.75; margin-bottom: 10px; }
+.m-p strong { color: var(--text); font-weight: 600; }
+.m-p em { font-style: italic; }
+.m-formula {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--accent);
+  line-height: 1.7;
+  margin: 10px 0;
+}
+.m-note {
+  background: rgba(196,92,58,0.08);
+  border: 1px solid rgba(196,92,58,0.2);
+  border-radius: 7px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  color: #dd7055;
+  line-height: 1.65;
+  margin-top: 14px;
+}
+.m-caveat {
+  background: rgba(232,197,71,0.07);
+  border: 1px solid rgba(232,197,71,0.2);
+  border-radius: 7px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  color: var(--accent);
+  line-height: 1.65;
+  margin-top: 14px;
+}
+.m-table-wrap { overflow-x: auto; margin: 12px 0; }
+.m-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.m-table th {
+  background: rgba(255,255,255,0.04);
+  padding: 9px 12px;
+  text-align: left;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.m-table td {
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(240,237,230,0.05);
+  color: var(--muted);
+  vertical-align: middle;
+  font-family: 'DM Mono', 'Courier New', monospace;
+}
+.m-table tr:last-child td { border-bottom: none; }
+.m-table tr:hover td { background: rgba(255,255,255,0.02); }
+.m-table .col-nm { font-family: 'DM Sans', system-ui, sans-serif; color: var(--text); font-weight: 500; font-size: 12px; }
+.t-yes { color: #5dba80 !important; font-weight: 600; }
+.t-no  { color: rgba(139,133,120,0.45) !important; }
+.t-tbd { color: var(--accent) !important; font-weight: 600; }
+.t-brd { color: #c8a84a !important; }
+.t-flag { color: #dd7055 !important; font-weight: 600; font-style: italic; }
+.t-100 { color: var(--accent) !important; font-weight: 700; }
+.t-75  { color: #c8a84a !important; font-weight: 600; }
+.t-25  { color: var(--muted) !important; }
+.t-10  { color: rgba(139,133,120,0.5) !important; }
+.t-0   { color: rgba(139,133,120,0.3) !important; }
+.t-pend{ color: #dd7055 !important; font-style: italic; }
+.m-cite {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.65;
+  margin-bottom: 7px;
+  padding-left: 14px;
+  border-left: 2px solid var(--border);
+}
+/* Intervention matrix */
+.m-matrix {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 12px 0;
+  font-size: 12px;
+}
+.mx-header-row, .mx-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.mx-row:last-child { border-bottom: none; }
+.mx-cell {
+  padding: 10px 14px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.mx-cell:last-child { border-right: none; }
+.mx-header-row .mx-cell {
+  background: rgba(255,255,255,0.03);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.mx-row-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  background: rgba(255,255,255,0.02);
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+.mx-type { font-size: 11.5px; font-weight: 700; margin-bottom: 3px; }
+.mx-ta { color: var(--type-a); }
+.mx-tb { color: var(--type-b); }
+.mx-tc { color: var(--type-c); }
+.mx-skip { color: rgba(139,133,120,0.3); font-size: 11px; }
+.mx-tdesc { font-size: 10.5px; color: var(--muted); font-family: 'DM Sans', system-ui, sans-serif; }
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 900px) {
+  #top-nav { padding: 0 16px; }
+  main { padding: 0 16px 80px; }
+  .page-hero { padding: 40px 16px 28px; }
+  .cell-grid { grid-template-columns: 1fr 1fr; }
+  .source-grid { grid-template-columns: repeat(2, 1fr); }
+  .desc-grid { grid-template-columns: 1fr; }
+  .flow-subs-3 { grid-template-columns: 1fr 1fr; }
+  .modal-box { padding: 28px 22px; }
+}
+@media (max-width: 580px) {
+  .cell-grid { grid-template-columns: 1fr; }
+  .source-grid { grid-template-columns: 1fr 1fr; }
+  .flow-subs-2, .flow-subs-3 { grid-template-columns: 1fr; }
+  .nav-link { display: none; }
+  .nav-link--mobile { display: block !important; }
+}
+@media (max-width: 400px) {
+  .source-grid { grid-template-columns: 1fr; }
+}
+
+/* ── PRINT ───────────────────────────────── */
+@media print {
+  #top-nav, #modal-overlay { display: none !important; }
+  body { background: white; color: black; font-size: 10pt; }
+  .page-hero { border-color: #ccc; padding: 20pt 0 14pt; }
+  .hero-title { font-size: 26pt; color: black; }
+  .hero-eyebrow, .section-eyebrow { color: #666; }
+  .section + .section { border-color: #ddd; }
+  .section { padding: 28pt 0 18pt; }
+  .cell-grid { display: block; }
+  .cell-card {
+    display: block;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-bottom: 12pt;
+    break-inside: avoid;
+    cursor: default;
+    padding-bottom: 18px;
+  }
+  .cell-name { color: black; }
+  .cell-desc { color: #555; }
+  .cell-badge { background: #eee; color: #555; }
+  .cell-expand-hint { display: none; }
+  .modal-data-src {
+    display: block;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 12pt 14pt;
+    margin-top: 8pt;
+    break-inside: avoid;
+  }
+  .m-eyebrow { color: #888; font-size: 8pt; }
+  .m-title { color: black; font-size: 13pt; margin-bottom: 12pt; }
+  .m-p { color: #444; font-size: 10pt; margin-bottom: 6pt; }
+  .m-section-label { color: #666; font-size: 8pt; }
+  .m-formula { background: #eee; border-color: #ccc; color: black; font-size: 9pt; }
+  .m-note { background: #fff0ec; border-color: #ccc; color: #333; }
+  .m-caveat { background: #fffaec; border-color: #ccc; color: #333; }
+  .m-table th { background: #eee; color: #555; }
+  .m-table td { color: #444; }
+  .source-grid { display: block; }
+  a.source-cell { display: block; margin-bottom: 10pt; border: 1px solid #ddd; background: #f9f9f9; color: black; }
+  .src-name { color: black; }
+  .src-powers { color: #555; }
+  .desc-block { background: #f9f9f9; border: 1px solid #ddd; }
+  .desc-block h3, .repo-card h3 { color: black; }
+  .desc-block p, .repo-desc, .ai-card p { color: #555; }
+  .limit-item { background: #f9f9f9; border-color: #ccc; }
+  .limit-title { color: black; }
+  .limit-desc { color: #555; }
+  .pull-quote { background: #f5f5f5; border-color: #999; }
+  .pull-quote p { color: black; }
+  .repo-card, .repro-quote, .ai-card { background: #f9f9f9; border: 1px solid #ddd; }
+  a.repo-link { color: black; border-color: #999; }
+  .repo-oneliner { color: black; }
+  .ai-card h3 { color: #444; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── STICKY TOP NAV ────────────────────────────────── -->
+<nav id="top-nav" aria-label="Page navigation">
+  <a href="./labor_organizing_national_dashboard.html" class="nav-back">← Dashboard</a>
+  <div class="nav-links">
+    <a href="#glance"     class="nav-link">Model at a Glance</a>
+    <a href="#components" class="nav-link">Scoring Components</a>
+    <a href="#sources"    class="nav-link">Data Sources</a>
+    <a href="#limitations" class="nav-link">Limitations</a>
+  </div>
+</nav>
+
+<!-- ── PAGE HERO ─────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="hero-eyebrow">Labor Organizing Strategic Terrain Model</div>
+  <h1 class="hero-title">Methodology</h1>
+  <div class="hero-meta">
+    <span>Version 1.0</span>
+    <span>May 2026</span>
+    <span>Public Documentation</span>
+    <span>3,144 US Counties</span>
+  </div>
+</div>
+
+<main>
+
+<!-- ──────────────────────────────────────────────────── -->
+<!-- SECTION 1: THE MODEL AT A GLANCE                    -->
+<!-- ──────────────────────────────────────────────────── -->
+<section id="glance" class="section">
+  <div class="section-eyebrow">Section 1</div>
+  <h2 class="section-title">The Model at a Glance</h2>
+  <p class="section-intro">A two-layer model that separates the organizing question from the electoral deployment question — then combines them according to the user's stated goal.</p>
+
+  <!-- Flow diagram -->
+  <div class="flow-wrap" role="img" aria-label="Model flow diagram showing five layers from user goal to composite ranking">
+    <div class="flow-node flow-node--input">
+      <div class="flow-label">Your Goal</div>
+      <div class="flow-formula">Electoral objective — set by the user</div>
+    </div>
+    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
+
+    <div class="flow-node flow-node--org">
+      <div class="flow-label">Organizing Opportunity Score</div>
+      <div class="flow-formula">= Sectoral Value (55%) + Organizing Potential (45%)</div>
+      <div class="flow-subs flow-subs-2">
+        <div class="flow-sub">Sectoral Value Score</div>
+        <div class="flow-sub">Organizing Potential Score</div>
+      </div>
+    </div>
+    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
+
+    <div class="flow-node flow-node--interv">
+      <div class="flow-label">Intervention Type (A / B / C)</div>
+      <div class="flow-formula">= f(infrastructure score, political alignment)</div>
+      <div class="flow-subs flow-subs-2">
+        <div class="flow-sub">Infrastructure Score</div>
+        <div class="flow-sub">Political Alignment</div>
+      </div>
+    </div>
+    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
+
+    <div class="flow-node flow-node--elec">
+      <div class="flow-label">Electoral Sub-Scores (3 independent)</div>
+      <div class="flow-subs flow-subs-3">
+        <div class="flow-sub">Presidential</div>
+        <div class="flow-sub">Statewide</div>
+        <div class="flow-sub">Congressional</div>
+      </div>
+    </div>
+    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
+
+    <div class="flow-node flow-node--output">
+      <div class="flow-label">Composite Ranking</div>
+      <div class="flow-formula">= Opportunity × Electoral weight (goal-dependent)</div>
+    </div>
+  </div>
+
+  <!-- What it does / doesn't do -->
+  <div class="desc-grid">
+    <div class="desc-block">
+      <h3>What this model does</h3>
+      <p>Ranks U.S. counties by strategic terrain for labor organizing, filtered by electoral goal and intervention type. Uses the best available structural data as a prioritization tool — not a replacement for on-the-ground organizer judgment.</p>
+    </div>
+    <div class="desc-block">
+      <h3>What this model doesn't do</h3>
+      <p>It does not measure associational power, organic leader networks, employer-specific vulnerability, or local political dynamics. Those are the domain of organizer judgment. Omitted variables are documented in Section 4.</p>
+    </div>
+  </div>
+
+  <blockquote class="pull-quote">
+    <p>"The model does not pick the strategic goal. The user brings the goal. The model shows the terrain."</p>
+  </blockquote>
+</section>
+
+<!-- ──────────────────────────────────────────────────── -->
+<!-- SECTION 2: SCORING COMPONENTS                       -->
+<!-- ──────────────────────────────────────────────────── -->
+<section id="components" class="section">
+  <div class="section-eyebrow">Section 2</div>
+  <h2 class="section-title">Scoring Components</h2>
+  <p class="section-intro">Every score in the model is documented below. Click any cell for the full specification — formula, data sources, known limitations, and theoretical grounding.</p>
+
+  <div class="cell-grid">
+
+    <!-- CELL 1: Organizing Opportunity Score -->
+    <button class="cell-card" data-modal="1" aria-haspopup="dialog">
+      <span class="cell-icon">🎯</span>
+      <div class="cell-name">Organizing Opportunity Score</div>
+      <div class="cell-desc">The core question: how favorable is this county for building worker power?</div>
+      <div class="cell-footer">
+        <span class="cell-badge">Primary output</span>
+        <span class="cell-source">BLS QCEW · DOL LM-2</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-1">
+      <div class="m-eyebrow">Scoring Component 1</div>
+      <div class="m-title">Organizing Opportunity Score</div>
+      <div class="m-section">
+        <div class="m-section-label">Formula</div>
+        <div class="m-formula">OOS = (Sectoral Value Score × 0.55) + (Organizing Potential Score × 0.45)</div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Plain Language</div>
+        <p class="m-p">The Organizing Opportunity Score is the model's primary output for a county's organizing terrain. A score of 100 means maximum strategic value — a large, strategically concentrated workforce that is substantially unorganized. A score near zero means little structural leverage and little unorganized workforce to build from.</p>
+        <p class="m-p"><strong>Range:</strong> 0–100. Scores are scaled using an absolute benchmark, not relative to other counties, so they are stable across filtered views.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">What is intentionally excluded</div>
+        <p class="m-p">Electoral scores and the Infrastructure Score are <em>not</em> inputs to the Organizing Opportunity Score. This is a deliberate design choice: the organizing question (where can we build worker power?) must be answered independently of the electoral question (where does that power matter most?). Combining them would obscure both answers.</p>
+        <p class="m-p">The Composite Ranking combines the OOS with electoral sub-scores only after the user specifies a goal. Infrastructure Score is kept as a reference dimension that drives Intervention Type classification but does not inflate the organizing score.</p>
+      </div>
+    </div>
+
+    <!-- CELL 2: Sectoral Value Score (County) -->
+    <button class="cell-card" data-modal="2" aria-haspopup="dialog">
+      <span class="cell-icon">🏭</span>
+      <div class="cell-name">Sectoral Value Score (County)</div>
+      <div class="cell-desc">Does this county have strategically valuable workers — and enough of them?</div>
+      <div class="cell-footer">
+        <span class="cell-badge">55% of OOS</span>
+        <span class="cell-source">BLS QCEW</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-2">
+      <div class="m-eyebrow">Scoring Component 2</div>
+      <div class="m-title">Sectoral Value Score (County-Level)</div>
+      <div class="m-section">
+        <div class="m-section-label">Formula</div>
+        <div class="m-formula">County SVS = Σ (sector_SVS × county_employment_in_sector)<br>→ scaled to 0–100 using absolute benchmark</div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Plain Language</div>
+        <p class="m-p">A county scores high on this dimension only if it has <strong>both</strong> a strategically valuable sector <strong>and</strong> a significant workforce in it. The two factors multiply. A county full of retail workers scores low even if it sits in a swing state. A county with a single large hospital serving a rural region scores high.</p>
+        <p class="m-p"><strong>Scaling approach:</strong> An absolute benchmark (the theoretical maximum weighted employment score across all sectors) anchors the scale. This means scores are comparable across counties and across filtered views — a 75 in Pennsylvania means the same as a 75 in Texas.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Known Limitation</div>
+        <div class="m-note">⚠️ Public sector employment is <strong>understated</strong> in this score. The County Business Patterns dataset (CBP), from which employment figures derive, excludes government employees by design. Counties with large government workforces — DC, state capitals, county seats — will show lower Sectoral Value Scores than their actual structural importance warrants. This is a confirmed data gap, not a model error. BLS QCEW data partially compensates but does not fully resolve it.</div>
+      </div>
+    </div>
+
+    <!-- CELL 3: Strategic Value Score (Sector) -->
+    <button class="cell-card" data-modal="3" aria-haspopup="dialog">
+      <span class="cell-icon">⚡</span>
+      <div class="cell-name">Strategic Value Score (Sector)</div>
+      <div class="cell-desc">How much structural leverage does this sector have? Hospitals score 100. Retail scores 10.</div>
+      <div class="cell-footer">
+        <span class="cell-badge">Feeds into County SVS</span>
+        <span class="cell-source">NAICS · Labor literature</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-3">
+      <div class="m-eyebrow">Scoring Component 3</div>
+      <div class="m-title">Strategic Value Score (Sector-Level)</div>
+      <div class="m-section">
+        <div class="m-section-label">Boolean Rubric</div>
+        <div class="m-formula">Chokepoint Potential:   25 pts<br>Crisis-Creating:        20 pts<br>McAlevey Priority:     20 pts<br>Community-Facing:      15 pts<br>Non-Offshoreable:      10 pts<br>──────────────────────────<br>Base max:              90 pts (capped at 100)<br>Multiplier: ×1.15 if Chokepoint=YES AND Community-Facing=YES</div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Sector Comparison Table</div>
+        <div class="m-table-wrap">
+          <table class="m-table">
+            <thead>
+              <tr>
+                <th class="col-nm">Sector</th>
+                <th>Chokepoint</th>
+                <th>Crisis</th>
+                <th>McAlevey</th>
+                <th>Community</th>
+                <th>Non-off.</th>
+                <th>SVS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="col-nm">Hospitals</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-100">100</td></tr>
+              <tr><td class="col-nm">K-12 Education</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-100">100</td></tr>
+              <tr><td class="col-nm">Public Admin – Local</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-100">100</td></tr>
+              <tr><td class="col-nm">Ports / Maritime</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-75">75</td></tr>
+              <tr><td class="col-nm">Trucking</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-75">75</td></tr>
+              <tr><td class="col-nm">Warehousing</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-75">75</td></tr>
+              <tr><td class="col-nm">Utilities</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-tbd">TBD</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-pend">~55 (pending)</td></tr>
+              <tr><td class="col-nm">Public Admin – State</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-tbd">TBD</td><td class="t-brd">BORDERLINE</td><td class="t-yes">YES</td><td class="t-flag">flagged</td></tr>
+              <tr><td class="col-nm">Higher Education</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-25">25</td></tr>
+              <tr><td class="col-nm">Manufacturing – Durable</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-25">25</td></tr>
+              <tr><td class="col-nm">Social Assistance</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-25">25</td></tr>
+              <tr><td class="col-nm">Public Admin – Federal</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Manufacturing – Non-durable</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Construction / Building Trades</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Retail</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Hospitality</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Healthcare – Ambulatory</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Other Services</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
+              <tr><td class="col-nm">Financial Services</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-0">0</td></tr>
+              <tr><td class="col-nm">Tech / Information</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-0">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="m-note">⚠️ <strong>Utilities</strong> and <strong>Public Admin – State</strong> are flagged for review. Values shown are provisional and subject to revision in Phase 2. Organizability rubric scores are also flagged as draft — they require deeper theoretical development before being incorporated.</div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Coding Method</div>
+        <p class="m-p">Boolean fields were coded manually against NAICS sector definitions and peer-reviewed labor literature. Each coding decision is documented in the project Decisions Log. The table above is the most directly replicable artifact in the model — any researcher can verify or contest individual codings against the literature.</p>
+      </div>
+    </div>
+
+    <!-- CELL 4: Organizing Potential Score -->
+    <button class="cell-card" data-modal="4" aria-haspopup="dialog">
+      <span class="cell-icon">🌱</span>
+      <div class="cell-name">Organizing Potential Score</div>
+      <div class="cell-desc">How much unorganized workforce exists here, scaled by county size?</div>
+      <div class="cell-footer">
+        <span class="cell-badge">45% of OOS</span>
+        <span class="cell-source">BLS QCEW · DOL LM-2</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-4">
+      <div class="m-eyebrow">Scoring Component 4</div>
+      <div class="m-title">Organizing Potential Score</div>
+      <div class="m-section">
+        <div class="m-section-label">Calculation</div>
+        <div class="m-formula">Unorganized workforce = Total employment − Estimated union members<br>→ scaled by county employment share of national total<br>→ normalized to 0–100</div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Plain Language</div>
+        <p class="m-p">The Organizing Potential Score answers the question: how much untapped workforce is here to organize? It is a measure of <em>quantity of opportunity</em>, not quality. Quality is captured by the Sectoral Value Score. The two dimensions together form the Organizing Opportunity Score.</p>
+        <p class="m-p">A county with a massive unorganized workforce scores high regardless of sector composition. This is intentional: organizing potential is a prerequisite for any strategy, even if the sectoral terrain is only moderate.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Known Data Gap</div>
+        <div class="m-note">⚠️ Union membership data from DOL LM-2 filings has approximately <strong>2,192 unresolvable union locals</strong> — records with PO boxes, international addresses, U.S. territories, or addresses that cannot be geocoded to a county FIPS. These represent roughly <strong>20% of all LM-2 filers</strong> by count. This means the estimated union member count for any county is a floor, not a ceiling. The unresolvable records are a confirmed permanent exclusion — not a data error. The model treats this as a known limitation and documents it explicitly.</div>
+      </div>
+    </div>
+
+    <!-- CELL 5: Presidential Sub-score -->
+    <button class="cell-card" data-modal="5" aria-haspopup="dialog">
+      <span class="cell-icon">🗳️</span>
+      <div class="cell-name">Presidential Sub-score</div>
+      <div class="cell-desc">How much does organizing in this county matter for presidential electoral math?</div>
+      <div class="cell-footer">
+        <span class="cell-badge">Goal: Presidential Battlegrounds</span>
+        <span class="cell-source">MIT Election Lab</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-5">
+      <div class="m-eyebrow">Scoring Component 5</div>
+      <div class="m-title">Presidential Sub-score</div>
+      <div class="m-section">
+        <div class="m-section-label">Formula</div>
+        <div class="m-formula">Presidential Sub-score = Swing State Weight + f(county 2024 margin)</div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Swing State Weights</div>
+        <div class="m-table-wrap">
+          <table class="m-table">
+            <thead><tr><th>State(s)</th><th>Weight</th><th>Rationale</th></tr></thead>
+            <tbody>
+              <tr><td class="col-nm">Pennsylvania, Wisconsin</td><td class="t-100">100</td><td>Highest Electoral College leverage</td></tr>
+              <tr><td class="col-nm">Arizona, Nevada</td><td class="t-75">90</td><td>Competitive Sun Belt, growing labor presence</td></tr>
+              <tr><td class="col-nm">Georgia, Michigan</td><td class="t-75">85</td><td>High-value, genuine toss-ups</td></tr>
+              <tr><td class="col-nm">North Carolina, Texas</td><td class="t-25">70</td><td>Emerging competitiveness, high-upside targets</td></tr>
+              <tr><td class="col-nm">Florida</td><td class="t-10">60</td><td>Competitive in some cycles; labor infrastructure present</td></tr>
+              <tr><td class="col-nm">All others</td><td class="t-10">Scaled</td><td>Proportional to historical margin tightness</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Data Sources</div>
+        <p class="m-p">County-level presidential results from the MIT Election Data + Science Lab, 2020 and 2024 cycles. Both cycles are incorporated to capture trend as well as snapshot.</p>
+        <div class="m-note">⚠️ <strong>28 counties have no election data</strong> — primarily Alaska borough-level units that do not correspond to standard county-level election reporting. These are documented gaps, not data errors. Affected counties are flagged in the dataset.</div>
+      </div>
+    </div>
+
+    <!-- CELL 6: Statewide Sub-score -->
+    <button class="cell-card" data-modal="6" aria-haspopup="dialog">
+      <span class="cell-icon">🏛️</span>
+      <div class="cell-name">Statewide Sub-score</div>
+      <div class="cell-desc">How competitive is this state for statewide races — Senate, governor?</div>
+      <div class="cell-footer">
+        <span class="cell-badge">Goal: Long-Term State Transformation</span>
+        <span class="cell-source">MIT Election Lab · Cook</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-6">
+      <div class="m-eyebrow">Scoring Component 6</div>
+      <div class="m-title">Statewide Sub-score</div>
+      <div class="m-section">
+        <div class="m-section-label">Plain Language</div>
+        <p class="m-p">The Statewide Sub-score measures how much organizing in a county can move the needle on statewide electoral contests. Counties in competitive states score higher; counties in safely blue or safely red states score lower, because the electoral marginal value of organizing there is lower.</p>
+        <p class="m-p"><strong>Data sources:</strong> MIT Election Lab historical results; Cook Political Report competitiveness ratings for Senate and gubernatorial races.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Critical Caveat</div>
+        <div class="m-caveat">⚠️ <strong>The Statewide Sub-score must be interpreted differently depending on the target race.</strong> Presidential, gubernatorial, and Senate races each trigger different intervention logic — they are NOT interchangeable even within the same state. A county that is critical for a Senate race may be irrelevant for a gubernatorial race, depending on the district geography and voter composition. Cycle-specific race targeting is a planned Phase 2 refinement. Users should apply organizer judgment to distinguish race types when using this sub-score.</div>
+      </div>
+    </div>
+
+    <!-- CELL 7: Congressional Sub-score -->
+    <button class="cell-card" data-modal="7" aria-haspopup="dialog">
+      <span class="cell-icon">🏠</span>
+      <div class="cell-name">Congressional Sub-score</div>
+      <div class="cell-desc">How competitive is this county's congressional district?</div>
+      <div class="cell-footer">
+        <span class="cell-badge">Goal: Flip the House</span>
+        <span class="cell-source">MIT Election Lab · Cook</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-7">
+      <div class="m-eyebrow">Scoring Component 7</div>
+      <div class="m-title">Congressional Sub-score</div>
+      <div class="m-section">
+        <div class="m-section-label">Plain Language</div>
+        <p class="m-p">The Congressional Sub-score measures the electoral value of organizing in a county for House of Representatives races. Counties in genuinely competitive districts score highest. The score is derived from Cook Political Report district ratings and MIT Election Lab district-level historical results.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Design Decision: Primary Challenges</div>
+        <p class="m-p">This model treats primary challenges as a legitimate strategic option. Safe Democratic districts with out-of-step incumbents are scored <em>higher</em> than equivalent safe Republican districts — because a primary challenge in a safe Democratic seat has a plausible path to changing representation, whereas organizing in a safe Republican seat has no near-term electoral payoff for a House flip strategy.</p>
+        <p class="m-p">This is an explicit normative choice embedded in the framework. Users who prefer to exclude primary targeting can filter by Intervention Type to focus only on general-election-competitive districts.</p>
+      </div>
+    </div>
+
+    <!-- CELL 8: Infrastructure Score -->
+    <button class="cell-card" data-modal="8" aria-haspopup="dialog">
+      <span class="cell-icon">🏗️</span>
+      <div class="cell-name">Infrastructure Score</div>
+      <div class="cell-desc">How much organized power already exists here? Two sub-dimensions: scale and culture.</div>
+      <div class="cell-footer">
+        <span class="cell-badge cell-badge--theory">Reference score</span>
+        <span class="cell-source">DOL LM-2 · BLS</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-8">
+      <div class="m-eyebrow">Scoring Component 8</div>
+      <div class="m-title">Infrastructure Score</div>
+      <div class="m-section">
+        <div class="m-section-label">Two Sub-Components</div>
+        <p class="m-p"><strong>Organized Scale</strong> — Total union members in the county (raw count, scaled to 0–100). Measures the volume of existing organized power available for political deployment. High scale enables Type B and Type C interventions.</p>
+        <p class="m-p"><strong>Union Culture</strong> — Union members as a percentage of total county workforce (density). Measures how normalized collective action is — whether the social infrastructure for organizing exists culturally. Relevant for Type A interventions: a county where workers have neighbors and family members in unions is culturally primed for new organizing.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Why Infrastructure is Kept Separate</div>
+        <p class="m-p">The Infrastructure Score is deliberately excluded from the Organizing Opportunity Score formula. Union density is a <strong>lagging indicator</strong> — it is an outcome of past organizing strategy, not a predictor of future organizability. Including it would create a circular feedback: high-density counties would appear to be good organizing targets simply because they were organized in the past.</p>
+        <p class="m-p">More importantly: high density can <em>mask</em> a shift toward transactional servicing unionism. A county where unions are large but politically passive and internally undemocratic may score high on infrastructure while being a poor candidate for new power-building. Infrastructure feeds Intervention Type classification; it does not elevate the organizing opportunity signal.</p>
+        <div class="m-note">Do NOT use union density as a proxy for any boolean field in the Strategic Value Score rubric. These are distinct measurements.</div>
+      </div>
+    </div>
+
+    <!-- CELL 9: Intervention Type -->
+    <button class="cell-card" data-modal="9" aria-haspopup="dialog">
+      <span class="cell-icon">🔀</span>
+      <div class="cell-name">Intervention Type (A / B / C)</div>
+      <div class="cell-desc">What kind of strategy does this terrain call for? Not a score — a strategic classifier.</div>
+      <div class="cell-footer">
+        <span class="cell-badge cell-badge--theory">Categorical</span>
+        <span class="cell-source">Infrastructure + Electoral scores</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-9">
+      <div class="m-eyebrow">Scoring Component 9</div>
+      <div class="m-title">Intervention Type (A / B / C)</div>
+      <div class="m-section">
+        <div class="m-section-label">Classification Logic</div>
+        <p class="m-p"><strong>Type A — Build New Power:</strong> Infrastructure score low, opportunity score high. The terrain is favorable for organizing but existing union presence is weak. Strategy: enter the sector or geography and build from scratch. Longest ROI, highest resource intensity.</p>
+        <p class="m-p"><strong>Type B — Wake the Giant:</strong> Infrastructure score high, political alignment low. Unions exist but aren't activated. Strategy: mobilize existing members into durable electoral engagement. Medium ROI, medium resource intensity.</p>
+        <p class="m-p"><strong>Type C — Move Together:</strong> Infrastructure score high, political alignment high. Conditions are aligned. Strategy: coordinate across locals and sectors to maximize voter contact and issue pressure. Shortest deployment timeline, lowest resource intensity per impact unit.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Priority Matrix (Strategic Terrain × Infrastructure)</div>
+        <div class="m-matrix">
+          <div class="mx-header-row">
+            <div class="mx-cell mx-header-row">Opportunity Level</div>
+            <div class="mx-cell mx-header-row">Low Infrastructure</div>
+            <div class="mx-cell mx-header-row">High Infrastructure</div>
+          </div>
+          <div class="mx-row">
+            <div class="mx-cell mx-row-label">High Opportunity</div>
+            <div class="mx-cell"><div class="mx-type mx-ta">Type A ★★★</div><div class="mx-tdesc">Build New Power — flagship campaign terrain</div></div>
+            <div class="mx-cell"><div class="mx-type mx-tc">Type C ★★★</div><div class="mx-tdesc">Move Together — ready for immediate deployment</div></div>
+          </div>
+          <div class="mx-row">
+            <div class="mx-cell mx-row-label">Medium Opportunity</div>
+            <div class="mx-cell"><div class="mx-type mx-ta">Type A ★★</div><div class="mx-tdesc">New organizing, longer timeline</div></div>
+            <div class="mx-cell"><div class="mx-type mx-tb">Type B ★★</div><div class="mx-tdesc">Wake the Giant — mobilize existing members</div></div>
+          </div>
+          <div class="mx-row">
+            <div class="mx-cell mx-row-label">Low Opportunity</div>
+            <div class="mx-cell"><div class="mx-skip">— Deprioritize</div></div>
+            <div class="mx-cell"><div class="mx-type mx-tb">Type B ★</div><div class="mx-tdesc">Electoral activation only; no new organizing</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Resource Allocation Logic</div>
+        <p class="m-p">Type A requires the most resources (staff, time, money) and produces the longest ROI — 3–7 years to meaningful electoral impact. Type C requires the least marginal investment and can produce electoral results within a single cycle. Type B sits between: existing infrastructure lowers the cost but political alignment work takes sustained effort. A complete portfolio strategy deploys across all three types, not just the shortest-return quadrant.</p>
+      </div>
+    </div>
+
+    <!-- CELL 10: McAlevey Framework -->
+    <button class="cell-card" data-modal="10" aria-haspopup="dialog">
+      <span class="cell-icon">📖</span>
+      <div class="cell-name">McAlevey Framework</div>
+      <div class="cell-desc">The whole-worker organizing theory grounding this model's sector selection logic.</div>
+      <div class="cell-footer">
+        <span class="cell-badge cell-badge--theory">Theoretical foundation</span>
+        <span class="cell-source">McAlevey (2016, 2020)</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-10">
+      <div class="m-eyebrow">Theoretical Foundation</div>
+      <div class="m-title">McAlevey Framework</div>
+      <div class="m-section">
+        <div class="m-section-label">Theoretical Grounding</div>
+        <p class="m-p">This model is grounded in Jane McAlevey's whole-worker organizing framework. McAlevey argues that only sectors with genuine <em>chokepoint leverage</em> — the ability to create a crisis through collective action — combined with <em>community embeddedness</em> — deep roots in the social fabric beyond the workplace — can build durable political power. Her sector selection argument (organize healthcare and education workers, not gig workers or logistics temps) is operationalized directly in the Strategic Value Score rubric.</p>
+        <p class="m-p">The Boolean fields for Chokepoint Potential, Community-Facing, and McAlevey Priority directly encode her framework. The ×1.15 multiplier for sectors scoring YES on both Chokepoint and Community-Facing reflects her core theoretical claim: the combination is more powerful than either dimension alone.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Key Citations</div>
+        <p class="m-cite">McAlevey, J. (2016). <em>No Shortcuts: Organizing for Power in the New Gilded Age.</em> Oxford University Press.</p>
+        <p class="m-cite">McAlevey, J. (2020). <em>A Collective Bargain: Unions, Organizing, and the Fight for Democracy.</em> Ecco.</p>
+        <p class="m-cite">Silver, B. (2003). <em>Forces of Labor: Workers' Movements and Globalization Since 1870.</em> Cambridge University Press. [Chokepoint theory alignment — Silver's associational/marketplace power distinction maps closely onto McAlevey's leverage framework.]</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">SSI vs. McAlevey Tension</div>
+        <p class="m-p">The <strong>Strategic Sector Initiative (SSI)</strong> — an alternative labor strategy framework — prioritizes manufacturing as the organizing target, arguing that industrial workers have the greatest economic leverage and organizing tradition. McAlevey, by contrast, prioritizes social reproduction sectors (healthcare, education, public sector) as having both structural leverage and the community embeddedness necessary for durable political power.</p>
+        <p class="m-p"><strong>This model sides with McAlevey.</strong> The SVS rubric reflects her sector hierarchy. Users who prefer an SSI framework would need to recode the McAlevey Priority field and upweight the Manufacturing – Durable sector scores. The Decisions Log documents this choice explicitly as a contested theoretical commitment, not a neutral methodological judgment.</p>
+      </div>
+    </div>
+
+    <!-- CELL 11: Two-Actor Negotiating Logic -->
+    <button class="cell-card" data-modal="11" aria-haspopup="dialog">
+      <span class="cell-icon">⚖️</span>
+      <div class="cell-name">Two-Actor Negotiating Logic</div>
+      <div class="cell-desc">Labor negotiates differently with capitalists than with political actors. The electoral sub-scores reflect this distinction.</div>
+      <div class="cell-footer">
+        <span class="cell-badge cell-badge--theory">Theoretical context</span>
+        <span class="cell-source">Walker (2014)</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-11">
+      <div class="m-eyebrow">Theoretical Context</div>
+      <div class="m-title">Two-Actor Negotiating Logic</div>
+      <div class="m-section">
+        <div class="m-section-label">The Core Distinction</div>
+        <p class="m-p">Labor strategy operates across two fundamentally different actor types, each responding to a different logic of pressure:</p>
+        <p class="m-p"><strong>Capitalists</strong> are profit-maximizing actors with a legible cost-benefit calculus. A strike that disrupts production creates real, measurable losses. Conventional labor leverage — the credible threat of economic disruption — applies cleanly here. The Sectoral Value Score's Chokepoint and Crisis-Creating fields operationalize this logic.</p>
+        <p class="m-p"><strong>Political actors</strong> respond to electoral, ideological, and reputational incentives. They can be ideologically immovable in ways that capitalists typically cannot afford to be. Scott Walker and Ron DeSantis are exemplary cases: both accepted enormous economic costs (public sector dysfunction, business community opposition) to pursue ideological anti-labor agendas because their reelection calculus did not depend on material outcomes for workers.</p>
+        <p class="m-p">The electoral sub-scores reflect this distinction. When the goal is political transformation rather than collective bargaining wins, the pressure point shifts from economic disruption to electoral math. The model's two-layer architecture — organizing terrain separate from electoral scoring — encodes this distinction structurally.</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Reference</div>
+        <p class="m-cite">Walker, S. (2014). <em>The Untold Story of How the Koch Brothers Are Reshaping American Politics.</em> [Documentary evidence on ideologically immovable political actors where conventional labor leverage failed to produce expected concessions.]</p>
+      </div>
+    </div>
+
+    <!-- CELL 12: What This Model Cannot Do -->
+    <button class="cell-card" data-modal="12" aria-haspopup="dialog">
+      <span class="cell-icon">⚠️</span>
+      <div class="cell-name">What This Model Cannot Do</div>
+      <div class="cell-desc">The most important cell. The model's claims are bounded. Its blind spots are documented explicitly.</div>
+      <div class="cell-footer">
+        <span class="cell-badge cell-badge--danger">Epistemological limits</span>
+        <span class="cell-source">Decisions Log</span>
+      </div>
+      <span class="cell-expand-hint">click to expand ↗</span>
+    </button>
+    <div class="modal-data-src" id="mdata-12">
+      <div class="m-eyebrow">Epistemological Boundary</div>
+      <div class="m-title">What This Model Cannot Do</div>
+      <div class="m-section">
+        <div class="m-section-label">Structural Blind Spots</div>
+        <p class="m-p">This model operates on structural, publicly available data. It cannot see inside organizations, communities, or workplaces. The following are explicitly outside its scope — they require organizer judgment and on-the-ground intelligence:</p>
+        <p class="m-p"><strong>Not measured:</strong> organic leader networks · associational power · employer-specific vulnerability · local political dynamics · reform caucus presence · recent organizing activity · internal union democracy · worker sentiment</p>
+      </div>
+      <div class="m-section">
+        <div class="m-section-label">Documented Limitations (from Decisions Log)</div>
+        <p class="m-p">1. <strong>Progressive infrastructure / associational power absent.</strong> The model has no signal for DSA chapters, labor councils, interfaith coalitions, or other associational infrastructure. On-the-ground intel fills this gap.</p>
+        <p class="m-p">2. <strong>Public sector employment understated.</strong> CBP excludes government employment. Government-heavy counties (DC, state capitals) have understated sectoral scores. BLS QCEW provides partial correction.</p>
+        <p class="m-p">3. <strong>28 counties missing election data.</strong> Primarily Alaska borough units. Documented, not errors.</p>
+        <p class="m-p">4. <strong>~2,192 unresolvable union locals.</strong> PO boxes, international addresses, territories — approximately 20% of LM-2 filers by count. Confirmed permanent exclusion ceiling. Union member counts in every county are floors, not ceilings.</p>
+        <p class="m-p">5. <strong>Strike history not yet scored.</strong> Cornell ILR Labor Action Tracker data (2019–2024) is acquired but not incorporated. Planned Phase 2 addition.</p>
+        <p class="m-p">6. <strong>Organizability rubric is draft.</strong> Flagged for deeper theoretical development. The Harris critique — that some organic leaders identified by standard whole-worker methods may be pro-management — is a live validity threat to the McAlevey framework as applied here.</p>
+        <p class="m-p">7. <strong>Statewide sub-score is not race-specific.</strong> Gubernatorial vs. Senate vs. presidential races require different intervention logic. Cycle-specific data is a Phase 2 refinement.</p>
+        <p class="m-p">8. <strong>EMS not yet a separate sector.</strong> Emergency Medical Services are currently folded into Healthcare – Ambulatory (SVS=10). EMS workers have genuine chokepoint leverage and should score SVS=100. Phase 2 addition.</p>
+      </div>
+    </div>
+
+  </div><!-- /cell-grid -->
+</section>
+
+<!-- ──────────────────────────────────────────────────── -->
+<!-- SECTION 3: DATA SOURCES                             -->
+<!-- ──────────────────────────────────────────────────── -->
+<section id="sources" class="section">
+  <div class="section-eyebrow">Section 3</div>
+  <h2 class="section-title">Data Sources</h2>
+  <p class="section-intro">All data used in this model is publicly available from government agencies and academic institutions. No proprietary data sources were used. Click any source to visit the original.</p>
+
+  <div class="source-grid">
+    <a class="source-cell" href="https://www.bls.gov/cew/" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">📊</span>
+      <div class="src-name">BLS QCEW</div>
+      <div class="src-powers">Bureau of Labor Statistics Quarterly Census of Employment and Wages. Powers county-level employment by sector — the primary input to both the Sectoral Value Score and Organizing Potential Score.</div>
+      <div class="src-arrow">↗ bls.gov/cew</div>
+    </a>
+    <a class="source-cell" href="https://www.dol.gov/agencies/olms/public-disclosure-room" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">🏛️</span>
+      <div class="src-name">DOL LM-2</div>
+      <div class="src-powers">Dept. of Labor OLMS LM-2 Union Financial Disclosure Reports. Powers union local identification, membership counts, and geographic mapping to county FIPS codes.</div>
+      <div class="src-arrow">↗ dol.gov/olms</div>
+    </a>
+    <a class="source-cell" href="https://electionlab.mit.edu/" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">🗳️</span>
+      <div class="src-name">MIT Election Lab</div>
+      <div class="src-powers">MIT Election Data + Science Lab. Powers 2020 and 2024 presidential margins by county, and historical statewide and congressional race results.</div>
+      <div class="src-arrow">↗ electionlab.mit.edu</div>
+    </a>
+    <a class="source-cell" href="https://striketracker.ilr.cornell.edu/" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">🎓</span>
+      <div class="src-name">Cornell ILR</div>
+      <div class="src-powers">Cornell ILR Labor Action Tracker. Strike data 2019–2024. Acquired for Phase 2 incorporation into organizing history score. Not yet active in the model.</div>
+      <div class="src-arrow">↗ striketracker.ilr.cornell.edu</div>
+    </a>
+    <a class="source-cell" href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">🗺️</span>
+      <div class="src-name">Census Bureau</div>
+      <div class="src-powers">US Census Bureau ZCTA crosswalk, gazetteer files, and County Business Patterns. Powers county FIPS codes, population data, and geographic linkages across datasets.</div>
+      <div class="src-arrow">↗ census.gov</div>
+    </a>
+    <a class="source-cell" href="https://www.cookpolitical.com/" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">📚</span>
+      <div class="src-name">Cook Political Report</div>
+      <div class="src-powers">Cook Political Report district competitiveness ratings. Powers the Congressional Sub-score and informs Statewide Sub-score classification.</div>
+      <div class="src-arrow">↗ cookpolitical.com</div>
+    </a>
+    <a class="source-cell" href="https://www.census.gov/naics/" target="_blank" rel="noopener noreferrer">
+      <span class="src-icon">🔬</span>
+      <div class="src-name">NAICS</div>
+      <div class="src-powers">North American Industry Classification System. Sector definitions and industry codes used to map employment data to the model's 20 strategic sectors.</div>
+      <div class="src-arrow">↗ census.gov/naics</div>
+    </a>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── -->
+<!-- SECTION 4: LIMITATIONS & OPEN SOURCE                -->
+<!-- ──────────────────────────────────────────────────── -->
+<section id="limitations" class="section">
+  <div class="section-eyebrow">Section 4</div>
+  <h2 class="section-title">Limitations &amp; What This Model Cannot Do</h2>
+  <p class="section-intro">Every model has a boundary. This one's boundaries are documented here in full. These are not disclaimers — they are specifications of what organizer judgment must supply.</p>
+
+  <div class="limit-list">
+    <div class="limit-item">
+      <div class="limit-num">1</div>
+      <div class="limit-body">
+        <div class="limit-title">Progressive infrastructure and associational power — absent from model</div>
+        <div class="limit-desc">The model has no signal for DSA chapters, labor councils, interfaith coalitions, tenant organizations, or other associational infrastructure. These networks are often the difference between a county that looks good on paper and one that is actually ready to organize. On-the-ground intel fills this gap.</div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">2</div>
+      <div class="limit-body">
+        <div class="limit-title">Public sector employment understated</div>
+        <div class="limit-desc">The County Business Patterns dataset excludes government employees by design. Government-heavy counties — DC, state capitals, county seats — will show lower Sectoral Value Scores than their actual structural importance warrants. BLS QCEW provides partial correction but does not fully resolve the gap.</div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">3</div>
+      <div class="limit-body">
+        <div class="limit-title">28 counties missing election data</div>
+        <div class="limit-desc">Primarily Alaska borough-level units that do not correspond to standard county-level election reporting. These are documented gaps, not data errors. Affected counties are flagged in the dataset with null values for all electoral sub-scores.</div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">4</div>
+      <div class="limit-body">
+        <div class="limit-title">~2,192 unresolvable union locals (~20% of LM-2 filers)</div>
+        <div class="limit-desc">Records with PO boxes, international addresses, U.S. territories, or addresses that cannot be geocoded to a county FIPS. This is a confirmed permanent exclusion ceiling — union member counts in every county are floors, not ceilings. The model does not attempt to impute or distribute these records.</div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">5</div>
+      <div class="limit-body">
+        <div class="limit-title">Strike history not yet scored</div>
+        <div class="limit-desc">Cornell ILR Labor Action Tracker data (2019–2024) is acquired but not yet incorporated into the model. A county's recent strike history is a meaningful signal of organizing culture and employer vulnerability that this model currently misses.</div>
+        <div><span class="limit-phase">Phase 2 addition</span></div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">6</div>
+      <div class="limit-body">
+        <div class="limit-title">Organizability rubric is draft — live validity threat</div>
+        <div class="limit-desc">The organizability sub-rubric (distinct from the full SVS) is flagged for deeper theoretical development. The Harris critique — that some workers identified as organic leaders by standard whole-worker organizing methods may be pro-management — is a live validity threat to the McAlevey framework as operationalized here. This threat is not resolved in Version 1.0.</div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">7</div>
+      <div class="limit-body">
+        <div class="limit-title">Statewide sub-score is not race-specific</div>
+        <div class="limit-desc">Gubernatorial, Senate, and presidential races each trigger different intervention logic, different voter geographies, and different pressure strategies. The current Statewide Sub-score does not distinguish between them. Cycle-specific race targeting is a planned refinement.</div>
+        <div><span class="limit-phase">Phase 2 refinement</span></div>
+      </div>
+    </div>
+    <div class="limit-item">
+      <div class="limit-num">8</div>
+      <div class="limit-body">
+        <div class="limit-title">EMS not yet a separate sector</div>
+        <div class="limit-desc">Emergency Medical Services workers are currently folded into Healthcare – Ambulatory (SVS=10). EMS workers have genuine chokepoint leverage — ambulance work stoppages create immediate public crises — and should score SVS=100 by the model's own rubric. This misclassification understates the strategic value of counties with large EMS workforces.</div>
+        <div><span class="limit-phase">Phase 2 addition</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEN SOURCE & REPLICATION -->
+  <div class="repro-section">
+    <h3 class="repro-section-title">Open Source &amp; Replication</h3>
+
+    <div class="repo-card">
+      <h3>GitHub Repository</h3>
+      <a class="repo-link" href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener noreferrer">
+        ↗ github.com/kpsmas123-bit/labor-organizing-model
+      </a>
+      <p class="repo-desc">The repository contains all pipeline scripts (Tasks 1–9), configuration files, data source documentation, this methodology document, and the full Decisions Log. Every score in this model can be reproduced from public data sources using the pipeline in this repository.</p>
+      <p class="repo-desc">Contents: data ingestion pipelines · sector SVS rubric and coding decisions · county scoring logic · electoral sub-score construction · intervention type classifier · dashboard and gallery source · changelog</p>
+      <p class="repo-oneliner">"Every score in this model can be reproduced from public data sources using the pipeline in this repository."</p>
+    </div>
+
+    <blockquote class="repro-quote">
+      "This model was built entirely from public government data and peer-reviewed academic frameworks. No proprietary data was used. No results were manually adjusted after scoring. All methodological decisions are documented in the Decisions Log, which is the authoritative source of truth for this project."
+    </blockquote>
+
+    <div class="ai-card">
+      <h3>AI Disclosure</h3>
+      <p>This model was designed and built in collaboration with Claude (Anthropic). Claude was used for pipeline coding, data validation, theoretical literature review, and adversarial testing of model assumptions — including stress-testing the McAlevey framework operationalization, identifying the LM-2 unresolvable records ceiling, and drafting the sector SVS rubric for researcher review. All methodological decisions — sector codings, weighting choices, theoretical commitments, and scope limitations — were made by the human researcher. The role of AI in this project is documented in the GitHub repository.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── MODAL OVERLAY ──────────────────────────────────── -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+  <div class="modal-box" id="modal-box">
+    <button id="modal-close" aria-label="Close">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const overlay  = document.getElementById('modal-overlay');
+  const content  = document.getElementById('modal-content');
+  const closeBtn = document.getElementById('modal-close');
+  let lastFocus  = null;
+
+  function openModal(id) {
+    const src = document.getElementById('mdata-' + id);
+    if (!src) return;
+    content.innerHTML = src.innerHTML;
+    lastFocus = document.activeElement;
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+    content.innerHTML = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  // Cell clicks
+  document.querySelectorAll('.cell-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      openModal(card.dataset.modal);
+    });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(card.dataset.modal);
+      }
+    });
+  });
+
+  // Close button
+  closeBtn.addEventListener('click', closeModal);
+
+  // Click outside modal box
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  // ESC key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+
+  // Focus trap inside modal
+  overlay.addEventListener('keydown', function (e) {
+    if (!overlay.classList.contains('is-open') || e.key !== 'Tab') return;
+    var focusable = overlay.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    var first = focusable[0];
+    var last  = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('.nav-link[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Active nav highlight on scroll
+  var sections = document.querySelectorAll('section[id]');
+  var navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        navLinks.forEach(function (link) {
+          link.style.color = link.getAttribute('href') === '#' + entry.target.id
+            ? 'var(--accent)' : '';
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(function (s) { observer.observe(s); });
+})();
+</script>
+</body>
+</html>
