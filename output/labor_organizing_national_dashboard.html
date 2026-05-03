@@ -60,7 +60,7 @@
   .view-tab.active { color: #2C2C2C; border-bottom-color: #E8732A; }
 
   #views { flex: 1; overflow: hidden; }
-  #map-view { width: 100%; height: 100%; position: relative; background: #FAF7F2; }
+  #map-view { display: none; width: 100%; height: 100%; position: relative; background: #FAF7F2; }
   #map-svg { width: 100%; height: 100%; }
 
   #table-view { display: none; height: 100%; overflow-y: auto; padding: 16px; }
@@ -70,6 +70,118 @@
   #table-view td { padding: 7px 12px; border-bottom: 1px solid #EDE7DF; color: #2C2C2C; }
   #table-view tr:hover td { background: #F5F0E8; }
   .sort-indicator { color: #E8732A; margin-left: 4px; }
+
+  /* ── METHODOLOGY VIEW ────────────────────────── */
+  #methodology-view { display: block; height: 100%; overflow-y: auto; background: #FAF7F2; }
+  .meth-wrap { max-width: 820px; margin: 0 auto; padding: 28px 24px 60px; }
+  .meth-intro-head { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.3rem,2.5vw,1.8rem); font-weight: 700; color: #2C2C2C; margin-bottom: 8px; }
+  .meth-intro-sub { font-size: 13px; color: #7A6F64; line-height: 1.65; margin-bottom: 24px; max-width: 620px; }
+  .meth-pullquote { border-left: 3px solid #E8732A; padding: 12px 18px; background: rgba(232,115,42,0.05); border-radius: 0 6px 6px 0; margin-bottom: 28px; }
+  .meth-pullquote p { font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-style: italic; color: #2C2C2C; line-height: 1.5; margin: 0; }
+
+  /* Flow diagram */
+  .meth-flow { background: #F0EBE3; border: 1px solid #DDD5C8; border-radius: 10px; padding: 18px 22px; margin-bottom: 28px; font-size: 12px; }
+  .meth-flow-row { display: flex; align-items: baseline; gap: 10px; padding: 4px 0; }
+  .meth-flow-node { font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 4px; white-space: nowrap; }
+  .fn-org { background: rgba(232,115,42,0.15); color: #8B3A1A; }
+  .fn-elec { background: rgba(58,120,80,0.10); color: #2A5A3A; }
+  .fn-infra { background: rgba(74,80,140,0.08); color: #3A3A8A; }
+  .fn-out { background: #2C2C2C; color: #FAF7F2; }
+  .fn-input { background: #EDE7DF; color: #5A5050; }
+  .meth-flow-eq { font-size: 11.5px; color: #7A6F64; }
+  .meth-flow-arrow { padding-left: 10px; color: #A09385; font-size: 13px; }
+  .meth-flow-sep { height: 1px; background: #DDD5C8; margin: 6px 0; }
+
+  /* Section headers */
+  .meth-section-head { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7A6F64; margin: 28px 0 10px; padding-bottom: 7px; border-bottom: 1px solid #DDD5C8; }
+
+  /* Accordion items */
+  .meth-item { background: #fff; border: 1px solid #DDD5C8; border-radius: 8px; margin-bottom: 5px; overflow: hidden; }
+  .meth-item[open] { border-color: #C8BFB5; box-shadow: 0 1px 4px rgba(44,34,24,0.06); }
+  summary.meth-summary { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; list-style: none; user-select: none; transition: background .15s; }
+  summary.meth-summary::-webkit-details-marker { display: none; }
+  summary.meth-summary::marker { display: none; }
+  summary.meth-summary:hover { background: #FAF7F2; }
+  .meth-item[open] > summary.meth-summary { background: #F5F0E8; border-bottom: 1px solid #DDD5C8; }
+  .meth-icon { font-size: 17px; flex-shrink: 0; }
+  .meth-summary-text { flex: 1; min-width: 0; }
+  .meth-name { font-size: 13px; font-weight: 600; color: #2C2C2C; line-height: 1.2; }
+  .meth-tagline { font-size: 11px; color: #7A6F64; margin-top: 2px; line-height: 1.4; }
+  .meth-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: #EDE7DF; color: #7A6F64; white-space: nowrap; flex-shrink: 0; letter-spacing: .03em; }
+  .meth-badge--active { background: rgba(232,115,42,0.12); color: #C4512A; }
+  .meth-badge--theory { background: rgba(74,80,140,0.08); color: #404080; }
+  .meth-badge--warn { background: rgba(180,60,40,0.08); color: #A03020; }
+  .meth-chevron { font-size: 10px; color: #C8BFB5; flex-shrink: 0; transition: transform .2s; display: inline-block; }
+  .meth-item[open] .meth-chevron { transform: rotate(180deg); }
+
+  /* Accordion body layers */
+  .meth-layer { padding: 13px 16px; border-bottom: 1px solid #EDE7DF; }
+  .meth-layer:last-child { border-bottom: none; }
+  .meth-layer-tag { font-size: 8.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 6px; }
+  .meth-layer--science { background: #FDFAF6; border-left: 3px solid #D4A060; }
+  .meth-layer--plain { background: #fff; border-left: 3px solid #DDD5C8; }
+  .meth-layer--organizer { background: #FFF8F3; border-left: 3px solid #E8732A; }
+  .meth-layer--science .meth-layer-tag { color: #6A4820; }
+  .meth-layer--plain .meth-layer-tag { color: #7A6F64; }
+  .meth-layer--organizer .meth-layer-tag { color: #C4512A; }
+  .meth-layer p { font-size: 12.5px; color: #4A4540; line-height: 1.72; margin: 0; }
+  .meth-layer p + p { margin-top: 7px; }
+  .meth-layer p strong { color: #2C2C2C; font-weight: 600; }
+  .meth-layer p em { font-style: italic; }
+  .meth-formula { font-family: 'Inter', monospace; font-size: 11.5px; background: #F0EBE3; border: 1px solid #DDD5C8; border-radius: 4px; padding: 8px 12px; margin: 8px 0; color: #2C2C2C; line-height: 1.65; }
+
+  /* SVS table inside accordion */
+  .meth-tbl-wrap { overflow-x: auto; margin: 8px 0; }
+  .meth-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .meth-tbl th { background: #F0EBE3; padding: 6px 8px; text-align: left; font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #7A6F64; border-bottom: 1px solid #DDD5C8; white-space: nowrap; }
+  .meth-tbl td { padding: 5px 8px; border-bottom: 1px solid #EDE7DF; color: #7A6F64; font-family: 'Inter', monospace; }
+  .meth-tbl tr:last-child td { border-bottom: none; }
+  .meth-tbl .col-s { font-family: 'Inter', system-ui, sans-serif; color: #2C2C2C; font-weight: 500; font-size: 11.5px; }
+  .sv-yes { color: #2A6A40 !important; font-weight: 600; }
+  .sv-no  { color: #C8BFB5 !important; }
+  .sv-tbd { color: #B07020 !important; font-weight: 600; }
+  .sv-brd { color: #9A7830 !important; }
+  .sv-flag{ color: #A03020 !important; font-weight: 600; font-style: italic; }
+  .sv-100 { color: #C4512A !important; font-weight: 700; }
+  .sv-75  { color: #A06020 !important; font-weight: 600; }
+  .sv-25  { color: #7A6F64 !important; }
+  .sv-10  { color: #B0A898 !important; }
+  .sv-0   { color: #D8D0C8 !important; }
+  .sv-pend{ color: #A03020 !important; font-style: italic; }
+  .meth-tbl-note { font-size: 11px; color: #A03020; background: rgba(180,60,40,0.06); border: 1px solid rgba(180,60,40,0.18); border-radius: 4px; padding: 7px 11px; margin-top: 8px; line-height: 1.55; }
+
+  /* Intervention matrix inside accordion */
+  .meth-matrix { border: 1px solid #DDD5C8; border-radius: 6px; overflow: hidden; font-size: 11.5px; margin: 8px 0; }
+  .mx-r { display: grid; grid-template-columns: 130px 1fr 1fr; border-bottom: 1px solid #DDD5C8; }
+  .mx-r:last-child { border-bottom: none; }
+  .mx-c { padding: 9px 12px; border-right: 1px solid #DDD5C8; }
+  .mx-c:last-child { border-right: none; }
+  .mx-hd { background: #F0EBE3; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7A6F64; }
+  .mx-rl { background: #F8F4EE; font-size: 11px; font-weight: 600; color: #5A5050; }
+  .mx-type { font-weight: 700; font-size: 11.5px; margin-bottom: 2px; }
+  .mx-ta { color: #C4802A; } .mx-tb { color: #3A6090; } .mx-tc { color: #2A6A40; } .mx-sk { color: #C8BFB5; font-size: 11px; }
+  .mx-desc { font-size: 10.5px; color: #7A6F64; }
+
+  /* Limitations */
+  .meth-limits { display: flex; flex-direction: column; gap: 5px; }
+  .meth-limit { display: flex; gap: 12px; background: #fff; border: 1px solid #DDD5C8; border-left: 3px solid #C4512A; border-radius: 0 6px 6px 0; padding: 11px 14px; }
+  .meth-limit-num { font-size: 10px; font-weight: 700; color: #C4512A; min-width: 16px; padding-top: 1px; }
+  .meth-limit-title { font-size: 12.5px; font-weight: 600; color: #2C2C2C; margin-bottom: 3px; }
+  .meth-limit-desc { font-size: 11.5px; color: #7A6F64; line-height: 1.6; }
+  .meth-limit-phase { display: inline-block; margin-top: 5px; font-size: 9px; padding: 2px 7px; border-radius: 20px; background: rgba(74,127,193,0.10); color: #3A6090; }
+
+  /* Sources grid */
+  .meth-src-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+  .meth-src { background: #fff; border: 1px solid #DDD5C8; border-radius: 7px; padding: 12px 14px; }
+  .meth-src-name { font-size: 12px; font-weight: 600; color: #2C2C2C; margin-bottom: 2px; }
+  .meth-src-desc { font-size: 11px; color: #7A6F64; line-height: 1.5; }
+  a.meth-src-link { font-size: 10px; color: #E8732A; text-decoration: none; display: inline-block; margin-top: 5px; }
+  a.meth-src-link:hover { text-decoration: underline; }
+
+  /* AI disclosure strip */
+  .meth-disclosure { background: #F0EBE3; border: 1px solid #DDD5C8; border-radius: 7px; padding: 14px 16px; margin-top: 24px; }
+  .meth-disclosure-label { font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #7A6F64; margin-bottom: 6px; }
+  .meth-disclosure p { font-size: 11.5px; color: #7A6F64; line-height: 1.65; }
 
   /* ── GALLERY VIEW ─────────────────────────────── */
   #gallery-view { display: none; height: 100%; overflow-y: auto; background: #FAF7F2; }
@@ -248,10 +360,17 @@
   }
   #onboarding-got-it:hover { background: #E8732A; }
 
-  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.95); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; }
-  .legend-title { font-size: 10px; font-weight: 500; color: #7A6F64; margin-bottom: 6px; }
+  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.97); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; min-width: 200px; max-width: 230px; }
+  .legend-title { font-size: 10px; font-weight: 600; color: #2C2C2C; margin-bottom: 6px; }
   .legend-gradient { height: 8px; border-radius: 3px; margin-bottom: 4px; }
   .legend-labels { display: flex; justify-content: space-between; font-size: 9px; color: #A09385; }
+  .legend-divider { height: 1px; background: #EDE7DF; margin: 9px 0 8px; }
+  .legend-tier { display: flex; gap: 7px; align-items: flex-start; margin-bottom: 7px; }
+  .legend-tier:last-child { margin-bottom: 0; }
+  .legend-tier-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
+  .legend-tier-body {}
+  .legend-tier-label { font-size: 9.5px; font-weight: 700; color: #2C2C2C; line-height: 1.2; margin-bottom: 1px; }
+  .legend-tier-desc { font-size: 9px; color: #7A6F64; line-height: 1.45; }
 
   #status-bar { padding: 6px 16px; background: #F0EBE3; border-top: 1px solid #DDD5C8; font-size: 10px; color: #A09385; display: flex; justify-content: space-between; align-items: center; }
 
@@ -406,9 +525,10 @@
 
   <div id="main">
     <div id="view-tabs">
-      <div class="view-tab active" data-view="map">Map View</div>
-      <div class="view-tab" data-view="table">Table View</div>
+      <div class="view-tab active" data-view="methodology">Methodology</div>
       <div class="view-tab" data-view="gallery">Gallery View</div>
+      <div class="view-tab" data-view="map">Map View</div>
+      <div class="view-tab" data-view="table">Table View</div>
     </div>
 
     <div id="views">
@@ -487,6 +607,8 @@
           <div class="legend-title" id="legend-title">Organizing Opportunity Score</div>
           <div class="legend-gradient" id="legend-gradient"></div>
           <div class="legend-labels"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+          <div class="legend-divider"></div>
+          <div id="legend-tiers"></div>
         </div>
 
         <div class="tooltip" id="tooltip"></div>
@@ -583,6 +705,429 @@
           </div>
         </div>
       </div><!-- /gallery-view -->
+
+      <!-- ── METHODOLOGY VIEW ─────────────────────────── -->
+      <div id="methodology-view">
+        <div class="meth-wrap">
+
+          <h2 class="meth-intro-head">The Model, Explained</h2>
+          <p class="meth-intro-sub">Every score in this model is grounded in social science theory, built from public data, and documented here. Click any component to expand the full explanation — from peer-reviewed framework to organizer's field logic.</p>
+
+          <blockquote class="meth-pullquote">
+            <p>"The model does not pick the strategic goal. The user brings the goal. The model shows the terrain."</p>
+          </blockquote>
+
+          <!-- Flow diagram -->
+          <div class="meth-flow">
+            <div class="meth-flow-row"><span class="meth-flow-node fn-input">YOUR GOAL</span><span class="meth-flow-eq">— Electoral objective set by the user</span></div>
+            <div class="meth-flow-sep"></div>
+            <div class="meth-flow-row"><span class="meth-flow-node fn-org">ORGANIZING OPPORTUNITY SCORE</span><span class="meth-flow-eq">= Sectoral Value (55%) + Organizing Potential (45%)</span></div>
+            <div class="meth-flow-row" style="padding-left:12px"><span class="meth-flow-node fn-infra">+ INFRASTRUCTURE SCORE</span><span class="meth-flow-eq">→ drives Intervention Type (A / B / C)</span></div>
+            <div class="meth-flow-sep"></div>
+            <div class="meth-flow-row"><span class="meth-flow-node fn-elec">ELECTORAL SUB-SCORES</span><span class="meth-flow-eq">Presidential · Statewide · Congressional — goal-dependent</span></div>
+            <div class="meth-flow-sep"></div>
+            <div class="meth-flow-row"><span class="meth-flow-node fn-out">COMPOSITE RANKING</span><span class="meth-flow-eq">= Opportunity × Electoral weight</span></div>
+          </div>
+
+          <!-- SCORING COMPONENTS -->
+          <div class="meth-section-head">Scoring Components</div>
+
+          <!-- 1. Organizing Opportunity Score -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🎯</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Organizing Opportunity Score</div>
+                <div class="meth-tagline">The composite terrain score — how favorable is this county for building power?</div>
+              </div>
+              <span class="meth-badge meth-badge--active">Primary output · 0–100</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>A composite index measuring the structural preconditions for collective action formation, operationalizing McAlevey's (2016) whole-worker organizing framework as a weighted combination of sector-level marketplace bargaining power (Silver, 2003) at 55% and unorganized labor reserve at 45%. Scores are normalized against an absolute national benchmark — not relative rankings — preserving cross-county comparability independent of filter state.</p>
+                <div class="meth-formula">OOS = (Sectoral Value Score × 0.55) + (Organizing Potential Score × 0.45)</div>
+                <p>Electoral scores and Infrastructure Score are intentionally excluded from the OOS formula. Combining organizing potential with electoral value would conflate two analytically distinct questions, corrupting both measurements.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>A 0–100 score answering one question: how good is this county's ground for building worker power? It combines the leverage of the workers here (what sector they're in) with how many of them are still unorganized. Both have to be true at once to score high.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>This is your terrain map before you commit resources. High score means you've got leverage <em>and</em> people to organize — the combination that turns a drive into a power-building project. A high score in a county with no organizers is a call to act. A low score in a county you're already in is a question you need to answer.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 2. Sectoral Value Score (County) -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🏭</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Sectoral Value Score (County)</div>
+                <div class="meth-tagline">Does this county have strategically powerful workers — and enough of them?</div>
+              </div>
+              <span class="meth-badge meth-badge--active">55% of OOS</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>County-level weighted summation of sector-specific Strategic Value Scores (SVS), normalized to an absolute benchmark. Implements Silver's (2003) marketplace bargaining power thesis: workers' structural position in production — specifically their capacity for disruptive action — is the primary determinant of leverage, independent of organizational density or political will. A county's sectoral composition is thus the foundational structural variable.</p>
+                <div class="meth-formula">County SVS = Σ (sector_SVS × county_employment_in_sector) → scaled 0–100</div>
+                <p><strong>Known gap:</strong> County Business Patterns excludes government workers by design. Government-heavy counties (DC, state capitals) are systematically understated.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>Two things have to be true at once — it's a multiplication, not an addition. A county scores high only if it has both strategically important workers AND enough of them. A county full of retail workers scores low even in a swing state. A county with a single large hospital system in a rural region scores high.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>One hospital system beats five strip malls. It's not headcount — it's who can actually stop something when they walk off. Before you open a campaign, look at what sector you're entering. This score tells you if the terrain has leverage baked into it, before you've talked to a single worker.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 3. Strategic Value Score (Sector) -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">⚡</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Strategic Value Score (Sector)</div>
+                <div class="meth-tagline">Boolean rubric: how much structural leverage does this sector have?</div>
+              </div>
+              <span class="meth-badge">Feeds County SVS</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Sector-level boolean rubric operationalizing chokepoint theory (Clawson &amp; Clawson, 1999; Silver, 2003) and McAlevey's (2016) community embeddedness thesis. Points are assigned for: <strong>Chokepoint Potential</strong> (25 pts) — capacity to disrupt essential flows; <strong>Crisis-Creating</strong> (20 pts) — a stoppage creates visible public harm; <strong>McAlevey Priority</strong> (20 pts) — explicitly identified in the whole-worker framework; <strong>Community-Facing</strong> (15 pts) — workers are embedded in the social fabric beyond the workplace; <strong>Non-Offshoreable</strong> (10 pts) — cannot be geographically displaced. A ×1.15 multiplier applies when Chokepoint=YES AND Community-Facing=YES, reflecting empirical evidence that these two dimensions produce non-additive leverage when combined.</p>
+                <div class="meth-tbl-wrap">
+                  <table class="meth-tbl">
+                    <thead><tr><th>Sector</th><th>Choke</th><th>Crisis</th><th>McAl.</th><th>Comm.</th><th>Non-off</th><th>SVS</th></tr></thead>
+                    <tbody>
+                      <tr><td class="col-s">Hospitals</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-100">100</td></tr>
+                      <tr><td class="col-s">K-12 Education</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-100">100</td></tr>
+                      <tr><td class="col-s">Public Admin – Local</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-100">100</td></tr>
+                      <tr><td class="col-s">Ports / Maritime</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-75">75</td></tr>
+                      <tr><td class="col-s">Trucking</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-75">75</td></tr>
+                      <tr><td class="col-s">Warehousing</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-75">75</td></tr>
+                      <tr><td class="col-s">Utilities</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-tbd">TBD</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-pend">~55 (pending)</td></tr>
+                      <tr><td class="col-s">Public Admin – State</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-tbd">TBD</td><td class="sv-brd">BRDLN</td><td class="sv-yes">YES</td><td class="sv-flag">flagged</td></tr>
+                      <tr><td class="col-s">Higher Education</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-25">25</td></tr>
+                      <tr><td class="col-s">Mfg – Durable</td><td class="sv-yes">YES</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-25">25</td></tr>
+                      <tr><td class="col-s">Social Assistance</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-yes">YES</td><td class="sv-25">25</td></tr>
+                      <tr><td class="col-s">Public Admin – Federal</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Mfg – Non-durable</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Construction</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Retail</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Hospitality</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Healthcare – Ambulatory</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Other Services</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-yes">YES</td><td class="sv-10">10</td></tr>
+                      <tr><td class="col-s">Financial Services</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-0">0</td></tr>
+                      <tr><td class="col-s">Tech / Information</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-no">NO</td><td class="sv-0">0</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="meth-tbl-note">⚠️ Utilities and Public Admin – State are flagged for review. EMS is currently folded into Healthcare – Ambulatory (SVS=10) but should score 100. Both are Phase 2 corrections.</div>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>A checklist: Can workers in this sector stop something critical? Is their work woven into community life? Can it be shipped overseas? The answers determine the sector's score. Hospitals and schools answer YES across the board. Financial services and tech answer NO — they can move, they can automate, and nobody's neighborhood depends on them showing up.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>Nurses' strike shuts the city down <em>and</em> your neighbor's kid is in that school. That's the combination. Retail scores 10 because Amazon opens a new store. Know which sector you're entering before you spend a year of someone's life on a campaign — the terrain either works for you or against you from day one.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 4. Organizing Potential Score -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🌱</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Organizing Potential Score</div>
+                <div class="meth-tagline">How large is the unorganized workforce here?</div>
+              </div>
+              <span class="meth-badge meth-badge--active">45% of OOS</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Measures the size of the available unorganized labor pool — total county employment minus estimated union members, scaled by the county's share of national employment. Operationalizes McCarthy &amp; Zald's (1977) classical resource mobilization concept of "available population": the raw material for movement formation, analytically independent of structural leverage quality. Combined with SVS, it produces the OOS.</p>
+                <div class="meth-formula">Unorganized workforce = Total employment − Estimated union members → scaled 0–100</div>
+                <p><strong>Known ceiling:</strong> ~2,192 LM-2 union locals (~20% of filers) are unresolvable due to PO boxes, international addresses, or territories. Union member counts in every county are floors, not ceilings.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>How many workers in this county don't have a union yet? This is about <em>quantity</em> of opportunity — the raw material. Sector quality tells you the terrain; this tells you how many people you could bring into the fight. Both have to be strong for a county to score high overall.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>A county with 50,000 unorganized hospital workers is a jackpot. A county with 500 unorganized retail workers is a long slog. This score tells you how full the room is before you walk in — before you've knocked a single door or made a single ask.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 5. Presidential Sub-score -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🗳️</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Presidential Sub-score</div>
+                <div class="meth-tagline">Electoral College leverage — how much does this county matter for the presidency?</div>
+              </div>
+              <span class="meth-badge">Goal: Presidential Battlegrounds</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Electoral college leverage score combining state-level swing weight (derived from historical presidential margin tightness and Electoral College value) with county-level 2024 presidential margin. Implements spatial targeting logic from electoral studies literature: organizing resources have highest marginal electoral value in counties within competitive states that are themselves competitive (Hersh, 2015; Enos &amp; Fowler, 2018). State weights: PA/WI=100, AZ/NV=90, GA/MI=85, NC/TX=70, FL=60, others scaled. 28 counties — mostly Alaska boroughs — have no election data.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>How much does organizing in this county matter for winning the presidency? Counties in close states that are themselves close score highest — those are the places where mobilizing a few thousand more union households could actually flip the outcome.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>If you're in Pennsylvania and your county went R by 3 points, you're gold — that's the margin labor can move. Don't burn your members' shoe leather in a county going D by 30. Take that capacity somewhere it counts. Presidential math is about marginal returns; this score does that math for you.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 6. Statewide Sub-score -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🏛️</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Statewide Sub-score</div>
+                <div class="meth-tagline">Senate and governor — how competitive is this state for statewide power?</div>
+              </div>
+              <span class="meth-badge">Goal: Long-Term State Transformation</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>State-level competitive index for statewide office (Senate, governor) derived from historical margin tightness and Cook Political Report ratings. Based on the theoretical premise that labor mobilization has asymmetric electoral returns — high in competitive states, near-zero in noncompetitive states (Key, 1949; Ansolabehere et al., 2006). <strong>Critical validity limitation:</strong> gubernatorial, Senate, and presidential races each require distinct intervention logic. This sub-score does not distinguish between them — race-specific targeting is a Phase 2 refinement.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>How competitive is this state for Senate and governor races? Counties in states with close statewide races score higher because organized labor's electoral work there has real marginal value. But be careful — a competitive state for a Senate race may be irrelevant for the governor's race, and vice versa.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>The statehouse controls labor law. A competitive Senate seat is worth years of infrastructure because winning it can change the rules for everyone. But know which race you're targeting — the Senate district map and the governor's map are different games, and your precinct strategy has to match the race.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 7. Congressional Sub-score -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🏠</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Congressional Sub-score</div>
+                <div class="meth-tagline">House races — general election competition and primary challenge potential.</div>
+              </div>
+              <span class="meth-badge">Goal: Flip the House</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>District-level competitiveness score incorporating Cook Political Report ratings and MIT Election Lab historical margins. Includes positive weighting for safe Democratic districts with vulnerable incumbents, reflecting strategic literature on primary elections as an accountability mechanism within legislative bodies (Boatright, 2013). This is a normative model choice: primary challenges are treated as a legitimate tool for legislative accountability.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>How much does organizing in this county matter for House races? This covers both tight general-election districts AND safe Democratic seats where a primary challenge could replace a bad incumbent with a better one.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>The House is the first lever. A competitive district is obvious. But don't sleep on a Democrat who votes against card check in a safe seat — you can primary them. Safe seat, wrong incumbent? That's a target too. This score accounts for both plays.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 8. Infrastructure Score -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🏗️</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Infrastructure Score</div>
+                <div class="meth-tagline">Scale and culture — how much organized power already exists here?</div>
+              </div>
+              <span class="meth-badge meth-badge--theory">Reference score</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Two-dimensional organizational capacity measure: <strong>Organized Scale</strong> — total union members (raw count, scaled), capturing deployable political resources; <strong>Union Culture</strong> — union density (members/total employment), capturing the normalized social acceptance of collective action, which Bronfenbrenner (2009) identifies as a significant predictor of new organizing success. Deliberately excluded from the OOS formula: density is an <em>outcome</em> of past strategy, not a predictor of future organizability. Including it would introduce circular measurement.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>Two questions: how many union members are here (scale), and what fraction of the workforce are they (culture/density)? Both matter but for different reasons. Scale drives what you can deploy politically right now. Culture shapes whether new organizing will stick.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>High scale means you've got members ready to knock doors this cycle. High density means workers in this county grew up with uncles in the union — the culture is already there, and a new drive has air under it from day one. Low on both? You're starting from scratch. That's not a reason not to go — but price it right.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 9. Intervention Type -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">🔀</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Intervention Type (A / B / C)</div>
+                <div class="meth-tagline">What strategic mode does this terrain call for?</div>
+              </div>
+              <span class="meth-badge meth-badge--theory">Categorical classifier</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Categorical classifier derived from the infrastructure–opportunity matrix, drawing on social movement theory's distinction between <em>mobilization</em> (activating existing resources) and <em>organization-building</em> (creating new resources) as distinct strategic modes with different resource requirements and timelines (McCarthy &amp; Zald, 1977; McAlevey, 2016). Prevents the common error of applying uniform resource allocation to structurally dissimilar terrains.</p>
+                <div class="meth-matrix">
+                  <div class="mx-r"><div class="mx-c mx-hd">Opportunity</div><div class="mx-c mx-hd">Low Infrastructure</div><div class="mx-c mx-hd">High Infrastructure</div></div>
+                  <div class="mx-r"><div class="mx-c mx-rl">High</div><div class="mx-c"><div class="mx-type mx-ta">Type A ★★★</div><div class="mx-desc">Build New Power — flagship campaign terrain</div></div><div class="mx-c"><div class="mx-type mx-tc">Type C ★★★</div><div class="mx-desc">Move Together — ready to deploy now</div></div></div>
+                  <div class="mx-r"><div class="mx-c mx-rl">Medium</div><div class="mx-c"><div class="mx-type mx-ta">Type A ★★</div><div class="mx-desc">New organizing, longer timeline</div></div><div class="mx-c"><div class="mx-type mx-tb">Type B ★★</div><div class="mx-desc">Wake the Giant — activate existing members</div></div></div>
+                  <div class="mx-r"><div class="mx-c mx-rl">Low</div><div class="mx-c"><div class="mx-sk">— Deprioritize</div></div><div class="mx-c"><div class="mx-type mx-tb">Type B ★</div><div class="mx-desc">Electoral activation only</div></div></div>
+                </div>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p><strong>Type A</strong> — Build from scratch where there's opportunity but no unions. <strong>Type B</strong> — Wake up the existing unions that aren't politically active. <strong>Type C</strong> — Coordinate unions that are already aligned and active. Different types, different resources, different timelines.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>These aren't just labels — they determine your budget, your timeline, and your staff model. A Type A campaign needs an experienced lead organizer and 18 months minimum. A Type C just needs a coordinator and a voter file. Don't run a Type A campaign with Type C resources. Don't waste a Type C terrain by treating it like it needs to be built from scratch.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 10. McAlevey Framework -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">📖</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">McAlevey Framework</div>
+                <div class="meth-tagline">The whole-worker theory driving sector selection in this model.</div>
+              </div>
+              <span class="meth-badge meth-badge--theory">Theoretical foundation</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>McAlevey's (2016, 2020) whole-worker framework argues that durable political power requires organizing workers as complete social beings embedded in their communities — not merely as economic actors. The framework predicts that sectors with both chokepoint leverage <em>and</em> community embeddedness generate superior long-run political capacity compared to sectors with leverage alone. This is in direct theoretical tension with the Strategic Sector Initiative (SSI), which prioritizes manufacturing based on industrial organization theory. <strong>This model sides with McAlevey</strong> — the SVS rubric encodes her sector hierarchy, and the ×1.15 multiplier operationalizes her core claim about the non-additive effect of combining leverage with community presence.</p>
+                <p><em>Key citations:</em> McAlevey (2016) <em>No Shortcuts</em>; McAlevey (2020) <em>A Collective Bargain</em>; Silver (2003) <em>Forces of Labor</em> (chokepoint theory alignment).</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>The model follows McAlevey's argument: organize nurses and teachers, not Amazon drivers. Hospitals have more leverage AND nurses live in the communities they serve. Both things are true, and together they're more powerful than either one alone. The SSI framework would say go to manufacturing — this model disagrees.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>McAlevey's insight is simple: the best organizers don't see workers — they see whole people who go home to neighborhoods, churches, and school board meetings. If your sector is woven into community life AND can shut something down, you've found the sweet spot. That's not sentiment — it's the empirical record of which campaigns build the kind of power that lasts past a contract.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 11. Two-Actor Negotiating Logic -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">⚖️</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">Two-Actor Negotiating Logic</div>
+                <div class="meth-tagline">Bosses and politicians respond to different kinds of pressure.</div>
+              </div>
+              <span class="meth-badge meth-badge--theory">Theoretical context</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Theoretical distinction between two principal counterparties in labor strategy: <strong>private-sector employers</strong> — profit-maximizing actors amenable to cost-benefit negotiation, where workplace disruption creates measurable material losses; and <strong>political actors</strong> — responsive to electoral, ideological, and reputational incentives, capable of ideological intransigence even at substantial material cost (principal-agent theory; public choice literature). Empirically validated by cases where conventional labor leverage failed against ideologically committed political actors: Walker (WI, 2011), DeSantis (FL, 2022). The electoral sub-scores exist precisely because political actors require a different pressure mechanism — the ballot box, not the picket line alone.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>You negotiate with bosses and politicians very differently. A boss will calculate what the strike costs them and make a deal. A politician running on an anti-union platform will let the strike drag on and call it a win. Different actor, different logic, different tools needed.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>Scott Walker took the hit. DeSantis took the hit. They <em>wanted</em> the fight — it was their brand. Conventional pressure doesn't work on a true believer with a base. You can't bargain someone out of an ideology. You vote them out. That's why this model has electoral scores as a separate layer — because some opponents can only be beaten at the ballot box, not at the table.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 12. What This Model Cannot Do -->
+          <details class="meth-item">
+            <summary class="meth-summary">
+              <span class="meth-icon">⚠️</span>
+              <div class="meth-summary-text">
+                <div class="meth-name">What This Model Cannot Do</div>
+                <div class="meth-tagline">The model's boundaries — what organizer judgment must supply.</div>
+              </div>
+              <span class="meth-badge meth-badge--warn">Epistemological limits</span>
+              <span class="meth-chevron">▼</span>
+            </summary>
+            <div class="meth-body">
+              <div class="meth-layer meth-layer--science">
+                <div class="meth-layer-tag">Social Science</div>
+                <p>Systematic documentation of measurement validity threats (Cook &amp; Campbell, 1979). The model cannot operationalize: associational power (Levi, 1996), organic leader network centrality, employer-specific financial vulnerability (Bronfenbrenner, 2009), local political contingency, or internal union democracy. These represent genuine construct validity gaps that structural administrative data cannot close — they require ethnographic, participatory, and field research methods. The model is a structural prioritization instrument, not a substitute for ground-level political intelligence.</p>
+              </div>
+              <div class="meth-layer meth-layer--plain">
+                <div class="meth-layer-tag">Plain Language</div>
+                <p>The model sees structure, not people. It cannot see whether your county has a trusted leader who can move a shop, whether the employer is in financial trouble, whether there's a reform caucus ready to activate, or what happened at the last organizing drive. Those gaps are real and they matter.</p>
+              </div>
+              <div class="meth-layer meth-layer--organizer">
+                <div class="meth-layer-tag">Organizer's Take</div>
+                <p>This map shows you where to look — not what you'll find when you get there. The next step after a high-scoring county is always talking to people on the ground. The model tells you to go to Scranton; your job is to find out who in Scranton is ready to move, and whether the boss is overextended, and whether the last drive failed because of a snitch or because of a bad lead organizer. The model can't answer any of that. You have to.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- DATA SOURCES -->
+          <div class="meth-section-head">Data Sources</div>
+          <div class="meth-src-grid">
+            <div class="meth-src"><div class="meth-src-name">📊 BLS QCEW</div><div class="meth-src-desc">Bureau of Labor Statistics Quarterly Census of Employment and Wages — county-level employment by sector.</div><a class="meth-src-link" href="https://www.bls.gov/cew/" target="_blank" rel="noopener noreferrer">↗ bls.gov/cew</a></div>
+            <div class="meth-src"><div class="meth-src-name">🏛️ DOL LM-2</div><div class="meth-src-desc">Dept. of Labor OLMS union financial disclosures — local membership counts mapped to county FIPS.</div><a class="meth-src-link" href="https://www.dol.gov/agencies/olms/public-disclosure-room" target="_blank" rel="noopener noreferrer">↗ dol.gov/olms</a></div>
+            <div class="meth-src"><div class="meth-src-name">🗳️ MIT Election Lab</div><div class="meth-src-desc">2020 + 2024 presidential margins by county; statewide and congressional historical results.</div><a class="meth-src-link" href="https://electionlab.mit.edu/" target="_blank" rel="noopener noreferrer">↗ electionlab.mit.edu</a></div>
+            <div class="meth-src"><div class="meth-src-name">📚 Cook Political Report</div><div class="meth-src-desc">Congressional and statewide race competitiveness ratings.</div><a class="meth-src-link" href="https://www.cookpolitical.com/" target="_blank" rel="noopener noreferrer">↗ cookpolitical.com</a></div>
+            <div class="meth-src"><div class="meth-src-name">🗺️ Census Bureau</div><div class="meth-src-desc">ZCTA crosswalk, gazetteer files, County Business Patterns — FIPS codes, population, geographic linkages.</div><a class="meth-src-link" href="https://www.census.gov/" target="_blank" rel="noopener noreferrer">↗ census.gov</a></div>
+            <div class="meth-src"><div class="meth-src-name">🎓 Cornell ILR Tracker</div><div class="meth-src-desc">Strike data 2019–2024. Acquired for Phase 2; not yet active in the model.</div><a class="meth-src-link" href="https://striketracker.ilr.cornell.edu/" target="_blank" rel="noopener noreferrer">↗ striketracker.ilr.cornell.edu</a></div>
+          </div>
+
+          <!-- LIMITATIONS -->
+          <div class="meth-section-head" style="margin-top:32px">Known Limitations</div>
+          <div class="meth-limits">
+            <div class="meth-limit"><div class="meth-limit-num">1</div><div><div class="meth-limit-title">Associational power not measured</div><div class="meth-limit-desc">DSA chapters, labor councils, interfaith coalitions — absent. On-the-ground intel fills this gap.</div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">2</div><div><div class="meth-limit-title">Public sector employment understated</div><div class="meth-limit-desc">CBP excludes government workers. DC, state capitals, county seats are systematically underscored.</div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">3</div><div><div class="meth-limit-title">28 counties missing election data</div><div class="meth-limit-desc">Primarily Alaska boroughs. Documented gaps, not errors.</div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">4</div><div><div class="meth-limit-title">~2,192 unresolvable union locals (~20% of LM-2)</div><div class="meth-limit-desc">PO boxes, territories, international addresses. Union counts in all counties are floors, not ceilings.</div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">5</div><div><div class="meth-limit-title">Strike history not yet scored</div><div class="meth-limit-desc">Cornell ILR data acquired but not incorporated.<span class="meth-limit-phase">Phase 2</span></div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">6</div><div><div class="meth-limit-title">Statewide sub-score not race-specific</div><div class="meth-limit-desc">Governor vs. Senate vs. President require different logic. Cycle-specific targeting is Phase 2.<span class="meth-limit-phase">Phase 2</span></div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">7</div><div><div class="meth-limit-title">EMS misclassified</div><div class="meth-limit-desc">EMS folded into Ambulatory (SVS=10). Should score SVS=100. Phase 2 correction.<span class="meth-limit-phase">Phase 2</span></div></div></div>
+            <div class="meth-limit"><div class="meth-limit-num">8</div><div><div class="meth-limit-title">Organizability rubric is draft</div><div class="meth-limit-desc">The Harris critique — some organic leaders may be pro-management — is a live validity threat not resolved in v1.0.</div></div></div>
+          </div>
+
+          <div class="meth-disclosure">
+            <div class="meth-disclosure-label">AI Disclosure</div>
+            <p>Built in collaboration with Claude (Anthropic) for pipeline coding, data validation, literature review, and adversarial testing. All methodological decisions were made by the human researcher. Full documentation at <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener noreferrer" style="color:#E8732A">github.com/kpsmas123-bit/labor-organizing-model</a>.</p>
+          </div>
+
+        </div><!-- /meth-wrap -->
+      </div><!-- /methodology-view -->
     </div>
 
     <div id="status-bar">
@@ -598,7 +1143,7 @@
 // ──────────────────────────────────────────────────────────────
 let allCounties = [];
 let filteredCounties = [];
-let currentView = "map";
+let currentView = "methodology";
 let sortCol = "organizing_opportunity_score";
 let sortAsc = false;
 let goalFilter = "opp";
@@ -691,6 +1236,40 @@ function updateLegend() {
     const labels = document.querySelector(".legend-labels");
     labels.innerHTML = breaks.map(v => `<span>${v}</span>`).join("");
   }
+
+  // Score tier explainers — what do different score levels actually mean?
+  const tierDefs = {
+    opp: [
+      { swatch: "#6B3A1A", label: "High (75–100)", desc: "Large unorganized workforce in chokepoint sectors — hospitals, schools, ports. Maximum terrain advantage for building power." },
+      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Moderate leverage or workforce, but not both at full strength. Real opportunity with realistic constraints." },
+      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Few strategic-sector workers or already heavily organized. Low structural advantage for new organizing." }
+    ],
+    presidential: [
+      { swatch: "#6B3A1A", label: "High (75–100)", desc: "Swing county in a must-win state (PA, WI, AZ, NV). Every mobilized union household can shift the outcome." },
+      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Competitive state, one-sided county — or toss-up county in a less decisive state. Real but partial leverage." },
+      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Safely partisan state or county. Organizing here has near-zero marginal impact on the presidential race." }
+    ],
+    statewide: [
+      { swatch: "#6B3A1A", label: "High (75–100)", desc: "True toss-up state with a competitive Senate or governor race. Organized labor can flip statewide outcomes." },
+      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Lean state — contested but not a toss-up. Organizing has real but not decisive marginal electoral value." },
+      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Safely partisan for statewide races. Legislative and governor races are not competitive; leverage is minimal." }
+    ],
+    congressional: [
+      { swatch: "#6B3A1A", label: "High (75–100)", desc: "Toss-up district or safe Democratic seat with a vulnerable incumbent open to a primary challenge." },
+      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Lean district — favored but close enough that organized labor voter contact can shift the margin." },
+      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Safe seat with entrenched incumbent. No near-term House leverage regardless of organizing effort." }
+    ]
+  };
+  const tiers = tierDefs[goalFilter] || tierDefs.opp;
+  document.getElementById("legend-tiers").innerHTML = tiers.map(t =>
+    `<div class="legend-tier">
+      <div class="legend-tier-swatch" style="background:${t.swatch}"></div>
+      <div class="legend-tier-body">
+        <div class="legend-tier-label">${t.label}</div>
+        <div class="legend-tier-desc">${t.desc}</div>
+      </div>
+    </div>`
+  ).join("");
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -980,6 +1559,7 @@ document.querySelectorAll(".view-tab").forEach(tab => {
     document.getElementById("map-view").style.display = currentView === "map" ? "block" : "none";
     document.getElementById("table-view").style.display = currentView === "table" ? "block" : "none";
     document.getElementById("gallery-view").style.display = currentView === "gallery" ? "block" : "none";
+    document.getElementById("methodology-view").style.display = currentView === "methodology" ? "block" : "none";
     if (currentView === "table") renderTable();
     if (currentView === "gallery") glInitGallery();
   });
