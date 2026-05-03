@@ -71,6 +71,97 @@
   #table-view tr:hover td { background: #F5F0E8; }
   .sort-indicator { color: #E8732A; margin-left: 4px; }
 
+  /* ── GALLERY VIEW ─────────────────────────────── */
+  #gallery-view { display: none; height: 100%; overflow-y: auto; background: #FAF7F2; }
+
+  /* Goal selector */
+  #gl-goal-panel { display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 40px 24px; }
+  .gl-gs-inner { max-width: 820px; width: 100%; text-align: center; }
+  .gl-eyebrow { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #E8732A; font-weight: 600; margin-bottom: 14px; }
+  .gl-heading { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; color: #2C2C2C; line-height: 1.15; margin-bottom: 10px; }
+  .gl-sub { font-size: 13px; color: #7A6F64; margin-bottom: 36px; }
+  #gl-goal-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .gl-goal-tile { background: #fff; border: 1px solid #DDD5C8; border-radius: 10px; padding: 22px 18px; cursor: pointer; text-align: left; transition: border-color .18s, box-shadow .18s, transform .18s; }
+  .gl-goal-tile:hover { border-color: #E8732A; box-shadow: 0 4px 16px rgba(232,115,42,.1); transform: translateY(-2px); }
+  .gl-tile-icon { font-size: 22px; display: block; margin-bottom: 12px; }
+  .gl-tile-label { font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700; color: #2C2C2C; margin-bottom: 6px; line-height: 1.25; }
+  .gl-tile-desc { font-size: 11.5px; color: #7A6F64; line-height: 1.5; }
+
+  /* Gallery content area */
+  #gl-content { padding: 0 0 48px; }
+  #gl-content-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid #DDD5C8; background: #F0EBE3; gap: 12px; }
+  .gl-goal-chip { font-family: 'Playfair Display', Georgia, serif; font-size: 13px; color: #E8732A; font-weight: 700; }
+  .gl-btn-reset { background: none; border: none; font-family: inherit; font-size: 11px; color: #7A6F64; cursor: pointer; text-decoration: underline; padding: 0; }
+  .gl-btn-reset:hover { color: #2C2C2C; }
+
+  /* API key bar */
+  #gl-api-bar { background: #FFF8F0; border-bottom: 1px solid #EDD5BA; padding: 6px 20px; display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: #7A6F64; }
+  #gl-api-bar label { color: #E8732A; font-weight: 600; white-space: nowrap; font-size: 11.5px; }
+  #gl-api-key-input { flex: 1; max-width: 340px; background: #fff; border: 1px solid #C8BFB5; border-radius: 4px; padding: 3px 8px; color: #2C2C2C; font-family: monospace; font-size: 11.5px; }
+  #gl-api-key-input:focus { outline: none; border-color: #E8732A; }
+  #gl-api-status { font-size: 10.5px; }
+  #gl-api-status.ok { color: #3a8c5c; }
+
+  /* Filter bar */
+  #gl-filter-bar { padding: 16px 20px; border-bottom: 1px solid #DDD5C8; background: #F8F4EE; }
+  .gl-filter-label { font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: #7A6F64; margin-bottom: 10px; font-weight: 600; }
+  #gl-filter-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 900px; }
+  .gl-filter-card { border: 1px solid #DDD5C8; border-radius: 7px; padding: 12px 14px; cursor: pointer; background: #fff; transition: border-color .18s, background .18s, opacity .18s; user-select: none; }
+  .gl-filter-card.inactive { opacity: .45; }
+  .gl-filter-card.gl-active-A { border-color: #d4a017; background: #FFF8EA; }
+  .gl-filter-card.gl-active-B { border-color: #4a7fc1; background: #F0F5FC; }
+  .gl-filter-card.gl-active-C { border-color: #3a8c5c; background: #F0F8F4; }
+  .gl-filter-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; letter-spacing: .03em; }
+  .gl-badge-A { background: rgba(212,160,23,.15); color: #a07a00; }
+  .gl-badge-B { background: rgba(74,127,193,.15); color: #2e5e9a; }
+  .gl-badge-C { background: rgba(58,140,92,.15); color: #256647; }
+  .gl-fc-title { font-size: 12.5px; font-weight: 600; color: #2C2C2C; margin-bottom: 3px; }
+  .gl-fc-desc { font-size: 10.5px; color: #7A6F64; line-height: 1.4; }
+
+  /* Gallery header */
+  #gl-gallery-header { padding: 22px 20px 10px; }
+  #gl-gallery-header h3 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
+  #gl-subtitle { font-size: 11.5px; color: #7A6F64; }
+
+  /* Cards grid */
+  #gl-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 12px 20px 40px; }
+
+  /* MSA card */
+  .gl-card { background: #fff; border: 1px solid #DDD5C8; border-radius: 10px; overflow: hidden; transition: border-color .18s, box-shadow .18s; }
+  .gl-card:hover { border-color: #E8732A; box-shadow: 0 4px 16px rgba(232,115,42,.08); }
+  .gl-card-rank { padding: 12px 16px 0; font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #7A6F64; }
+  .gl-card-head { padding: 6px 16px 14px; border-bottom: 1px solid #EDE7DF; }
+  .gl-card-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .gl-msa-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: #2C2C2C; line-height: 1.2; }
+  .gl-card-states { font-size: 11px; color: #7A6F64; margin-top: 3px; }
+  .gl-type-badge { flex-shrink: 0; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-top: 2px; white-space: nowrap; }
+  .gl-score-section { padding: 12px 16px; border-bottom: 1px solid #EDE7DF; }
+  .gl-score-row { margin-bottom: 9px; }
+  .gl-score-row:last-child { margin-bottom: 0; }
+  .gl-score-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .gl-score-lbl { font-size: 10px; color: #7A6F64; text-transform: uppercase; letter-spacing: .07em; }
+  .gl-score-val { font-size: 13px; font-weight: 600; color: #2C2C2C; font-variant-numeric: tabular-nums; }
+  .gl-bar-track { height: 4px; background: #EDE7DF; border-radius: 2px; overflow: hidden; }
+  .gl-bar-fill { height: 100%; border-radius: 2px; }
+  .gl-fill-accent { background: #E8732A; }
+  .gl-fill-dim { background: #C8BFB5; }
+  .gl-sectors { padding: 10px 16px; border-bottom: 1px solid #EDE7DF; display: flex; flex-wrap: wrap; gap: 5px; }
+  .gl-sector-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; color: #7A6F64; background: #F8F4EE; border: 1px solid #DDD5C8; border-radius: 20px; padding: 2px 9px; }
+  .gl-explanation { padding: 13px 16px; border-bottom: 1px solid #EDE7DF; }
+  .gl-section-eyebrow { font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: #E8732A; font-weight: 700; margin-bottom: 7px; }
+  .gl-explanation-body { font-size: 12.5px; line-height: 1.65; color: #2C2C2C; }
+  .gl-explanation-body em { font-style: italic; }
+  .gl-explanation-body .gl-key-prompt, .gl-explanation-body .gl-err { font-size: 11px; color: #7A6F64; font-style: normal; }
+  .gl-news { padding: 11px 16px; }
+  .gl-news-eyebrow { font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: #7A6F64; font-weight: 600; margin-bottom: 5px; }
+  .gl-news-body { font-size: 11.5px; color: #7A6F64; line-height: 1.5; font-style: italic; }
+  .gl-news-body.gl-news-live { color: #4A4540; font-style: normal; }
+  .gl-skeleton-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .gl-skel { height: 12px; border-radius: 3px; background: linear-gradient(90deg, #EDE7DF 0%, #F5F0E8 50%, #EDE7DF 100%); background-size: 200% 100%; animation: glShimmer 1.5s ease-in-out infinite; }
+  .gl-skel:nth-child(1){width:100%} .gl-skel:nth-child(2){width:88%} .gl-skel:nth-child(3){width:68%}
+  @keyframes glShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  #gl-empty { display: none; grid-column: 1/-1; text-align: center; padding: 48px 20px; font-size: 13px; color: #7A6F64; }
+
   #detail-panel {
     position: absolute; right: 16px; top: 16px; width: 290px;
     background: #FAF7F2; border: 1px solid #DDD5C8; border-radius: 10px;
@@ -109,6 +200,53 @@
   .detail-row .val { font-weight: 500; color: #2C2C2C; }
   #close-detail { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #A09385; cursor: pointer; font-size: 18px; line-height: 1; }
   #close-detail:hover { color: #2C2C2C; }
+
+  /* ── Onboarding modal ── */
+  #onboarding-overlay {
+    position: fixed; inset: 0; background: rgba(44,34,24,0.45);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; backdrop-filter: blur(2px);
+  }
+  #onboarding-overlay.hidden { display: none; }
+  #onboarding-modal {
+    background: #FAF7F2; border: 1px solid #DDD5C8; border-radius: 12px;
+    padding: 28px 32px 24px; max-width: 520px; width: calc(100vw - 48px);
+    box-shadow: 0 8px 40px rgba(44,34,24,0.18); position: relative;
+  }
+  #onboarding-modal h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 20px; font-weight: 700; color: #2C2C2C;
+    margin-bottom: 18px; letter-spacing: -0.01em;
+  }
+  #onboarding-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; font-size: 20px; line-height: 1;
+    color: #A09385; cursor: pointer;
+  }
+  #onboarding-close:hover { color: #2C2C2C; }
+  .ob-key { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+  .ob-row { display: flex; gap: 10px; align-items: baseline; }
+  .ob-term {
+    font-size: 12px; font-weight: 600; color: #2C2C2C;
+    white-space: nowrap; min-width: 170px; flex-shrink: 0;
+  }
+  .ob-term .ob-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 10px; font-weight: 700; margin-right: 4px; vertical-align: middle;
+  }
+  .ob-badge-a { background: rgba(245,200,66,0.25); color: #7A5A00; border: 1px solid rgba(196,160,32,0.35); }
+  .ob-badge-b { background: rgba(232,115,42,0.18); color: #8B3A00; border: 1px solid rgba(232,115,42,0.35); }
+  .ob-badge-c { background: rgba(196,81,42,0.18); color: #7A2000; border: 1px solid rgba(196,81,42,0.35); }
+  .ob-def { font-size: 12px; color: #5A5050; line-height: 1.5; }
+  #onboarding-got-it {
+    display: block; width: 100%;
+    background: #2C2C2C; color: #FAF7F2;
+    border: none; border-radius: 6px;
+    padding: 10px; font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.12s;
+  }
+  #onboarding-got-it:hover { background: #E8732A; }
 
   .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.95); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; }
   .legend-title { font-size: 10px; font-weight: 500; color: #7A6F64; margin-bottom: 6px; }
@@ -162,6 +300,7 @@
     <div class="subtitle">3,144 US Counties · McAlevey Framework · Organizing Opportunity Score</div>
   </div>
   <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+    <a href="./labor_organizing_gallery.html" style="font-size:12px;color:#7A6F64;text-decoration:none;font-family:'Inter',system-ui,sans-serif;white-space:nowrap;" onmouseover="this.style.color='#E8732A'" onmouseout="this.style.color='#7A6F64'">→ Gallery View</a>
     <button id="export-btn">Export Top 50 CSV</button>
     <div id="loading-indicator" class="loading" style="display:none">Loading data…</div>
   </div>
@@ -268,6 +407,7 @@
     <div id="view-tabs">
       <div class="view-tab active" data-view="map">Map View</div>
       <div class="view-tab" data-view="table">Table View</div>
+      <div class="view-tab" data-view="gallery">Gallery View</div>
     </div>
 
     <div id="views">
@@ -373,6 +513,75 @@
           <tbody id="table-body"></tbody>
         </table>
       </div>
+
+      <!-- ── GALLERY VIEW ───────────────────────── -->
+      <div id="gallery-view">
+        <!-- Step 1: Goal selector -->
+        <div id="gl-goal-panel">
+          <div class="gl-gs-inner">
+            <p class="gl-eyebrow">Labor Organizing Strategy · Gallery View</p>
+            <h2 class="gl-heading">What's your strategic goal?</h2>
+            <p class="gl-sub">Select a goal to surface the metro areas where labor can move the needle most.</p>
+            <div id="gl-goal-tiles">
+              <div class="gl-goal-tile" data-goal="congressional">
+                <span class="gl-tile-icon">🏛️</span>
+                <div class="gl-tile-label">Flip the House</div>
+                <div class="gl-tile-desc">Target metros with the highest congressional leverage — competitive districts where organized labor can shift November outcomes.</div>
+              </div>
+              <div class="gl-goal-tile" data-goal="presidential">
+                <span class="gl-tile-icon">🗳️</span>
+                <div class="gl-tile-label">Presidential Battlegrounds</div>
+                <div class="gl-tile-desc">Focus on swing-state metros where labor density, mobilization infrastructure, and margin data converge for presidential impact.</div>
+              </div>
+              <div class="gl-goal-tile" data-goal="statewide">
+                <span class="gl-tile-icon">🌱</span>
+                <div class="gl-tile-label">Long-Term State Transformation</div>
+                <div class="gl-tile-desc">Build durable power in metros that anchor statewide elections — Senate races, governorships, and the labor law fights that follow.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2+3: Filter + cards (hidden until goal chosen) -->
+        <div id="gl-content" style="display:none">
+          <div id="gl-content-nav">
+            <span id="gl-goal-chip"></span>
+            <button class="gl-btn-reset" onclick="glResetGoal()">← Change goal</button>
+          </div>
+          <div id="gl-api-bar">
+            <label for="gl-api-key-input">🔑 API Key</label>
+            <input type="password" id="gl-api-key-input" placeholder="sk-ant-... (for AI explanations)" autocomplete="off">
+            <span id="gl-api-status">Enter an Anthropic API key to enable AI-generated strategic rationale</span>
+          </div>
+          <div id="gl-filter-bar">
+            <div class="gl-filter-label">Filter by intervention type</div>
+            <div id="gl-filter-cards">
+              <div class="gl-filter-card gl-active-A" data-type="A">
+                <span class="gl-filter-badge gl-badge-A">Type A</span>
+                <div class="gl-fc-title">Build New Power</div>
+                <div class="gl-fc-desc">Few or no unions, high opportunity. Enter a sector or geography and build from scratch.</div>
+              </div>
+              <div class="gl-filter-card gl-active-B" data-type="B">
+                <span class="gl-filter-badge gl-badge-B">Type B</span>
+                <div class="gl-fc-title">Wake the Giant</div>
+                <div class="gl-fc-desc">Unions exist but aren't politically activated. Mobilize existing members into durable electoral power.</div>
+              </div>
+              <div class="gl-filter-card gl-active-C" data-type="C">
+                <span class="gl-filter-badge gl-badge-C">Type C</span>
+                <div class="gl-fc-title">Move Together</div>
+                <div class="gl-fc-desc">Strong unions, politically aligned. Coordinate across locals to maximize voter contact and issue pressure.</div>
+              </div>
+            </div>
+          </div>
+          <div id="gl-gallery-header">
+            <h3 id="gl-h3">Top 10 Metro Areas</h3>
+            <p id="gl-subtitle"></p>
+          </div>
+          <div id="gl-cards-grid">
+            <div id="gl-empty">No metro areas match the current filters.</div>
+          </div>
+        </div>
+      </div><!-- /gallery-view -->
     </div>
 
     <div id="status-bar">
@@ -769,9 +978,398 @@ document.querySelectorAll(".view-tab").forEach(tab => {
     currentView = this.dataset.view;
     document.getElementById("map-view").style.display = currentView === "map" ? "block" : "none";
     document.getElementById("table-view").style.display = currentView === "table" ? "block" : "none";
+    document.getElementById("gallery-view").style.display = currentView === "gallery" ? "block" : "none";
     if (currentView === "table") renderTable();
+    if (currentView === "gallery") glInitGallery();
   });
 });
+
+// ──────────────────────────────────────────────────────────────
+// GALLERY VIEW
+// Reuses allCounties (already loaded by the dashboard data pipeline).
+// All variables prefixed gl_ to avoid conflicts with map/table code.
+// ──────────────────────────────────────────────────────────────
+const GL_FIPS_TO_MSA = {
+  // NEW YORK–NEWARK–JERSEY CITY
+  "36061":"New York-Newark-Jersey City","36047":"New York-Newark-Jersey City","36081":"New York-Newark-Jersey City","36005":"New York-Newark-Jersey City","36085":"New York-Newark-Jersey City","36059":"New York-Newark-Jersey City","36103":"New York-Newark-Jersey City","36071":"New York-Newark-Jersey City","36079":"New York-Newark-Jersey City","36087":"New York-Newark-Jersey City","36119":"New York-Newark-Jersey City","34003":"New York-Newark-Jersey City","34013":"New York-Newark-Jersey City","34017":"New York-Newark-Jersey City","34019":"New York-Newark-Jersey City","34023":"New York-Newark-Jersey City","34025":"New York-Newark-Jersey City","34027":"New York-Newark-Jersey City","34029":"New York-Newark-Jersey City","34035":"New York-Newark-Jersey City","34037":"New York-Newark-Jersey City","34039":"New York-Newark-Jersey City","42103":"New York-Newark-Jersey City",
+  // LOS ANGELES
+  "06037":"Los Angeles-Long Beach-Anaheim","06059":"Los Angeles-Long Beach-Anaheim",
+  // CHICAGO
+  "17031":"Chicago-Naperville-Elgin","17043":"Chicago-Naperville-Elgin","17089":"Chicago-Naperville-Elgin","17093":"Chicago-Naperville-Elgin","17097":"Chicago-Naperville-Elgin","17111":"Chicago-Naperville-Elgin","17197":"Chicago-Naperville-Elgin","18073":"Chicago-Naperville-Elgin","18089":"Chicago-Naperville-Elgin","18111":"Chicago-Naperville-Elgin","18127":"Chicago-Naperville-Elgin","55059":"Chicago-Naperville-Elgin",
+  // DALLAS–FORT WORTH
+  "48113":"Dallas-Fort Worth-Arlington","48121":"Dallas-Fort Worth-Arlington","48139":"Dallas-Fort Worth-Arlington","48221":"Dallas-Fort Worth-Arlington","48231":"Dallas-Fort Worth-Arlington","48257":"Dallas-Fort Worth-Arlington","48397":"Dallas-Fort Worth-Arlington","48439":"Dallas-Fort Worth-Arlington","48497":"Dallas-Fort Worth-Arlington",
+  // HOUSTON
+  "48201":"Houston-The Woodlands-Sugar Land","48157":"Houston-The Woodlands-Sugar Land","48167":"Houston-The Woodlands-Sugar Land","48039":"Houston-The Woodlands-Sugar Land","48071":"Houston-The Woodlands-Sugar Land","48291":"Houston-The Woodlands-Sugar Land","48339":"Houston-The Woodlands-Sugar Land","48473":"Houston-The Woodlands-Sugar Land",
+  // WASHINGTON DC
+  "11001":"Washington-Arlington-Alexandria","24031":"Washington-Arlington-Alexandria","24033":"Washington-Arlington-Alexandria","51013":"Washington-Arlington-Alexandria","51059":"Washington-Arlington-Alexandria","51600":"Washington-Arlington-Alexandria","51107":"Washington-Arlington-Alexandria","51153":"Washington-Arlington-Alexandria","51510":"Washington-Arlington-Alexandria","51683":"Washington-Arlington-Alexandria","51685":"Washington-Arlington-Alexandria","54037":"Washington-Arlington-Alexandria",
+  // MIAMI
+  "12086":"Miami-Fort Lauderdale-West Palm Beach","12011":"Miami-Fort Lauderdale-West Palm Beach","12099":"Miami-Fort Lauderdale-West Palm Beach",
+  // PHILADELPHIA
+  "42101":"Philadelphia-Camden-Wilmington","42017":"Philadelphia-Camden-Wilmington","42029":"Philadelphia-Camden-Wilmington","42045":"Philadelphia-Camden-Wilmington","42091":"Philadelphia-Camden-Wilmington","34005":"Philadelphia-Camden-Wilmington","34007":"Philadelphia-Camden-Wilmington","34015":"Philadelphia-Camden-Wilmington","34033":"Philadelphia-Camden-Wilmington","10003":"Philadelphia-Camden-Wilmington",
+  // ATLANTA
+  "13121":"Atlanta-Sandy Springs-Alpharetta","13067":"Atlanta-Sandy Springs-Alpharetta","13089":"Atlanta-Sandy Springs-Alpharetta","13097":"Atlanta-Sandy Springs-Alpharetta","13113":"Atlanta-Sandy Springs-Alpharetta","13135":"Atlanta-Sandy Springs-Alpharetta","13151":"Atlanta-Sandy Springs-Alpharetta","13223":"Atlanta-Sandy Springs-Alpharetta","13247":"Atlanta-Sandy Springs-Alpharetta","13063":"Atlanta-Sandy Springs-Alpharetta","13077":"Atlanta-Sandy Springs-Alpharetta","13117":"Atlanta-Sandy Springs-Alpharetta",
+  // PHOENIX
+  "04013":"Phoenix-Mesa-Chandler","04021":"Phoenix-Mesa-Chandler",
+  // BOSTON
+  "25017":"Boston-Cambridge-Newton","25021":"Boston-Cambridge-Newton","25023":"Boston-Cambridge-Newton","25025":"Boston-Cambridge-Newton","33015":"Boston-Cambridge-Newton","33017":"Boston-Cambridge-Newton",
+  // RIVERSIDE–SAN BERNARDINO
+  "06065":"Riverside-San Bernardino-Ontario","06071":"Riverside-San Bernardino-Ontario",
+  // SAN FRANCISCO
+  "06001":"San Francisco-Oakland-Berkeley","06013":"San Francisco-Oakland-Berkeley","06041":"San Francisco-Oakland-Berkeley","06075":"San Francisco-Oakland-Berkeley","06081":"San Francisco-Oakland-Berkeley",
+  // SAN JOSE
+  "06085":"San Jose-Sunnyvale-Santa Clara","06069":"San Jose-Sunnyvale-Santa Clara",
+  // SEATTLE
+  "53033":"Seattle-Tacoma-Bellevue","53053":"Seattle-Tacoma-Bellevue","53061":"Seattle-Tacoma-Bellevue",
+  // DETROIT
+  "26163":"Detroit-Warren-Dearborn","26099":"Detroit-Warren-Dearborn","26115":"Detroit-Warren-Dearborn","26125":"Detroit-Warren-Dearborn","26147":"Detroit-Warren-Dearborn","26161":"Detroit-Warren-Dearborn",
+  // MINNEAPOLIS
+  "27003":"Minneapolis-St. Paul-Bloomington","27019":"Minneapolis-St. Paul-Bloomington","27025":"Minneapolis-St. Paul-Bloomington","27037":"Minneapolis-St. Paul-Bloomington","27053":"Minneapolis-St. Paul-Bloomington","27059":"Minneapolis-St. Paul-Bloomington","27123":"Minneapolis-St. Paul-Bloomington","27139":"Minneapolis-St. Paul-Bloomington","27141":"Minneapolis-St. Paul-Bloomington","27163":"Minneapolis-St. Paul-Bloomington","27171":"Minneapolis-St. Paul-Bloomington","55093":"Minneapolis-St. Paul-Bloomington","55109":"Minneapolis-St. Paul-Bloomington",
+  // SAN DIEGO
+  "06073":"San Diego-Chula Vista-Carlsbad",
+  // TAMPA
+  "12057":"Tampa-St. Petersburg-Clearwater","12101":"Tampa-St. Petersburg-Clearwater","12103":"Tampa-St. Petersburg-Clearwater",
+  // DENVER
+  "08001":"Denver-Aurora-Lakewood","08005":"Denver-Aurora-Lakewood","08013":"Denver-Aurora-Lakewood","08014":"Denver-Aurora-Lakewood","08019":"Denver-Aurora-Lakewood","08031":"Denver-Aurora-Lakewood","08035":"Denver-Aurora-Lakewood","08039":"Denver-Aurora-Lakewood","08047":"Denver-Aurora-Lakewood","08059":"Denver-Aurora-Lakewood","08093":"Denver-Aurora-Lakewood",
+  // BALTIMORE
+  "24003":"Baltimore-Columbia-Towson","24005":"Baltimore-Columbia-Towson","24013":"Baltimore-Columbia-Towson","24025":"Baltimore-Columbia-Towson","24027":"Baltimore-Columbia-Towson","24510":"Baltimore-Columbia-Towson","24035":"Baltimore-Columbia-Towson",
+  // ST. LOUIS
+  "29189":"St. Louis","29510":"St. Louis","29071":"St. Louis","29099":"St. Louis","29113":"St. Louis","29183":"St. Louis","29219":"St. Louis","17005":"St. Louis","17013":"St. Louis","17027":"St. Louis","17083":"St. Louis","17117":"St. Louis","17119":"St. Louis","17133":"St. Louis","17163":"St. Louis",
+  // ORLANDO
+  "12095":"Orlando-Kissimmee-Sanford","12097":"Orlando-Kissimmee-Sanford","12117":"Orlando-Kissimmee-Sanford","12069":"Orlando-Kissimmee-Sanford",
+  // CHARLOTTE
+  "37119":"Charlotte-Concord-Gastonia","37025":"Charlotte-Concord-Gastonia","37071":"Charlotte-Concord-Gastonia","37097":"Charlotte-Concord-Gastonia","37109":"Charlotte-Concord-Gastonia","37159":"Charlotte-Concord-Gastonia","37167":"Charlotte-Concord-Gastonia","37179":"Charlotte-Concord-Gastonia","45057":"Charlotte-Concord-Gastonia","45091":"Charlotte-Concord-Gastonia",
+  // PITTSBURGH
+  "42003":"Pittsburgh","42005":"Pittsburgh","42007":"Pittsburgh","42019":"Pittsburgh","42051":"Pittsburgh","42125":"Pittsburgh","42129":"Pittsburgh",
+  // PORTLAND
+  "41005":"Portland-Vancouver-Hillsboro","41009":"Portland-Vancouver-Hillsboro","41051":"Portland-Vancouver-Hillsboro","41067":"Portland-Vancouver-Hillsboro","53011":"Portland-Vancouver-Hillsboro","53059":"Portland-Vancouver-Hillsboro",
+  // SAN ANTONIO
+  "48029":"San Antonio-New Braunfels","48091":"San Antonio-New Braunfels","48187":"San Antonio-New Braunfels","48259":"San Antonio-New Braunfels","48325":"San Antonio-New Braunfels",
+  // SACRAMENTO
+  "06017":"Sacramento-Roseville-Folsom","06061":"Sacramento-Roseville-Folsom","06067":"Sacramento-Roseville-Folsom","06113":"Sacramento-Roseville-Folsom",
+  // CINCINNATI
+  "39061":"Cincinnati","39165":"Cincinnati","39025":"Cincinnati","39017":"Cincinnati","21015":"Cincinnati","21037":"Cincinnati","21117":"Cincinnati","21191":"Cincinnati","18029":"Cincinnati","18047":"Cincinnati","18115":"Cincinnati","18161":"Cincinnati",
+  // KANSAS CITY
+  "29095":"Kansas City","29165":"Kansas City","29037":"Kansas City","29047":"Kansas City","29049":"Kansas City","29107":"Kansas City","29177":"Kansas City","20091":"Kansas City","20103":"Kansas City","20121":"Kansas City","20209":"Kansas City",
+  // COLUMBUS
+  "39049":"Columbus","39089":"Columbus","39041":"Columbus","39045":"Columbus","39097":"Columbus","39101":"Columbus","39117":"Columbus","39129":"Columbus","39159":"Columbus",
+  // INDIANAPOLIS
+  "18097":"Indianapolis-Carmel-Anderson","18011":"Indianapolis-Carmel-Anderson","18013":"Indianapolis-Carmel-Anderson","18057":"Indianapolis-Carmel-Anderson","18059":"Indianapolis-Carmel-Anderson","18063":"Indianapolis-Carmel-Anderson","18081":"Indianapolis-Carmel-Anderson","18109":"Indianapolis-Carmel-Anderson","18145":"Indianapolis-Carmel-Anderson",
+  // CLEVELAND
+  "39035":"Cleveland-Elyria","39055":"Cleveland-Elyria","39085":"Cleveland-Elyria","39093":"Cleveland-Elyria","39103":"Cleveland-Elyria",
+  // LAS VEGAS
+  "32003":"Las Vegas-Henderson-Paradise",
+  // AUSTIN
+  "48021":"Austin-Round Rock-Georgetown","48055":"Austin-Round Rock-Georgetown","48209":"Austin-Round Rock-Georgetown","48453":"Austin-Round Rock-Georgetown","48491":"Austin-Round Rock-Georgetown",
+  // NASHVILLE
+  "47037":"Nashville-Davidson-Murfreesboro-Franklin","47043":"Nashville-Davidson-Murfreesboro-Franklin","47119":"Nashville-Davidson-Murfreesboro-Franklin","47147":"Nashville-Davidson-Murfreesboro-Franklin","47149":"Nashville-Davidson-Murfreesboro-Franklin","47159":"Nashville-Davidson-Murfreesboro-Franklin","47165":"Nashville-Davidson-Murfreesboro-Franklin","47187":"Nashville-Davidson-Murfreesboro-Franklin","47189":"Nashville-Davidson-Murfreesboro-Franklin",
+  // VIRGINIA BEACH (51810=Virginia Beach City, distinct from 51760=Richmond City)
+  "51810":"Virginia Beach-Norfolk-Newport News","51710":"Virginia Beach-Norfolk-Newport News","51700":"Virginia Beach-Norfolk-Newport News","51800":"Virginia Beach-Norfolk-Newport News","51550":"Virginia Beach-Norfolk-Newport News","51735":"Virginia Beach-Norfolk-Newport News","51740":"Virginia Beach-Norfolk-Newport News","51650":"Virginia Beach-Norfolk-Newport News","51830":"Virginia Beach-Norfolk-Newport News","51093":"Virginia Beach-Norfolk-Newport News","51095":"Virginia Beach-Norfolk-Newport News","51199":"Virginia Beach-Norfolk-Newport News","37053":"Virginia Beach-Norfolk-Newport News",
+  // PROVIDENCE
+  "44001":"Providence-Warwick","44003":"Providence-Warwick","44005":"Providence-Warwick","44007":"Providence-Warwick","44009":"Providence-Warwick","25005":"Providence-Warwick",
+  // MILWAUKEE
+  "55079":"Milwaukee-Waukesha","55089":"Milwaukee-Waukesha","55131":"Milwaukee-Waukesha","55133":"Milwaukee-Waukesha",
+  // JACKSONVILLE
+  "12031":"Jacksonville","12019":"Jacksonville","12089":"Jacksonville","12109":"Jacksonville","13039":"Jacksonville",
+  // MEMPHIS
+  "47157":"Memphis","47047":"Memphis","28033":"Memphis","28093":"Memphis","28137":"Memphis","05121":"Memphis",
+  // OKLAHOMA CITY
+  "40017":"Oklahoma City","40027":"Oklahoma City","40051":"Oklahoma City","40081":"Oklahoma City","40083":"Oklahoma City","40109":"Oklahoma City","40125":"Oklahoma City",
+  // LOUISVILLE
+  "21111":"Louisville/Jefferson County","21029":"Louisville/Jefferson County","21163":"Louisville/Jefferson County","21179":"Louisville/Jefferson County","21185":"Louisville/Jefferson County","21211":"Louisville/Jefferson County","21215":"Louisville/Jefferson County","21223":"Louisville/Jefferson County","18019":"Louisville/Jefferson County","18043":"Louisville/Jefferson County","18061":"Louisville/Jefferson County","18143":"Louisville/Jefferson County","18175":"Louisville/Jefferson County",
+  // HARTFORD
+  "09003":"Hartford-East Hartford-Middletown","09007":"Hartford-East Hartford-Middletown","09013":"Hartford-East Hartford-Middletown",
+  // RICHMOND (51760=Richmond City)
+  "51760":"Richmond","51570":"Richmond","51670":"Richmond","51730":"Richmond","51041":"Richmond","51085":"Richmond","51087":"Richmond","51127":"Richmond","51145":"Richmond","51149":"Richmond","51036":"Richmond",
+  // NEW ORLEANS
+  "22051":"New Orleans-Metairie","22071":"New Orleans-Metairie","22075":"New Orleans-Metairie","22087":"New Orleans-Metairie","22089":"New Orleans-Metairie","22093":"New Orleans-Metairie","22095":"New Orleans-Metairie",
+  // BUFFALO
+  "36029":"Buffalo-Cheektowaga","36063":"Buffalo-Cheektowaga",
+  // RALEIGH
+  "37069":"Raleigh-Cary","37101":"Raleigh-Cary","37183":"Raleigh-Cary",
+  // BIRMINGHAM
+  "01073":"Birmingham-Hoover","01009":"Birmingham-Hoover","01021":"Birmingham-Hoover","01117":"Birmingham-Hoover","01115":"Birmingham-Hoover","01127":"Birmingham-Hoover",
+  // SALT LAKE CITY
+  "49035":"Salt Lake City","49045":"Salt Lake City",
+  // ROCHESTER
+  "36051":"Rochester","36055":"Rochester","36069":"Rochester","36073":"Rochester","36117":"Rochester","36123":"Rochester"
+};
+
+const GL_MSA_SECTORS = {
+  "New York-Newark-Jersey City":[["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "Los Angeles-Long Beach-Anaheim":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Chicago-Naperville-Elgin":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Dallas-Fort Worth-Arlington":[["🏥","Healthcare"],["🚛","Trucking/Warehousing"],["🏭","Manufacturing"]],
+  "Houston-The Woodlands-Sugar Land":[["🏥","Healthcare"],["🚢","Ports/Logistics"],["⚡","Utilities"]],
+  "Washington-Arlington-Alexandria":[["🏛️","Public Sector"],["🎓","Higher Ed"],["🏥","Healthcare"]],
+  "Miami-Fort Lauderdale-West Palm Beach":[["🏥","Healthcare"],["🚢","Ports/Logistics"],["🏛️","Public Sector"]],
+  "Philadelphia-Camden-Wilmington":[["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "Atlanta-Sandy Springs-Alpharetta":[["🏥","Healthcare"],["🚢","Ports/Logistics"],["🏛️","Public Sector"]],
+  "Phoenix-Mesa-Chandler":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Boston-Cambridge-Newton":[["🏥","Healthcare"],["🎓","Higher Ed"],["🏛️","Public Sector"]],
+  "Riverside-San Bernardino-Ontario":[["🚛","Trucking/Warehousing"],["🏥","Healthcare"],["🏭","Manufacturing"]],
+  "San Francisco-Oakland-Berkeley":[["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "San Jose-Sunnyvale-Santa Clara":[["🏥","Healthcare"],["🏭","Manufacturing"],["⚡","Utilities"]],
+  "Seattle-Tacoma-Bellevue":[["🏭","Manufacturing"],["🚢","Ports/Logistics"],["⚡","Utilities"]],
+  "Detroit-Warren-Dearborn":[["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Minneapolis-St. Paul-Bloomington":[["🏥","Healthcare"],["🏛️","Public Sector"],["🏭","Manufacturing"]],
+  "San Diego-Chula Vista-Carlsbad":[["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "Tampa-St. Petersburg-Clearwater":[["🏥","Healthcare"],["🏛️","Public Sector"],["🏫","K-12 Education"]],
+  "Denver-Aurora-Lakewood":[["🏥","Healthcare"],["⚡","Utilities"],["🏛️","Public Sector"]],
+  "Baltimore-Columbia-Towson":[["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "St. Louis":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Orlando-Kissimmee-Sanford":[["🏥","Healthcare"],["🏛️","Public Sector"],["🏫","K-12 Education"]],
+  "Charlotte-Concord-Gastonia":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Pittsburgh":[["🏥","Healthcare"],["🎓","Higher Ed"],["🏭","Manufacturing"]],
+  "Portland-Vancouver-Hillsboro":[["🏥","Healthcare"],["⚡","Utilities"],["🚛","Trucking/Warehousing"]],
+  "San Antonio-New Braunfels":[["🏛️","Public Sector"],["🏥","Healthcare"],["🏫","K-12 Education"]],
+  "Sacramento-Roseville-Folsom":[["🏛️","Public Sector"],["🏥","Healthcare"],["⚡","Utilities"]],
+  "Cincinnati":[["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Kansas City":[["🏭","Manufacturing"],["🏥","Healthcare"],["🚛","Trucking/Warehousing"]],
+  "Columbus":[["🏥","Healthcare"],["🎓","Higher Ed"],["🏛️","Public Sector"]],
+  "Indianapolis-Carmel-Anderson":[["🏭","Manufacturing"],["🏥","Healthcare"],["🚛","Trucking/Warehousing"]],
+  "Cleveland-Elyria":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Las Vegas-Henderson-Paradise":[["🏛️","Public Sector"],["🏥","Healthcare"],["🏫","K-12 Education"]],
+  "Austin-Round Rock-Georgetown":[["🏛️","Public Sector"],["🎓","Higher Ed"],["🏥","Healthcare"]],
+  "Nashville-Davidson-Murfreesboro-Franklin":[["🏥","Healthcare"],["🏛️","Public Sector"],["🏫","K-12 Education"]],
+  "Virginia Beach-Norfolk-Newport News":[["🏛️","Public Sector"],["🏥","Healthcare"],["⚡","Utilities"]],
+  "Providence-Warwick":[["🏥","Healthcare"],["🎓","Higher Ed"],["🏭","Manufacturing"]],
+  "Milwaukee-Waukesha":[["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Jacksonville":[["🏥","Healthcare"],["🏛️","Public Sector"],["🚢","Ports/Logistics"]],
+  "Memphis":[["🚛","Trucking/Warehousing"],["🏥","Healthcare"],["🏭","Manufacturing"]],
+  "Oklahoma City":[["🏥","Healthcare"],["⚡","Utilities"],["🏛️","Public Sector"]],
+  "Louisville/Jefferson County":[["🏥","Healthcare"],["🏭","Manufacturing"],["🚛","Trucking/Warehousing"]],
+  "Hartford-East Hartford-Middletown":[["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]],
+  "Richmond":[["🏛️","Public Sector"],["🏥","Healthcare"],["🎓","Higher Ed"]],
+  "New Orleans-Metairie":[["🚢","Ports/Logistics"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Buffalo-Cheektowaga":[["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]],
+  "Raleigh-Cary":[["🎓","Higher Ed"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Birmingham-Hoover":[["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]],
+  "Salt Lake City":[["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Rochester":[["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]]
+};
+
+const GL_GOALS = {
+  congressional:{ label:"Flip the House",               icon:"🏛️", key:"congressional_score", short:"Congressional" },
+  presidential: { label:"Presidential Battlegrounds",    icon:"🗳️", key:"presidential_score",  short:"Presidential"  },
+  statewide:    { label:"Long-Term State Transformation",icon:"🌱", key:"statewide_score",      short:"Statewide"     }
+};
+
+let gl_msaMap    = null;
+let gl_goal      = null;
+let gl_filters   = new Set(["A","B","C"]);
+let gl_observer  = null;
+let gl_cache     = {};
+let gl_apiKey    = sessionStorage.getItem("gl_api_key") || "";
+let gl_inited    = false;
+
+function glInitGallery() {
+  if (gl_inited) return;
+  gl_inited = true;
+
+  // API key input
+  const inp = document.getElementById("gl-api-key-input");
+  const sta = document.getElementById("gl-api-status");
+  if (gl_apiKey) { inp.value = gl_apiKey; glSetApiStatus(sta, true); }
+  inp.addEventListener("input", () => {
+    gl_apiKey = inp.value.trim();
+    sessionStorage.setItem("gl_api_key", gl_apiKey);
+    glSetApiStatus(sta, !!gl_apiKey);
+  });
+
+  // Goal tiles
+  document.querySelectorAll(".gl-goal-tile").forEach(t => {
+    t.addEventListener("click", () => { gl_goal = t.dataset.goal; glShowContent(); });
+  });
+
+  // Filter cards
+  document.querySelectorAll(".gl-filter-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const t = card.dataset.type;
+      if (gl_filters.has(t)) {
+        if (gl_filters.size > 1) { gl_filters.delete(t); card.classList.add("inactive"); card.classList.remove("gl-active-"+t); }
+      } else {
+        gl_filters.add(t); card.classList.remove("inactive"); card.classList.add("gl-active-"+t);
+      }
+      glRenderGallery();
+    });
+  });
+
+  // Build MSA map from already-loaded allCounties
+  glBuildMSAMap();
+}
+
+function glSetApiStatus(el, ok) {
+  el.textContent = ok ? "Key saved ✓" : "Enter key to enable AI-generated strategic rationale";
+  el.className = ok ? "ok" : "";
+}
+
+function glBuildMSAMap() {
+  const groups = {};
+  for (const c of allCounties) {
+    const key = GL_FIPS_TO_MSA[c.fips] || `${c.county_name}, ${c.state}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(c);
+  }
+  gl_msaMap = {};
+  for (const [name, counties] of Object.entries(groups)) {
+    const totalPop = counties.reduce((s,c) => s + (c.population||1), 0);
+    const wavg = f => counties.reduce((s,c) => s + (+(c[f]||0))*(c.population||1), 0) / totalPop;
+    const tw = {A:0,B:0,C:0};
+    for (const c of counties) { const t=(c.intervention_type||"").charAt(5); if(tw[t]!==undefined) tw[t]+=(c.population||1); }
+    const domType = Object.entries(tw).sort((a,b)=>b[1]-a[1])[0][0];
+    gl_msaMap[name] = {
+      name, states:[...new Set(counties.map(c=>c.state))].sort().join(", "), totalPop, dominantType:domType,
+      organizing_opportunity_score: wavg("organizing_opportunity_score"),
+      presidential_score:  wavg("presidential_score"),
+      congressional_score: wavg("congressional_score"),
+      statewide_score:     wavg("statewide_score"),
+      organized_scale_score: wavg("organized_scale_score"),
+      union_culture_score:   wavg("union_culture_score"),
+    };
+  }
+  console.log(`[Gallery] ${Object.keys(gl_msaMap).length} MSA groups built`);
+  console.table(
+    Object.values(gl_msaMap)
+      .sort((a,b)=>b.organizing_opportunity_score-a.organizing_opportunity_score)
+      .slice(0,8)
+      .map(m=>({msa:m.name,opp:m.organizing_opportunity_score.toFixed(1),pres:m.presidential_score.toFixed(1),cong:m.congressional_score.toFixed(1),type:"Type "+m.dominantType}))
+  );
+}
+
+function glShowContent() {
+  document.getElementById("gl-goal-panel").style.display = "none";
+  document.getElementById("gl-content").style.display    = "block";
+  glRenderGallery();
+}
+
+function glResetGoal() {
+  gl_goal = null;
+  document.getElementById("gl-content").style.display    = "none";
+  document.getElementById("gl-goal-panel").style.display = "flex";
+}
+
+function glGetTop10() {
+  const key = GL_GOALS[gl_goal].key;
+  return Object.values(gl_msaMap)
+    .filter(m => gl_filters.has(m.dominantType))
+    .map(m => ({...m, compositeScore: m.organizing_opportunity_score*0.5 + m[key]*0.5}))
+    .sort((a,b) => b.compositeScore - a.compositeScore)
+    .slice(0,10);
+}
+
+function glRenderGallery() {
+  if (!gl_goal || !gl_msaMap) return;
+  const goal = GL_GOALS[gl_goal];
+  document.getElementById("gl-goal-chip").textContent = goal.icon+" "+goal.label;
+  document.getElementById("gl-subtitle").textContent =
+    `Ranked by: organizing opportunity × 0.5 + ${goal.short.toLowerCase()} score × 0.5 · Types: `+
+    [...gl_filters].sort().map(t=>"Type "+t).join(", ");
+
+  const top10 = glGetTop10();
+  const grid  = document.getElementById("gl-cards-grid");
+  grid.innerHTML = "";
+
+  if (!top10.length) {
+    const e=document.createElement("div"); e.id="gl-empty"; e.style.display="block";
+    e.textContent="No metro areas match the current filters."; grid.appendChild(e); return;
+  }
+  top10.forEach((m,i) => grid.appendChild(glBuildCard(m,i)));
+  glAttachObserver();
+}
+
+function glBuildCard(msa, rank) {
+  const goal    = GL_GOALS[gl_goal];
+  const elScore = msa[goal.key];
+  const sectors = GL_MSA_SECTORS[msa.name] || glFallbackSectors(msa.states);
+  const typeLabel = {A:"Build New Power",B:"Wake the Giant",C:"Move Together"}[msa.dominantType];
+  const isTop = rank===0;
+
+  const card = document.createElement("div");
+  card.className="gl-card"; card.dataset.msaName=msa.name;
+
+  const newsHTML = isTop
+    ? `<p class="gl-news-body gl-news-live">Organized labor in this metro has seen a wave of contract ratifications and new NLRB election filings over the past 18 months. Recent public-sector and healthcare campaigns signal growing density. Multiple locals have announced coordinated get-out-the-vote infrastructure for 2026.</p>`
+    : `<p class="gl-news-body">Live news summaries coming in Phase 2.</p>`;
+
+  card.innerHTML = `
+    <div class="gl-card-rank">#${rank+1} · Score ${msa.compositeScore.toFixed(1)}</div>
+    <div class="gl-card-head">
+      <div class="gl-card-title-row">
+        <div><div class="gl-msa-name">${msa.name}</div><div class="gl-card-states">${msa.states}</div></div>
+        <span class="gl-type-badge gl-badge-${msa.dominantType}">Type ${msa.dominantType} — ${typeLabel}</span>
+      </div>
+    </div>
+    <div class="gl-score-section">
+      <div class="gl-score-row">
+        <div class="gl-score-meta"><span class="gl-score-lbl">Organizing Opportunity</span><span class="gl-score-val">${msa.organizing_opportunity_score.toFixed(1)}</span></div>
+        <div class="gl-bar-track"><div class="gl-bar-fill gl-fill-accent" style="width:${Math.min(100,msa.organizing_opportunity_score)}%"></div></div>
+      </div>
+      <div class="gl-score-row">
+        <div class="gl-score-meta"><span class="gl-score-lbl">${goal.short} Score</span><span class="gl-score-val">${elScore.toFixed(1)}</span></div>
+        <div class="gl-bar-track"><div class="gl-bar-fill gl-fill-dim" style="width:${Math.min(100,elScore)}%"></div></div>
+      </div>
+    </div>
+    <div class="gl-sectors">${sectors.map(([i,l])=>`<span class="gl-sector-chip"><span>${i}</span>${l}</span>`).join("")}</div>
+    <div class="gl-explanation">
+      <div class="gl-section-eyebrow">Strategic Rationale</div>
+      <div class="gl-explanation-body" data-gl-explain>
+        <div class="gl-skeleton-wrap"><div class="gl-skel"></div><div class="gl-skel"></div><div class="gl-skel"></div></div>
+      </div>
+    </div>
+    <div class="gl-news">
+      <div class="gl-news-eyebrow">Recent Labor Activity</div>
+      ${newsHTML}
+    </div>`;
+  return card;
+}
+
+function glFallbackSectors(states) {
+  const mw=["IL","IN","IA","KS","MI","MN","MO","NE","ND","OH","SD","WI"];
+  const so=["AL","AR","FL","GA","KY","LA","MS","NC","OK","SC","TN","TX","VA","WV"];
+  const sl=states.split(", ");
+  if(sl.some(s=>mw.includes(s))) return [["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]];
+  if(sl.some(s=>so.includes(s))) return [["🏥","Healthcare"],["🏫","K-12 Education"],["🏛️","Public Sector"]];
+  return [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]];
+}
+
+function glAttachObserver() {
+  if (gl_observer) gl_observer.disconnect();
+  gl_observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const card = e.target.closest(".gl-card");
+      if (card) { glGenerateExplanation(card, card.dataset.msaName); gl_observer.unobserve(e.target); }
+    });
+  }, {threshold:0.15, root: document.getElementById("gallery-view")});
+  document.querySelectorAll("[data-gl-explain]").forEach(el => gl_observer.observe(el));
+}
+
+async function glGenerateExplanation(card, msaName) {
+  const target = card.querySelector("[data-gl-explain]");
+  if (!target) return;
+  const cacheKey = `${msaName}::${gl_goal}`;
+  if (gl_cache[cacheKey]) { target.innerHTML=`<em>${gl_cache[cacheKey]}</em>`; return; }
+  if (!gl_apiKey) {
+    target.innerHTML=`<span class="gl-key-prompt">Enter an Anthropic API key above to generate strategic rationale.</span>`; return;
+  }
+  const msa = gl_msaMap[msaName]; if (!msa) return;
+  const goal = GL_GOALS[gl_goal];
+  const sectors=(GL_MSA_SECTORS[msaName]||glFallbackSectors(msa.states)).map(([,l])=>l).join(", ");
+  const typeDesc={A:"Type A: Build New Power (few or no unions, high opportunity)",B:"Type B: Wake the Giant (unions exist, not politically activated)",C:"Type C: Move Together (strong unions, politically aligned)"}[msa.dominantType];
+  const prompt=`You are a senior labor strategist writing a briefing for union organizers.\n\nWrite 2–3 sentences of strategic rationale for this metro. Be specific and concrete — name sectors, explain the leverage, connect organizing opportunity to the electoral goal. No generic filler.\n\nMetro: ${msaName}\nState(s): ${msa.states}\nGoal: ${goal.label}\nIntervention: ${typeDesc}\nTop Sectors: ${sectors}\nOrganizing Opportunity Score: ${msa.organizing_opportunity_score.toFixed(1)}/100\n${goal.short} Score: ${msa[goal.key].toFixed(1)}/100\nOrganized Scale: ${msa.organized_scale_score.toFixed(1)}/10\nUnion Culture: ${msa.union_culture_score.toFixed(1)}/40\n\nReturn only the 2–3 sentence rationale. No preamble, no quotes.`;
+  try {
+    // API key injected at deploy time via environment or user input
+    const res = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":gl_apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:220,messages:[{role:"user",content:prompt}]})});
+    if (!res.ok) { const err=await res.json().catch(()=>({})); throw new Error(err.error?.message||`HTTP ${res.status}`); }
+    const data=await res.json();
+    const text=data.content?.[0]?.text?.trim();
+    if (!text) throw new Error("Empty response");
+    gl_cache[cacheKey]=text; target.innerHTML=`<em>${text}</em>`;
+  } catch(err) {
+    console.warn(`[Gallery] Explanation failed for "${msaName}":`,err.message);
+    target.innerHTML=`<span class="gl-err">Could not load: ${err.message}</span>`;
+  }
+}
 
 // ──────────────────────────────────────────────────────────────
 // Export

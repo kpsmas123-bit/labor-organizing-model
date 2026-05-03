@@ -1,0 +1,1241 @@
+<!--
+  labor_organizing_gallery.html
+
+  Goal-first, gallery-based companion to the Labor Organizing National Dashboard.
+  Companion to: ./labor_organizing_national_dashboard.html
+
+  DATA DEPENDENCY
+    ../data/county_scores.json — the same dataset that powers the map view.
+    This file is loaded at runtime via fetch("../data/county_scores.json").
+    No build step required; open from a local server or GitHub Pages.
+
+  API KEY (for AI-generated strategic explanations)
+    Option 1 — User entry: type your Anthropic API key into the input field at the top.
+                The key is stored in sessionStorage only, never persisted to disk,
+                and sent only to api.anthropic.com.
+    Option 2 — Deploy-time injection: set window.ANTHROPIC_API_KEY before this
+                script executes (e.g. via a build step or server-side template).
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labor Organizing Strategy — Gallery View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #0f1117;
+      --bg-card:      #181c27;
+      --text:         #f0ede6;
+      --text-muted:   #8b8578;
+      --accent:       #e8c547;
+      --type-a:       #d4a017;
+      --type-b:       #4a7fc1;
+      --type-c:       #3a8c5c;
+      --border:       rgba(240,237,230,0.08);
+      --bar-bg:       rgba(240,237,230,0.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── API KEY BAR ─────────────────────────────── */
+    #api-bar {
+      position: relative;
+      z-index: 200;
+      background: rgba(232,197,71,0.06);
+      border-bottom: 1px solid rgba(232,197,71,0.15);
+      padding: 7px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+    }
+    #api-bar label { white-space: nowrap; color: var(--accent); font-weight: 600; }
+    #api-key-input {
+      flex: 1;
+      max-width: 380px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 4px 10px;
+      color: var(--text);
+      font-family: 'DM Mono', 'Courier New', monospace;
+      font-size: 12px;
+    }
+    #api-key-input:focus { outline: none; border-color: var(--accent); }
+    #api-status { font-size: 11px; color: var(--text-muted); }
+    #api-status.ok { color: var(--type-c); }
+
+    /* ─── GOAL SELECTOR SCREEN ────────────────────── */
+    #goal-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      overflow: hidden;
+    }
+    #goal-screen .bg-aura {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 50%, rgba(232,197,71,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 80% 20%, rgba(74,127,193,0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 45% 55% at 65% 80%, rgba(58,140,92,0.04) 0%, transparent 70%);
+      animation: auraPulse 9s ease-in-out infinite alternate;
+    }
+    @keyframes auraPulse {
+      0%   { opacity: .55; transform: scale(1);    }
+      100% { opacity: 1;   transform: scale(1.06); }
+    }
+    #goal-screen .gs-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 920px;
+      padding: 0 24px;
+    }
+    .gs-eyebrow {
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+    .gs-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .gs-sub {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 52px;
+    }
+    #goal-tiles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .goal-tile {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 30px 24px;
+      cursor: pointer;
+      text-align: left;
+      transition: background .22s, border-color .22s, transform .22s;
+    }
+    .goal-tile:hover {
+      background: rgba(232,197,71,0.07);
+      border-color: rgba(232,197,71,0.32);
+      transform: translateY(-3px);
+    }
+    .goal-tile .gt-icon  { font-size: 30px; display: block; margin-bottom: 18px; }
+    .goal-tile .gt-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .goal-tile .gt-desc  { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+
+    /* exit animation */
+    #goal-screen.exiting {
+      animation: goalExit .45s ease forwards;
+      pointer-events: none;
+    }
+    @keyframes goalExit {
+      0%   { opacity: 1; transform: scale(1);    }
+      100% { opacity: 0; transform: scale(1.04); }
+    }
+
+    /* ─── MAIN GALLERY ────────────────────────────── */
+    #gallery-screen {
+      display: none;
+      opacity: 0;
+      transition: opacity .5s ease .35s;
+    }
+    #gallery-screen.visible { opacity: 1; }
+
+    /* Nav */
+    #top-nav {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .nav-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+    #nav-goal-chip {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--accent);
+      letter-spacing: -.01em;
+    }
+    .btn-reset {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+    .btn-reset:hover { color: var(--text); }
+
+    /* Intervention filter bar */
+    #filter-bar {
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-section-label {
+      font-size: 10.5px;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    #filter-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      max-width: 960px;
+    }
+    .filter-card {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 14px 16px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.02);
+      transition: background .18s, border-color .18s, opacity .18s;
+      user-select: none;
+    }
+    .filter-card.inactive { opacity: .4; }
+    .filter-card.active-A { border-color: rgba(212,160,23,.45);  background: rgba(212,160,23,.07);  }
+    .filter-card.active-B { border-color: rgba(74,127,193,.45);  background: rgba(74,127,193,.07);  }
+    .filter-card.active-C { border-color: rgba(58,140,92,.45);   background: rgba(58,140,92,.07);   }
+    .filter-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      letter-spacing: .03em;
+    }
+    .badge-A { background: rgba(212,160,23,.2); color: var(--type-a); }
+    .badge-B { background: rgba(74,127,193,.2); color: var(--type-b); }
+    .badge-C { background: rgba(58,140,92,.2);  color: var(--type-c); }
+    .fc-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .fc-desc  { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+
+    /* Gallery header */
+    #gallery-header {
+      padding: 30px 24px 14px;
+    }
+    #gallery-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    #gallery-subtitle { font-size: 13px; color: var(--text-muted); }
+
+    /* Cards grid */
+    #cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 16px 24px 72px;
+    }
+
+    /* ─── MSA CARD ────────────────────────────────── */
+    .msa-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .msa-card:hover {
+      border-color: rgba(232,197,71,.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.35);
+    }
+    .card-rank-label {
+      padding: 14px 20px 0;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Card header */
+    .card-head {
+      padding: 8px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card-msa-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .card-states { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .card-type-badge {
+      flex-shrink: 0;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 20px;
+      margin-top: 3px;
+      white-space: nowrap;
+    }
+
+    /* Score bars */
+    .card-scores {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .score-row { margin-bottom: 11px; }
+    .score-row:last-child { margin-bottom: 0; }
+    .score-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 5px;
+    }
+    .score-lbl {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+    .score-val {
+      font-size: 14px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .bar-track {
+      height: 4px;
+      background: var(--bar-bg);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+    .fill-gold { background: var(--accent); }
+    .fill-dim  { background: rgba(240,237,230,.32); }
+
+    /* Sector chips */
+    .card-sectors {
+      padding: 11px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .sector-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    /* Strategic explanation */
+    .card-explanation {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-section-eyebrow {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+    .explanation-body {
+      font-size: 13.5px;
+      line-height: 1.68;
+    }
+    .explanation-body em { font-style: italic; color: var(--text); }
+    .explanation-body .err-msg { font-size: 12px; color: var(--text-muted); font-style: normal; }
+    .explanation-body .key-prompt { font-size: 12px; color: var(--text-muted); font-style: normal; }
+
+    /* Skeleton loader */
+    .skeleton-wrap { display: flex; flex-direction: column; gap: 7px; }
+    .skel {
+      height: 13px;
+      border-radius: 4px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,.04) 0%,
+        rgba(255,255,255,.09) 50%,
+        rgba(255,255,255,.04) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s ease-in-out infinite;
+    }
+    .skel:nth-child(1) { width: 100%; }
+    .skel:nth-child(2) { width: 90%;  }
+    .skel:nth-child(3) { width: 72%;  }
+    @keyframes shimmer {
+      0%   { background-position:  200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* News teaser */
+    .card-news { padding: 13px 20px; }
+    .news-body {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      font-style: italic;
+    }
+    .news-body.news-live { color: rgba(240,237,230,.68); font-style: normal; }
+
+    /* Empty state */
+    #empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-muted);
+      font-size: 15px;
+      display: none;
+    }
+
+    /* Mobile */
+    @media (max-width: 720px) {
+      #goal-tiles  { grid-template-columns: 1fr; }
+      #filter-cards { grid-template-columns: 1fr; }
+      #cards-grid  { grid-template-columns: 1fr; padding: 12px 16px 60px; gap: 14px; }
+      #gallery-header { padding: 20px 16px 10px; }
+      #filter-bar { padding: 16px; }
+      #top-nav { padding: 12px 16px; }
+      #api-bar { flex-wrap: wrap; row-gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── API KEY BAR ──────────────────────────────────── -->
+<div id="api-bar">
+  <label for="api-key-input">🔑 Anthropic API Key</label>
+  <input type="password" id="api-key-input" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+  <span id="api-status">Enter key to enable AI-generated strategic rationale</span>
+</div>
+
+<!-- ─── GOAL SELECTOR SCREEN ────────────────────────── -->
+<div id="goal-screen">
+  <div class="bg-aura"></div>
+  <div class="gs-content">
+    <p class="gs-eyebrow">Labor Organizing Strategy · Gallery View</p>
+    <h1 class="gs-heading">What's your<br>strategic goal?</h1>
+    <p class="gs-sub">Select a goal to surface the metro areas where labor can move the needle most.</p>
+    <div id="goal-tiles">
+      <div class="goal-tile" data-goal="congressional">
+        <span class="gt-icon">🏛️</span>
+        <div class="gt-label">Flip the House</div>
+        <div class="gt-desc">Target metros with the highest congressional leverage — competitive districts where organized labor can shift the outcome in November.</div>
+      </div>
+      <div class="goal-tile" data-goal="presidential">
+        <span class="gt-icon">🗳️</span>
+        <div class="gt-label">Presidential Battlegrounds</div>
+        <div class="gt-desc">Focus on swing-state metros where labor density, mobilization infrastructure, and margin data converge for presidential impact.</div>
+      </div>
+      <div class="goal-tile" data-goal="statewide">
+        <span class="gt-icon">🌱</span>
+        <div class="gt-label">Long-Term State Transformation</div>
+        <div class="gt-desc">Build durable power in metros that anchor statewide elections — Senate races, governorships, and the labor law fights that follow.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── GALLERY SCREEN ──────────────────────────────── -->
+<div id="gallery-screen">
+
+  <div id="top-nav">
+    <a href="./labor_organizing_national_dashboard.html" class="nav-back">← Back to Map View</a>
+    <span id="nav-goal-chip"></span>
+    <button class="btn-reset" onclick="resetToGoalSelector()">Change goal</button>
+  </div>
+
+  <div id="filter-bar">
+    <div class="filter-section-label">Filter by intervention type — select one or more</div>
+    <div id="filter-cards">
+      <div class="filter-card active-A" data-type="A">
+        <span class="filter-badge badge-A">Type A</span>
+        <div class="fc-title">Build New Power</div>
+        <div class="fc-desc">Few or no unions, high opportunity. The classic new campaign — enter a sector or geography and build from scratch.</div>
+      </div>
+      <div class="filter-card active-B" data-type="B">
+        <span class="filter-badge badge-B">Type B</span>
+        <div class="fc-title">Wake the Giant</div>
+        <div class="fc-desc">Unions exist but aren't politically activated. The infrastructure is there — mobilize existing members into durable electoral power.</div>
+      </div>
+      <div class="filter-card active-C" data-type="C">
+        <span class="filter-badge badge-C">Type C</span>
+        <div class="fc-title">Move Together</div>
+        <div class="fc-desc">Strong unions, politically aligned. Coordinate across locals and sectors to maximize voter contact and issue pressure.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gallery-header">
+    <h2 id="gallery-h2">Top 10 Metro Areas</h2>
+    <p id="gallery-subtitle"></p>
+  </div>
+
+  <div id="cards-grid">
+    <div id="empty-state">No metro areas match the current filters.</div>
+  </div>
+
+</div><!-- /gallery-screen -->
+
+<script>
+// ─────────────────────────────────────────────────────────────────────
+// FIPS → MSA LOOKUP  (Census CBSA definitions, top ~50 MSAs)
+// Counties not listed here are displayed as individual county entries.
+// ─────────────────────────────────────────────────────────────────────
+const FIPS_TO_MSA = {
+  // NEW YORK–NEWARK–JERSEY CITY (NY-NJ-PA)
+  "36061":"New York-Newark-Jersey City","36047":"New York-Newark-Jersey City",
+  "36081":"New York-Newark-Jersey City","36005":"New York-Newark-Jersey City",
+  "36085":"New York-Newark-Jersey City","36059":"New York-Newark-Jersey City",
+  "36103":"New York-Newark-Jersey City","36071":"New York-Newark-Jersey City",
+  "36079":"New York-Newark-Jersey City","36087":"New York-Newark-Jersey City",
+  "36119":"New York-Newark-Jersey City","34003":"New York-Newark-Jersey City",
+  "34013":"New York-Newark-Jersey City","34017":"New York-Newark-Jersey City",
+  "34019":"New York-Newark-Jersey City","34023":"New York-Newark-Jersey City",
+  "34025":"New York-Newark-Jersey City","34027":"New York-Newark-Jersey City",
+  "34029":"New York-Newark-Jersey City","34035":"New York-Newark-Jersey City",
+  "34037":"New York-Newark-Jersey City","34039":"New York-Newark-Jersey City",
+  "42103":"New York-Newark-Jersey City",
+  // LOS ANGELES–LONG BEACH–ANAHEIM (CA)
+  "06037":"Los Angeles-Long Beach-Anaheim","06059":"Los Angeles-Long Beach-Anaheim",
+  // CHICAGO–NAPERVILLE–ELGIN (IL-IN-WI)
+  "17031":"Chicago-Naperville-Elgin","17043":"Chicago-Naperville-Elgin",
+  "17089":"Chicago-Naperville-Elgin","17093":"Chicago-Naperville-Elgin",
+  "17097":"Chicago-Naperville-Elgin","17111":"Chicago-Naperville-Elgin",
+  "17197":"Chicago-Naperville-Elgin","18073":"Chicago-Naperville-Elgin",
+  "18089":"Chicago-Naperville-Elgin","18111":"Chicago-Naperville-Elgin",
+  "18127":"Chicago-Naperville-Elgin","55059":"Chicago-Naperville-Elgin",
+  // DALLAS–FORT WORTH–ARLINGTON (TX)
+  "48113":"Dallas-Fort Worth-Arlington","48121":"Dallas-Fort Worth-Arlington",
+  "48139":"Dallas-Fort Worth-Arlington","48221":"Dallas-Fort Worth-Arlington",
+  "48231":"Dallas-Fort Worth-Arlington","48257":"Dallas-Fort Worth-Arlington",
+  "48397":"Dallas-Fort Worth-Arlington","48439":"Dallas-Fort Worth-Arlington",
+  "48497":"Dallas-Fort Worth-Arlington",
+  // HOUSTON–THE WOODLANDS–SUGAR LAND (TX)
+  "48201":"Houston-The Woodlands-Sugar Land","48157":"Houston-The Woodlands-Sugar Land",
+  "48167":"Houston-The Woodlands-Sugar Land","48039":"Houston-The Woodlands-Sugar Land",
+  "48071":"Houston-The Woodlands-Sugar Land","48291":"Houston-The Woodlands-Sugar Land",
+  "48339":"Houston-The Woodlands-Sugar Land","48473":"Houston-The Woodlands-Sugar Land",
+  // WASHINGTON–ARLINGTON–ALEXANDRIA (DC-VA-MD-WV)
+  "11001":"Washington-Arlington-Alexandria","24031":"Washington-Arlington-Alexandria",
+  "24033":"Washington-Arlington-Alexandria","51013":"Washington-Arlington-Alexandria",
+  "51059":"Washington-Arlington-Alexandria","51600":"Washington-Arlington-Alexandria",
+  "51107":"Washington-Arlington-Alexandria","51153":"Washington-Arlington-Alexandria",
+  "51510":"Washington-Arlington-Alexandria","51683":"Washington-Arlington-Alexandria",
+  "51685":"Washington-Arlington-Alexandria","54037":"Washington-Arlington-Alexandria",
+  // MIAMI–FORT LAUDERDALE–WEST PALM BEACH (FL)
+  "12086":"Miami-Fort Lauderdale-West Palm Beach","12011":"Miami-Fort Lauderdale-West Palm Beach",
+  "12099":"Miami-Fort Lauderdale-West Palm Beach",
+  // PHILADELPHIA–CAMDEN–WILMINGTON (PA-NJ-DE-MD)
+  "42101":"Philadelphia-Camden-Wilmington","42017":"Philadelphia-Camden-Wilmington",
+  "42029":"Philadelphia-Camden-Wilmington","42045":"Philadelphia-Camden-Wilmington",
+  "42091":"Philadelphia-Camden-Wilmington","34005":"Philadelphia-Camden-Wilmington",
+  "34007":"Philadelphia-Camden-Wilmington","34015":"Philadelphia-Camden-Wilmington",
+  "34033":"Philadelphia-Camden-Wilmington","10003":"Philadelphia-Camden-Wilmington",
+  // ATLANTA–SANDY SPRINGS–ALPHARETTA (GA)
+  "13121":"Atlanta-Sandy Springs-Alpharetta","13067":"Atlanta-Sandy Springs-Alpharetta",
+  "13089":"Atlanta-Sandy Springs-Alpharetta","13097":"Atlanta-Sandy Springs-Alpharetta",
+  "13113":"Atlanta-Sandy Springs-Alpharetta","13135":"Atlanta-Sandy Springs-Alpharetta",
+  "13151":"Atlanta-Sandy Springs-Alpharetta","13223":"Atlanta-Sandy Springs-Alpharetta",
+  "13247":"Atlanta-Sandy Springs-Alpharetta","13063":"Atlanta-Sandy Springs-Alpharetta",
+  "13077":"Atlanta-Sandy Springs-Alpharetta","13117":"Atlanta-Sandy Springs-Alpharetta",
+  // PHOENIX–MESA–CHANDLER (AZ)
+  "04013":"Phoenix-Mesa-Chandler","04021":"Phoenix-Mesa-Chandler",
+  // BOSTON–CAMBRIDGE–NEWTON (MA-NH)
+  "25017":"Boston-Cambridge-Newton","25021":"Boston-Cambridge-Newton",
+  "25023":"Boston-Cambridge-Newton","25025":"Boston-Cambridge-Newton",
+  "33015":"Boston-Cambridge-Newton","33017":"Boston-Cambridge-Newton",
+  // RIVERSIDE–SAN BERNARDINO–ONTARIO (CA)
+  "06065":"Riverside-San Bernardino-Ontario","06071":"Riverside-San Bernardino-Ontario",
+  // SAN FRANCISCO–OAKLAND–BERKELEY (CA)
+  "06001":"San Francisco-Oakland-Berkeley","06013":"San Francisco-Oakland-Berkeley",
+  "06041":"San Francisco-Oakland-Berkeley","06075":"San Francisco-Oakland-Berkeley",
+  "06081":"San Francisco-Oakland-Berkeley",
+  // SAN JOSE–SUNNYVALE–SANTA CLARA (CA)
+  "06085":"San Jose-Sunnyvale-Santa Clara","06069":"San Jose-Sunnyvale-Santa Clara",
+  // SEATTLE–TACOMA–BELLEVUE (WA)
+  "53033":"Seattle-Tacoma-Bellevue","53053":"Seattle-Tacoma-Bellevue",
+  "53061":"Seattle-Tacoma-Bellevue",
+  // DETROIT–WARREN–DEARBORN (MI)
+  "26163":"Detroit-Warren-Dearborn","26099":"Detroit-Warren-Dearborn",
+  "26115":"Detroit-Warren-Dearborn","26125":"Detroit-Warren-Dearborn",
+  "26147":"Detroit-Warren-Dearborn","26161":"Detroit-Warren-Dearborn",
+  // MINNEAPOLIS–ST. PAUL–BLOOMINGTON (MN-WI)
+  "27003":"Minneapolis-St. Paul-Bloomington","27019":"Minneapolis-St. Paul-Bloomington",
+  "27025":"Minneapolis-St. Paul-Bloomington","27037":"Minneapolis-St. Paul-Bloomington",
+  "27053":"Minneapolis-St. Paul-Bloomington","27059":"Minneapolis-St. Paul-Bloomington",
+  "27123":"Minneapolis-St. Paul-Bloomington","27139":"Minneapolis-St. Paul-Bloomington",
+  "27141":"Minneapolis-St. Paul-Bloomington","27163":"Minneapolis-St. Paul-Bloomington",
+  "27171":"Minneapolis-St. Paul-Bloomington","55093":"Minneapolis-St. Paul-Bloomington",
+  "55109":"Minneapolis-St. Paul-Bloomington",
+  // SAN DIEGO–CHULA VISTA–CARLSBAD (CA)
+  "06073":"San Diego-Chula Vista-Carlsbad",
+  // TAMPA–ST. PETERSBURG–CLEARWATER (FL)
+  "12057":"Tampa-St. Petersburg-Clearwater","12101":"Tampa-St. Petersburg-Clearwater",
+  "12103":"Tampa-St. Petersburg-Clearwater",
+  // DENVER–AURORA–LAKEWOOD (CO)
+  "08001":"Denver-Aurora-Lakewood","08005":"Denver-Aurora-Lakewood",
+  "08013":"Denver-Aurora-Lakewood","08014":"Denver-Aurora-Lakewood",
+  "08019":"Denver-Aurora-Lakewood","08031":"Denver-Aurora-Lakewood",
+  "08035":"Denver-Aurora-Lakewood","08039":"Denver-Aurora-Lakewood",
+  "08047":"Denver-Aurora-Lakewood","08059":"Denver-Aurora-Lakewood",
+  "08093":"Denver-Aurora-Lakewood",
+  // BALTIMORE–COLUMBIA–TOWSON (MD)
+  "24003":"Baltimore-Columbia-Towson","24005":"Baltimore-Columbia-Towson",
+  "24013":"Baltimore-Columbia-Towson","24025":"Baltimore-Columbia-Towson",
+  "24027":"Baltimore-Columbia-Towson","24510":"Baltimore-Columbia-Towson",
+  "24035":"Baltimore-Columbia-Towson",
+  // ST. LOUIS (MO-IL)
+  "29189":"St. Louis","29510":"St. Louis","29071":"St. Louis","29099":"St. Louis",
+  "29113":"St. Louis","29183":"St. Louis","29219":"St. Louis","17005":"St. Louis",
+  "17013":"St. Louis","17027":"St. Louis","17083":"St. Louis","17117":"St. Louis",
+  "17119":"St. Louis","17133":"St. Louis","17163":"St. Louis",
+  // ORLANDO–KISSIMMEE–SANFORD (FL)
+  "12095":"Orlando-Kissimmee-Sanford","12097":"Orlando-Kissimmee-Sanford",
+  "12117":"Orlando-Kissimmee-Sanford","12069":"Orlando-Kissimmee-Sanford",
+  // CHARLOTTE–CONCORD–GASTONIA (NC-SC)
+  "37119":"Charlotte-Concord-Gastonia","37025":"Charlotte-Concord-Gastonia",
+  "37071":"Charlotte-Concord-Gastonia","37097":"Charlotte-Concord-Gastonia",
+  "37109":"Charlotte-Concord-Gastonia","37159":"Charlotte-Concord-Gastonia",
+  "37167":"Charlotte-Concord-Gastonia","37179":"Charlotte-Concord-Gastonia",
+  "45057":"Charlotte-Concord-Gastonia","45091":"Charlotte-Concord-Gastonia",
+  // PITTSBURGH (PA)
+  "42003":"Pittsburgh","42005":"Pittsburgh","42007":"Pittsburgh","42019":"Pittsburgh",
+  "42051":"Pittsburgh","42125":"Pittsburgh","42129":"Pittsburgh",
+  // PORTLAND–VANCOUVER–HILLSBORO (OR-WA)
+  "41005":"Portland-Vancouver-Hillsboro","41009":"Portland-Vancouver-Hillsboro",
+  "41051":"Portland-Vancouver-Hillsboro","41067":"Portland-Vancouver-Hillsboro",
+  "53011":"Portland-Vancouver-Hillsboro","53059":"Portland-Vancouver-Hillsboro",
+  // SAN ANTONIO–NEW BRAUNFELS (TX)
+  "48029":"San Antonio-New Braunfels","48091":"San Antonio-New Braunfels",
+  "48187":"San Antonio-New Braunfels","48259":"San Antonio-New Braunfels",
+  "48325":"San Antonio-New Braunfels",
+  // SACRAMENTO–ROSEVILLE–FOLSOM (CA)
+  "06017":"Sacramento-Roseville-Folsom","06061":"Sacramento-Roseville-Folsom",
+  "06067":"Sacramento-Roseville-Folsom","06113":"Sacramento-Roseville-Folsom",
+  // CINCINNATI (OH-KY-IN)
+  "39061":"Cincinnati","39165":"Cincinnati","39025":"Cincinnati","39017":"Cincinnati",
+  "21015":"Cincinnati","21037":"Cincinnati","21117":"Cincinnati","21191":"Cincinnati",
+  "18029":"Cincinnati","18047":"Cincinnati","18115":"Cincinnati","18161":"Cincinnati",
+  // KANSAS CITY (MO-KS)
+  "29095":"Kansas City","29165":"Kansas City","29037":"Kansas City","29047":"Kansas City",
+  "29049":"Kansas City","29107":"Kansas City","29177":"Kansas City","20091":"Kansas City",
+  "20103":"Kansas City","20121":"Kansas City","20209":"Kansas City",
+  // COLUMBUS (OH)
+  "39049":"Columbus","39089":"Columbus","39041":"Columbus","39045":"Columbus",
+  "39097":"Columbus","39101":"Columbus","39117":"Columbus","39129":"Columbus",
+  "39159":"Columbus",
+  // INDIANAPOLIS–CARMEL–ANDERSON (IN)
+  "18097":"Indianapolis-Carmel-Anderson","18011":"Indianapolis-Carmel-Anderson",
+  "18013":"Indianapolis-Carmel-Anderson","18057":"Indianapolis-Carmel-Anderson",
+  "18059":"Indianapolis-Carmel-Anderson","18063":"Indianapolis-Carmel-Anderson",
+  "18081":"Indianapolis-Carmel-Anderson","18109":"Indianapolis-Carmel-Anderson",
+  "18145":"Indianapolis-Carmel-Anderson",
+  // CLEVELAND–ELYRIA (OH)
+  "39035":"Cleveland-Elyria","39055":"Cleveland-Elyria","39085":"Cleveland-Elyria",
+  "39093":"Cleveland-Elyria","39103":"Cleveland-Elyria",
+  // LAS VEGAS–HENDERSON–PARADISE (NV)
+  "32003":"Las Vegas-Henderson-Paradise",
+  // AUSTIN–ROUND ROCK–GEORGETOWN (TX)
+  "48021":"Austin-Round Rock-Georgetown","48055":"Austin-Round Rock-Georgetown",
+  "48209":"Austin-Round Rock-Georgetown","48453":"Austin-Round Rock-Georgetown",
+  "48491":"Austin-Round Rock-Georgetown",
+  // NASHVILLE–DAVIDSON–MURFREESBORO–FRANKLIN (TN)
+  "47037":"Nashville-Davidson-Murfreesboro-Franklin","47043":"Nashville-Davidson-Murfreesboro-Franklin",
+  "47119":"Nashville-Davidson-Murfreesboro-Franklin","47147":"Nashville-Davidson-Murfreesboro-Franklin",
+  "47149":"Nashville-Davidson-Murfreesboro-Franklin","47159":"Nashville-Davidson-Murfreesboro-Franklin",
+  "47165":"Nashville-Davidson-Murfreesboro-Franklin","47187":"Nashville-Davidson-Murfreesboro-Franklin",
+  "47189":"Nashville-Davidson-Murfreesboro-Franklin",
+  // VIRGINIA BEACH–NORFOLK–NEWPORT NEWS (VA-NC)
+  // Note: Virginia independent city FIPS — Virginia Beach=51810, Norfolk=51710, etc.
+  "51810":"Virginia Beach-Norfolk-Newport News","51710":"Virginia Beach-Norfolk-Newport News",
+  "51700":"Virginia Beach-Norfolk-Newport News","51800":"Virginia Beach-Norfolk-Newport News",
+  "51550":"Virginia Beach-Norfolk-Newport News","51735":"Virginia Beach-Norfolk-Newport News",
+  "51740":"Virginia Beach-Norfolk-Newport News","51650":"Virginia Beach-Norfolk-Newport News",
+  "51830":"Virginia Beach-Norfolk-Newport News","51093":"Virginia Beach-Norfolk-Newport News",
+  "51095":"Virginia Beach-Norfolk-Newport News","51199":"Virginia Beach-Norfolk-Newport News",
+  "37053":"Virginia Beach-Norfolk-Newport News",
+  // PROVIDENCE–WARWICK (RI-MA)
+  "44001":"Providence-Warwick","44003":"Providence-Warwick","44005":"Providence-Warwick",
+  "44007":"Providence-Warwick","44009":"Providence-Warwick","25005":"Providence-Warwick",
+  // MILWAUKEE–WAUKESHA (WI)
+  "55079":"Milwaukee-Waukesha","55089":"Milwaukee-Waukesha",
+  "55131":"Milwaukee-Waukesha","55133":"Milwaukee-Waukesha",
+  // JACKSONVILLE (FL)
+  "12031":"Jacksonville","12019":"Jacksonville","12089":"Jacksonville",
+  "12109":"Jacksonville","13039":"Jacksonville",
+  // MEMPHIS (TN-MS-AR)
+  "47157":"Memphis","47047":"Memphis","28033":"Memphis","28093":"Memphis",
+  "28137":"Memphis","05121":"Memphis",
+  // OKLAHOMA CITY (OK)
+  "40017":"Oklahoma City","40027":"Oklahoma City","40051":"Oklahoma City",
+  "40081":"Oklahoma City","40083":"Oklahoma City","40109":"Oklahoma City",
+  "40125":"Oklahoma City",
+  // LOUISVILLE/JEFFERSON COUNTY (KY-IN)
+  "21111":"Louisville/Jefferson County","21029":"Louisville/Jefferson County",
+  "21163":"Louisville/Jefferson County","21179":"Louisville/Jefferson County",
+  "21185":"Louisville/Jefferson County","21211":"Louisville/Jefferson County",
+  "21215":"Louisville/Jefferson County","21223":"Louisville/Jefferson County",
+  "18019":"Louisville/Jefferson County","18043":"Louisville/Jefferson County",
+  "18061":"Louisville/Jefferson County","18143":"Louisville/Jefferson County",
+  "18175":"Louisville/Jefferson County",
+  // HARTFORD–EAST HARTFORD–MIDDLETOWN (CT)
+  "09003":"Hartford-East Hartford-Middletown","09007":"Hartford-East Hartford-Middletown",
+  "09013":"Hartford-East Hartford-Middletown",
+  // RICHMOND (VA) — Richmond City FIPS=51760 (distinct from Virginia Beach=51810)
+  "51760":"Richmond","51570":"Richmond","51670":"Richmond","51730":"Richmond",
+  "51041":"Richmond","51085":"Richmond","51087":"Richmond","51127":"Richmond",
+  "51145":"Richmond","51149":"Richmond","51036":"Richmond",
+  // NEW ORLEANS–METAIRIE (LA)
+  "22051":"New Orleans-Metairie","22071":"New Orleans-Metairie",
+  "22075":"New Orleans-Metairie","22087":"New Orleans-Metairie",
+  "22089":"New Orleans-Metairie","22093":"New Orleans-Metairie",
+  "22095":"New Orleans-Metairie",
+  // BUFFALO–CHEEKTOWAGA (NY)
+  "36029":"Buffalo-Cheektowaga","36063":"Buffalo-Cheektowaga",
+  // RALEIGH–CARY (NC)
+  "37069":"Raleigh-Cary","37101":"Raleigh-Cary","37183":"Raleigh-Cary",
+  // BIRMINGHAM–HOOVER (AL)
+  "01073":"Birmingham-Hoover","01009":"Birmingham-Hoover","01021":"Birmingham-Hoover",
+  "01117":"Birmingham-Hoover","01115":"Birmingham-Hoover","01127":"Birmingham-Hoover",
+  // SALT LAKE CITY (UT)
+  "49035":"Salt Lake City","49045":"Salt Lake City",
+  // ROCHESTER (NY)
+  "36051":"Rochester","36055":"Rochester","36069":"Rochester",
+  "36073":"Rochester","36117":"Rochester","36123":"Rochester"
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// TOP SECTORS BY MSA (hardcoded from regional economic knowledge)
+// Displayed as scannable metadata chips on each card.
+// ─────────────────────────────────────────────────────────────────────
+const MSA_SECTORS = {
+  "New York-Newark-Jersey City":        [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "Los Angeles-Long Beach-Anaheim":     [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Chicago-Naperville-Elgin":           [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Dallas-Fort Worth-Arlington":        [["🏥","Healthcare"],["🚛","Trucking/Warehousing"],["🏭","Manufacturing"]],
+  "Houston-The Woodlands-Sugar Land":   [["🏥","Healthcare"],["🚢","Ports/Logistics"],["⚡","Utilities"]],
+  "Washington-Arlington-Alexandria":    [["🏛️","Public Sector"],["🎓","Higher Ed"],["🏥","Healthcare"]],
+  "Miami-Fort Lauderdale-West Palm Beach":[["🏥","Healthcare"],["🚢","Ports/Logistics"],["🏛️","Public Sector"]],
+  "Philadelphia-Camden-Wilmington":     [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "Atlanta-Sandy Springs-Alpharetta":   [["🏥","Healthcare"],["🚢","Ports/Logistics"],["🏛️","Public Sector"]],
+  "Phoenix-Mesa-Chandler":              [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Boston-Cambridge-Newton":            [["🏥","Healthcare"],["🎓","Higher Ed"],["🏛️","Public Sector"]],
+  "Riverside-San Bernardino-Ontario":   [["🚛","Trucking/Warehousing"],["🏥","Healthcare"],["🏭","Manufacturing"]],
+  "San Francisco-Oakland-Berkeley":     [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "San Jose-Sunnyvale-Santa Clara":     [["🏥","Healthcare"],["🏭","Manufacturing"],["⚡","Utilities"]],
+  "Seattle-Tacoma-Bellevue":            [["🏭","Manufacturing"],["🚢","Ports/Logistics"],["⚡","Utilities"]],
+  "Detroit-Warren-Dearborn":            [["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Minneapolis-St. Paul-Bloomington":   [["🏥","Healthcare"],["🏛️","Public Sector"],["🏭","Manufacturing"]],
+  "San Diego-Chula Vista-Carlsbad":     [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "Tampa-St. Petersburg-Clearwater":    [["🏥","Healthcare"],["🏛️","Public Sector"],["🏫","K-12 Education"]],
+  "Denver-Aurora-Lakewood":             [["🏥","Healthcare"],["⚡","Utilities"],["🏛️","Public Sector"]],
+  "Baltimore-Columbia-Towson":          [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]],
+  "St. Louis":                          [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Orlando-Kissimmee-Sanford":          [["🏥","Healthcare"],["🏛️","Public Sector"],["🏫","K-12 Education"]],
+  "Charlotte-Concord-Gastonia":         [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Pittsburgh":                         [["🏥","Healthcare"],["🎓","Higher Ed"],["🏭","Manufacturing"]],
+  "Portland-Vancouver-Hillsboro":       [["🏥","Healthcare"],["⚡","Utilities"],["🚛","Trucking/Warehousing"]],
+  "San Antonio-New Braunfels":          [["🏛️","Public Sector"],["🏥","Healthcare"],["🏫","K-12 Education"]],
+  "Sacramento-Roseville-Folsom":        [["🏛️","Public Sector"],["🏥","Healthcare"],["⚡","Utilities"]],
+  "Cincinnati":                         [["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Kansas City":                        [["🏭","Manufacturing"],["🏥","Healthcare"],["🚛","Trucking/Warehousing"]],
+  "Columbus":                           [["🏥","Healthcare"],["🎓","Higher Ed"],["🏛️","Public Sector"]],
+  "Indianapolis-Carmel-Anderson":       [["🏭","Manufacturing"],["🏥","Healthcare"],["🚛","Trucking/Warehousing"]],
+  "Cleveland-Elyria":                   [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Las Vegas-Henderson-Paradise":       [["🏛️","Public Sector"],["🏥","Healthcare"],["🏫","K-12 Education"]],
+  "Austin-Round Rock-Georgetown":       [["🏛️","Public Sector"],["🎓","Higher Ed"],["🏥","Healthcare"]],
+  "Nashville-Davidson-Murfreesboro-Franklin":[["🏥","Healthcare"],["🏛️","Public Sector"],["🏫","K-12 Education"]],
+  "Virginia Beach-Norfolk-Newport News":[["🏛️","Public Sector"],["🏥","Healthcare"],["⚡","Utilities"]],
+  "Providence-Warwick":                 [["🏥","Healthcare"],["🎓","Higher Ed"],["🏭","Manufacturing"]],
+  "Milwaukee-Waukesha":                 [["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Jacksonville":                       [["🏥","Healthcare"],["🏛️","Public Sector"],["🚢","Ports/Logistics"]],
+  "Memphis":                            [["🚛","Trucking/Warehousing"],["🏥","Healthcare"],["🏭","Manufacturing"]],
+  "Oklahoma City":                      [["🏥","Healthcare"],["⚡","Utilities"],["🏛️","Public Sector"]],
+  "Louisville/Jefferson County":        [["🏥","Healthcare"],["🏭","Manufacturing"],["🚛","Trucking/Warehousing"]],
+  "Hartford-East Hartford-Middletown":  [["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]],
+  "Richmond":                           [["🏛️","Public Sector"],["🏥","Healthcare"],["🎓","Higher Ed"]],
+  "New Orleans-Metairie":               [["🚢","Ports/Logistics"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Buffalo-Cheektowaga":                [["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]],
+  "Raleigh-Cary":                       [["🎓","Higher Ed"],["🏥","Healthcare"],["🏛️","Public Sector"]],
+  "Birmingham-Hoover":                  [["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]],
+  "Salt Lake City":                     [["🏥","Healthcare"],["🏭","Manufacturing"],["🏛️","Public Sector"]],
+  "Rochester":                          [["🏥","Healthcare"],["🏭","Manufacturing"],["🎓","Higher Ed"]]
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// GOAL CONFIGURATION
+// ─────────────────────────────────────────────────────────────────────
+const GOALS = {
+  congressional: { label:"Flip the House",               icon:"🏛️", key:"congressional_score", shortLabel:"Congressional" },
+  presidential:  { label:"Presidential Battlegrounds",    icon:"🗳️", key:"presidential_score",  shortLabel:"Presidential"  },
+  statewide:     { label:"Long-Term State Transformation",icon:"🌱", key:"statewide_score",      shortLabel:"Statewide"     }
+};
+
+// ─────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────
+let allCounties = [];
+let msaMap = {};            // name → aggregated MSA object
+let selectedGoal = null;
+let activeFilters = new Set(["A","B","C"]);
+let observer = null;
+const explanationCache = {};
+
+// API key — prefer window injection, then sessionStorage, then blank
+let apiKey = (window.ANTHROPIC_API_KEY || sessionStorage.getItem("anthropic_api_key") || "").trim();
+
+// ─────────────────────────────────────────────────────────────────────
+// API KEY UI
+// ─────────────────────────────────────────────────────────────────────
+const apiKeyInput  = document.getElementById("api-key-input");
+const apiStatusEl  = document.getElementById("api-status");
+
+function setApiStatus(msg, ok) {
+  apiStatusEl.textContent = msg;
+  apiStatusEl.className   = ok ? "ok" : "";
+}
+
+if (apiKey) {
+  apiKeyInput.value = apiKey;
+  setApiStatus("Key loaded ✓", true);
+}
+
+apiKeyInput.addEventListener("input", () => {
+  apiKey = apiKeyInput.value.trim();
+  sessionStorage.setItem("anthropic_api_key", apiKey);
+  setApiStatus(apiKey ? "Key saved to session ✓" : "Enter key to enable AI-generated strategic rationale", !!apiKey);
+});
+
+// ─────────────────────────────────────────────────────────────────────
+// DATA LOADING
+// ─────────────────────────────────────────────────────────────────────
+async function loadData() {
+  const res = await fetch("../data/county_scores.json");
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  allCounties = await res.json();
+  console.log(`[Gallery] Loaded ${allCounties.length} counties`);
+  buildMSAMap();
+}
+
+function buildMSAMap() {
+  const groups = {};
+
+  for (const c of allCounties) {
+    const key = FIPS_TO_MSA[c.fips] || `${c.county_name}, ${c.state}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(c);
+  }
+
+  msaMap = {};
+
+  for (const [name, counties] of Object.entries(groups)) {
+    const totalPop = counties.reduce((s, c) => s + (c.population || 1), 0);
+
+    const wavg = field =>
+      counties.reduce((s, c) => s + (+(c[field] || 0)) * (c.population || 1), 0) / totalPop;
+
+    // Dominant intervention type by population weight
+    const typeWeight = { A: 0, B: 0, C: 0 };
+    for (const c of counties) {
+      const t = (c.intervention_type || "").charAt(5); // "Type A…" → "A"
+      if (typeWeight[t] !== undefined)
+        typeWeight[t] += (c.population || 1);
+    }
+    const dominantType = Object.entries(typeWeight).sort((a, b) => b[1] - a[1])[0][0];
+
+    const states = [...new Set(counties.map(c => c.state))].sort().join(", ");
+
+    msaMap[name] = {
+      name, states, totalPop, counties, dominantType,
+      organizing_opportunity_score: wavg("organizing_opportunity_score"),
+      presidential_score:  wavg("presidential_score"),
+      congressional_score: wavg("congressional_score"),
+      statewide_score:     wavg("statewide_score"),
+      organized_scale_score: wavg("organized_scale_score"),
+      union_culture_score:   wavg("union_culture_score"),
+      sectoral_score:        wavg("sectoral_score"),
+    };
+  }
+
+  // Console output for inspection
+  console.log(`[Gallery] Aggregated into ${Object.keys(msaMap).length} MSA/county groups`);
+  const sample = Object.values(msaMap)
+    .sort((a, b) => b.organizing_opportunity_score - a.organizing_opportunity_score)
+    .slice(0, 8)
+    .map(m => ({
+      msa:  m.name,
+      pop:  m.totalPop.toLocaleString(),
+      opp:  m.organizing_opportunity_score.toFixed(1),
+      pres: m.presidential_score.toFixed(1),
+      cong: m.congressional_score.toFixed(1),
+      sw:   m.statewide_score.toFixed(1),
+      type: "Type " + m.dominantType,
+    }));
+  console.table(sample);
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// RANKING
+// composite = organizing_opportunity_score × 0.5 + electoral_sub_score × 0.5
+// ─────────────────────────────────────────────────────────────────────
+function getTop10(goal, filterTypes) {
+  const scoreKey = GOALS[goal].key;
+  return Object.values(msaMap)
+    .filter(m => filterTypes.has(m.dominantType))
+    .map(m => ({
+      ...m,
+      compositeScore: m.organizing_opportunity_score * 0.5 + m[scoreKey] * 0.5,
+    }))
+    .sort((a, b) => b.compositeScore - a.compositeScore)
+    .slice(0, 10);
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// GOAL SELECTION
+// ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll(".goal-tile").forEach(tile => {
+  tile.addEventListener("click", () => {
+    selectedGoal = tile.dataset.goal;
+    transitionToGallery();
+  });
+});
+
+function transitionToGallery() {
+  const gs = document.getElementById("goal-screen");
+  const gl = document.getElementById("gallery-screen");
+  gs.classList.add("exiting");
+  setTimeout(() => {
+    gs.style.display = "none";
+    gl.style.display  = "block";
+    gl.offsetHeight;              // force reflow so transition fires
+    gl.classList.add("visible");
+    renderGallery();
+  }, 400);
+}
+
+function resetToGoalSelector() {
+  const gs = document.getElementById("goal-screen");
+  const gl = document.getElementById("gallery-screen");
+  gl.classList.remove("visible");
+  setTimeout(() => {
+    gl.style.display = "none";
+    gs.classList.remove("exiting");
+    gs.style.display = "flex";
+    selectedGoal = null;
+  }, 220);
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// FILTER CARDS
+// ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll(".filter-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const t = card.dataset.type;
+    if (activeFilters.has(t)) {
+      if (activeFilters.size > 1) {
+        activeFilters.delete(t);
+        card.classList.add("inactive");
+        card.classList.remove(`active-${t}`);
+      }
+    } else {
+      activeFilters.add(t);
+      card.classList.remove("inactive");
+      card.classList.add(`active-${t}`);
+    }
+    renderGallery();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────
+// GALLERY RENDER
+// ─────────────────────────────────────────────────────────────────────
+function renderGallery() {
+  if (!selectedGoal) return;
+
+  const goal = GOALS[selectedGoal];
+  document.getElementById("nav-goal-chip").textContent = `${goal.icon} ${goal.label}`;
+  document.getElementById("gallery-subtitle").textContent =
+    `Ranked by: organizing opportunity score × 0.5 + ${goal.shortLabel.toLowerCase()} score × 0.5` +
+    ` · Showing type${activeFilters.size > 1 ? "s" : ""}: ` +
+    [...activeFilters].sort().map(t => "Type " + t).join(", ");
+
+  const top10 = getTop10(selectedGoal, activeFilters);
+  const grid  = document.getElementById("cards-grid");
+  grid.innerHTML = "";
+
+  if (top10.length === 0) {
+    const el = document.createElement("div");
+    el.id = "empty-state";
+    el.style.display = "block";
+    el.textContent = "No metro areas match the current filters. Select at least one intervention type.";
+    grid.appendChild(el);
+    return;
+  }
+
+  top10.forEach((msa, i) => grid.appendChild(buildCard(msa, i)));
+  attachIntersectionObserver();
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// CARD BUILDER
+// ─────────────────────────────────────────────────────────────────────
+function buildCard(msa, rank) {
+  const goal     = GOALS[selectedGoal];
+  const elScore  = msa[goal.key];
+  const sectors  = MSA_SECTORS[msa.name] || fallbackSectors(msa.states);
+  const isTop    = rank === 0;
+
+  const typeLabel = { A:"Build New Power", B:"Wake the Giant", C:"Move Together" }[msa.dominantType];
+
+  const card = document.createElement("div");
+  card.className = "msa-card";
+  card.dataset.msaName = msa.name;
+
+  // Hardcoded news example for the #1 card only — shows what Phase 2 will look like
+  const newsHTML = isTop
+    ? `<p class="news-body news-live">
+        Organized labor in this metro has seen a wave of contract ratifications and new election filings over the past 18 months.
+        Recent public-sector organizing drives and healthcare NLRB petitions signal growing density.
+        Multiple locals have announced coordinated get-out-the-vote infrastructure for 2026.
+      </p>`
+    : `<p class="news-body">Live news summaries coming in Phase 2.</p>`;
+
+  card.innerHTML = `
+    <div class="card-rank-label">#${rank + 1} &nbsp;·&nbsp; Score ${msa.compositeScore.toFixed(1)}</div>
+    <div class="card-head">
+      <div class="card-title-row">
+        <div>
+          <div class="card-msa-name">${msa.name}</div>
+          <div class="card-states">${msa.states}</div>
+        </div>
+        <span class="card-type-badge badge-${msa.dominantType}">Type ${msa.dominantType} — ${typeLabel}</span>
+      </div>
+    </div>
+    <div class="card-scores">
+      <div class="score-row">
+        <div class="score-meta-row">
+          <span class="score-lbl">Organizing Opportunity</span>
+          <span class="score-val">${msa.organizing_opportunity_score.toFixed(1)}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-gold" style="width:${Math.min(100,msa.organizing_opportunity_score)}%"></div>
+        </div>
+      </div>
+      <div class="score-row">
+        <div class="score-meta-row">
+          <span class="score-lbl">${goal.shortLabel} Score</span>
+          <span class="score-val">${elScore.toFixed(1)}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill fill-dim" style="width:${Math.min(100,elScore)}%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-sectors">
+      ${sectors.map(([icon, label]) =>
+        `<span class="sector-chip"><span>${icon}</span>${label}</span>`
+      ).join("")}
+    </div>
+    <div class="card-explanation">
+      <div class="card-section-eyebrow">Strategic Rationale</div>
+      <div class="explanation-body" data-explanation-target>
+        <div class="skeleton-wrap">
+          <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-news">
+      <div class="card-section-eyebrow" style="color:var(--text-muted)">Recent Labor Activity</div>
+      ${newsHTML}
+    </div>
+  `;
+
+  return card;
+}
+
+function fallbackSectors(states) {
+  const midwest = ["IL","IN","IA","KS","MI","MN","MO","NE","ND","OH","SD","WI"];
+  const south   = ["AL","AR","FL","GA","KY","LA","MS","NC","OK","SC","TN","TX","VA","WV"];
+  const sl = states.split(", ");
+  if (sl.some(s => midwest.includes(s))) return [["🏭","Manufacturing"],["🏥","Healthcare"],["🏛️","Public Sector"]];
+  if (sl.some(s => south.includes(s)))   return [["🏥","Healthcare"],["🏫","K-12 Education"],["🏛️","Public Sector"]];
+  return [["🏥","Healthcare"],["🏛️","Public Sector"],["🎓","Higher Ed"]];
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// INTERSECTION OBSERVER — lazy AI explanation loading
+// ─────────────────────────────────────────────────────────────────────
+function attachIntersectionObserver() {
+  if (observer) observer.disconnect();
+
+  observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const card = entry.target.closest(".msa-card");
+      if (card) {
+        generateExplanation(card, card.dataset.msaName);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll("[data-explanation-target]").forEach(el => observer.observe(el));
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// CLAUDE API CALL — strategic explanation per card
+// API key is injected at deploy time (window.ANTHROPIC_API_KEY) or
+// entered by the user in the field above.
+// ─────────────────────────────────────────────────────────────────────
+async function generateExplanation(card, msaName) {
+  const target = card.querySelector("[data-explanation-target]");
+  if (!target) return;
+
+  const cacheKey = `${msaName}::${selectedGoal}`;
+  if (explanationCache[cacheKey]) {
+    target.innerHTML = `<em>${explanationCache[cacheKey]}</em>`;
+    return;
+  }
+
+  if (!apiKey) {
+    target.innerHTML = `<span class="key-prompt">Enter an Anthropic API key at the top of the page to generate strategic rationale for this metro.</span>`;
+    return;
+  }
+
+  const msa  = msaMap[msaName];
+  if (!msa) return;
+
+  const goal    = GOALS[selectedGoal];
+  const elScore = msa[goal.key];
+  const sectors = (MSA_SECTORS[msaName] || fallbackSectors(msa.states)).map(([,l]) => l).join(", ");
+  const typeDesc = {
+    A: "Type A: Build New Power — few or no unions, high organizing opportunity",
+    B: "Type B: Wake the Giant — unions exist but are not politically activated",
+    C: "Type C: Move Together — strong unions, politically aligned",
+  }[msa.dominantType];
+
+  const prompt = `You are a senior labor strategist writing a briefing for union organizers, not a data scientist.
+
+Write exactly 2–3 sentences of strategic rationale for the metro area below. Be specific and concrete — name sectors, explain the leverage, and connect the organizing opportunity to the electoral goal. Avoid generic phrases like "this metro presents an opportunity" or "labor can make a difference here." Sound like someone who knows the terrain.
+
+Metro: ${msaName}
+State(s): ${msa.states}
+Strategic Goal: ${goal.label}
+Intervention: ${typeDesc}
+Top Sectors: ${sectors}
+Organizing Opportunity Score: ${msa.organizing_opportunity_score.toFixed(1)} / 100
+${goal.shortLabel} Score: ${elScore.toFixed(1)} / 100
+Organized Scale Score: ${msa.organized_scale_score.toFixed(1)} / 10
+Union Culture Score: ${msa.union_culture_score.toFixed(1)} / 40
+
+Return only the 2–3 sentence rationale. No label, no preamble, no quotation marks.`;
+
+  try {
+    // API key injected at deploy time via window.ANTHROPIC_API_KEY or user input above
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 220,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text?.trim();
+    if (!text) throw new Error("Empty response from API");
+
+    explanationCache[cacheKey] = text;
+    target.innerHTML = `<em>${text}</em>`;
+
+  } catch (err) {
+    console.warn(`[Gallery] Explanation failed for "${msaName}":`, err.message);
+    target.innerHTML = `<span class="err-msg">Could not load explanation: ${err.message}</span>`;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────
+loadData().catch(err => {
+  console.error("[Gallery] Data load failed:", err);
+  document.querySelector(".gs-sub").textContent =
+    "⚠ Could not load county data. Ensure county_scores.json is accessible at ../data/county_scores.json.";
+});
+</script>
+</body>
+</html>
