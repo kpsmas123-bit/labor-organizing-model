@@ -277,11 +277,14 @@
   #detail-panel {
     position: absolute; right: 16px; top: 16px; width: 290px;
     background: #FAF7F2; border: 1px solid #DDD5C8; border-radius: 10px;
-    padding: 16px; display: none; z-index: 100;
+    padding: 16px; display: none; z-index: 100; max-height: calc(100vh - 120px); overflow-y: auto;
     box-shadow: 0 4px 24px rgba(44,34,24,0.12);
   }
   #detail-panel h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700; margin-bottom: 2px; color: #2C2C2C; }
   #detail-panel .state-label { font-size: 11px; color: #7A6F64; margin-bottom: 10px; }
+  #dp-summary-text { font-size: 11px; color: #5A4A3A; line-height: 1.6; margin: 0; }
+  #dp-county-list { font-size: 10px; color: #7A6F64; column-count: 2; column-gap: 8px; max-height: 90px; overflow-y: auto; }
+  #dp-county-list div { padding: 1px 0; }
 
   .opp-score-display { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
   .opp-score-number { font-family: 'Playfair Display', Georgia, serif; font-size: 38px; font-weight: 700; color: #C4512A; line-height: 1; }
@@ -379,8 +382,10 @@
 
   .loading { color: #E8732A; font-size: 11px; }
 
-  .county-path { stroke: none; cursor: pointer; transition: opacity 0.08s; }
-  .county-path:hover { opacity: 0.75; stroke: #2C2C2C; stroke-width: 1px; }
+  .msa-path { cursor: pointer; transition: opacity 0.08s; }
+  .msa-path:hover { opacity: 0.78; }
+  .nonmetro-path { cursor: pointer; transition: opacity 0.08s; }
+  .nonmetro-path:hover { opacity: 0.75; }
   .state-boundary { fill: none; stroke: #5A4A3A; stroke-width: 1.2; pointer-events: none; }
 
   .tooltip {
@@ -537,8 +542,8 @@
 
         <div id="detail-panel">
           <button id="close-detail">×</button>
-          <h3 id="dp-name">County Name</h3>
-          <div class="state-label" id="dp-state">State · Region</div>
+          <h3 id="dp-name">Metro Area</h3>
+          <div class="state-label" id="dp-state">States</div>
 
           <div class="opp-score-display">
             <div class="opp-score-number" id="dp-opp">–</div>
@@ -548,6 +553,11 @@
           <div class="badge-row">
             <span class="badge" id="dp-int-badge">–</span>
             <span class="badge" id="dp-tier-badge">–</span>
+          </div>
+
+          <div class="detail-section" id="dp-summary-section" style="display:none">
+            <h4>Labor Intelligence Brief</h4>
+            <p id="dp-summary-text"></p>
           </div>
 
           <div class="score-bars" id="dp-score-bars">
@@ -584,23 +594,22 @@
           </div>
 
           <div class="detail-section">
-            <h4>Electoral Context</h4>
-            <div class="detail-row"><span class="label">2024 Margin</span><span class="val" id="dp-margin24">–</span></div>
-            <div class="detail-row"><span class="label">2020 Margin</span><span class="val" id="dp-margin20">–</span></div>
-            <div class="detail-row"><span class="label">Swing State</span><span class="val" id="dp-swing">–</span></div>
-          </div>
-
-          <div class="detail-section">
-            <h4>Infrastructure Detail</h4>
-            <div class="detail-row"><span class="label">Organized Scale</span><span class="val" id="dp-scale">–</span></div>
+            <h4>Metro Area</h4>
+            <div class="detail-row"><span class="label">Counties</span><span class="val" id="dp-pop">–</span></div>
+            <div class="detail-row"><span class="label">Population</span><span class="val" id="dp-rurban">–</span></div>
             <div class="detail-row"><span class="label">Union Culture</span><span class="val" id="dp-culture">–</span></div>
+            <div class="detail-row"><span class="label">Organized Scale</span><span class="val" id="dp-scale">–</span></div>
+            <div class="detail-row"><span class="label">Swing State(s)</span><span class="val" id="dp-swing">–</span></div>
           </div>
 
-          <div class="detail-section">
-            <h4>County Info</h4>
-            <div class="detail-row"><span class="label">Population</span><span class="val" id="dp-pop">–</span></div>
-            <div class="detail-row"><span class="label">Rural/Urban</span><span class="val" id="dp-rurban">–</span></div>
+          <div class="detail-section" id="dp-counties-section">
+            <h4>Counties in Metro</h4>
+            <div id="dp-county-list"></div>
           </div>
+
+          <!-- Hidden fields kept for non-metro county fallback -->
+          <span id="dp-margin24" style="display:none"></span>
+          <span id="dp-margin20" style="display:none"></span>
         </div>
 
         <div class="legend" id="map-legend">
@@ -1299,9 +1308,10 @@ function updateLegend() {
 const svg = d3.select("#map-svg");
 let g;
 
-// MSA aggregate score lookup: fips → {msaScore, msaName, msaElectoral}
+// MSA aggregate score lookup: fips → msaScore obj, name → msaScore obj
 // Built once at map init; used by both fill and updateMapColors.
 let msaScoreByFips = {};
+let msaScoreByName = {};
 
 function buildMsaScoreLookup() {
   // Group counties by MSA
@@ -1314,16 +1324,40 @@ function buildMsaScoreLookup() {
   }
   // Compute population-weighted average scores per MSA
   msaScoreByFips = {};
+  msaScoreByName = {};
   for (const [msaName, counties] of Object.entries(msaGroups)) {
     const totalPop = counties.reduce((s, c) => s + (c.population || 1), 0);
-    const wavg = f => counties.reduce((s, c) => s + (+(c[f] || 0)) * (c.population || 1), 0) / totalPop;
+    const wavg = f => Math.round(counties.reduce((s, c) => s + (+(c[f] || 0)) * (c.population || 1), 0) / totalPop);
+    // Dominant intervention type by population weight
+    const tw = {A:0, B:0, C:0};
+    for (const c of counties) { const t = (c.intervention_type || "").charAt(5); if (tw[t] !== undefined) tw[t] += (c.population || 1); }
+    const domLetter = Object.entries(tw).sort((a,b) => b[1]-a[1])[0][0];
+    const domType = domLetter === "A" ? "Type A: Organize the Unorganized"
+                  : domLetter === "B" ? "Type B: Politically Activate Existing Unions"
+                  : "Type C: Partner with Activated Unions";
+    // Swing states in this MSA
+    const swingStates = [...new Set(counties.filter(c => c.swing_state).map(c => c.state))].sort().join(", ");
+    const states = [...new Set(counties.map(c => c.state))].sort().join(", ");
     const msaScore = {
-      opp:          wavg("organizing_opportunity_score"),
-      presidential: wavg("presidential_score"),
-      statewide:    wavg("statewide_score"),
-      congressional:wavg("congressional_score"),
+      opp:              wavg("organizing_opportunity_score"),
+      presidential:     wavg("presidential_score"),
+      statewide:        wavg("statewide_score"),
+      congressional:    wavg("congressional_score"),
+      organizing:       wavg("organizing_score"),
+      sectoral:         wavg("sectoral_score"),
+      infra:            wavg("infra_score"),
+      unionCulture:     wavg("union_culture_score"),
+      organizedScale:   wavg("organized_scale_score"),
+      totalPop,
+      countyCount:      counties.length,
+      dominantType:     domType,
+      dominantLetter:   domLetter,
+      swingStates,
+      states,
+      counties,
       msaName,
     };
+    msaScoreByName[msaName] = msaScore;
     for (const c of counties) {
       msaScoreByFips[c.fips] = msaScore;
     }
@@ -1354,72 +1388,118 @@ async function initMap() {
 
   try {
     const us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json");
-    const counties = topojson.feature(us, us.objects.counties);
+    const allCountyFeatures = topojson.feature(us, us.objects.counties);
     const stateMesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
 
-    // MSA border mesh: edge between two counties that belong to different MSAs
-    // (or one is in an MSA and the other isn't)
     const countyByFips = {};
     allCounties.forEach(c => { countyByFips[c.fips] = c; });
 
-    const getMsaKey = fips => {
-      const c = countyByFips[fips];
-      return (c && c.msa_name && c.msa_name !== "Non-Metro") ? c.msa_name : `__${fips}`;
-    };
-    const msaMesh = topojson.mesh(
-      us, us.objects.counties,
-      (a, b) => a !== b && getMsaKey(a.id) !== getMsaKey(b.id)
-    );
+    // Group TopoJSON county geometries by MSA name for merging
+    const msaGeomGroups = {};   // msaName → array of county TopoJSON geom objects
+    const nonMetroGeoms = [];   // individual geom objects for non-metro counties
 
-    const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], counties));
+    for (const geom of us.objects.counties.geometries) {
+      const c = countyByFips[geom.id];
+      const msaName = (c && c.msa_name && c.msa_name !== "Non-Metro") ? c.msa_name : null;
+      if (msaName) {
+        if (!msaGeomGroups[msaName]) msaGeomGroups[msaName] = [];
+        msaGeomGroups[msaName].push(geom);
+      } else {
+        nonMetroGeoms.push(geom);
+      }
+    }
 
-    g.append("g")
+    // Merge each MSA's counties into a single GeoJSON Feature (no internal county topology)
+    const msaFeatures = Object.entries(msaGeomGroups).map(([msaName, geoms]) => ({
+      type: "Feature",
+      geometry: topojson.merge(us, geoms),
+      properties: { msaName },
+    }));
+
+    // Non-metro counties stay as individual features
+    const nonMetroFeatures = allCountyFeatures.features.filter(f => {
+      const c = countyByFips[f.id];
+      return !c || !c.msa_name || c.msa_name === "Non-Metro";
+    });
+
+    const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], allCountyFeatures));
+    const tt = document.getElementById("tooltip");
+
+    // ── Draw merged MSA regions ──────────────────────────────────
+    g.append("g").attr("class", "msa-regions")
       .selectAll("path")
-      .data(counties.features)
+      .data(msaFeatures)
       .join("path")
-      .attr("class", "county-path")
+      .attr("class", "msa-path")
       .attr("d", path)
+      .attr("stroke", "#8B7355")
+      .attr("stroke-width", "0.5")
+      .attr("stroke-opacity", "0.55")
+      .attr("fill", d => {
+        const msa = msaScoreByName[d.properties.msaName];
+        if (!msa) return NO_DATA_COLOR;
+        const score = goalFilter === "presidential" ? msa.presidential
+                    : goalFilter === "statewide"    ? msa.statewide
+                    : goalFilter === "congressional" ? msa.congressional
+                    : msa.opp;
+        return scoreColor(score, null);
+      })
+      .attr("data-msa", d => d.properties.msaName)
+      .on("mousemove", (event, d) => {
+        const msaName = d.properties.msaName;
+        const msa = msaScoreByName[msaName];
+        if (!msa) return;
+        const score = goalFilter === "presidential" ? msa.presidential
+                    : goalFilter === "statewide"    ? msa.statewide
+                    : goalFilter === "congressional" ? msa.congressional
+                    : msa.opp;
+        const intLetter = msa.dominantLetter;
+        const intClass = intLetter === "A" ? "int-type-a" : intLetter === "B" ? "int-type-b" : "int-type-c";
+        tt.style.opacity = "1";
+        tt.style.left = (event.offsetX + 12) + "px";
+        tt.style.top = (event.offsetY - 10) + "px";
+        tt.innerHTML = `<strong>${msaName}</strong>`
+          + `<br><span style="font-size:10px;color:#A09385">${msa.states}</span>`
+          + `<br><span class="tt-opp">OPP ${Math.round(score)}</span>`
+          + `&nbsp;<span class="${intClass}">Type ${intLetter}</span>`;
+      })
+      .on("mouseleave", () => { tt.style.opacity = "0"; })
+      .on("click", (event, d) => { showMsaDetail(d.properties.msaName); });
+
+    // ── Draw non-metro county regions ───────────────────────────
+    g.append("g").attr("class", "nonmetro-regions")
+      .selectAll("path")
+      .data(nonMetroFeatures)
+      .join("path")
+      .attr("class", "nonmetro-path")
+      .attr("d", path)
+      .attr("stroke", "#C8BFB5")
+      .attr("stroke-width", "0.3")
       .attr("fill", d => {
         const c = countyByFips[d.id];
         if (!c) return NO_DATA_COLOR;
-        const score = getMsaDisplayScore(c);
-        const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
-        return scoreColor(score, key);
+        return scoreColor(getDisplayScore(c), null);
       })
       .attr("data-fips", d => d.id)
       .on("mousemove", (event, d) => {
         const c = countyByFips[d.id];
         if (!c) return;
         const score = getDisplayScore(c);
-        const msa = msaScoreByFips[c.fips];
-        const intClass = (c.intervention_type || "").startsWith("Type A") ? "int-type-a"
-                       : (c.intervention_type || "").startsWith("Type B") ? "int-type-b" : "int-type-c";
-        const tt = document.getElementById("tooltip");
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
         tt.innerHTML = `<strong>${c.county_name}, ${c.state}</strong>`
-          + (msa ? `<br><span style="font-size:10px;color:#A09385">${msa.msaName}</span>` : "")
-          + `<br><span class="tt-opp">OPP ${c.organizing_opportunity_score ?? "–"}</span>`
-          + `&nbsp;<span class="${intClass}">${c.intervention_type ?? ""}</span>`
-          + (goalFilter !== "opp" ? `<br>${goalFilter.charAt(0).toUpperCase() + goalFilter.slice(1)}: ${score ?? "–"}` : "");
+          + `<br><span style="font-size:10px;color:#A09385">Non-Metro</span>`
+          + `<br><span class="tt-opp">OPP ${score ?? "–"}</span>`;
       })
-      .on("mouseleave", () => { document.getElementById("tooltip").style.opacity = "0"; })
+      .on("mouseleave", () => { tt.style.opacity = "0"; })
       .on("click", (event, d) => {
         const c = countyByFips[d.id];
         if (c) showDetail(c);
       });
 
-    // MSA borders — drawn between counties in different MSAs
-    g.append("path").datum(msaMesh)
-      .attr("fill", "none")
-      .attr("stroke", "#8B7355")
-      .attr("stroke-width", "0.6")
-      .attr("stroke-opacity", "0.7")
-      .attr("d", path);
-
     g.append("path").datum(stateMesh).attr("class", "state-boundary").attr("d", path);
-    setStatus(`Map loaded · ${allCounties.length} counties`);
+    setStatus(`Map loaded · ${msaFeatures.length} metro areas`);
   } catch (e) {
     setStatus("Map topology failed to load. Check internet connection.");
     console.error(e);
@@ -1427,66 +1507,139 @@ async function initMap() {
 }
 
 function updateMapColors() {
+  if (!g) return;
   const visibleFips = new Set(filteredCounties.map(c => c.fips));
+
+  // MSA regions: filtered out if none of their counties pass the filter
+  g.selectAll(".msa-path").attr("fill", function() {
+    const msaName = this.dataset.msa;
+    const msa = msaScoreByName[msaName];
+    if (!msa) return NO_DATA_COLOR;
+    const anyVisible = msa.counties.some(c => visibleFips.has(c.fips));
+    if (!anyVisible) return FILTERED_COLOR;
+    const score = goalFilter === "presidential" ? msa.presidential
+                : goalFilter === "statewide"    ? msa.statewide
+                : goalFilter === "congressional" ? msa.congressional
+                : msa.opp;
+    return scoreColor(score, null);
+  });
+
+  // Non-metro counties
   const countyByFips = {};
   allCounties.forEach(c => { countyByFips[c.fips] = c; });
-  g && g.selectAll(".county-path").attr("fill", function() {
+  g.selectAll(".nonmetro-path").attr("fill", function() {
     const fips = this.dataset.fips;
     const c = countyByFips[fips];
     if (!c) return NO_DATA_COLOR;
     if (!visibleFips.has(fips)) return FILTERED_COLOR;
-    const score = getMsaDisplayScore(c);
-    const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
-    return scoreColor(score, key);
+    return scoreColor(getDisplayScore(c), null);
   });
 }
 
 // ──────────────────────────────────────────────────────────────
 // Detail panel
 // ──────────────────────────────────────────────────────────────
+function _setBar(barId, valId, lblId, score, highlighted) {
+  const pct = score !== null && score !== undefined ? Math.min(100, Math.max(0, score)) : 0;
+  document.getElementById(barId).style.width = pct + "%";
+  document.getElementById(valId).textContent = score !== null && score !== undefined ? Math.round(score) : "–";
+  document.getElementById(valId).className = "score-bar-val" + (highlighted ? " highlighted" : "");
+  document.getElementById(lblId).className = "score-bar-label" + (highlighted ? " highlighted" : "");
+}
+
+function _setIntBadge(intType) {
+  const intBadge = document.getElementById("dp-int-badge");
+  intBadge.textContent = intType || "–";
+  intBadge.className = "badge " + ((intType || "").startsWith("Type A") ? "badge-int-a"
+                                 : (intType || "").startsWith("Type B") ? "badge-int-b" : "badge-int-c");
+}
+
+// MSA panel — shown when clicking a merged metro region
+function showMsaDetail(msaName) {
+  const msa = msaScoreByName[msaName];
+  if (!msa) return;
+
+  const panel = document.getElementById("detail-panel");
+  panel.style.display = "block";
+  panel.scrollTop = 0;
+
+  document.getElementById("dp-name").textContent = msaName;
+  document.getElementById("dp-state").textContent = msa.states;
+  document.getElementById("dp-opp").textContent = Math.round(msa.opp);
+
+  _setIntBadge(msa.dominantType);
+
+  const tierBadge = document.getElementById("dp-tier-badge");
+  const tierLetter = msa.dominantLetter;
+  tierBadge.textContent = `Tier ${tierLetter}`;
+  tierBadge.className = "badge " + (tierLetter === "A" ? "badge-tier-a" : tierLetter === "B" ? "badge-tier-b" : "badge-tier-c");
+
+  // Show AI summary if available
+  const summarySection = document.getElementById("dp-summary-section");
+  const summaryText = document.getElementById("dp-summary-text");
+  const prebuilt = gl_msaSummaries[msaName];
+  if (prebuilt && prebuilt.summary) {
+    summaryText.textContent = prebuilt.summary;
+    summarySection.style.display = "block";
+  } else {
+    summarySection.style.display = "none";
+  }
+
+  _setBar("bar-org",   "val-org",   "lbl-bar-org",  msa.organizing,    false);
+  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", msa.sectoral,      false);
+  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", msa.presidential,  goalFilter === "presidential");
+  _setBar("bar-state", "val-state", "lbl-bar-state",msa.statewide,     goalFilter === "statewide");
+  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", msa.congressional, goalFilter === "congressional");
+  _setBar("bar-infra", "val-infra", "lbl-bar-infra",msa.infra,         false);
+
+  document.getElementById("dp-pop").textContent = msa.countyCount + (msa.countyCount === 1 ? " county" : " counties");
+  document.getElementById("dp-rurban").textContent = msa.totalPop ? msa.totalPop.toLocaleString() : "–";
+  document.getElementById("dp-culture").textContent = Math.round(msa.unionCulture);
+  document.getElementById("dp-scale").textContent = Math.round(msa.organizedScale);
+  document.getElementById("dp-swing").textContent = msa.swingStates || "None";
+
+  // County list
+  const countyList = document.getElementById("dp-county-list");
+  const sorted = [...msa.counties].sort((a, b) => (b.organizing_opportunity_score || 0) - (a.organizing_opportunity_score || 0));
+  countyList.innerHTML = sorted.map(c =>
+    `<div>${c.county_name}<span style="color:#A09385"> ${Math.round(c.organizing_opportunity_score || 0)}</span></div>`
+  ).join("");
+  document.getElementById("dp-counties-section").style.display = "block";
+}
+
+// Non-metro county panel (fallback for non-MSA county clicks)
 function showDetail(c) {
   const panel = document.getElementById("detail-panel");
   panel.style.display = "block";
+  panel.scrollTop = 0;
 
-  document.getElementById("dp-name").textContent = c.county_name;
-  document.getElementById("dp-state").textContent = `${c.state} · ${c.region || "–"}`;
+  document.getElementById("dp-name").textContent = `${c.county_name}, ${c.state}`;
+  document.getElementById("dp-state").textContent = `${c.region || "Non-Metro"} · Non-Metro`;
   document.getElementById("dp-opp").textContent = c.organizing_opportunity_score ?? "–";
 
-  const intBadge = document.getElementById("dp-int-badge");
-  intBadge.textContent = c.intervention_type || "–";
-  intBadge.className = "badge " + ((c.intervention_type || "").startsWith("Type A") ? "badge-int-a"
-                                 : (c.intervention_type || "").startsWith("Type B") ? "badge-int-b" : "badge-int-c");
+  _setIntBadge(c.intervention_type);
 
   const tier = (c.priority_tier || "").charAt(0);
   const tierBadge = document.getElementById("dp-tier-badge");
   tierBadge.textContent = c.priority_tier ? `Tier ${tier}` : "–";
   tierBadge.className = "badge " + (tier === "A" ? "badge-tier-a" : tier === "B" ? "badge-tier-b" : "badge-tier-c");
 
-  function setBar(barId, valId, lblId, score, highlighted) {
-    const pct = score !== null && score !== undefined ? Math.min(100, Math.max(0, score)) : 0;
-    document.getElementById(barId).style.width = pct + "%";
-    document.getElementById(valId).textContent = score ?? "–";
-    document.getElementById(valId).className = "score-bar-val" + (highlighted ? " highlighted" : "");
-    document.getElementById(lblId).className = "score-bar-label" + (highlighted ? " highlighted" : "");
-  }
+  document.getElementById("dp-summary-section").style.display = "none";
 
-  setBar("bar-org",   "val-org",   "lbl-bar-org",  c.organizing_score,    false);
-  setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sectoral_score,      false);
-  setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.presidential_score,  goalFilter === "presidential");
-  setBar("bar-state", "val-state", "lbl-bar-state",c.statewide_score,     goalFilter === "statewide");
-  setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.congressional_score, goalFilter === "congressional");
-  setBar("bar-infra", "val-infra", "lbl-bar-infra",c.infra_score,         false);
+  _setBar("bar-org",   "val-org",   "lbl-bar-org",  c.organizing_score,    false);
+  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sectoral_score,      false);
+  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.presidential_score,  goalFilter === "presidential");
+  _setBar("bar-state", "val-state", "lbl-bar-state",c.statewide_score,     goalFilter === "statewide");
+  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.congressional_score, goalFilter === "congressional");
+  _setBar("bar-infra", "val-infra", "lbl-bar-infra",c.infra_score,         false);
 
-  const fmtMargin = v => v === null || v === undefined ? "–" :
-    (v >= 0 ? `D+${Math.abs(v).toFixed(1)}` : `R+${Math.abs(v).toFixed(1)}`);
-
-  document.getElementById("dp-margin24").textContent = fmtMargin(c.margin_2024);
-  document.getElementById("dp-margin20").textContent = fmtMargin(c.margin_2020);
-  document.getElementById("dp-swing").textContent = c.swing_state ? "Yes" : "No";
-  document.getElementById("dp-scale").textContent = c.organized_scale_score ?? "–";
+  document.getElementById("dp-pop").textContent = "1 county";
+  document.getElementById("dp-rurban").textContent = c.population ? c.population.toLocaleString() : "–";
   document.getElementById("dp-culture").textContent = c.union_culture_score ?? "–";
-  document.getElementById("dp-pop").textContent = c.population ? c.population.toLocaleString() : "–";
-  document.getElementById("dp-rurban").textContent = c.rural_urban || "–";
+  document.getElementById("dp-scale").textContent = c.organized_scale_score ?? "–";
+  document.getElementById("dp-swing").textContent = c.swing_state ? c.state : "No";
+  document.getElementById("dp-counties-section").style.display = "none";
+  document.getElementById("dp-county-list").innerHTML = "";
 }
 
 document.getElementById("close-detail").addEventListener("click", () => {
