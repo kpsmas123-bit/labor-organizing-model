@@ -418,6 +418,11 @@
 </head>
 <body>
 
+<div id="beta-banner" style="background:#FEF3C7;border-left:4px solid #D97706;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;padding:9px 16px;display:flex;align-items:center;gap:10px;position:relative;z-index:50;">
+  <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
+  <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
+</div>
+
 <div id="header">
   <div>
     <h1>National Labor Organizing Strategic Prioritization</h1>
@@ -1133,6 +1138,11 @@
           <div class="meth-disclosure">
             <div class="meth-disclosure-label">AI Disclosure</div>
             <p>Built in collaboration with Claude (Anthropic) for pipeline coding, data validation, literature review, and adversarial testing. All methodological decisions were made by the human researcher. Full documentation at <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener noreferrer" style="color:#E8732A">github.com/kpsmas123-bit/labor-organizing-model</a>.</p>
+          </div>
+
+          <div class="meth-disclosure" style="margin-top:12px;">
+            <div class="meth-disclosure-label">About This Project</div>
+            <p>Built by Sam Kaplan-Pettus, recent UC Berkeley Political Science graduate. A personal project exploring how new AI tools can serve the labor movement — inspired by Jane McAlevey's work on labor and political prioritization. Now looking for work and projects at the intersection of labor and national political organizing.<br><br>📧 <a href="mailto:sam.kp@berkeley.edu" style="color:#E8732A;text-decoration:none;">sam.kp@berkeley.edu</a> · 📂 <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener noreferrer" style="color:#E8732A;text-decoration:none;">github.com/kpsmas123-bit/labor-organizing-model</a></p>
           </div>
 
         </div><!-- /meth-wrap -->
