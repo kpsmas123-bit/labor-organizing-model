@@ -1299,6 +1299,47 @@ function updateLegend() {
 const svg = d3.select("#map-svg");
 let g;
 
+// MSA aggregate score lookup: fips → {msaScore, msaName, msaElectoral}
+// Built once at map init; used by both fill and updateMapColors.
+let msaScoreByFips = {};
+
+function buildMsaScoreLookup() {
+  // Group counties by MSA
+  const msaGroups = {};
+  for (const c of allCounties) {
+    const key = (c.msa_name && c.msa_name !== "Non-Metro") ? c.msa_name : null;
+    if (!key) continue;
+    if (!msaGroups[key]) msaGroups[key] = [];
+    msaGroups[key].push(c);
+  }
+  // Compute population-weighted average scores per MSA
+  msaScoreByFips = {};
+  for (const [msaName, counties] of Object.entries(msaGroups)) {
+    const totalPop = counties.reduce((s, c) => s + (c.population || 1), 0);
+    const wavg = f => counties.reduce((s, c) => s + (+(c[f] || 0)) * (c.population || 1), 0) / totalPop;
+    const msaScore = {
+      opp:          wavg("organizing_opportunity_score"),
+      presidential: wavg("presidential_score"),
+      statewide:    wavg("statewide_score"),
+      congressional:wavg("congressional_score"),
+      msaName,
+    };
+    for (const c of counties) {
+      msaScoreByFips[c.fips] = msaScore;
+    }
+  }
+}
+
+function getMsaDisplayScore(c) {
+  const msa = msaScoreByFips[c.fips];
+  if (!msa) return getDisplayScore(c); // non-metro: fall back to county score
+  if (goalFilter === "opp")           return msa.opp;
+  if (goalFilter === "presidential")  return msa.presidential;
+  if (goalFilter === "statewide")     return msa.statewide;
+  if (goalFilter === "congressional") return msa.congressional;
+  return msa.opp;
+}
+
 async function initMap() {
   // us-atlas counties-albers-10m.json is already projected in a 960×600 Albers pixel space.
   // Use geoIdentity + fitSize — applying geoAlbersUsa() on top garbles shapes into lines.
@@ -1309,15 +1350,28 @@ async function initMap() {
   const zoom = d3.zoom().scaleExtent([1, 12]).on("zoom", e => g.attr("transform", e.transform));
   svg.call(zoom);
 
+  buildMsaScoreLookup();
+
   try {
     const us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json");
     const counties = topojson.feature(us, us.objects.counties);
     const stateMesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
 
-    const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], counties));
-
+    // MSA border mesh: edge between two counties that belong to different MSAs
+    // (or one is in an MSA and the other isn't)
     const countyByFips = {};
     allCounties.forEach(c => { countyByFips[c.fips] = c; });
+
+    const getMsaKey = fips => {
+      const c = countyByFips[fips];
+      return (c && c.msa_name && c.msa_name !== "Non-Metro") ? c.msa_name : `__${fips}`;
+    };
+    const msaMesh = topojson.mesh(
+      us, us.objects.counties,
+      (a, b) => a !== b && getMsaKey(a.id) !== getMsaKey(b.id)
+    );
+
+    const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], counties));
 
     g.append("g")
       .selectAll("path")
@@ -1328,7 +1382,7 @@ async function initMap() {
       .attr("fill", d => {
         const c = countyByFips[d.id];
         if (!c) return NO_DATA_COLOR;
-        const score = getDisplayScore(c);
+        const score = getMsaDisplayScore(c);
         const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
         return scoreColor(score, key);
       })
@@ -1337,22 +1391,32 @@ async function initMap() {
         const c = countyByFips[d.id];
         if (!c) return;
         const score = getDisplayScore(c);
+        const msa = msaScoreByFips[c.fips];
         const intClass = (c.intervention_type || "").startsWith("Type A") ? "int-type-a"
                        : (c.intervention_type || "").startsWith("Type B") ? "int-type-b" : "int-type-c";
         const tt = document.getElementById("tooltip");
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
-        tt.innerHTML = `<strong>${c.county_name}, ${c.state}</strong><br>
-          <span class="tt-opp">OPP ${c.organizing_opportunity_score ?? "–"}</span>
-          &nbsp;<span class="${intClass}">${c.intervention_type ?? ""}</span>
-          ${goalFilter !== "opp" ? `<br>${goalFilter.charAt(0).toUpperCase() + goalFilter.slice(1)}: ${score ?? "–"}` : ""}`;
+        tt.innerHTML = `<strong>${c.county_name}, ${c.state}</strong>`
+          + (msa ? `<br><span style="font-size:10px;color:#A09385">${msa.msaName}</span>` : "")
+          + `<br><span class="tt-opp">OPP ${c.organizing_opportunity_score ?? "–"}</span>`
+          + `&nbsp;<span class="${intClass}">${c.intervention_type ?? ""}</span>`
+          + (goalFilter !== "opp" ? `<br>${goalFilter.charAt(0).toUpperCase() + goalFilter.slice(1)}: ${score ?? "–"}` : "");
       })
       .on("mouseleave", () => { document.getElementById("tooltip").style.opacity = "0"; })
       .on("click", (event, d) => {
         const c = countyByFips[d.id];
         if (c) showDetail(c);
       });
+
+    // MSA borders — drawn between counties in different MSAs
+    g.append("path").datum(msaMesh)
+      .attr("fill", "none")
+      .attr("stroke", "#8B7355")
+      .attr("stroke-width", "0.6")
+      .attr("stroke-opacity", "0.7")
+      .attr("d", path);
 
     g.append("path").datum(stateMesh).attr("class", "state-boundary").attr("d", path);
     setStatus(`Map loaded · ${allCounties.length} counties`);
@@ -1371,7 +1435,7 @@ function updateMapColors() {
     const c = countyByFips[fips];
     if (!c) return NO_DATA_COLOR;
     if (!visibleFips.has(fips)) return FILTERED_COLOR;
-    const score = getDisplayScore(c);
+    const score = getMsaDisplayScore(c);
     const key = goalFilter !== "opp" ? goalFilter + "_score" : null;
     return scoreColor(score, key);
   });
