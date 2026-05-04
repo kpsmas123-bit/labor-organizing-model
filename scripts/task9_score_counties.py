@@ -254,9 +254,12 @@ def strategic_terrain_score(electoral: float, org: int, sect: float, infra: floa
 
 
 def priority_tier(score: float) -> str:
-    if score >= 70:
+    # Percentile-based thresholds calibrated against actual score distribution (n=3,144).
+    # ≥37 ≈ top 12% → A; ≥19 ≈ top 46% → B; remainder → C.
+    # Targets: ~10-15% A, ~30-40% B, ~50% C.
+    if score >= 37.0:
         return "A: High Priority"
-    elif score >= 50:
+    elif score >= 19.0:
         return "B: Medium Priority"
     return "C: Lower Priority"
 
