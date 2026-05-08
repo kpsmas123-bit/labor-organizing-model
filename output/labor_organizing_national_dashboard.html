@@ -19,6 +19,7 @@
   #layout { display: flex; height: calc(100vh - 55px); }
 
   #sidebar { width: 300px; min-width: 260px; background: #F0EBE3; border-right: 1px solid #DDD5C8; overflow-y: auto; padding: 16px; flex-shrink: 0; }
+  #sidebar.sidebar-hidden { visibility: hidden; pointer-events: none; }
   #sidebar h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #7A6F64; margin-bottom: 10px; }
 
   .filter-group { margin-bottom: 18px; }
@@ -425,7 +426,7 @@
 </div>
 
 <div id="layout">
-  <div id="sidebar" style="display:none">
+  <div id="sidebar" class="sidebar-hidden">
     <h2>Map Goal</h2>
 
     <div class="filter-group">
@@ -1782,7 +1783,9 @@ document.querySelectorAll(".view-tab").forEach(tab => {
     document.getElementById("table-view").style.display = currentView === "table" ? "block" : "none";
     document.getElementById("gallery-view").style.display = currentView === "gallery" ? "block" : "none";
     document.getElementById("methodology-view").style.display = currentView === "methodology" ? "block" : "none";
-    document.getElementById("sidebar").style.display = currentView === "map" ? "block" : "none";
+    const sb = document.getElementById("sidebar");
+    sb.style.display = "block";
+    sb.classList.toggle("sidebar-hidden", currentView !== "map");
     if (currentView === "table") renderTable();
     if (currentView === "gallery") glInitGallery();
   });
