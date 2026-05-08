@@ -16,7 +16,8 @@
   #header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: 700; color: #2C2C2C; letter-spacing: -0.01em; }
   #header .subtitle { font-size: 11px; color: #7A6F64; margin-top: 1px; }
 
-  #layout { display: flex; height: calc(100vh - 55px); }
+  #view-tabs { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; }
+  #layout { display: flex; height: calc(100vh - 94px); }
 
   #sidebar { width: 300px; min-width: 260px; background: #F0EBE3; border-right: 1px solid #DDD5C8; overflow-y: auto; padding: 16px; flex-shrink: 0; }
   #sidebar.sidebar-hidden { visibility: hidden; pointer-events: none; }
@@ -54,13 +55,12 @@
   .int-type-card .card-desc { font-size: 10px; color: #7A6F64; line-height: 1.45; }
   .int-type-card .card-tag { font-size: 9px; color: #A09385; font-style: italic; margin-top: 3px; }
 
-  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #FAF7F2; }
-  #view-tabs { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; }
   .view-tab { padding: 10px 20px; font-size: 12px; font-weight: 500; cursor: pointer; color: #7A6F64; border-bottom: 2px solid transparent; transition: all 0.12s; }
   .view-tab:hover { color: #2C2C2C; }
   .view-tab.active { color: #2C2C2C; border-bottom-color: #E8732A; }
 
-  #views { flex: 1; overflow: hidden; }
+  #main { flex: 1; overflow: hidden; background: #FAF7F2; }
+  #views { width: 100%; height: 100%; overflow: hidden; }
   #map-view { display: none; width: 100%; height: 100%; position: relative; background: #FAF7F2; }
   #map-svg { width: 100%; height: 100%; }
 
@@ -425,6 +425,14 @@
   </div>
 </div>
 
+<div id="view-tabs">
+  <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
+  <div class="view-tab active" data-view="methodology">Methodology</div>
+  <div class="view-tab" data-view="gallery">County Gallery</div>
+  <div class="view-tab" data-view="map">Map View</div>
+  <div class="view-tab" data-view="table">Table View</div>
+</div>
+
 <div id="layout">
   <div id="sidebar" class="sidebar-hidden">
     <h2>Map Goal</h2>
@@ -523,14 +531,6 @@
   </div>
 
   <div id="main">
-    <div id="view-tabs">
-      <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
-      <div class="view-tab active" data-view="methodology">Methodology</div>
-      <div class="view-tab" data-view="gallery">County Gallery</div>
-      <div class="view-tab" data-view="map">Map View</div>
-      <div class="view-tab" data-view="table">Table View</div>
-    </div>
-
     <div id="views">
       <div id="map-view">
         <svg id="map-svg"></svg>
