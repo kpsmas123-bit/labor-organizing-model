@@ -24,8 +24,6 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
   padding: 14px 24px; background: #F0EBE3; border-bottom: 1px solid #DDD5C8;
   display: flex; align-items: center; gap: 16px;
 }
-#header-left, #header-right { width: 140px; flex-shrink: 0; }
-#header-right { text-align: right; }
 #header-center { flex: 1; text-align: center; }
 #header h1 {
   font-family: 'Playfair Display', Georgia, serif; font-size: 18px;
@@ -38,6 +36,16 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
   background: #FAF7F2; transition: all 0.12s; white-space: nowrap; display: inline-block;
 }
 .nav-link:hover { color: #2C2C2C; border-color: #A09385; }
+
+/* === TOP NAV TABS === */
+#top-nav { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; }
+.top-nav-tab {
+  padding: 10px 20px; font-size: 12px; font-weight: 500; color: #7A6F64;
+  border-bottom: 2px solid transparent; text-decoration: none; white-space: nowrap;
+  transition: all 0.12s; display: inline-block;
+}
+.top-nav-tab:hover { color: #2C2C2C; }
+.top-nav-tab.active { color: #2C2C2C; border-bottom-color: #E8732A; }
 
 /* === PAGE WRAP === */
 #page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
@@ -411,16 +419,19 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
 <!-- HEADER -->
 <div id="header">
-  <div id="header-left">
-    <a href="./labor_organizing_national_dashboard.html" class="nav-link">← Dashboard</a>
-  </div>
   <div id="header-center">
     <h1>Find Your Role in the Labor Movement</h1>
     <div class="subtitle">Match your skills and situation to the highest-impact organizing opportunities</div>
   </div>
-  <div id="header-right">
-    <a href="./methodology.html" class="nav-link">Methodology →</a>
-  </div>
+</div>
+
+<!-- TOP NAV TABS -->
+<div id="top-nav">
+  <span class="top-nav-tab active">Jobs Board</span>
+  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=gallery">County Gallery</a>
+  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=map">Map View</a>
+  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=table">Table View</a>
+  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=methodology">Methodology</a>
 </div>
 
 <!-- PAGE WRAP -->
@@ -447,15 +458,22 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <!-- Rank & File card -->
       <div class="path-card" id="card-rf" data-path="rf" onclick="selectPath('rf')">
         <div class="path-card-icon">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- dome (narrower than brim) -->
-            <path d="M14 28 C14 28 13 12 26 12 C39 12 38 28 38 28 Z" fill="#C4802A"/>
-            <!-- flat wide brim (clearly extends past dome) -->
-            <rect x="4" y="27" width="44" height="7" rx="1" fill="#C4802A"/>
-            <!-- dark bottom edge of brim -->
-            <rect x="4" y="32" width="44" height="3" rx="1" fill="#7A5A00"/>
-            <!-- mid-band where dome meets brim -->
-            <rect x="14" y="27" width="24" height="3" rx="1" fill="#9A6010"/>
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- dome fill -->
+            <path d="M9 35 C9 19 16 11 28 11 C40 11 47 19 47 35 Z" fill="#E8B84B"/>
+            <!-- brim fill -->
+            <rect x="4" y="33" width="48" height="9" rx="4.5" fill="#E8B84B"/>
+            <!-- dome outline -->
+            <path d="M9 35 C9 19 16 11 28 11 C40 11 47 19 47 35" fill="none" stroke="#2C1A06" stroke-width="2.8" stroke-linecap="round"/>
+            <!-- brim outline -->
+            <rect x="4" y="33" width="48" height="9" rx="4.5" fill="none" stroke="#2C1A06" stroke-width="2.8"/>
+            <!-- suspension band (curved line across dome base) -->
+            <path d="M9 35 Q28 30 47 35" fill="none" stroke="#2C1A06" stroke-width="1.8"/>
+            <!-- central rib (two arching lines) -->
+            <path d="M24 34 C24 22 25.5 13 28 12" fill="none" stroke="#2C1A06" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M32 34 C32 22 30.5 13 28 12" fill="none" stroke="#2C1A06" stroke-width="2.2" stroke-linecap="round"/>
+            <!-- rib top knob -->
+            <rect x="25.5" y="8" width="5" height="6" rx="1.5" fill="#E8B84B" stroke="#2C1A06" stroke-width="2.2"/>
           </svg>
         </div>
         <div class="path-card-label">Rank &amp; File</div>
@@ -466,14 +484,19 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <!-- Staff & Organizer card -->
       <div class="path-card" id="card-staff" data-path="staff" onclick="selectPath('staff')">
         <div class="path-card-icon">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- megaphone cone -->
-            <path d="M8 20 L8 34 L34 44 L34 8 Z" fill="#2e5e9a" opacity="0.85"/>
-            <!-- cap on narrow end -->
-            <ellipse cx="8" cy="27" rx="4" ry="7" fill="#2e5e9a"/>
-            <!-- sound waves -->
-            <path d="M38 20 Q45 23 45 27 Q45 31 38 34" stroke="#2e5e9a" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M40 14 Q50 20 50 27 Q50 34 40 40" stroke="#2e5e9a" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.4"/>
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- cone body (wide on left/bell, narrow on right/mouthpiece) -->
+            <path d="M14 19 L42 23 L42 33 L14 37 Z" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8" stroke-linejoin="round"/>
+            <!-- bell opening (circle at wide/left end) -->
+            <circle cx="14" cy="28" r="10" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8"/>
+            <!-- mouthpiece end cap (right side) -->
+            <rect x="41" y="22" width="7" height="12" rx="3.5" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8"/>
+            <!-- handle pointing down -->
+            <rect x="25" y="37" width="8" height="13" rx="4" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8"/>
+            <!-- sound rays from bell (going left) -->
+            <line x1="6" y1="20" x2="2" y2="15" stroke="#2C1A06" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="4" y1="28" x2="0" y2="28" stroke="#2C1A06" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="6" y1="36" x2="2" y2="41" stroke="#2C1A06" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
         </div>
         <div class="path-card-label">Staff &amp; Organizer</div>

@@ -524,8 +524,9 @@
 
   <div id="main">
     <div id="view-tabs">
+      <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
       <div class="view-tab active" data-view="methodology">Methodology</div>
-      <div class="view-tab" data-view="gallery">Gallery View</div>
+      <div class="view-tab" data-view="gallery">County Gallery</div>
       <div class="view-tab" data-view="map">Map View</div>
       <div class="view-tab" data-view="table">Table View</div>
     </div>
@@ -1774,22 +1775,31 @@ document.querySelectorAll("#results-table th").forEach(th => {
 // ──────────────────────────────────────────────────────────────
 // View switching
 // ──────────────────────────────────────────────────────────────
-document.querySelectorAll(".view-tab").forEach(tab => {
-  tab.addEventListener("click", function() {
-    document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
-    this.classList.add("active");
-    currentView = this.dataset.view;
-    document.getElementById("map-view").style.display = currentView === "map" ? "block" : "none";
-    document.getElementById("table-view").style.display = currentView === "table" ? "block" : "none";
-    document.getElementById("gallery-view").style.display = currentView === "gallery" ? "block" : "none";
-    document.getElementById("methodology-view").style.display = currentView === "methodology" ? "block" : "none";
-    const sb = document.getElementById("sidebar");
-    sb.style.display = "block";
-    sb.classList.toggle("sidebar-hidden", currentView !== "map");
-    if (currentView === "table") renderTable();
-    if (currentView === "gallery") glInitGallery();
+function switchToView(view) {
+  const valid = ["methodology","gallery","map","table"];
+  if (!valid.includes(view)) view = "methodology";
+  currentView = view;
+  document.querySelectorAll(".view-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.view === view);
   });
+  document.getElementById("map-view").style.display = view === "map" ? "block" : "none";
+  document.getElementById("table-view").style.display = view === "table" ? "block" : "none";
+  document.getElementById("gallery-view").style.display = view === "gallery" ? "block" : "none";
+  document.getElementById("methodology-view").style.display = view === "methodology" ? "block" : "none";
+  const sb = document.getElementById("sidebar");
+  sb.style.display = "block";
+  sb.classList.toggle("sidebar-hidden", view !== "map");
+  if (view === "table") renderTable();
+  if (view === "gallery") glInitGallery();
+}
+
+document.querySelectorAll(".view-tab").forEach(tab => {
+  tab.addEventListener("click", function() { switchToView(this.dataset.view); });
 });
+
+// Handle ?view= URL param (e.g. when navigating from jobs board)
+const _urlView = new URLSearchParams(window.location.search).get("view");
+if (_urlView) switchToView(_urlView);
 
 // ──────────────────────────────────────────────────────────────
 // GALLERY VIEW
