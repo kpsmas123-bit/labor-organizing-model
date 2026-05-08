@@ -797,7 +797,7 @@ async function loadJobs() {
 
 async function loadCountyScores() {
   try {
-    const res = await fetch('./county_scores.json');
+    const res = await fetch('../data/county_scores.json');
     if (!res.ok) return;
     const data = await res.json();
     if (!Array.isArray(data) || !data.length) return;
