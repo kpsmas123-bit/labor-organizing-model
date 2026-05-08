@@ -1304,7 +1304,9 @@ function makeJobCard(job) {
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
   const salary = formatSalary(job.salary_min, job.salary || job.salary_range);
   const impact = job.impact_score || 50;
-  const applyUrl = job.apply_url || '';
+  const applyUrl = job.job_id
+    ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}`
+    : (job.apply_url || '');
 
   // Badges
   const badgeHtml = buildBadges(job);
