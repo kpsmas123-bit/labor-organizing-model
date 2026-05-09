@@ -462,6 +462,29 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .tp-footer-strip a { color: #E8732A; text-decoration: none; }
 .tp-footer-strip a:hover { text-decoration: underline; }
 
+/* === RF IMPACT GOALS PANEL === */
+#rf-impact-goals { margin-bottom: 16px; }
+.ig-panel { background: #fff; border: 1px solid #DDD5C8; border-radius: 10px; overflow: hidden; }
+.ig-header { padding: 16px 18px 14px; border-bottom: 1px solid #EDE7DF; background: #F8F4EE; }
+.ig-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #E8732A; margin-bottom: 5px; }
+.ig-title { font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700; color: #2C2C2C; line-height: 1.3; margin-bottom: 5px; }
+.ig-sub { font-size: 12px; color: #7A6F64; line-height: 1.6; }
+.ig-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); background: #EDE7DF; gap: 1px; }
+.ig-card { background: #fff; padding: 13px 14px; cursor: pointer; transition: background 0.12s; }
+.ig-card:hover { background: #FDFAF6; }
+.ig-card.ig-active { background: #FFF8F3; border-left: 2px solid #E8732A; }
+.ig-card-name { font-size: 13px; font-weight: 600; color: #2C2C2C; line-height: 1.25; margin-bottom: 2px; }
+.ig-card-states { font-size: 10px; color: #A09385; margin-bottom: 8px; }
+.ig-score-row { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+.ig-bar-track { flex: 1; height: 3px; background: #EDE7DF; border-radius: 2px; overflow: hidden; }
+.ig-bar-fill { height: 100%; background: #E8732A; border-radius: 2px; }
+.ig-score-val { font-size: 11px; font-weight: 700; color: #2C2C2C; min-width: 20px; text-align: right; }
+.ig-card-badges { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.ig-card-note { font-size: 10.5px; color: #7A6F64; line-height: 1.45; margin-top: 6px; }
+.ig-footer { padding: 10px 18px; background: #F8F4EE; border-top: 1px solid #EDE7DF; font-size: 11px; color: #9A8E85; line-height: 1.5; }
+@media (max-width: 900px) { .ig-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .ig-cards-grid { grid-template-columns: 1fr; } }
+
 /* === UTILITIES === */
 .hidden { display: none !important; }
 hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0; }
@@ -489,31 +512,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 .sector-chip:hover { border-color: #E8732A; background: #FFF4EE; }
 .sector-chip.selected { background: #E8732A; border-color: #E8732A; color: #fff; }
 
-/* Quiz Summary Bar — thin banner with ← arrows */
-#quiz-summary-bar {
-  display: none; background: #F0EBE3; border-bottom: 1px solid #DDD5C8;
-}
-#quiz-summary-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: stretch; flex-wrap: wrap;
-}
-.qs-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 8px 14px; font-size: 12.5px; color: #5A5050;
-  cursor: pointer; border-right: 1px solid #DDD5C8;
-  transition: background 0.12s, color 0.12s; white-space: nowrap;
-  background: none; border-top: none; border-bottom: none; border-left: none;
-  font-family: 'Inter', system-ui, sans-serif;
-}
-.qs-chip:hover { background: #E8DDD3; color: #2C2C2C; }
-.qs-chip .qs-arrow { font-size: 10px; color: #9A8E85; }
-.qs-chip .qs-val { font-weight: 500; }
-.qs-retake {
-  margin-left: auto; background: none; border: none; padding: 8px 14px;
-  font-size: 12px; color: #B84B15; cursor: pointer;
-  font-family: 'Inter', system-ui, sans-serif;
-}
-.qs-retake:hover { color: #E8732A; text-decoration: underline; }
+/* Quiz Summary Bar — replaced by second definition below */
 
 /* ZIP input */
 #quiz-zip-input {
@@ -531,29 +530,113 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   content: ''; flex: 1; height: 1px; background: #DDD5C8;
 }
 
-/* Quiz Summary Bar */
+/* Quiz Summary Bar — upgraded */
 #quiz-summary-bar {
-  display: none; background: #F5F0EA; border-bottom: 1px solid #DDD5C8; padding: 9px 24px;
+  display: none; background: #1E1A17; border-bottom: 3px solid #E8732A; padding: 0;
 }
 #quiz-summary-inner {
   max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
-  gap: 7px; flex-wrap: wrap;
+  gap: 8px; flex-wrap: wrap; padding: 13px 24px;
 }
-.qs-label { font-size: 11px; color: #9A8E85; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; margin-right: 2px; }
+.qs-label { font-size: 10px; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; margin-right: 4px; }
 .qs-chip {
-  background: #fff; border: 1.5px solid #D0C8BC; border-radius: 20px;
-  padding: 4px 12px; font-size: 12.5px; color: #3B2F2F; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
-  transition: border-color 0.15s, background 0.15s;
+  background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.18); border-radius: 20px;
+  padding: 6px 15px; font-size: 13px; color: rgba(255,255,255,0.85); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  font-family: 'Inter', system-ui, sans-serif;
 }
-.qs-chip::after { content: '✎'; font-size: 9px; opacity: 0.35; }
-.qs-chip:hover { border-color: #E8732A; background: #FFF4EE; }
-.qs-chip:hover::after { opacity: 0.9; }
+.qs-chip::after { content: '✎'; font-size: 8.5px; opacity: 0.32; margin-left: 2px; }
+.qs-chip:hover { background: rgba(232,115,42,0.28); border-color: rgba(232,115,42,0.8); color: #fff; }
+.qs-chip:hover::after { opacity: 1; }
+#qs-path {
+  background: #E8732A; border-color: #E8732A; color: #fff;
+  font-weight: 600; font-size: 13.5px; padding: 7px 18px;
+}
+#qs-path::after { content: ''; }
+#qs-path:hover { background: #C4512A; border-color: #C4512A; }
 .qs-retake {
-  margin-left: auto; background: none; border: none; font-size: 12px; color: #B84B15;
-  cursor: pointer; padding: 3px 0; text-decoration: underline; text-underline-offset: 2px;
+  margin-left: auto; background: none; border: none; font-size: 12px;
+  color: rgba(255,255,255,0.32); cursor: pointer; padding: 3px 0;
+  font-family: 'Inter', system-ui, sans-serif; transition: color 0.12s;
 }
-.qs-retake:hover { color: #E8732A; }
+.qs-retake:hover { color: rgba(255,255,255,0.75); }
+
+/* Suppress legacy quiz summary bar */
+#quiz-summary-bar { display: none !important; }
+
+/* Quiz tile row */
+#quiz-tile-row { background: #F8F4EE; border-bottom: 1px solid #DDD5C8; display: none; }
+#quiz-tile-inner {
+  max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
+  gap: 8px; flex-wrap: wrap; padding: 10px 24px;
+}
+.qtile {
+  position: relative; display: inline-flex; align-items: center; gap: 6px;
+  background: #fff; border: 1px solid #C8BFB5; border-radius: 20px;
+  padding: 7px 14px; font-size: 13px; color: #2C2C2C; cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s; user-select: none;
+}
+.qtile:hover { border-color: #E8732A; background: #FFF8F3; }
+.qtile.qtile-open { border-color: #E8732A; background: #FFF8F3; }
+.qtile-label { font-weight: 600; }
+.qtile-caret { font-size: 9px; color: #9A8E85; }
+.qtile-dropdown {
+  display: none; position: absolute; top: calc(100% + 6px); left: 0;
+  background: #fff; border: 1px solid #DDD5C8; border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10); min-width: 190px; z-index: 200;
+  padding: 5px 0;
+}
+.qtile-dropdown.open { display: block; }
+.qtile-opt {
+  padding: 9px 14px; font-size: 13px; color: #2C2C2C; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; transition: background 0.1s;
+}
+.qtile-opt:hover { background: #F8F4EE; }
+.qtile-opt .chk { width: 14px; color: #E8732A; font-size: 12px; flex-shrink: 0; }
+.qtile-opt.selected { color: #E8732A; font-weight: 600; }
+.qtile-sector-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; }
+.qtile-sector-chip {
+  padding: 5px 10px; border-radius: 12px; font-size: 12px; cursor: pointer;
+  border: 1px solid #DDD5C8; background: #F8F4EE; color: #5A5050;
+  transition: background 0.12s, border-color 0.12s;
+}
+.qtile-sector-chip.selected { background: #E8732A; border-color: #E8732A; color: #fff; }
+.qtile-sector-clear {
+  padding: 5px 10px 8px; font-size: 11px; color: #9A8E85; cursor: pointer;
+  border-top: 1px solid #EDE7DF; text-align: center;
+}
+.qtile-sector-clear:hover { color: #E8732A; }
+#qtile-state-wrap { padding: 6px 10px 8px; }
+#qtile-state-wrap select {
+  width: 100%; border: 1px solid #C8BFB5; border-radius: 5px;
+  padding: 6px 8px; font-size: 12px; font-family: 'Inter', system-ui, sans-serif;
+  background: #fff;
+}
+.qtile-retake {
+  margin-left: auto; background: none; border: none; font-size: 12px;
+  color: #9A8E85; cursor: pointer; padding: 3px 6px;
+  font-family: 'Inter', system-ui, sans-serif; transition: color 0.12s;
+  white-space: nowrap;
+}
+.qtile-retake:hover { color: #E8732A; }
+
+/* Show-me row */
+#show-me-row {
+  display: none; align-items: center; gap: 10px; padding: 12px 0 8px; flex-wrap: wrap;
+}
+.smt-label { font-size: 12px; color: #8A7E75; font-weight: 500; white-space: nowrap; }
+#show-me-tabs { display: flex; gap: 4px; }
+.smt-tab {
+  padding: 5px 13px; border-radius: 5px; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; color: #5A5050; border: 1px solid transparent;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.smt-tab:hover { background: #F0EAE2; }
+.smt-tab.active { background: #E8732A; color: #fff; border-color: #E8732A; }
+#show-me-staff-label { font-size: 12.5px; color: #5A5050; font-weight: 500; }
 
 /* Job Detail Panel */
 #terrain-guide, #job-detail-pane { transition: opacity 0.2s ease; }
@@ -580,8 +663,9 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 .jdp-badge-block { margin-bottom: 9px; display: flex; align-items: flex-start; gap: 9px; }
 .jdp-badge-block .badge { white-space: nowrap; flex-shrink: 0; }
 .jdp-badge-desc { font-size: 12px; color: #5A5050; line-height: 1.5; }
+.jdp-desc { font-size: 13px; color: #5A5050; line-height: 1.6; }
 .jdp-salary { font-size: 15px; font-weight: 600; color: #2C2C2C; }
-.jdp-salary-null { font-size: 13px; color: #9A8E85; }
+.jdp-salary-null { font-size: 13px; color: #8A7E75; font-style: italic; }
 .jdp-apply {
   display: block; background: #2C2C2C; color: #fff; text-align: center;
   padding: 11px 20px; border-radius: 7px; font-size: 14px; font-weight: 600;
@@ -632,6 +716,39 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <span class="qs-arrow">←</span><span class="qs-val"></span>
     </button>
     <button class="qs-retake" onclick="quizEditStep('qstep-path')">Start over</button>
+  </div>
+</div>
+
+<!-- QUIZ TILE ROW (replaces quiz-summary-bar after quiz completes) -->
+<div id="quiz-tile-row">
+  <div id="quiz-tile-inner">
+    <div class="qtile" id="qtile-path" onclick="toggleTileDropdown('qtile-path-dd', event)">
+      <span class="qtile-label" id="qtile-path-label">Path</span>
+      <span class="qtile-caret">▾</span>
+      <div class="qtile-dropdown" id="qtile-path-dd">
+        <div class="qtile-opt" data-path="rf" onclick="tileSetPath('rf', event)"><span class="chk"></span>Rank &amp; File</div>
+        <div class="qtile-opt" data-path="staff" onclick="tileSetPath('staff', event)"><span class="chk"></span>Staff Organizer</div>
+      </div>
+    </div>
+    <div class="qtile" id="qtile-sector" onclick="toggleTileDropdown('qtile-sector-dd', event)" style="display:none">
+      <span class="qtile-label" id="qtile-sector-label">Any sector</span>
+      <span class="qtile-caret">▾</span>
+      <div class="qtile-dropdown" id="qtile-sector-dd"><!-- populated by renderSectorTileDropdown() --></div>
+    </div>
+    <div class="qtile" id="qtile-loc" onclick="toggleTileDropdown('qtile-loc-dd', event)">
+      <span class="qtile-label" id="qtile-loc-label">Anywhere</span>
+      <span class="qtile-caret">▾</span>
+      <div class="qtile-dropdown" id="qtile-loc-dd">
+        <div class="qtile-opt selected" data-loc="anywhere" onclick="tileSetLocation('anywhere', event)"><span class="chk">✓</span>Anywhere US</div>
+        <div class="qtile-opt" data-loc="mystate" onclick="tileSetLocation('mystate', event)"><span class="chk"></span>My state</div>
+        <div id="qtile-state-wrap" style="display:none">
+          <select id="qtile-state-sel" onchange="tileSetMyState(this.value)" onclick="event.stopPropagation()">
+            <option value="">Select state…</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="qtile-retake" onclick="quizEditStep('qstep-path')">Start over</button>
   </div>
 </div>
 
@@ -884,6 +1001,17 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <!-- LEFT: JOBS PANEL -->
     <div id="jobs-panel">
 
+      <!-- Show-me row (shown post-quiz) -->
+      <div id="show-me-row">
+        <span class="smt-label">Show me:</span>
+        <div id="show-me-tabs">
+          <div class="smt-tab active" data-toggle="mcalevey" onclick="setRfToggle('mcalevey')">Priority sectors</div>
+          <div class="smt-tab" data-toggle="all" onclick="setRfToggle('all')">All union jobs</div>
+          <div class="smt-tab" data-toggle="apprenticeships" onclick="setRfToggle('apprenticeships')">Apprenticeships</div>
+        </div>
+        <span id="show-me-staff-label" style="display:none">All staff &amp; organizer roles</span>
+      </div>
+
       <!-- Header row -->
       <div id="jobs-header-row">
         <div>
@@ -897,9 +1025,26 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         </div>
       </div>
 
-      <!-- RF coming soon callout (shown when path=rf and toggle ≠ apprenticeships) -->
-      <div id="rf-coming-soon" class="info-banner hidden">
-        <strong>Direct sector job listings coming soon.</strong> We're building hospital, school district, and warehouse listings region by region. Apprenticeship programs are available now — select the Apprenticeships toggle above. <strong>Your terrain guide shows where these jobs will matter most.</strong>
+      <!-- RF Impact Goals Panel (shown when path=rf and toggle ≠ apprenticeships) -->
+      <div id="rf-impact-goals" class="hidden">
+        <div class="ig-panel">
+          <div class="ig-header">
+            <div class="ig-eyebrow">Impact Goals</div>
+            <div class="ig-title" id="ig-title-text">Where This Work Is Needed Most</div>
+            <div class="ig-sub" id="ig-sub-text">Direct sector job listings — hospital portals, school district boards, warehouse employers — are in development. These are the MSAs with the highest organizing opportunity, ranked by terrain score.</div>
+          </div>
+          <div class="ig-cards-grid" id="ig-cards-grid">
+            <div class="ig-card" style="pointer-events:none"><div class="skel" style="height:13px;width:70%;margin-bottom:6px"></div><div class="skel" style="height:10px;width:40%;margin-bottom:10px"></div><div class="skel" style="height:3px;width:100%;border-radius:2px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:55px;border-radius:3px"></div></div>
+            <div class="ig-card" style="pointer-events:none"><div class="skel" style="height:13px;width:60%;margin-bottom:6px"></div><div class="skel" style="height:10px;width:35%;margin-bottom:10px"></div><div class="skel" style="height:3px;width:100%;border-radius:2px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:50px;border-radius:3px"></div></div>
+            <div class="ig-card" style="pointer-events:none"><div class="skel" style="height:13px;width:75%;margin-bottom:6px"></div><div class="skel" style="height:10px;width:45%;margin-bottom:10px"></div><div class="skel" style="height:3px;width:100%;border-radius:2px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:60px;border-radius:3px"></div></div>
+            <div class="ig-card" style="pointer-events:none"><div class="skel" style="height:13px;width:65%;margin-bottom:6px"></div><div class="skel" style="height:10px;width:30%;margin-bottom:10px"></div><div class="skel" style="height:3px;width:100%;border-radius:2px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:50px;border-radius:3px"></div></div>
+            <div class="ig-card" style="pointer-events:none"><div class="skel" style="height:13px;width:55%;margin-bottom:6px"></div><div class="skel" style="height:10px;width:40%;margin-bottom:10px"></div><div class="skel" style="height:3px;width:100%;border-radius:2px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:55px;border-radius:3px"></div></div>
+            <div class="ig-card" style="pointer-events:none"><div class="skel" style="height:13px;width:68%;margin-bottom:6px"></div><div class="skel" style="height:10px;width:38%;margin-bottom:10px"></div><div class="skel" style="height:3px;width:100%;border-radius:2px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:52px;border-radius:3px"></div></div>
+          </div>
+          <div class="ig-footer">
+            Hospital job boards, school district postings, and warehouse employer listings are being built by region — starting with swing state metro areas. Apprenticeship programs are available now via the toggle above.
+          </div>
+        </div>
       </div>
 
       <!-- Salting framing banner (shown when path=rf and toggle=mcalevey) -->
@@ -1132,6 +1277,9 @@ async function loadCountyScores() {
     if (!Array.isArray(data) || !data.length) return;
     msaData = computeMsaData(data);
     renderMsaList();
+    if (state.path === 'rf' && state.rfToggle !== 'apprenticeships') {
+      renderImpactGoals();
+    }
   } catch(e) { /* skeleton state remains */ }
 }
 
@@ -1188,7 +1336,7 @@ function classifyJob(job) {
   const is_mcalevey_priority = svs_score >= 75;
   const is_swing_state = SWING_STATES.has(job.state_abbr || '');
 
-  const salary_min = parseSalaryMin(job.salary || job.salary_range || '');
+  const salary_min = parseSalaryMin(job.salary || job.salary_range || job.salary_raw || '');
 
   // Impact score (base 50 = no county match)
   let impact_score = 50;
@@ -1223,7 +1371,12 @@ function parseSalaryMin(s) {
 
 function formatSalary(salary_min, salaryRaw) {
   if (salaryRaw && typeof salaryRaw === 'string' && /\$/.test(salaryRaw)) {
-    // Try to show clean version of raw string
+    // Extract salary range from longer text (e.g. "...Salary: $82k – $125k (Annual)")
+    const m = salaryRaw.match(/(?:salary|pay range|compensation|wage)[:\s]+(\$[\d,]+(?:\.\d+)?(?:\s*[–\-—]\s*\$[\d,]+(?:\.\d+)?)?(?:\s*\([^)]{0,30}\))?)/i);
+    if (m) {
+      const extracted = m[1].trim();
+      if (extracted.length <= 60) return extracted;
+    }
     const cleaned = salaryRaw.replace(/^Salary:\s*/i,'').replace(/\s*based on.*$/i,'').trim();
     if (cleaned.length < 40) return cleaned;
   }
@@ -1425,11 +1578,14 @@ function quizUpdateSummary() {
     }
   }
   document.getElementById('quiz-summary-bar').style.display = 'block';
+  showTileRow();
 }
 
 function quizEditStep(stepId) {
   document.getElementById('quiz-summary-bar').style.display = 'none';
+  hideTileRow();
   document.getElementById('intake-wizard').style.display = 'block';
+  document.getElementById('page-intro').style.display = '';
   document.getElementById('results-section').classList.add('hidden');
   quizHistory = [];
   _quizShow(stepId);
@@ -1477,8 +1633,9 @@ function quizFinish() {
   state.sectors = quiz.sectors.length ? [...quiz.sectors] : [];
   // Store experience for sort boosting
   state.exp = quiz.exp;
-  // Hide wizard, show summary bar + board
+  // Hide wizard and intro, show summary bar + board
   document.getElementById('intake-wizard').style.display = 'none';
+  document.getElementById('page-intro').style.display = 'none';
   quizUpdateSummary();
   applyPath(state.path, true);
 }
@@ -1501,14 +1658,7 @@ function applyPath(path, animate) {
   staffCard.classList.toggle('selected', path === 'staff');
   staffCard.classList.toggle('dimmed', path === 'rf');
   document.getElementById('intake-prompt').classList.add('hidden');
-
-  // Show filter bar
-  document.getElementById('filter-bar').classList.remove('hidden');
-  document.getElementById('rf-toggles').classList.toggle('hidden', path !== 'rf');
-  document.getElementById('staff-label').classList.toggle('hidden', path !== 'staff');
-  if (path !== 'rf') document.getElementById('rf-toggles').style.display = '';
-  if (path === 'rf') document.getElementById('rf-toggles').style.display = 'flex';
-  else document.getElementById('staff-label').style.display = 'block';
+  updateShowMeTabs();
 
   // Show results
   document.getElementById('results-section').classList.remove('hidden');
@@ -1529,6 +1679,7 @@ function setRfToggle(toggle) {
   state.rfToggle = toggle;
   state.page = 1;
   updateRfToggleUI();
+  updateShowMeTabs();
   updateBanners();
   updateLookForContent();
   applyFiltersAndRender();
@@ -1760,12 +1911,87 @@ function loadMore() {
 // BANNERS
 // ============================================================
 function updateBanners() {
-  const comingSoon = document.getElementById('rf-coming-soon');
+  const impactGoals = document.getElementById('rf-impact-goals');
   const salting = document.getElementById('salting-banner');
   const isRf = state.path === 'rf';
   const notApprentice = state.rfToggle !== 'apprenticeships';
-  comingSoon.classList.toggle('hidden', !(isRf && notApprentice));
+  if (impactGoals) {
+    impactGoals.classList.toggle('hidden', !(isRf && notApprentice));
+    if (isRf && notApprentice) renderImpactGoals();
+  }
   salting.classList.toggle('hidden', !(isRf && state.rfToggle === 'mcalevey'));
+}
+
+// ============================================================
+// IMPACT GOALS PANEL
+// ============================================================
+const IG_TYPE_NOTES = {
+  'a': 'High potential for new organizing',
+  'b': 'Activate existing union power',
+  'c': 'Partner with organized labor',
+};
+
+function renderImpactGoals() {
+  const grid = document.getElementById('ig-cards-grid');
+  const titleEl = document.getElementById('ig-title-text');
+  const subEl = document.getElementById('ig-sub-text');
+  if (!grid) return;
+
+  const sectorNames = state.sectors.length
+    ? state.sectors.map(s => s.split('/')[0]).join(' & ')
+    : null;
+
+  if (titleEl) {
+    titleEl.textContent = sectorNames
+      ? `Where ${sectorNames} Organizing Is Needed Most`
+      : 'Where This Work Is Needed Most';
+  }
+  if (subEl) {
+    subEl.textContent = sectorNames
+      ? `Direct ${sectorNames.toLowerCase()} job listings are in development. These are the MSAs with the strongest terrain for organizing in your chosen sector — ranked by opportunity score.`
+      : 'Direct sector job listings — hospital portals, school district boards, warehouse employers — are in development. These are the MSAs with the highest organizing opportunity, ranked by terrain score.';
+  }
+
+  if (!msaData.length) return; // keep skeleton
+
+  const sorted = [...msaData]
+    .sort((a, b) => (b.avgOos + (b.isSwing ? 3 : 0)) - (a.avgOos + (a.isSwing ? 3 : 0)))
+    .slice(0, 6);
+
+  grid.innerHTML = sorted.map(msa => {
+    const stateStr = msa.states.slice(0, 3).join(', ');
+    const pct = Math.min(100, msa.avgOos);
+    const domType = msa.domType || '';
+    const typeChar = (domType.match(/Type\s+([A-Ca-c])/)?.[1] || '').toLowerCase();
+    const typeCls = typeChar ? `badge-int-${typeChar}` : '';
+    const typeBadge = domType ? `<span class="badge ${typeCls}">${escHtml(domType)}</span>` : '';
+    const swingBadge = msa.isSwing ? `<span style="font-size:11px" title="Swing state">🚩</span>` : '';
+    const note = IG_TYPE_NOTES[typeChar] || '';
+    return `
+      <div class="ig-card" data-msa="${escHtml(msa.name)}" onclick="igCardClick(this)">
+        <div class="ig-card-name">${escHtml(msa.name)}</div>
+        <div class="ig-card-states">${escHtml(stateStr)}</div>
+        <div class="ig-score-row">
+          <div class="ig-bar-track"><div class="ig-bar-fill" style="width:${pct}%"></div></div>
+          <div class="ig-score-val">${msa.avgOos}</div>
+        </div>
+        <div class="ig-card-badges">${typeBadge}${swingBadge}</div>
+        ${note ? `<div class="ig-card-note">${escHtml(note)}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function igCardClick(el) {
+  const msaName = el.dataset.msa;
+  document.querySelectorAll('.ig-card').forEach(c =>
+    c.classList.toggle('ig-active', c.dataset.msa === msaName));
+  document.querySelectorAll('.msa-row').forEach(row =>
+    row.classList.toggle('msa-highlighted', row.dataset.msa === msaName));
+  const terrain = document.getElementById('terrain-panel');
+  if (terrain && window.innerWidth <= 800) {
+    terrain.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 // ============================================================
@@ -1865,9 +2091,9 @@ function highlightMsa(stateAbbr) {
 // JOB DETAIL PANEL
 // ============================================================
 const INT_DESCS = {
-  'Type A': 'Few or no unions here — high potential for new organizing. Start from scratch, find organic leaders, and build structure.',
-  'Type B': 'Unions exist but aren\'t punching their weight politically. The power is there — it needs activation.',
-  'Type C': 'Strong unions, politically engaged. Best terrain for coordinated campaigns and electoral leverage.',
+  'A': 'Low union density — ground-floor organizing opportunity. Workers here haven\'t been reached yet; there\'s room to build from scratch.',
+  'B': 'Strong unions exist but aren\'t fully politically activated. This is activation terrain — building political power from existing structures.',
+  'C': 'High-density, politically active terrain — best suited for coordinated campaigns and electoral leverage.',
 };
 const ROLE_DESCS = {
   'staff': 'Professional staff role working for a union or labor organization.',
@@ -1881,7 +2107,9 @@ const SECTOR_ICONS = {
   'Finance/Admin': '📊', 'Communications/Digital': '💻', 'Transportation': '🚌',
   'Retail': '🛒', 'Hospitality': '🍽️', 'Agriculture': '🌾',
 };
-function getSectorIcon(tags) {
+const STAFF_ICON_SVG = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="12" width="22" height="13" rx="2.5" stroke="#7A6F64" stroke-width="2" fill="none"/><path d="M10 12V9a4 4 0 0 1 8 0v3" stroke="#7A6F64" stroke-width="2" stroke-linecap="round" fill="none"/><line x1="3" y1="18" x2="25" y2="18" stroke="#7A6F64" stroke-width="1.5"/></svg>`;
+function getSectorIcon(tags, roleType) {
+  if (roleType === 'staff') return STAFF_ICON_SVG;
   if (!tags || !tags.length) return '🔷';
   for (const t of tags) { if (SECTOR_ICONS[t]) return SECTOR_ICONS[t]; }
   return '🔷';
@@ -1894,16 +2122,39 @@ function showJobDetail(job) {
   const org = job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
   const impact = job.impact_score || 50;
-  const salary = formatSalary(job.salary_min, job.salary || job.salary_range);
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw);
   const applyUrl = job.job_id ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}` : (job.apply_url || '');
-  const badgeHtml = buildBadges(job);
 
-  const intType = job.intervention_type || '';
-  const intDesc = INT_DESCS[intType] || '';
+  const intType = (job.intervention_type || '').toUpperCase().replace('TYPE ', '');
+  const intTypeKey = ['A','B','C'].includes(intType) ? intType : null;
+  const intDesc = intTypeKey ? INT_DESCS[intTypeKey] : '';
   const roleDesc = ROLE_DESCS[job.role_type || 'staff'] || '';
   const scoreContext = impact >= 90 ? 'Top-tier organizing terrain' : impact >= 70 ? 'High-opportunity terrain' : impact >= 50 ? 'Moderate organizing opportunity' : 'Developing terrain';
+  const isStaff = job.role_type === 'staff' || !job.role_type;
 
-  const sectorIcon = getSectorIcon(job.sector_tags);
+  const sectorIcon = getSectorIcon(job.sector_tags, job.role_type);
+
+  // Section 2: description snippet
+  const desc = (job.description || '').trim();
+  const descSnippet = desc.length > 300 ? desc.slice(0, 300).replace(/\s+\S*$/, '') + '…' : desc;
+
+  // Section 3: path-aware terrain copy
+  const terrainCopy = isStaff
+    ? 'The geographic terrain shapes the strategic value of organizing work in this area — reflecting union infrastructure, sector coverage, and electoral impact.'
+    : (intTypeKey === 'A'
+        ? 'Low union density here creates ground-floor organizing potential. Workers haven\'t been fully reached — this is terrain for building from scratch.'
+        : intTypeKey === 'B'
+          ? 'Unions exist here but aren\'t fully activated politically. Rank & file work in this terrain means building power from existing structures.'
+          : intTypeKey === 'C'
+            ? 'Highly organized, politically active terrain. Rank & file presence here means coordinating with strong existing structures.'
+            : 'This score reflects union infrastructure, sector density, and electoral opportunity in the surrounding area.');
+
+  // Section 4: sector note for staff
+  const sectorNote = isStaff && (job.sector_tags||[]).length
+    ? `<div class="jdp-badge-desc" style="margin-top:6px"><strong>Employer's sector:</strong> ${escHtml(job.sector_tags.join(', '))}<br><span style="color:#9A8E85;font-size:11px">The employer's industry — relevant when assessing organizing terrain around this workplace.</span></div>`
+    : (job.sector_tags||[]).length
+      ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>Sector:</strong> ${escHtml(job.sector_tags.join(', '))}</div>`
+      : '';
 
   pane.innerHTML = `
     <button class="jdp-back" onclick="hideJobDetail()">← Back to terrain guide</button>
@@ -1913,25 +2164,28 @@ function showJobDetail(job) {
       ${org ? `<div class="jdp-org">${escHtml(org)}</div>` : ''}
       ${loc ? `<div class="jdp-loc">📍 ${escHtml(loc)}</div>` : ''}
     </div>
+    ${descSnippet ? `<div class="jdp-section"><div class="jdp-eyebrow">About this role</div><div class="jdp-desc">${escHtml(descSnippet)}</div></div>` : ''}
     <div class="jdp-section">
-      <div class="jdp-eyebrow">Terrain Impact Score</div>
+      <div class="jdp-eyebrow">Terrain Impact</div>
       <div class="jdp-score-row">
         <div class="jdp-score-num">${impact}</div>
-        <div class="jdp-score-sub"><strong>${scoreContext}</strong><br>Scores every U.S. county by union infrastructure, sector density, and electoral terrain.</div>
+        <div class="jdp-score-sub"><strong>${scoreContext}</strong><br>${escHtml(terrainCopy)}</div>
       </div>
       <div class="jdp-track"><div class="jdp-fill" style="width:${impact}%"></div></div>
     </div>
     <div class="jdp-section">
       <div class="jdp-eyebrow">Role &amp; Context</div>
       ${roleDesc ? `<div class="jdp-badge-block"><span class="badge badge-role-staff" style="flex-shrink:0">${escHtml(job.rf_subtype_label || 'Staff & Organizer')}</span><div class="jdp-badge-desc">${escHtml(roleDesc)}</div></div>` : ''}
-      ${intType ? `<div class="jdp-badge-block"><span class="badge badge-int-${intType.replace('Type ','').toLowerCase()}" style="flex-shrink:0">${escHtml(intType)}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
+      ${intTypeKey ? `<div class="jdp-badge-block"><span class="badge badge-int-${intTypeKey.toLowerCase()}" style="flex-shrink:0">Type ${intTypeKey}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
       ${job.is_mcalevey_priority ? `<div class="jdp-badge-block"><span class="badge badge-mcalevey" style="flex-shrink:0">⭐ McAlevey</span><div class="jdp-badge-desc">In Jane McAlevey's highest-priority sectors: healthcare, education, logistics, or public sector.</div></div>` : ''}
       ${job.is_swing_state ? `<div class="jdp-badge-block"><span class="badge badge-swing" style="flex-shrink:0">🚩 Swing state</span><div class="jdp-badge-desc">Located in a competitive state where labor organizing has direct electoral impact.</div></div>` : ''}
-      ${(job.sector_tags||[]).length ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>${job.role_type === 'staff' ? 'Employer sectors:' : 'Sectors:'}</strong> ${job.sector_tags.join(', ')}</div>` : ''}
+      ${sectorNote}
     </div>
     <div class="jdp-section">
       <div class="jdp-eyebrow">Compensation</div>
-      ${salary ? `<div class="jdp-salary">💰 ${escHtml(salary)}</div>` : `<div class="jdp-salary-null">Salary not listed in posting</div>`}
+      ${salary
+        ? `<div class="jdp-salary">💰 ${escHtml(salary)}</div>`
+        : `<div class="jdp-salary-null">Salary not listed in posting — check the full listing for compensation details.</div>`}
     </div>
     ${applyUrl ? `<a class="jdp-apply" href="${escHtml(applyUrl)}" target="_blank" rel="noopener">Apply on UnionJobs.com →</a>` : ''}
   `;
@@ -1980,7 +2234,7 @@ function makeJobCard(job) {
   const title = job.title || 'Untitled Position';
   const org = job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
-  const salary = formatSalary(job.salary_min, job.salary || job.salary_range);
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw);
   const impact = job.impact_score || 50;
   const applyUrl = job.job_id
     ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}`
@@ -2109,6 +2363,152 @@ function toggleDropdown(id, e) {
 
 function closeAllDropdowns() {
   document.querySelectorAll('.filter-dropdown.open').forEach(el => el.classList.remove('open'));
+  closeTileDropdowns();
+}
+
+// ============================================================
+// QUIZ TILE ROW
+// ============================================================
+function showTileRow() {
+  document.getElementById('quiz-tile-row').style.display = 'block';
+  updateTileRow();
+}
+function hideTileRow() {
+  document.getElementById('quiz-tile-row').style.display = 'none';
+}
+function updateTileRow() {
+  const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
+  const pathLabel = document.getElementById('qtile-path-label');
+  if (pathLabel) pathLabel.textContent = pathLabels[state.path] || 'Choose path';
+  document.querySelectorAll('#qtile-path-dd .qtile-opt').forEach(o =>
+    o.querySelector('.chk').textContent = o.dataset.path === state.path ? '✓' : '');
+  document.querySelectorAll('#qtile-path-dd .qtile-opt').forEach(o =>
+    o.classList.toggle('selected', o.dataset.path === state.path));
+
+  const sectorTile = document.getElementById('qtile-sector');
+  if (sectorTile) {
+    sectorTile.style.display = state.path === 'rf' ? '' : 'none';
+    const sectorLabel = document.getElementById('qtile-sector-label');
+    if (sectorLabel) sectorLabel.textContent = state.sectors.length
+      ? state.sectors.map(s => s.split('/')[0]).join(', ')
+      : 'Any sector';
+    renderSectorTileDropdown();
+  }
+
+  const locLabel = document.getElementById('qtile-loc-label');
+  if (locLabel) {
+    locLabel.textContent = (state.location === 'mystate' && state.myState)
+      ? state.myState
+      : state.location === 'mystate' ? 'My state' : 'Anywhere';
+  }
+  document.querySelectorAll('#qtile-loc-dd .qtile-opt[data-loc]').forEach(o => {
+    const sel = o.dataset.loc === state.location;
+    o.querySelector('.chk').textContent = sel ? '✓' : '';
+    o.classList.toggle('selected', sel);
+  });
+  const stWrap = document.getElementById('qtile-state-wrap');
+  if (stWrap) stWrap.style.display = state.location === 'mystate' ? '' : 'none';
+}
+function renderSectorTileDropdown() {
+  const dd = document.getElementById('qtile-sector-dd');
+  if (!dd) return;
+  const sectors = ['Healthcare','Education','Logistics/Warehousing','Manufacturing','Public Sector','Building Trades','Transportation','Communications/Digital'];
+  const chips = sectors.map(s =>
+    `<div class="qtile-sector-chip${state.sectors.includes(s) ? ' selected' : ''}" onclick="tileToggleSector('${escHtml(s)}', event)">${escHtml(s.split('/')[0])}</div>`
+  ).join('');
+  dd.innerHTML = `<div class="qtile-sector-chips">${chips}</div><div class="qtile-sector-clear" onclick="tileClearSectors(event)">Clear all</div>`;
+}
+function tileToggleSector(sector, e) {
+  if (e) e.stopPropagation();
+  const idx = state.sectors.indexOf(sector);
+  if (idx > -1) state.sectors.splice(idx, 1); else state.sectors.push(sector);
+  renderSectorTileDropdown();
+  const label = document.getElementById('qtile-sector-label');
+  if (label) label.textContent = state.sectors.length ? state.sectors.map(s => s.split('/')[0]).join(', ') : 'Any sector';
+  state.page = 1;
+  applyFiltersAndRender();
+  writeUrlParams();
+}
+function tileClearSectors(e) {
+  if (e) e.stopPropagation();
+  state.sectors = [];
+  renderSectorTileDropdown();
+  const label = document.getElementById('qtile-sector-label');
+  if (label) label.textContent = 'Any sector';
+  state.page = 1;
+  applyFiltersAndRender();
+  writeUrlParams();
+}
+function toggleTileDropdown(ddId, e) {
+  if (e) e.stopPropagation();
+  const dd = document.getElementById(ddId);
+  if (!dd) return;
+  const isOpen = dd.classList.contains('open');
+  closeTileDropdowns();
+  if (!isOpen) {
+    dd.classList.add('open');
+    dd.closest('.qtile').classList.add('qtile-open');
+  }
+}
+function closeTileDropdowns() {
+  document.querySelectorAll('.qtile-dropdown.open').forEach(dd => {
+    dd.classList.remove('open');
+    const tile = dd.closest('.qtile');
+    if (tile) tile.classList.remove('qtile-open');
+  });
+}
+function tileSetPath(path, e) {
+  if (e) e.stopPropagation();
+  closeTileDropdowns();
+  state.path = path;
+  quiz.path = path;
+  updateTileRow();
+  applyPath(path, true);
+}
+function tileSetLocation(locType, e) {
+  if (e) e.stopPropagation();
+  state.location = locType;
+  document.querySelectorAll('#qtile-loc-dd .qtile-opt[data-loc]').forEach(o => {
+    const sel = o.dataset.loc === locType;
+    o.querySelector('.chk').textContent = sel ? '✓' : '';
+    o.classList.toggle('selected', sel);
+  });
+  const stWrap = document.getElementById('qtile-state-wrap');
+  if (stWrap) stWrap.style.display = locType === 'mystate' ? '' : 'none';
+  if (locType !== 'mystate') {
+    const label = document.getElementById('qtile-loc-label');
+    if (label) label.textContent = 'Anywhere';
+    closeTileDropdowns();
+    state.page = 1;
+    applyFiltersAndRender();
+    writeUrlParams();
+  }
+}
+function tileSetMyState(val) {
+  state.myState = val;
+  state.location = 'mystate';
+  const label = document.getElementById('qtile-loc-label');
+  if (label) label.textContent = val || 'My state';
+  closeTileDropdowns();
+  state.page = 1;
+  applyFiltersAndRender();
+  writeUrlParams();
+}
+function updateShowMeTabs() {
+  const row = document.getElementById('show-me-row');
+  if (!row || !state.path) { if (row) row.style.display = 'none'; return; }
+  row.style.display = 'flex';
+  const tabs = document.getElementById('show-me-tabs');
+  const staffLabel = document.getElementById('show-me-staff-label');
+  if (state.path === 'rf') {
+    if (tabs) tabs.style.display = 'flex';
+    if (staffLabel) staffLabel.style.display = 'none';
+    document.querySelectorAll('.smt-tab').forEach(t =>
+      t.classList.toggle('active', t.dataset.toggle === state.rfToggle));
+  } else {
+    if (tabs) tabs.style.display = 'none';
+    if (staffLabel) staffLabel.style.display = '';
+  }
 }
 
 // ============================================================
@@ -2122,8 +2522,8 @@ function populateStateSelect() {
     'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
     'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'
   ];
-  // Populate both the filter bar select and the quiz select
-  ['state-select', 'quiz-state-sel'].forEach(id => {
+  // Populate filter bar, quiz, and tile row state selects
+  ['state-select', 'quiz-state-sel', 'qtile-state-sel'].forEach(id => {
     const sel = document.getElementById(id);
     if (!sel) return;
     states.forEach(s => {

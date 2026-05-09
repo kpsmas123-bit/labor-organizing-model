@@ -77,6 +77,9 @@ class NotionClient:
     def get_page(self, page_id: str) -> dict:
         return self._request("GET", f"/pages/{page_id}")
 
+    def archive_page(self, page_id: str) -> dict:
+        return self._request("PATCH", f"/pages/{page_id}", {"archived": True})
+
 
 # ── Property builders ───────────────────────────────────────────────────────
 

@@ -286,6 +286,21 @@
       "avg_union_density": 4.4
     },
     {
+      "name": "Healthcare - EMS / Emergency Ambulance",
+      "naics": "621910",
+      "sector_type": "Healthcare",
+      "strategic_value": 100,
+      "non_offshoreable": true,
+      "crisis_creating": true,
+      "community_facing": true,
+      "chokepoint_potential": true,
+      "organizability": "High",
+      "mcalevey_priority": true,
+      "description": "Emergency ambulance services, air ambulance. Private EMS companies (e.g. AMR/Global Medical Response) are active organizing targets. NOTE: Employment here is a subset of NAICS 621 (Ambulatory). Small double-count acknowledged — accepted per P2-2 decision (Option B). Understates true EMS impact by emp_621910 x SVS_621=10 per county.",
+      "us_employment_est": 260000,
+      "avg_union_density": 4.2
+    },
+    {
       "name": "Utilities",
       "naics": "221",
       "sector_type": "Utilities",
