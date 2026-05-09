@@ -475,6 +475,46 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   #header-center { text-align: left; order: -1; flex-basis: 100%; }
 }
 
+/* Sector selection step */
+.quiz-q-sub { font-size: 13px; color: #7A6F64; text-align: center; margin: -16px 0 20px; }
+.sectors-grid {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  max-width: 620px; margin: 0 auto 24px;
+}
+.sector-chip {
+  padding: 9px 18px; border: 1.5px solid #D0C8BC; border-radius: 24px;
+  font-size: 13.5px; cursor: pointer; background: #fff; color: #3B2F2F;
+  transition: all 0.12s; user-select: none;
+}
+.sector-chip:hover { border-color: #E8732A; background: #FFF4EE; }
+.sector-chip.selected { background: #E8732A; border-color: #E8732A; color: #fff; }
+
+/* Quiz Summary Bar — thin banner with ← arrows */
+#quiz-summary-bar {
+  display: none; background: #F0EBE3; border-bottom: 1px solid #DDD5C8;
+}
+#quiz-summary-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: stretch; flex-wrap: wrap;
+}
+.qs-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 8px 14px; font-size: 12.5px; color: #5A5050;
+  cursor: pointer; border-right: 1px solid #DDD5C8;
+  transition: background 0.12s, color 0.12s; white-space: nowrap;
+  background: none; border-top: none; border-bottom: none; border-left: none;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.qs-chip:hover { background: #E8DDD3; color: #2C2C2C; }
+.qs-chip .qs-arrow { font-size: 10px; color: #9A8E85; }
+.qs-chip .qs-val { font-weight: 500; }
+.qs-retake {
+  margin-left: auto; background: none; border: none; padding: 8px 14px;
+  font-size: 12px; color: #B84B15; cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.qs-retake:hover { color: #E8732A; text-decoration: underline; }
+
 /* ZIP input */
 #quiz-zip-input {
   width: 100%; box-sizing: border-box; background: #fff;
@@ -579,11 +619,18 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 <!-- QUIZ SUMMARY BAR -->
 <div id="quiz-summary-bar">
   <div id="quiz-summary-inner">
-    <span class="qs-label">Your path:</span>
-    <span class="qs-chip" id="qs-path" onclick="quizEditStep('qstep-path')"></span>
-    <span class="qs-chip" id="qs-exp" onclick="quizEditStep('qstep-experience')"></span>
-    <span class="qs-chip" id="qs-loc" onclick="quizEditStep('qstep-location')"></span>
-    <span class="qs-chip" id="qs-rftype" style="display:none" onclick="quizEditStep('qstep-rftype')"></span>
+    <button class="qs-chip" id="qs-path" onclick="quizEditStep('qstep-path')">
+      <span class="qs-arrow">←</span><span class="qs-val"></span>
+    </button>
+    <button class="qs-chip" id="qs-step2" onclick="quizEditStep('qstep-path')" style="display:none">
+      <span class="qs-arrow">←</span><span class="qs-val"></span>
+    </button>
+    <button class="qs-chip" id="qs-loc" onclick="quizEditStep('qstep-location')">
+      <span class="qs-arrow">←</span><span class="qs-val"></span>
+    </button>
+    <button class="qs-chip" id="qs-rftype" style="display:none" onclick="quizEditStep('qstep-rftype')">
+      <span class="qs-arrow">←</span><span class="qs-val"></span>
+    </button>
     <button class="qs-retake" onclick="quizEditStep('qstep-path')">Start over</button>
   </div>
 </div>
@@ -656,7 +703,24 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       </div>
     </div><!-- /step-path -->
 
-    <!-- STEP 2: Experience -->
+    <!-- STEP 2a: Sectors (RF path only) -->
+    <div class="quiz-step" id="qstep-sectors">
+      <div class="quiz-q">Which sectors interest you?</div>
+      <div class="quiz-q-sub">Select any that apply — or skip for all sectors</div>
+      <div class="sectors-grid" id="qsectors-grid">
+        <div class="sector-chip" data-sector="Healthcare" onclick="quizToggleSector('Healthcare')">🏥 Healthcare</div>
+        <div class="sector-chip" data-sector="Education" onclick="quizToggleSector('Education')">🎓 Education</div>
+        <div class="sector-chip" data-sector="Logistics/Warehousing" onclick="quizToggleSector('Logistics/Warehousing')">📦 Logistics</div>
+        <div class="sector-chip" data-sector="Manufacturing" onclick="quizToggleSector('Manufacturing')">🏭 Manufacturing</div>
+        <div class="sector-chip" data-sector="Public Sector" onclick="quizToggleSector('Public Sector')">🏛️ Public Sector</div>
+        <div class="sector-chip" data-sector="Building Trades" onclick="quizToggleSector('Building Trades')">🔨 Building Trades</div>
+        <div class="sector-chip" data-sector="Transportation" onclick="quizToggleSector('Transportation')">🚌 Transportation</div>
+        <div class="sector-chip" data-sector="Communications/Digital" onclick="quizToggleSector('Communications/Digital')">💻 Tech/Digital</div>
+      </div>
+      <button class="quiz-cta" style="max-width:320px;margin:0 auto;display:block" onclick="quizConfirmSectors()">Continue →</button>
+    </div><!-- /step-sectors -->
+
+    <!-- STEP 2b: Experience (Staff path only) -->
     <div class="quiz-step" id="qstep-experience">
       <div class="quiz-q">What's your experience level?</div>
       <div class="quiz-cards-row three-col">
@@ -1170,14 +1234,32 @@ function formatSalary(salary_min, salaryRaw) {
 // ============================================================
 // INTAKE QUIZ
 // ============================================================
-const quiz = { path: null, exp: null, locType: 'anywhere', myState: null, zip: null, radius: 50, rfType: null };
+const quiz = { path: null, exp: null, sectors: [], locType: 'anywhere', myState: null, zip: null, radius: 50, rfType: null };
 let quizHistory = [];
 
 function quizPickPath(path) {
   quiz.path = path;
+  quiz.sectors = [];
   quizHistory.push('qstep-path');
-  _quizShow('qstep-experience');
+  if (path === 'rf') {
+    _quizShow('qstep-sectors');
+  } else {
+    _quizShow('qstep-experience');
+  }
   _quizDots(2);
+}
+
+function quizToggleSector(sector) {
+  const idx = quiz.sectors.indexOf(sector);
+  if (idx > -1) quiz.sectors.splice(idx, 1); else quiz.sectors.push(sector);
+  document.querySelectorAll('#qsectors-grid .sector-chip').forEach(c =>
+    c.classList.toggle('selected', quiz.sectors.includes(c.dataset.sector)));
+}
+
+function quizConfirmSectors() {
+  quizHistory.push('qstep-sectors');
+  _quizShow('qstep-location');
+  _quizDots(3);
 }
 
 function quizPickExp(exp) {
@@ -1236,6 +1318,11 @@ function quizBack() {
     document.getElementById('qcard-local').classList.remove('selected');
     const zi = document.getElementById('quiz-zip-input');
     if (zi) zi.value = '';
+  }
+  if (prev === 'qstep-sectors') {
+    // re-render selected state on chips
+    document.querySelectorAll('#qsectors-grid .sector-chip').forEach(c =>
+      c.classList.toggle('selected', quiz.sectors.includes(c.dataset.sector)));
   }
 }
 
@@ -1303,21 +1390,41 @@ function quizUpdateSummary() {
   const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
   const expLabels = { new: 'New to labor', some: 'Some experience', seasoned: 'Seasoned' };
   const rfLabels = { strategic: 'Strategic hire', apprenticeship: 'Apprenticeship', salt: 'Salt a shop' };
-  const el = id => document.getElementById(id);
-  if (el('qs-path')) el('qs-path').textContent = pathLabels[quiz.path] || 'Path';
-  if (el('qs-exp')) el('qs-exp').textContent = expLabels[quiz.exp] || 'Experience';
-  let locLabel = quiz.zip ? `Near ${quiz.zip}` : (quiz.locType === 'anywhere' ? 'Anywhere' : (quiz.myState || 'Local'));
-  if (el('qs-loc')) el('qs-loc').textContent = locLabel;
-  const rfChip = el('qs-rftype');
+  const chip = (id, val, step) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.querySelector('.qs-val').textContent = val;
+    el.onclick = () => quizEditStep(step);
+    el.style.display = val ? '' : 'none';
+  };
+  chip('qs-path', pathLabels[quiz.path] || '', 'qstep-path');
+  // step 2 chip: sectors for RF, experience for staff
+  const step2El = document.getElementById('qs-step2');
+  if (step2El) {
+    if (quiz.path === 'rf') {
+      const sLabel = quiz.sectors.length ? quiz.sectors.map(s => s.split('/')[0]).join(', ') : 'Any sector';
+      step2El.querySelector('.qs-val').textContent = sLabel;
+      step2El.onclick = () => quizEditStep('qstep-sectors');
+      step2El.style.display = '';
+    } else {
+      step2El.querySelector('.qs-val').textContent = expLabels[quiz.exp] || '';
+      step2El.onclick = () => quizEditStep('qstep-experience');
+      step2El.style.display = quiz.exp ? '' : 'none';
+    }
+  }
+  const locLabel = quiz.zip ? `Near ${quiz.zip}` : (quiz.locType === 'anywhere' ? 'Anywhere US' : (quiz.myState || 'Local'));
+  chip('qs-loc', locLabel, 'qstep-location');
+  const rfChip = document.getElementById('qs-rftype');
   if (rfChip) {
     if (quiz.path === 'rf' && quiz.rfType) {
-      rfChip.textContent = rfLabels[quiz.rfType] || 'Role type';
+      rfChip.querySelector('.qs-val').textContent = rfLabels[quiz.rfType] || '';
+      rfChip.onclick = () => quizEditStep('qstep-rftype');
       rfChip.style.display = '';
     } else {
       rfChip.style.display = 'none';
     }
   }
-  el('quiz-summary-bar').style.display = 'block';
+  document.getElementById('quiz-summary-bar').style.display = 'block';
 }
 
 function quizEditStep(stepId) {
@@ -1366,6 +1473,8 @@ function quizFinish() {
   } else {
     state.rfToggle = 'mcalevey';
   }
+  // Apply sector selection (RF path, non-strict)
+  state.sectors = quiz.sectors.length ? [...quiz.sectors] : [];
   // Store experience for sort boosting
   state.exp = quiz.exp;
   // Hide wizard, show summary bar + board
