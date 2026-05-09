@@ -12,15 +12,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; }
 
-  #header { padding: 14px 24px; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; display: flex; align-items: center; gap: 16px; }
-  #header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: 700; color: #2C2C2C; letter-spacing: -0.01em; }
+  #header { padding: 12px 24px; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; display: flex; align-items: center; position: relative; min-height: 52px; }
+  #header-center { flex: 1; text-align: center; }
+  #header h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 17px; font-weight: 700; color: #2C2C2C; letter-spacing: -0.01em; }
   #header .subtitle { font-size: 11px; color: #7A6F64; margin-top: 1px; }
+  #header-right { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; }
 
-  #view-tabs { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; }
-  #layout { display: flex; height: calc(100vh - 94px); }
+  #view-tabs { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; overflow-x: auto; }
+  #layout { display: flex; height: calc(100vh - 91px); }
 
   #sidebar { width: 300px; min-width: 260px; background: #F0EBE3; border-right: 1px solid #DDD5C8; overflow-y: auto; padding: 16px; flex-shrink: 0; }
-  #sidebar.sidebar-hidden { visibility: hidden; pointer-events: none; }
+  #sidebar.sidebar-hidden { display: none; }
   #sidebar h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #7A6F64; margin-bottom: 10px; }
 
   .filter-group { margin-bottom: 18px; }
@@ -55,12 +57,12 @@
   .int-type-card .card-desc { font-size: 10px; color: #7A6F64; line-height: 1.45; }
   .int-type-card .card-tag { font-size: 9px; color: #A09385; font-style: italic; margin-top: 3px; }
 
-  .view-tab { padding: 10px 20px; font-size: 12px; font-weight: 500; cursor: pointer; color: #7A6F64; border-bottom: 2px solid transparent; transition: all 0.12s; }
+  .view-tab { padding: 10px 18px; font-size: 12px; font-weight: 500; cursor: pointer; color: #7A6F64; border-bottom: 2px solid transparent; transition: color 0.12s, border-color 0.12s; white-space: nowrap; flex-shrink: 0; }
   .view-tab:hover { color: #2C2C2C; }
   .view-tab.active { color: #2C2C2C; border-bottom-color: #E8732A; }
 
-  #main { flex: 1; overflow: hidden; background: #FAF7F2; }
-  #views { width: 100%; height: 100%; overflow: hidden; }
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #FAF7F2; }
+  #views { flex: 1; overflow: hidden; min-height: 0; }
   #map-view { display: none; width: 100%; height: 100%; position: relative; background: #FAF7F2; }
   #map-svg { width: 100%; height: 100%; }
 
@@ -368,7 +370,7 @@
 
   #status-bar { padding: 6px 16px; background: #F0EBE3; border-top: 1px solid #DDD5C8; font-size: 10px; color: #A09385; display: flex; justify-content: space-between; align-items: center; }
 
-  #export-btn { padding: 6px 14px; background: #2C2C2C; border: 1px solid #2C2C2C; border-radius: 5px; color: #FAF7F2; font-size: 11px; font-family: 'Inter', system-ui, sans-serif; font-weight: 500; cursor: pointer; transition: background 0.12s; }
+  #export-btn { display: none; }
   #export-btn:hover { background: #E8732A; border-color: #E8732A; }
 
   .loading { color: #E8732A; font-size: 11px; }
@@ -405,6 +407,38 @@
   #top10-list .top10-row:hover { color: #E8732A; }
   #top10-list .top10-name { color: #2C2C2C; }
   #top10-list .top10-score { font-weight: 600; }
+
+  /* ── MOBILE RESPONSIVE ─────────────────────── */
+  @media (max-width: 640px) {
+    #beta-banner { font-size: 11px; padding: 7px 12px; }
+    #header { padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
+    #header h1 { font-size: 14px; white-space: normal; line-height: 1.3; }
+    #header .subtitle { font-size: 10px; white-space: normal; }
+    #export-btn { display: none; }
+    #view-tabs { -webkit-overflow-scrolling: touch; }
+    .view-tab { padding: 9px 14px; font-size: 11px; }
+    #layout { height: calc(100vh - 130px); }
+    /* Gallery */
+    #gl-api-bar { flex-wrap: wrap; gap: 6px; }
+    #gl-api-key-input { max-width: 100%; }
+    #gl-goal-filter, #gl-filter-bar { padding: 12px 14px; }
+    #gl-goal-cards, #gl-filter-cards { grid-template-columns: 1fr; }
+    #gl-gallery-header { padding: 16px 14px 8px; }
+    #gl-cards-grid { grid-template-columns: 1fr; padding: 8px 12px 40px; gap: 12px; }
+    .gl-card-title-row { flex-wrap: wrap; }
+    /* Table */
+    #table-view { padding: 8px; }
+    #table-view th, #table-view td { padding: 6px 8px; font-size: 11px; }
+    /* Methodology */
+    .meth-wrap { padding: 18px 14px 40px; }
+    .meth-intro-head { font-size: 1.3rem; }
+    .meth-flow { padding: 12px 14px; }
+    .meth-flow-row { flex-wrap: wrap; }
+    /* Map */
+    #map-view { height: 100%; }
+    .legend { max-width: 160px; font-size: 10px; padding: 8px 10px; }
+    #detail-panel { width: calc(100vw - 24px); max-width: none; right: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -415,12 +449,11 @@
 </div>
 
 <div id="header">
-  <div>
+  <div id="header-center">
     <h1>National Labor Organizing Strategic Prioritization</h1>
     <div class="subtitle">3,144 US Counties · McAlevey Framework · Organizing Opportunity Score</div>
   </div>
-  <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
-    <button id="export-btn">Export Top 50 CSV</button>
+  <div id="header-right">
     <div id="loading-indicator" class="loading" style="display:none">Loading data…</div>
   </div>
 </div>
@@ -434,7 +467,7 @@
 </div>
 
 <div id="layout">
-  <div id="sidebar" class="sidebar-hidden">
+  <div id="sidebar" style="display:none">
     <h2>Map Goal</h2>
 
     <div class="filter-group">
@@ -644,7 +677,7 @@
       <!-- ── GALLERY VIEW ───────────────────────── -->
       <div id="gallery-view">
         <div id="gl-api-bar">
-          <label for="gl-api-key-input">🔑 API Key</label>
+          <label for="gl-api-key-input">API Key</label>
           <input type="password" id="gl-api-key-input" placeholder="sk-ant-... (for AI explanations)" autocomplete="off">
           <span id="gl-api-status">Enter an Anthropic API key to enable AI-generated strategic rationale</span>
         </div>
@@ -654,15 +687,15 @@
           <div class="gl-filter-label">Strategic goal</div>
           <div id="gl-goal-cards">
             <div class="gl-goal-card" data-goal="congressional">
-              <div class="gl-gc-title"><span>🏛️</span> Flip the House</div>
+              <div class="gl-gc-title">Flip the House</div>
               <div class="gl-gc-desc">Metros with the highest congressional leverage — where labor can shift competitive district outcomes.</div>
             </div>
             <div class="gl-goal-card" data-goal="presidential">
-              <div class="gl-gc-title"><span>🗳️</span> Presidential Battlegrounds</div>
+              <div class="gl-gc-title">Presidential Battlegrounds</div>
               <div class="gl-gc-desc">Swing-state metros where labor density and mobilization infrastructure converge for presidential impact.</div>
             </div>
             <div class="gl-goal-card" data-goal="statewide">
-              <div class="gl-gc-title"><span>🌱</span> Long-Term State Transformation</div>
+              <div class="gl-gc-title">Long-Term State Transformation</div>
               <div class="gl-gc-desc">Metros that anchor statewide power — Senate races, governorships, and labor law reform.</div>
             </div>
           </div>
@@ -1787,8 +1820,7 @@ function switchToView(view) {
   document.getElementById("gallery-view").style.display = view === "gallery" ? "block" : "none";
   document.getElementById("methodology-view").style.display = view === "methodology" ? "block" : "none";
   const sb = document.getElementById("sidebar");
-  sb.style.display = "block";
-  sb.classList.toggle("sidebar-hidden", view !== "map");
+  sb.style.display = view === "map" ? "block" : "none";
   if (view === "table") renderTable();
   if (view === "gallery") glInitGallery();
 }
@@ -2138,7 +2170,7 @@ function glBuildCard(msa, rank) {
         <div class="gl-bar-track"><div class="gl-bar-fill gl-fill-dim" style="width:${Math.min(100,elScore)}%"></div></div>
       </div>
     </div>
-    <div class="gl-sectors">${sectors.map(([i,l])=>`<span class="gl-sector-chip"><span>${i}</span>${l}</span>`).join("")}</div>
+    <div class="gl-sectors">${sectors.map(([,l])=>`<span class="gl-sector-chip">${l}</span>`).join("")}</div>
     <div class="gl-explanation">
       <div class="gl-section-eyebrow">Strategic Rationale</div>
       <div class="gl-explanation-body" data-gl-explain>
@@ -2209,28 +2241,6 @@ async function glGenerateExplanation(card, msaName) {
   }
 }
 
-// ──────────────────────────────────────────────────────────────
-// Export
-// ──────────────────────────────────────────────────────────────
-document.getElementById("export-btn").addEventListener("click", () => {
-  const top50 = [...filteredCounties]
-    .sort((a, b) => (b.organizing_opportunity_score ?? 0) - (a.organizing_opportunity_score ?? 0))
-    .slice(0, 50);
-  const headers = ["rank","fips","county_name","state","region","organizing_opportunity_score",
-    "intervention_type","presidential_score","statewide_score","congressional_score",
-    "organizing_score","sectoral_score","infra_score","organized_scale_score","union_culture_score",
-    "margin_2024","swing_state","population","rural_urban","priority_tier"];
-  const rows = top50.map((c, i) => headers.map(h => {
-    if (h === "rank") return i + 1;
-    const v = c[h];
-    return v === null || v === undefined ? "" : v;
-  }).join(","));
-  const csv = [headers.join(","), ...rows].join("\n");
-  const a = document.createElement("a");
-  a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-  a.download = "top50_labor_organizing_counties.csv";
-  a.click();
-});
 
 // ──────────────────────────────────────────────────────────────
 // Utility

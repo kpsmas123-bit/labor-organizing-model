@@ -52,27 +52,94 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 /* === PAGE INTRO === */
 #page-intro {
-  max-width: 640px; margin: 36px auto 0; text-align: center; padding: 0 8px;
+  max-width: 640px; margin: 32px auto 0; text-align: center; padding: 0 8px;
 }
-#page-intro p {
-  font-size: 14px; color: #5A5050; line-height: 1.72; margin-bottom: 18px;
-}
+#page-intro p { font-size: 14px; color: #5A5050; line-height: 1.72; margin-bottom: 0; }
 #page-intro p em { font-style: italic; }
 #page-intro p strong { color: #2C2C2C; font-weight: 600; }
-.intro-steps {
-  display: flex; align-items: center; justify-content: center;
-  gap: 8px; flex-wrap: wrap;
-}
-.intro-step {
-  font-size: 11.5px; font-weight: 500; color: #7A6F64;
-  background: #F0EBE3; border: 1px solid #DDD5C8;
-  padding: 4px 12px; border-radius: 20px; white-space: nowrap;
-}
-.intro-step-num { color: #E8732A; font-weight: 700; margin-right: 4px; }
-.intro-arrow { color: #C8BFB5; font-size: 10px; }
 
-/* === INTAKE SECTION === */
-#intake-section { padding: 28px 0 32px; max-width: 860px; margin: 0 auto; }
+/* === INTAKE QUIZ === */
+#intake-wizard { padding: 28px 0 24px; max-width: 860px; margin: 0 auto; }
+
+#quiz-nav {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 28px; min-height: 28px;
+}
+#quiz-back-btn {
+  font-size: 12px; color: #7A6F64;
+  background: none; border: 1px solid #DDD5C8; cursor: pointer; padding: 5px 12px;
+  border-radius: 20px; transition: all 0.12s; font-family: 'Inter', system-ui, sans-serif;
+}
+#quiz-back-btn:hover { color: #2C2C2C; border-color: #A09385; background: #F5F0E8; }
+.qdots { display: flex; gap: 6px; align-items: center; }
+.qdot { width: 7px; height: 7px; border-radius: 50%; background: #DDD5C8; transition: background 0.25s, transform 0.25s; }
+.qdot.active { background: #E8732A; transform: scale(1.2); }
+
+.quiz-step { display: none; }
+.quiz-step.active { display: block; animation: qFadeIn 0.22s ease; }
+@keyframes qFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.quiz-q {
+  text-align: center; font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: 700; color: #2C2C2C;
+  margin-bottom: 22px; line-height: 1.35;
+}
+
+.quiz-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.quiz-cards-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
+
+.quiz-card {
+  background: #fff; border: 2px solid #DDD5C8; border-radius: 12px;
+  padding: 26px 20px; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  gap: 10px; user-select: none;
+}
+.quiz-card:hover { border-color: #C8BFB5; background: #FDFAF6; box-shadow: 0 2px 14px rgba(44,34,24,0.06); }
+.quiz-card.selected { border-color: #E8732A; background: #FFF8F3; box-shadow: 0 4px 20px rgba(232,115,42,0.1); }
+
+.qc-label {
+  font-family: 'Playfair Display', Georgia, serif; font-size: 20px;
+  font-weight: 700; color: #2C2C2C; line-height: 1.2;
+}
+.qc-sub { font-size: 13px; color: #7A6F64; line-height: 1.55; }
+.qc-tag {
+  display: inline-block; font-size: 10.5px; font-weight: 700;
+  padding: 4px 14px; border-radius: 20px; letter-spacing: 0.03em; margin-top: 2px;
+}
+
+/* Location local opts */
+#quiz-local-opts {
+  margin-top: 20px; background: #F8F4EE; border: 1px solid #DDD5C8;
+  border-radius: 10px; padding: 20px 24px; max-width: 480px; margin-left: auto; margin-right: auto;
+}
+.quiz-local-label { font-size: 10.5px; font-weight: 700; color: #7A6F64; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 8px; }
+#quiz-state-sel {
+  width: 100%; background: #fff; border: 1px solid #C8BFB5; color: #2C2C2C;
+  border-radius: 6px; padding: 8px 12px; font-size: 13px;
+  font-family: 'Inter', system-ui, sans-serif; margin-bottom: 16px;
+}
+#quiz-state-sel:focus { outline: none; border-color: #E8732A; }
+.radius-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
+.radius-row-label { font-size: 11.5px; color: #7A6F64; font-weight: 500; white-space: nowrap; }
+.rpill {
+  padding: 5px 14px; border: 1px solid #C8BFB5; border-radius: 20px;
+  font-size: 11.5px; color: #7A6F64; cursor: pointer; background: #fff;
+  transition: all 0.12s; user-select: none;
+}
+.rpill:hover { border-color: #A09385; color: #2C2C2C; }
+.rpill.active { background: #2C2C2C; border-color: #2C2C2C; color: #FAF7F2; }
+.quiz-cta {
+  width: 100%; padding: 11px 16px; background: #E8732A; border: none; border-radius: 8px;
+  color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif; transition: background 0.12s;
+}
+.quiz-cta:hover { background: #C4512A; }
+
+@media (max-width: 600px) {
+  .quiz-cards-row, .quiz-cards-row.three-col { grid-template-columns: 1fr; }
+  .quiz-q { font-size: 1.15rem; }
+}
 
 /* === GUIDED NAV FOOTER === */
 #guided-nav {
@@ -407,6 +474,81 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   #header { flex-wrap: wrap; gap: 8px; }
   #header-center { text-align: left; order: -1; flex-basis: 100%; }
 }
+
+/* ZIP input */
+#quiz-zip-input {
+  width: 100%; box-sizing: border-box; background: #fff;
+  border: 1px solid #C8BFB5; color: #2C2C2C; border-radius: 6px;
+  padding: 9px 12px; font-size: 14px; font-family: 'Inter', system-ui, sans-serif;
+  margin-bottom: 10px; transition: border-color 0.15s;
+}
+#quiz-zip-input:focus { outline: none; border-color: #E8732A; }
+.quiz-zip-or {
+  text-align: center; font-size: 11px; color: #9A8E85;
+  margin: 2px 0 10px; display: flex; align-items: center; gap: 10px;
+}
+.quiz-zip-or::before, .quiz-zip-or::after {
+  content: ''; flex: 1; height: 1px; background: #DDD5C8;
+}
+
+/* Quiz Summary Bar */
+#quiz-summary-bar {
+  display: none; background: #F5F0EA; border-bottom: 1px solid #DDD5C8; padding: 9px 24px;
+}
+#quiz-summary-inner {
+  max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
+  gap: 7px; flex-wrap: wrap;
+}
+.qs-label { font-size: 11px; color: #9A8E85; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; margin-right: 2px; }
+.qs-chip {
+  background: #fff; border: 1.5px solid #D0C8BC; border-radius: 20px;
+  padding: 4px 12px; font-size: 12.5px; color: #3B2F2F; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
+}
+.qs-chip::after { content: '✎'; font-size: 9px; opacity: 0.35; }
+.qs-chip:hover { border-color: #E8732A; background: #FFF4EE; }
+.qs-chip:hover::after { opacity: 0.9; }
+.qs-retake {
+  margin-left: auto; background: none; border: none; font-size: 12px; color: #B84B15;
+  cursor: pointer; padding: 3px 0; text-decoration: underline; text-underline-offset: 2px;
+}
+.qs-retake:hover { color: #E8732A; }
+
+/* Job Detail Panel */
+#terrain-guide, #job-detail-pane { transition: opacity 0.2s ease; }
+#job-detail-pane { display: none; }
+.jdp-back {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 12px;
+  color: #8A7E75; cursor: pointer; border: none; background: none;
+  padding: 14px 16px 8px; width: 100%; text-align: left;
+}
+.jdp-back:hover { color: #E8732A; }
+.jdp-hero { padding: 0 16px 14px; border-bottom: 1px solid #EDE7DF; }
+.jdp-hero-icon { font-size: 28px; margin-bottom: 6px; line-height: 1; }
+.jdp-title { font-size: 16px; font-weight: 700; color: #2C2C2C; line-height: 1.3; margin-bottom: 3px; }
+.jdp-org { font-size: 13px; color: #5A5050; margin-bottom: 3px; }
+.jdp-loc { font-size: 12px; color: #8A7E75; }
+.jdp-section { padding: 13px 16px; border-bottom: 1px solid #EDE7DF; }
+.jdp-section:last-of-type { border-bottom: none; }
+.jdp-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: #9A8E85; margin-bottom: 8px; }
+.jdp-score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.jdp-score-num { font-size: 30px; font-weight: 700; color: #E8732A; line-height: 1; min-width: 52px; }
+.jdp-score-sub { font-size: 12px; color: #5A5050; line-height: 1.55; }
+.jdp-track { height: 5px; background: #F0EAE2; border-radius: 3px; margin-bottom: 6px; }
+.jdp-fill { height: 5px; background: linear-gradient(90deg,#E8732A,#C4512A); border-radius: 3px; }
+.jdp-badge-block { margin-bottom: 9px; display: flex; align-items: flex-start; gap: 9px; }
+.jdp-badge-block .badge { white-space: nowrap; flex-shrink: 0; }
+.jdp-badge-desc { font-size: 12px; color: #5A5050; line-height: 1.5; }
+.jdp-salary { font-size: 15px; font-weight: 600; color: #2C2C2C; }
+.jdp-salary-null { font-size: 13px; color: #9A8E85; }
+.jdp-apply {
+  display: block; background: #2C2C2C; color: #fff; text-align: center;
+  padding: 11px 20px; border-radius: 7px; font-size: 14px; font-weight: 600;
+  text-decoration: none; margin: 14px 16px 16px; letter-spacing: 0.02em;
+  transition: background 0.15s;
+}
+.jdp-apply:hover { background: #E8732A; }
 </style>
 </head>
 <body>
@@ -434,79 +576,167 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=methodology">Methodology</a>
 </div>
 
+<!-- QUIZ SUMMARY BAR -->
+<div id="quiz-summary-bar">
+  <div id="quiz-summary-inner">
+    <span class="qs-label">Your path:</span>
+    <span class="qs-chip" id="qs-path" onclick="quizEditStep('qstep-path')"></span>
+    <span class="qs-chip" id="qs-exp" onclick="quizEditStep('qstep-experience')"></span>
+    <span class="qs-chip" id="qs-loc" onclick="quizEditStep('qstep-location')"></span>
+    <span class="qs-chip" id="qs-rftype" style="display:none" onclick="quizEditStep('qstep-rftype')"></span>
+    <button class="qs-retake" onclick="quizEditStep('qstep-path')">Start over</button>
+  </div>
+</div>
+
 <!-- PAGE WRAP -->
 <div id="page-wrap">
 
   <!-- PAGE INTRO -->
   <div id="page-intro">
     <p>
-      This tool scores every U.S. county by organizing opportunity — using sector data, union infrastructure, and electoral terrain — grounded in Jane McAlevey's <em>whole-worker</em> framework. <strong>The jobs board matches you to the highest-impact role for your situation.</strong>
+      This tool scores every U.S. county by organizing opportunity — using sector data, union infrastructure, and electoral terrain — grounded in Jane McAlevey's <em>whole-worker</em> framework. <strong>Answer a few quick questions to find your highest-impact role.</strong>
     </p>
-    <div class="intro-steps">
-      <div class="intro-step"><span class="intro-step-num">1</span>Pick your path</div>
-      <div class="intro-arrow">→</div>
-      <div class="intro-step"><span class="intro-step-num">2</span>Filter by sector &amp; location</div>
-      <div class="intro-arrow">→</div>
-      <div class="intro-step"><span class="intro-step-num">3</span>See the terrain behind the listings</div>
-    </div>
   </div>
 
-  <!-- INTAKE SECTION -->
-  <div id="intake-section">
-    <div id="intake-cards">
+  <!-- Hidden legacy elements applyPath() references -->
+  <div id="card-rf" style="display:none"></div>
+  <div id="card-staff" style="display:none"></div>
+  <div id="intake-prompt" style="display:none"></div>
 
-      <!-- Rank & File card -->
-      <div class="path-card" id="card-rf" data-path="rf" onclick="selectPath('rf')">
-        <div class="path-card-icon">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- dome fill -->
+  <!-- INTAKE QUIZ -->
+  <div id="intake-wizard">
+
+    <!-- Nav: back button + step dots -->
+    <div id="quiz-nav">
+      <button id="quiz-back-btn" style="display:none" onclick="quizBack()">← Back</button>
+      <div class="qdots">
+        <span class="qdot active" id="qdot-1"></span>
+        <span class="qdot" id="qdot-2"></span>
+        <span class="qdot" id="qdot-3"></span>
+        <span class="qdot" id="qdot-4" style="display:none"></span>
+      </div>
+    </div>
+
+    <!-- STEP 1: Path -->
+    <div class="quiz-step active" id="qstep-path">
+      <div class="quiz-q">What's your situation?</div>
+      <div class="quiz-cards-row">
+
+        <div class="quiz-card" id="qcard-rf" onclick="quizPickPath('rf')">
+          <svg width="52" height="52" viewBox="0 0 56 56" fill="none">
             <path d="M9 35 C9 19 16 11 28 11 C40 11 47 19 47 35 Z" fill="#E8B84B"/>
-            <!-- brim fill -->
             <rect x="4" y="33" width="48" height="9" rx="4.5" fill="#E8B84B"/>
-            <!-- dome outline -->
             <path d="M9 35 C9 19 16 11 28 11 C40 11 47 19 47 35" fill="none" stroke="#2C1A06" stroke-width="2.8" stroke-linecap="round"/>
-            <!-- brim outline -->
             <rect x="4" y="33" width="48" height="9" rx="4.5" fill="none" stroke="#2C1A06" stroke-width="2.8"/>
-            <!-- suspension band (curved line across dome base) -->
             <path d="M9 35 Q28 30 47 35" fill="none" stroke="#2C1A06" stroke-width="1.8"/>
-            <!-- central rib (two arching lines) -->
             <path d="M24 34 C24 22 25.5 13 28 12" fill="none" stroke="#2C1A06" stroke-width="2.2" stroke-linecap="round"/>
             <path d="M32 34 C32 22 30.5 13 28 12" fill="none" stroke="#2C1A06" stroke-width="2.2" stroke-linecap="round"/>
-            <!-- rib top knob -->
             <rect x="25.5" y="8" width="5" height="6" rx="1.5" fill="#E8B84B" stroke="#2C1A06" stroke-width="2.2"/>
           </svg>
+          <div class="qc-label">Rank &amp; File</div>
+          <div class="qc-sub">Take a job and organize from the inside</div>
+          <span class="qc-tag tag-mcalevey">Organize on the side</span>
         </div>
-        <div class="path-card-label">Rank &amp; File</div>
-        <div class="path-card-sub">Take a job and organize from the inside</div>
-        <span class="path-card-tag tag-mcalevey">Highest strategic impact</span>
-      </div>
 
-      <!-- Staff & Organizer card -->
-      <div class="path-card" id="card-staff" data-path="staff" onclick="selectPath('staff')">
-        <div class="path-card-icon">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- cone body (wide on left/bell, narrow on right/mouthpiece) -->
+        <div class="quiz-card" id="qcard-staff" onclick="quizPickPath('staff')">
+          <svg width="52" height="52" viewBox="0 0 56 56" fill="none">
             <path d="M14 19 L42 23 L42 33 L14 37 Z" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8" stroke-linejoin="round"/>
-            <!-- bell opening (circle at wide/left end) -->
             <circle cx="14" cy="28" r="10" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8"/>
-            <!-- mouthpiece end cap (right side) -->
             <rect x="41" y="22" width="7" height="12" rx="3.5" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8"/>
-            <!-- handle pointing down -->
             <rect x="25" y="37" width="8" height="13" rx="4" fill="#4A7FC1" stroke="#2C1A06" stroke-width="2.8"/>
-            <!-- sound rays from bell (going left) -->
             <line x1="6" y1="20" x2="2" y2="15" stroke="#2C1A06" stroke-width="2.5" stroke-linecap="round"/>
             <line x1="4" y1="28" x2="0" y2="28" stroke="#2C1A06" stroke-width="2.5" stroke-linecap="round"/>
             <line x1="6" y1="36" x2="2" y2="41" stroke="#2C1A06" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
+          <div class="qc-label">Staff Organizer</div>
+          <div class="qc-sub">Work professionally for a union or labor org</div>
+          <span class="qc-tag tag-staff">Professional organizing</span>
         </div>
-        <div class="path-card-label">Staff &amp; Organizer</div>
-        <div class="path-card-sub">Work professionally for a union or labor org</div>
-        <span class="path-card-tag tag-staff">Build the movement professionally</span>
+
+      </div>
+    </div><!-- /step-path -->
+
+    <!-- STEP 2: Experience -->
+    <div class="quiz-step" id="qstep-experience">
+      <div class="quiz-q">What's your experience level?</div>
+      <div class="quiz-cards-row three-col">
+
+        <div class="quiz-card" onclick="quizPickExp('new')">
+          <div class="qc-label">New to labor</div>
+          <div class="qc-sub">Just getting started — learning how unions work and where I fit in</div>
+        </div>
+
+        <div class="quiz-card" onclick="quizPickExp('some')">
+          <div class="qc-label">Some experience</div>
+          <div class="qc-sub">Some experience working for or in a labor union, or other strategic campaigns</div>
+        </div>
+
+        <div class="quiz-card" onclick="quizPickExp('seasoned')">
+          <div class="qc-label">Seasoned organizer</div>
+          <div class="qc-sub">I've worked in unions for years and am looking for the next move</div>
+        </div>
+
+      </div>
+    </div><!-- /step-experience -->
+
+    <!-- STEP 3: Location -->
+    <div class="quiz-step" id="qstep-location">
+      <div class="quiz-q">Where can you work?</div>
+      <div class="quiz-cards-row">
+
+        <div class="quiz-card" onclick="quizPickLocation('anywhere')">
+          <div class="qc-label">Open to relocating</div>
+          <div class="qc-sub">Show me the highest-impact opportunities anywhere in the US</div>
+        </div>
+
+        <div class="quiz-card" id="qcard-local" onclick="quizPickLocation('local')">
+          <div class="qc-label">Staying local</div>
+          <div class="qc-sub">I want to find opportunities near where I live</div>
+        </div>
+
       </div>
 
-    </div>
-    <div id="intake-prompt">Select your path to see opportunities</div>
-  </div>
+      <!-- State + radius (appears when "Staying local" clicked) -->
+      <div id="quiz-local-opts" style="display:none">
+        <div class="quiz-local-label">ZIP code</div>
+        <input type="text" id="quiz-zip-input" placeholder="e.g. 48201" maxlength="5" inputmode="numeric" pattern="[0-9]{5}" oninput="quizZipInput(this.value)">
+        <div class="radius-row" style="margin-top:16px">
+          <span class="radius-row-label">Willing to commute:</span>
+          <div class="rpill active" data-r="25" onclick="quizSetRadius(25)">25 mi</div>
+          <div class="rpill" data-r="50" onclick="quizSetRadius(50)">50 mi</div>
+          <div class="rpill" data-r="100" onclick="quizSetRadius(100)">100 mi</div>
+          <div class="rpill" data-r="0" onclick="quizSetRadius(0)">Any</div>
+        </div>
+        <button class="quiz-cta" onclick="quizConfirmLocation()">Find opportunities near me →</button>
+      </div>
+    </div><!-- /step-location -->
+
+    <!-- STEP 4: RF Role Type (rank & file only) -->
+    <div class="quiz-step" id="qstep-rftype">
+      <div class="quiz-q">What kind of role?</div>
+      <div class="quiz-cards-row three-col">
+
+        <div class="quiz-card" onclick="quizPickRfType('strategic')">
+          <div class="qc-label">Strategic hire</div>
+          <div class="qc-sub">Find work in a high-impact sector and build an organizing committee from within</div>
+          <span class="qc-tag tag-mcalevey">Priority sectors</span>
+        </div>
+
+        <div class="quiz-card" onclick="quizPickRfType('apprenticeship')">
+          <div class="qc-label">Apprenticeship</div>
+          <div class="qc-sub">Join a union apprenticeship program and enter a trade with union wages from day one</div>
+        </div>
+
+        <div class="quiz-card" onclick="quizPickRfType('salt')">
+          <div class="qc-label">Salt a shop</div>
+          <div class="qc-sub">Take a job at a non-union employer specifically to build an organizing committee</div>
+          <span class="qc-tag tag-mcalevey">Lowest entry point</span>
+        </div>
+
+      </div>
+    </div><!-- /step-rftype -->
+
+  </div><!-- /intake-wizard -->
 
   <!-- FILTER BAR -->
   <div id="filter-bar" class="hidden">
@@ -627,6 +857,12 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <!-- RIGHT: TERRAIN PANEL -->
     <div id="terrain-panel">
 
+      <!-- JOB DETAIL PANE (shown on card click) -->
+      <div id="job-detail-pane"></div>
+
+      <!-- TERRAIN GUIDE -->
+      <div id="terrain-guide">
+
       <!-- A: Where to Focus -->
       <div class="tp-section" id="tp-focus">
         <div class="tp-section-eyebrow">A — Where to Focus</div>
@@ -708,6 +944,8 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         Based on Jane McAlevey's whole-worker organizing model. <a href="./methodology.html">Full methodology →</a>
       </div>
 
+      </div><!-- /terrain-guide -->
+
     </div><!-- /terrain-panel -->
 
   </div><!-- /results-section -->
@@ -764,7 +1002,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   readUrlParams();
   populateStateSelect();
   await loadData();
-  if (state.path) applyPath(state.path, false);
+  if (state.path) {
+    // URL param bypasses quiz — hide wizard and go straight to board
+    document.getElementById('intake-wizard').style.display = 'none';
+    applyPath(state.path, false);
+  }
   closeAllDropdowns();
   document.addEventListener('click', closeAllDropdowns);
 });
@@ -923,6 +1165,213 @@ function formatSalary(salary_min, salaryRaw) {
   }
   if (salary_min) return '$' + Math.round(salary_min/1000) + 'k+';
   return null;
+}
+
+// ============================================================
+// INTAKE QUIZ
+// ============================================================
+const quiz = { path: null, exp: null, locType: 'anywhere', myState: null, zip: null, radius: 50, rfType: null };
+let quizHistory = [];
+
+function quizPickPath(path) {
+  quiz.path = path;
+  quizHistory.push('qstep-path');
+  _quizShow('qstep-experience');
+  _quizDots(2);
+}
+
+function quizPickExp(exp) {
+  quiz.exp = exp;
+  quizHistory.push('qstep-experience');
+  _quizShow('qstep-location');
+  _quizDots(3);
+}
+
+function quizPickLocation(type) {
+  quiz.locType = type;
+  if (type === 'anywhere') {
+    if (quiz.path === 'rf') {
+      quizHistory.push('qstep-location');
+      _quizShow('qstep-rftype');
+      _quizDots(4);
+    } else {
+      quizFinish();
+    }
+  } else {
+    document.getElementById('qcard-local').classList.add('selected');
+    document.getElementById('quiz-local-opts').style.display = 'block';
+  }
+}
+
+function quizSetRadius(r) {
+  quiz.radius = r;
+  document.querySelectorAll('.rpill').forEach(p =>
+    p.classList.toggle('active', parseInt(p.dataset.r) === r));
+}
+
+function quizConfirmLocation() {
+  quiz.zip = document.getElementById('quiz-zip-input')?.value.trim() || null;
+  quiz.myState = quiz.zip ? (zipToState(quiz.zip) || null) : null;
+  if (quiz.path === 'rf') {
+    quizHistory.push('qstep-location');
+    _quizShow('qstep-rftype');
+    _quizDots(4);
+  } else {
+    quizFinish();
+  }
+}
+
+function quizPickRfType(type) {
+  quiz.rfType = type;
+  quizFinish();
+}
+
+function quizBack() {
+  if (!quizHistory.length) return;
+  const prev = quizHistory.pop();
+  _quizShow(prev);
+  _quizDots(quizHistory.length + 1);
+  if (prev === 'qstep-location') {
+    document.getElementById('quiz-local-opts').style.display = 'none';
+    document.getElementById('qcard-local').classList.remove('selected');
+    const zi = document.getElementById('quiz-zip-input');
+    if (zi) zi.value = '';
+  }
+}
+
+function quizZipInput(val) {
+  quiz.zip = val.length === 5 ? val : null;
+}
+
+function zipToState(zip) {
+  const p = parseInt(zip.substring(0, 3));
+  if (p >= 10 && p <= 27) return 'MA';
+  if (p >= 28 && p <= 29) return 'RI';
+  if (p >= 30 && p <= 38) return 'NH';
+  if (p >= 39 && p <= 49) return 'ME';
+  if (p >= 50 && p <= 59) return 'VT';
+  if (p >= 60 && p <= 69) return 'CT';
+  if (p >= 70 && p <= 89) return 'NJ';
+  if (p >= 100 && p <= 149) return 'NY';
+  if (p >= 150 && p <= 196) return 'PA';
+  if (p >= 197 && p <= 199) return 'DE';
+  if (p >= 200 && p <= 205) return 'DC';
+  if (p >= 206 && p <= 219) return 'MD';
+  if (p >= 220 && p <= 246) return 'VA';
+  if (p >= 247 && p <= 268) return 'WV';
+  if (p >= 270 && p <= 289) return 'NC';
+  if (p >= 290 && p <= 299) return 'SC';
+  if (p >= 300 && p <= 319) return 'GA';
+  if (p >= 320 && p <= 349) return 'FL';
+  if (p >= 350 && p <= 369) return 'AL';
+  if (p >= 370 && p <= 385) return 'TN';
+  if (p >= 386 && p <= 397) return 'MS';
+  if (p >= 400 && p <= 427) return 'KY';
+  if (p >= 430 && p <= 458) return 'OH';
+  if (p >= 460 && p <= 479) return 'IN';
+  if (p >= 480 && p <= 499) return 'MI';
+  if (p >= 500 && p <= 528) return 'IA';
+  if (p >= 530 && p <= 549) return 'WI';
+  if (p >= 550 && p <= 567) return 'MN';
+  if (p >= 570 && p <= 577) return 'SD';
+  if (p >= 580 && p <= 588) return 'ND';
+  if (p >= 590 && p <= 599) return 'MT';
+  if (p >= 600 && p <= 629) return 'IL';
+  if (p >= 630 && p <= 658) return 'MO';
+  if (p >= 660 && p <= 679) return 'KS';
+  if (p >= 680 && p <= 693) return 'NE';
+  if (p >= 700 && p <= 714) return 'LA';
+  if (p >= 716 && p <= 729) return 'AR';
+  if (p >= 730 && p <= 749) return 'OK';
+  if (p >= 750 && p <= 799) return 'TX';
+  if (p >= 800 && p <= 816) return 'CO';
+  if (p >= 820 && p <= 831) return 'WY';
+  if (p >= 832 && p <= 838) return 'ID';
+  if (p >= 840 && p <= 847) return 'UT';
+  if (p >= 850 && p <= 865) return 'AZ';
+  if (p >= 870 && p <= 884) return 'NM';
+  if (p >= 889 && p <= 898) return 'NV';
+  if (p >= 900 && p <= 961) return 'CA';
+  if (p >= 967 && p <= 968) return 'HI';
+  if (p >= 970 && p <= 979) return 'OR';
+  if (p >= 980 && p <= 994) return 'WA';
+  if (p >= 995 && p <= 999) return 'AK';
+  return null;
+}
+
+function quizUpdateSummary() {
+  const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
+  const expLabels = { new: 'New to labor', some: 'Some experience', seasoned: 'Seasoned' };
+  const rfLabels = { strategic: 'Strategic hire', apprenticeship: 'Apprenticeship', salt: 'Salt a shop' };
+  const el = id => document.getElementById(id);
+  if (el('qs-path')) el('qs-path').textContent = pathLabels[quiz.path] || 'Path';
+  if (el('qs-exp')) el('qs-exp').textContent = expLabels[quiz.exp] || 'Experience';
+  let locLabel = quiz.zip ? `Near ${quiz.zip}` : (quiz.locType === 'anywhere' ? 'Anywhere' : (quiz.myState || 'Local'));
+  if (el('qs-loc')) el('qs-loc').textContent = locLabel;
+  const rfChip = el('qs-rftype');
+  if (rfChip) {
+    if (quiz.path === 'rf' && quiz.rfType) {
+      rfChip.textContent = rfLabels[quiz.rfType] || 'Role type';
+      rfChip.style.display = '';
+    } else {
+      rfChip.style.display = 'none';
+    }
+  }
+  el('quiz-summary-bar').style.display = 'block';
+}
+
+function quizEditStep(stepId) {
+  document.getElementById('quiz-summary-bar').style.display = 'none';
+  document.getElementById('intake-wizard').style.display = 'block';
+  document.getElementById('results-section').classList.add('hidden');
+  quizHistory = [];
+  _quizShow(stepId);
+  const stepNums = { 'qstep-path': 1, 'qstep-experience': 2, 'qstep-location': 3, 'qstep-rftype': 4 };
+  _quizDots(stepNums[stepId] || 1);
+  document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function _quizShow(stepId) {
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+  document.getElementById(stepId).classList.add('active');
+  document.getElementById('quiz-back-btn').style.display = quizHistory.length > 0 ? 'inline-block' : 'none';
+  document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function _quizDots(step) {
+  // Show dot 4 only for RF path (which has the role-type step)
+  const hasStep4 = quiz.path === 'rf';
+  document.getElementById('qdot-4').style.display = hasStep4 ? 'inline-block' : 'none';
+  [1, 2, 3, 4].forEach(i => {
+    const d = document.getElementById('qdot-' + i);
+    if (d) d.classList.toggle('active', i <= step);
+  });
+}
+
+function quizFinish() {
+  // Apply quiz answers to filter state
+  state.path = quiz.path;
+  if (quiz.locType === 'local' && quiz.myState) {
+    state.location = 'mystate';
+    state.myState = quiz.myState;
+    // Sync the existing state-select UI too
+    const ss = document.getElementById('state-select');
+    if (ss) ss.value = quiz.myState;
+  }
+  // RF role type → toggle
+  if (quiz.rfType === 'apprenticeship' || (!quiz.rfType && quiz.exp === 'new')) {
+    state.rfToggle = 'apprenticeships';
+  } else if (quiz.rfType === 'salt') {
+    state.rfToggle = 'all';
+  } else {
+    state.rfToggle = 'mcalevey';
+  }
+  // Store experience for sort boosting
+  state.exp = quiz.exp;
+  // Hide wizard, show summary bar + board
+  document.getElementById('intake-wizard').style.display = 'none';
+  quizUpdateSummary();
+  applyPath(state.path, true);
 }
 
 // ============================================================
@@ -1286,17 +1735,120 @@ function highlightMsa(stateAbbr) {
 }
 
 // ============================================================
+// ============================================================
+// JOB DETAIL PANEL
+// ============================================================
+const INT_DESCS = {
+  'Type A': 'Few or no unions here — high potential for new organizing. Start from scratch, find organic leaders, and build structure.',
+  'Type B': 'Unions exist but aren\'t punching their weight politically. The power is there — it needs activation.',
+  'Type C': 'Strong unions, politically engaged. Best terrain for coordinated campaigns and electoral leverage.',
+};
+const ROLE_DESCS = {
+  'staff': 'Professional staff role working for a union or labor organization.',
+  'R3_apprenticeship': 'Structured apprenticeship to develop organizing skills with mentorship and real campaigns.',
+  'R2_career': 'Take a job in a strategic sector (healthcare, education, logistics) to build worker power from the inside.',
+  'R4_union_job': 'A good union job in an organized workplace.',
+};
+const SECTOR_ICONS = {
+  'Education': '🎓', 'Healthcare': '🏥', 'Logistics/Warehousing': '📦',
+  'Manufacturing': '🏭', 'Public Sector': '🏛️', 'Building Trades': '🔨',
+  'Finance/Admin': '📊', 'Communications/Digital': '💻', 'Transportation': '🚌',
+  'Retail': '🛒', 'Hospitality': '🍽️', 'Agriculture': '🌾',
+};
+function getSectorIcon(tags) {
+  if (!tags || !tags.length) return '🔷';
+  for (const t of tags) { if (SECTOR_ICONS[t]) return SECTOR_ICONS[t]; }
+  return '🔷';
+}
+
+function showJobDetail(job) {
+  const guide = document.getElementById('terrain-guide');
+  const pane = document.getElementById('job-detail-pane');
+  const title = job.title || 'Untitled Position';
+  const org = job.organization || '';
+  const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
+  const impact = job.impact_score || 50;
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range);
+  const applyUrl = job.job_id ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}` : (job.apply_url || '');
+  const badgeHtml = buildBadges(job);
+
+  const intType = job.intervention_type || '';
+  const intDesc = INT_DESCS[intType] || '';
+  const roleDesc = ROLE_DESCS[job.role_type || 'staff'] || '';
+  const scoreContext = impact >= 90 ? 'Top-tier organizing terrain' : impact >= 70 ? 'High-opportunity terrain' : impact >= 50 ? 'Moderate organizing opportunity' : 'Developing terrain';
+
+  const sectorIcon = getSectorIcon(job.sector_tags);
+
+  pane.innerHTML = `
+    <button class="jdp-back" onclick="hideJobDetail()">← Back to terrain guide</button>
+    <div class="jdp-hero">
+      <div class="jdp-hero-icon">${sectorIcon}</div>
+      <div class="jdp-title">${escHtml(title)}</div>
+      ${org ? `<div class="jdp-org">${escHtml(org)}</div>` : ''}
+      ${loc ? `<div class="jdp-loc">📍 ${escHtml(loc)}</div>` : ''}
+    </div>
+    <div class="jdp-section">
+      <div class="jdp-eyebrow">Terrain Impact Score</div>
+      <div class="jdp-score-row">
+        <div class="jdp-score-num">${impact}</div>
+        <div class="jdp-score-sub"><strong>${scoreContext}</strong><br>Scores every U.S. county by union infrastructure, sector density, and electoral terrain.</div>
+      </div>
+      <div class="jdp-track"><div class="jdp-fill" style="width:${impact}%"></div></div>
+    </div>
+    <div class="jdp-section">
+      <div class="jdp-eyebrow">Role &amp; Context</div>
+      ${roleDesc ? `<div class="jdp-badge-block"><span class="badge badge-role-staff" style="flex-shrink:0">${escHtml(job.rf_subtype_label || 'Staff & Organizer')}</span><div class="jdp-badge-desc">${escHtml(roleDesc)}</div></div>` : ''}
+      ${intType ? `<div class="jdp-badge-block"><span class="badge badge-int-${intType.replace('Type ','').toLowerCase()}" style="flex-shrink:0">${escHtml(intType)}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
+      ${job.is_mcalevey_priority ? `<div class="jdp-badge-block"><span class="badge badge-mcalevey" style="flex-shrink:0">⭐ McAlevey</span><div class="jdp-badge-desc">In Jane McAlevey's highest-priority sectors: healthcare, education, logistics, or public sector.</div></div>` : ''}
+      ${job.is_swing_state ? `<div class="jdp-badge-block"><span class="badge badge-swing" style="flex-shrink:0">🚩 Swing state</span><div class="jdp-badge-desc">Located in a competitive state where labor organizing has direct electoral impact.</div></div>` : ''}
+      ${(job.sector_tags||[]).length ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>Sectors:</strong> ${job.sector_tags.join(', ')}</div>` : ''}
+    </div>
+    <div class="jdp-section">
+      <div class="jdp-eyebrow">Compensation</div>
+      ${salary ? `<div class="jdp-salary">💰 ${escHtml(salary)}</div>` : `<div class="jdp-salary-null">Salary not listed in posting</div>`}
+    </div>
+    ${applyUrl ? `<a class="jdp-apply" href="${escHtml(applyUrl)}" target="_blank" rel="noopener">Apply on UnionJobs.com →</a>` : ''}
+  `;
+
+  guide.style.opacity = '0';
+  guide.style.pointerEvents = 'none';
+  setTimeout(() => {
+    guide.style.display = 'none';
+    pane.style.display = 'block';
+    pane.style.opacity = '0';
+    requestAnimationFrame(() => { pane.style.opacity = '1'; });
+  }, 180);
+}
+
+function hideJobDetail() {
+  const guide = document.getElementById('terrain-guide');
+  const pane = document.getElementById('job-detail-pane');
+  pane.style.opacity = '0';
+  setTimeout(() => {
+    pane.style.display = 'none';
+    guide.style.display = '';
+    guide.style.pointerEvents = '';
+    requestAnimationFrame(() => { guide.style.opacity = '1'; });
+  }, 180);
+  document.querySelectorAll('.job-card.highlighted').forEach(el => el.classList.remove('highlighted'));
+}
+
+// ============================================================
 // JOB CARD RENDERING
 // ============================================================
 function makeJobCard(job) {
   const div = document.createElement('div');
   div.className = 'job-card';
   div.addEventListener('click', () => {
-    // Highlight MSA
     if (job.state_abbr) highlightMsa(job.state_abbr);
-    // Toggle highlighted state on card
-    document.querySelectorAll('.job-card.highlighted').forEach(el => { if (el !== div) el.classList.remove('highlighted'); });
-    div.classList.toggle('highlighted');
+    const wasHighlighted = div.classList.contains('highlighted');
+    document.querySelectorAll('.job-card.highlighted').forEach(el => el.classList.remove('highlighted'));
+    if (!wasHighlighted) {
+      div.classList.add('highlighted');
+      showJobDetail(job);
+    } else {
+      hideJobDetail();
+    }
   });
 
   const title = job.title || 'Untitled Position';
@@ -1439,13 +1991,20 @@ function populateStateSelect() {
     'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
     'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'
   ];
-  const sel = document.getElementById('state-select');
-  states.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s; opt.textContent = s;
-    if (s === state.myState) opt.selected = true;
-    sel.appendChild(opt);
+  // Populate both the filter bar select and the quiz select
+  ['state-select', 'quiz-state-sel'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    states.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      if (s === state.myState) opt.selected = true;
+      sel.appendChild(opt);
+    });
   });
+  // Hide dot 3 until path is chosen
+  const d3 = document.getElementById('qdot-3');
+  if (d3) d3.style.display = 'none';
 }
 
 // ============================================================
