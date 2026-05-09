@@ -1648,6 +1648,23 @@ function getEffectiveJobs() {
     if (job.is_swing_state) boost += 15;
     if (state.location === 'mystate' && state.myState && job.state_abbr === state.myState) boost += 15;
     if (state.income > 0 && job.salary_min && job.salary_min < state.income) boost -= 15;
+    // Experience level boost/penalty
+    if (state.exp) {
+      const t = (job.title || '').toLowerCase();
+      const isEntry = /assistant|associate|coordinator|junior|entry.level|entry |apprentice|trainee|fellow/.test(t);
+      const isSenior = /director|senior|manager|chief|head of|\bvp\b|vice president|lead organizer|internal organizer/.test(t);
+      const salMin = job.salary_min;
+      if (state.exp === 'new') {
+        if (isEntry) boost += 10;
+        if (salMin && salMin < 60000) boost += 8;
+        if (isSenior) boost -= 20;
+      } else if (state.exp === 'some') {
+        if (isSenior) boost += 10;
+      } else if (state.exp === 'seasoned') {
+        if (isSenior) boost += 18;
+        if (salMin && salMin >= 80000) boost += 10;
+      }
+    }
     return { ...job, _boost: boost, _effectiveScore: (job.impact_score || 50) + boost };
   });
 }
@@ -1910,7 +1927,7 @@ function showJobDetail(job) {
       ${intType ? `<div class="jdp-badge-block"><span class="badge badge-int-${intType.replace('Type ','').toLowerCase()}" style="flex-shrink:0">${escHtml(intType)}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
       ${job.is_mcalevey_priority ? `<div class="jdp-badge-block"><span class="badge badge-mcalevey" style="flex-shrink:0">⭐ McAlevey</span><div class="jdp-badge-desc">In Jane McAlevey's highest-priority sectors: healthcare, education, logistics, or public sector.</div></div>` : ''}
       ${job.is_swing_state ? `<div class="jdp-badge-block"><span class="badge badge-swing" style="flex-shrink:0">🚩 Swing state</span><div class="jdp-badge-desc">Located in a competitive state where labor organizing has direct electoral impact.</div></div>` : ''}
-      ${(job.sector_tags||[]).length ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>Sectors:</strong> ${job.sector_tags.join(', ')}</div>` : ''}
+      ${(job.sector_tags||[]).length ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>${job.role_type === 'staff' ? 'Employer sectors:' : 'Sectors:'}</strong> ${job.sector_tags.join(', ')}</div>` : ''}
     </div>
     <div class="jdp-section">
       <div class="jdp-eyebrow">Compensation</div>
@@ -1996,9 +2013,14 @@ function makeJobCard(job) {
 
 function buildBadges(job) {
   const parts = [];
-  // Sector chips
+  // Sector chips — for staff roles the tag reflects the employer's sector, not the job itself
+  const isStaff = (job.role_type || 'staff') === 'staff';
   (job.sector_tags || []).forEach(s => {
-    parts.push(`<span class="badge badge-sector">${escHtml(s)}</span>`);
+    if (isStaff) {
+      parts.push(`<span class="badge badge-sector" title="The union or org that employs this role works in this sector">Employer sector: ${escHtml(s)}</span>`);
+    } else {
+      parts.push(`<span class="badge badge-sector">${escHtml(s)}</span>`);
+    }
   });
   // Role badge
   const roleBadge = getRoleBadge(job);
