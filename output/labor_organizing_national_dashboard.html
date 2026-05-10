@@ -35,9 +35,10 @@
   .seg-btn { flex: 1; padding: 6px 4px; border: 1px solid #C8BFB5; border-radius: 5px; background: #FAF7F2; color: #7A6F64; font-size: 11px; font-family: 'Inter', system-ui, sans-serif; cursor: pointer; transition: all 0.12s; text-align: center; white-space: nowrap; }
   .seg-btn:hover { border-color: #A09385; color: #2C2C2C; }
   .seg-btn.active { background: #2C2C2C; border-color: #2C2C2C; color: #FAF7F2; }
-  .seg-btn.goal-pres.active { background: #8B3A1A; border-color: #8B3A1A; }
-  .seg-btn.goal-state.active { background: #6B4A1A; border-color: #6B4A1A; }
-  .seg-btn.goal-cong.active { background: #3A4A2A; border-color: #3A4A2A; }
+  .seg-btn.goal-pres.active  { background: #8B3A1A; border-color: #8B3A1A; }
+  .seg-btn.goal-power.active { background: #6B4A1A; border-color: #6B4A1A; }
+  .seg-btn.goal-senate.active{ background: #1A3A5A; border-color: #1A3A5A; }
+  .seg-btn.goal-cong { opacity: 0.4; cursor: not-allowed !important; }
 
   .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 12px; color: #2C2C2C; }
   .toggle-btn input { accent-color: #E8732A; width: 14px; height: 14px; }
@@ -63,8 +64,11 @@
 
   #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #FAF7F2; }
   #views { flex: 1; overflow: hidden; min-height: 0; }
-  #map-view { display: none; width: 100%; height: 100%; position: relative; background: #FAF7F2; }
-  #map-svg { width: 100%; height: 100%; }
+  #map-view { display: none; flex-direction: column; width: 100%; height: 100%; position: relative; background: #FAF7F2; }
+  #map-svg { flex: 1; min-height: 0; width: 100%; }
+  #senate-banner { flex-shrink: 0; display: none; padding: 8px 16px; background: #F0EBE3; border-top: 1px solid #DDD5C8; font-size: 11px; color: #7A6F64; line-height: 1.5; }
+  #senate-banner a { color: #E8732A; text-decoration: none; }
+  #senate-banner a:hover { text-decoration: underline; }
 
   #table-view { display: none; height: 100%; overflow-y: auto; padding: 16px; }
   #table-view table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -473,10 +477,10 @@
     <div class="filter-group">
       <label>Color map by electoral goal</label>
       <div class="seg-buttons">
-        <div class="seg-btn active" data-goal="opp">OPP Score</div>
-        <div class="seg-btn goal-pres" data-goal="presidential">Presidential</div>
-        <div class="seg-btn goal-state" data-goal="statewide">Statewide</div>
-        <div class="seg-btn goal-cong" data-goal="congressional">Congressional</div>
+        <div class="seg-btn goal-pres active" data-goal="presidential">Presidential Swing</div>
+        <div class="seg-btn goal-power" data-goal="power">Long-Term Power Building</div>
+        <div class="seg-btn goal-senate" data-goal="senate">Senate Battlegrounds</div>
+        <div class="seg-btn goal-cong" data-goal="congressional" title="Paused — mid-decade redistricting makes district data unreliable. Returning after 2026 elections.">Congressional Districts</div>
       </div>
     </div>
 
@@ -567,6 +571,10 @@
     <div id="views">
       <div id="map-view">
         <svg id="map-svg"></svg>
+        <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
+          (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
+          target="_blank" rel="noopener noreferrer">Source: NPR — 2026 Senate Races to Watch</a>.
+          Reflects structural competitiveness, not current cycle polling.</div>
 
         <div id="detail-panel">
           <button id="close-detail">×</button>
@@ -1177,7 +1185,7 @@ let gl_countyExplanations = {}; // fips → explanation string
 let currentView = "methodology";
 let sortCol = "organizing_opportunity_score";
 let sortAsc = false;
-let goalFilter = "opp";
+let goalFilter = "presidential";
 let filters = { state: "", region: "", interventionType: "all", minScore: 0, swingOnly: false };
 
 // ──────────────────────────────────────────────────────────────
@@ -1225,9 +1233,8 @@ async function loadData() {
 // Score display helpers
 // ──────────────────────────────────────────────────────────────
 function getDisplayScore(c) {
-  if (goalFilter === "presidential") return c.presidential_score;
-  if (goalFilter === "statewide")    return c.statewide_score;
-  if (goalFilter === "congressional") return c.congressional_score;
+  if (goalFilter === "presidential") return c.organizing_opportunity_score;
+  if (goalFilter === "power")        return getCountyPowerScore(c);
   return c.organizing_opportunity_score;
 }
 
@@ -1241,6 +1248,72 @@ const NO_DATA_COLOR    = "#D8CFC4";
 const FILTERED_COLOR   = "#EDE7DF";
 const TYPE_COLORS = { A: "#2d6a4f", B: "#e76f51", C: "#457b9d" };
 let colorMode = "type"; // "type" | "score"
+
+// ── Goal-view constants ───────────────────────────────────────
+const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV"]);
+const NON_SWING_COLOR = "#2a2a2a";
+
+const SENATE_TIERS = {
+  NC: 1,
+  ME: 2, MI: 2, OH: 2,
+  AK: 3, GA: 3, NH: 3,
+  IA: 4, MN: 4,
+  TX: 5
+};
+const SENATE_TIER_COLORS = { 1:"#bd0026", 2:"#f03b20", 3:"#fd8d3c", 4:"#fecc5c", 5:"#ffffb2" };
+const SENATE_TIER_LABELS = { 1:"Most likely to flip", 2:"Toss-up", 3:"Reach", 4:"Longer shot", 5:"Watch" };
+
+let globalPowerMin = 0, globalPowerMax = 100;
+
+function computeRawPowerScore(c) {
+  const oos = c.organizing_opportunity_score || 0;
+  const sw  = c.statewide_score || 0;
+  const osc = c.organized_scale_score || 0;
+  const swing_bonus = c.swing_state ? 20 : 0;
+  return oos * 0.40 + sw * 0.30 + swing_bonus * 0.20 + osc * 0.10;
+}
+
+function buildGlobalPowerRange() {
+  if (!allCounties.length) return;
+  const raws = allCounties.map(computeRawPowerScore);
+  globalPowerMin = Math.min(...raws);
+  globalPowerMax = Math.max(...raws);
+}
+
+function getCountyPowerScore(c) {
+  const raw = computeRawPowerScore(c);
+  if (globalPowerMax === globalPowerMin) return 50;
+  return (raw - globalPowerMin) / (globalPowerMax - globalPowerMin) * 100;
+}
+
+function getSenateColor(state) {
+  const tier = SENATE_TIERS[state];
+  return tier ? SENATE_TIER_COLORS[tier] : NON_SWING_COLOR;
+}
+
+function getGoalFill(c) {
+  if (goalFilter === "presidential") {
+    return SWING_STATES_PRES.has(c.state)
+      ? getFillByScore(c.organizing_opportunity_score)
+      : NON_SWING_COLOR;
+  }
+  if (goalFilter === "power")  return getFillByScore(getCountyPowerScore(c));
+  if (goalFilter === "senate") return getSenateColor(c.state);
+  return NO_DATA_COLOR;
+}
+
+function getMsaGoalFill(msa) {
+  if (goalFilter === "presidential") {
+    return msa.hasSwingers ? getFillByScore(msa.opp) : NON_SWING_COLOR;
+  }
+  if (goalFilter === "power") return getFillByScore(msa.power);
+  if (goalFilter === "senate") {
+    const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
+    if (!tierNums.length) return NON_SWING_COLOR;
+    return SENATE_TIER_COLORS[Math.min(...tierNums)];
+  }
+  return NO_DATA_COLOR;
+}
 
 function getFillByType(typeLetter) {
   return TYPE_COLORS[typeLetter] || "#d4d4d4";
@@ -1270,27 +1343,51 @@ const TYPE_LEGEND = [
 ];
 
 function updateLegend() {
-  if (colorMode === "type") {
-    document.getElementById("legend-title").textContent = "Intervention Type";
-    document.getElementById("legend-tiers").innerHTML = TYPE_LEGEND.map(t =>
+  if (goalFilter === "senate") {
+    document.getElementById("legend-title").textContent = "Senate Competitiveness";
+    const rows = [
+      { color: "#bd0026", label: "Most likely to flip" },
+      { color: "#f03b20", label: "Toss-up" },
+      { color: "#fd8d3c", label: "Reach" },
+      { color: "#fecc5c", label: "Longer shot" },
+      { color: "#ffffb2", label: "Watch" },
+      { color: "#2a2a2a", label: "Not competitive" },
+    ];
+    document.getElementById("legend-tiers").innerHTML = rows.map(t =>
       `<div class="legend-tier">
         <div class="legend-tier-swatch" style="background:${t.color}"></div>
-        <div class="legend-tier-body">
-          <div class="legend-tier-label">Type ${t.letter} — ${t.label}</div>
-          <div class="legend-tier-desc">${t.desc}</div>
-        </div>
+        <div class="legend-tier-label">${t.label}</div>
       </div>`
     ).join("");
-  } else {
-    const titles = { opp: "Organizing Opportunity Score", presidential: "Presidential Score", statewide: "Statewide Score", congressional: "Congressional Score" };
-    document.getElementById("legend-title").textContent = titles[goalFilter] || "Score";
+    return;
+  }
+  if (goalFilter === "presidential") {
+    document.getElementById("legend-title").textContent = "Organizing Opportunity Score";
+    document.getElementById("legend-tiers").innerHTML =
+      YLORRD.map((color, i) =>
+        `<div class="legend-tier">
+          <div class="legend-tier-swatch" style="background:${color}"></div>
+          <div class="legend-tier-label">${JENKS_LABELS[i]}</div>
+        </div>`
+      ).join("") +
+      `<div class="legend-tier">
+        <div class="legend-tier-swatch" style="background:#2a2a2a"></div>
+        <div class="legend-tier-label">Not competitive</div>
+      </div>`;
+    return;
+  }
+  if (goalFilter === "power") {
+    document.getElementById("legend-title").textContent = "Long-Term Power Score";
     document.getElementById("legend-tiers").innerHTML = YLORRD.map((color, i) =>
       `<div class="legend-tier">
         <div class="legend-tier-swatch" style="background:${color}"></div>
         <div class="legend-tier-label">${JENKS_LABELS[i]}</div>
       </div>`
     ).join("");
+    return;
   }
+  document.getElementById("legend-title").textContent = "Score";
+  document.getElementById("legend-tiers").innerHTML = "";
 }
 
 document.getElementById("cm-type").addEventListener("click", () => {
@@ -1344,6 +1441,10 @@ function buildMsaScoreLookup() {
     // Swing states in this MSA
     const swingStates = [...new Set(counties.filter(c => c.swing_state).map(c => c.state))].sort().join(", ");
     const states = [...new Set(counties.map(c => c.state))].sort().join(", ");
+    const totalPowerRaw = counties.reduce((s, c) => s + computeRawPowerScore(c) * (c.population || 1), 0);
+    const powerRaw = totalPowerRaw / totalPop;
+    const powerScaled = (globalPowerMax === globalPowerMin) ? 50
+      : (powerRaw - globalPowerMin) / (globalPowerMax - globalPowerMin) * 100;
     const msaScore = {
       opp:              wavg("organizing_opportunity_score"),
       presidential:     wavg("presidential_score"),
@@ -1354,6 +1455,8 @@ function buildMsaScoreLookup() {
       infra:            wavg("infra_score"),
       unionCulture:     wavg("union_culture_score"),
       organizedScale:   wavg("organized_scale_score"),
+      power:            Math.round(powerScaled),
+      hasSwingers:      counties.some(c => SWING_STATES_PRES.has(c.state)),
       totalPop,
       countyCount:      counties.length,
       dominantType:     domType,
@@ -1451,30 +1554,34 @@ async function initMap() {
       .attr("fill", d => {
         const msa = msaScoreByName[d.properties.msaName];
         if (!msa) return NO_DATA_COLOR;
-        if (colorMode === "type") return getFillByType(msa.dominantLetter);
-        const score = goalFilter === "presidential" ? msa.presidential
-                    : goalFilter === "statewide"    ? msa.statewide
-                    : goalFilter === "congressional" ? msa.congressional
-                    : msa.opp;
-        return getFillByScore(score);
+        return getMsaGoalFill(msa);
       })
       .attr("data-msa", d => d.properties.msaName)
       .on("mousemove", (event, d) => {
         const msaName = d.properties.msaName;
         const msa = msaScoreByName[msaName];
         if (!msa) return;
-        const score = goalFilter === "presidential" ? msa.presidential
-                    : goalFilter === "statewide"    ? msa.statewide
-                    : goalFilter === "congressional" ? msa.congressional
-                    : msa.opp;
-        const intLetter = msa.dominantLetter;
-        const intClass = intLetter === "A" ? "int-type-a" : intLetter === "B" ? "int-type-b" : "int-type-c";
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
+        let scoreHtml = "";
+        if (goalFilter === "presidential") {
+          scoreHtml = msa.hasSwingers
+            ? `<br><span class="tt-opp">OPP ${Math.round(msa.opp)}</span>`
+            : `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
+        } else if (goalFilter === "power") {
+          scoreHtml = `<br><span class="tt-opp">Power ${Math.round(msa.power)}</span>`;
+        } else if (goalFilter === "senate") {
+          const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
+          scoreHtml = tierNums.length
+            ? `<br><span class="tt-opp">${SENATE_TIER_LABELS[Math.min(...tierNums)]}</span>`
+            : `<br><span style="color:#888;font-size:10px">Not competitive</span>`;
+        }
+        const intLetter = msa.dominantLetter;
+        const intClass = intLetter === "A" ? "int-type-a" : intLetter === "B" ? "int-type-b" : "int-type-c";
         tt.innerHTML = `<strong>${msaName}</strong>`
           + `<br><span style="font-size:10px;color:#A09385">${msa.states}</span>`
-          + `<br><span class="tt-opp">OPP ${Math.round(score)}</span>`
+          + scoreHtml
           + `&nbsp;<span class="${intClass}">Type ${intLetter}</span>`;
       })
       .on("mouseleave", () => { tt.style.opacity = "0"; })
@@ -1492,20 +1599,31 @@ async function initMap() {
       .attr("fill", d => {
         const c = countyByFips[d.id];
         if (!c) return NO_DATA_COLOR;
-        if (colorMode === "type") return getFillByType((c.intervention_type || "").charAt(5));
-        return getFillByScore(getDisplayScore(c));
+        return getGoalFill(c);
       })
       .attr("data-fips", d => d.id)
       .on("mousemove", (event, d) => {
         const c = countyByFips[d.id];
         if (!c) return;
-        const score = getDisplayScore(c);
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
+        let scoreHtml = "";
+        if (goalFilter === "presidential") {
+          scoreHtml = SWING_STATES_PRES.has(c.state)
+            ? `<br><span class="tt-opp">OPP ${Math.round(c.organizing_opportunity_score ?? 0)}</span>`
+            : `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
+        } else if (goalFilter === "power") {
+          scoreHtml = `<br><span class="tt-opp">Power ${Math.round(getCountyPowerScore(c))}</span>`;
+        } else if (goalFilter === "senate") {
+          const tier = SENATE_TIERS[c.state];
+          scoreHtml = tier
+            ? `<br><span class="tt-opp">${SENATE_TIER_LABELS[tier]}</span>`
+            : `<br><span style="color:#888;font-size:10px">Not competitive</span>`;
+        }
         tt.innerHTML = `<strong>${c.county_name}, ${c.state}</strong>`
           + `<br><span style="font-size:10px;color:#A09385">Non-Metro</span>`
-          + `<br><span class="tt-opp">OPP ${score ?? "–"}</span>`;
+          + scoreHtml;
       })
       .on("mouseleave", () => { tt.style.opacity = "0"; })
       .on("click", (event, d) => {
@@ -1526,22 +1644,15 @@ function updateMapColors() {
   if (!g) return;
   const visibleFips = new Set(filteredCounties.map(c => c.fips));
 
-  // MSA regions: filtered out if none of their counties pass the filter
   g.selectAll(".msa-path").attr("fill", function() {
     const msaName = this.dataset.msa;
     const msa = msaScoreByName[msaName];
     if (!msa) return NO_DATA_COLOR;
     const anyVisible = msa.counties.some(c => visibleFips.has(c.fips));
     if (!anyVisible) return FILTERED_COLOR;
-    if (colorMode === "type") return getFillByType(msa.dominantLetter);
-    const score = goalFilter === "presidential" ? msa.presidential
-                : goalFilter === "statewide"    ? msa.statewide
-                : goalFilter === "congressional" ? msa.congressional
-                : msa.opp;
-    return getFillByScore(score);
+    return getMsaGoalFill(msa);
   });
 
-  // Non-metro counties
   const countyByFips = {};
   allCounties.forEach(c => { countyByFips[c.fips] = c; });
   g.selectAll(".nonmetro-path").attr("fill", function() {
@@ -1549,8 +1660,7 @@ function updateMapColors() {
     const c = countyByFips[fips];
     if (!c) return NO_DATA_COLOR;
     if (!visibleFips.has(fips)) return FILTERED_COLOR;
-    if (colorMode === "type") return getFillByType((c.intervention_type || "").charAt(5));
-    return getFillByScore(getDisplayScore(c));
+    return getGoalFill(c);
   });
 }
 
@@ -1736,14 +1846,14 @@ document.querySelectorAll("[data-inttype]").forEach(btn => {
 
 document.querySelectorAll("[data-goal]").forEach(btn => {
   btn.addEventListener("click", function() {
+    if (this.dataset.goal === "congressional") return;
     document.querySelectorAll("[data-goal]").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     goalFilter = this.dataset.goal;
-    // Auto-enable swing filter for presidential, auto-disable when leaving it
-    filters.swingOnly = (goalFilter === "presidential");
-    document.getElementById("filter-swing").checked = filters.swingOnly;
     applyFilters();
     updateLegend();
+    const banner = document.getElementById("senate-banner");
+    if (banner) banner.style.display = goalFilter === "senate" ? "block" : "none";
   });
 });
 
@@ -1817,7 +1927,7 @@ function switchToView(view) {
   document.querySelectorAll(".view-tab").forEach(t => {
     t.classList.toggle("active", t.dataset.view === view);
   });
-  document.getElementById("map-view").style.display = view === "map" ? "block" : "none";
+  document.getElementById("map-view").style.display = view === "map" ? "flex" : "none";
   document.getElementById("table-view").style.display = view === "table" ? "block" : "none";
   document.getElementById("gallery-view").style.display = view === "gallery" ? "block" : "none";
   document.getElementById("methodology-view").style.display = view === "methodology" ? "block" : "none";
@@ -2256,6 +2366,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
 (async () => {
   await loadData();
   buildColorScales();
+  buildGlobalPowerRange();
   filteredCounties = [...allCounties];
   populateStateFilter();
   updateStats();
