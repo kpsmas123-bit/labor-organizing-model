@@ -8,6 +8,57 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="terrain.css">
 <style>
+/* === TERRAIN OVERRIDES === */
+body {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+  background: #f7f4f0 !important;
+  color: #1a1a1a !important;
+}
+
+#header, #top-nav { display: none !important; }
+
+.job-card {
+  background: #ffffff !important;
+  border: 1px solid #e0d8d0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+.job-card:hover {
+  box-shadow: none !important;
+  border-color: #bd0026 !important;
+}
+
+.grade-green { background: #bd0026 !important; color: #fff !important; }
+.grade-orange { background: #fd8d3c !important; color: #1a1a1a !important; }
+.grade-amber  { background: #fecc5c !important; color: #1a1a1a !important; }
+
+#terrain-panel {
+  background: #ffffff !important;
+  border-left: 1px solid #e0d8d0 !important;
+}
+
+.quiz-card {
+  background: #ffffff !important;
+  border: 1px solid #e0d8d0 !important;
+  border-radius: 8px !important;
+}
+.quiz-card.selected {
+  border-color: #bd0026 !important;
+  background: #fff1f1 !important;
+}
+
+.quiz-cta, .apply-btn {
+  background: #bd0026 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+}
+.quiz-cta:hover, .apply-btn:hover {
+  background: #8b0019 !important;
+}
+.qdot.active { background: #bd0026 !important; transform: scale(1.25) !important; }
+/* === END TERRAIN OVERRIDES === */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; }
 
@@ -756,18 +807,28 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 </div>
 
 <nav class="terrain-nav">
-  <a href="../index.html" class="terrain-nav-brand">TERRAIN</a>
-  <button class="terrain-nav-toggle" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-  <ul class="terrain-nav-links">
-    <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
-    <li><a href="jobs.html" class="active">Jobs</a></li>
-    <li><a href="education.html">Learn</a></li>
-    <li><a href="methodology.html">Method</a></li>
-    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model"
-       target="_blank">GitHub ↗</a></li>
-  </ul>
+  <div class="terrain-nav__inner">
+    <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
+    <ul class="terrain-nav__links">
+      <li><a href="labor_organizing_national_dashboard.html?view=map">Map</a></li>
+      <li><a href="jobs.html" class="active">Jobs</a></li>
+      <li><a href="education.html">Learn</a></li>
+      <li><a href="methodology.html">Method</a></li>
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub</a></li>
+    </ul>
+    <button class="terrain-nav__hamburger" aria-label="Toggle menu" onclick="this.closest('.terrain-nav').querySelector('.terrain-nav__drawer').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="terrain-nav__drawer">
+    <ul>
+      <li><a href="labor_organizing_national_dashboard.html?view=map">Map</a></li>
+      <li><a href="jobs.html" class="active">Jobs</a></li>
+      <li><a href="education.html">Learn</a></li>
+      <li><a href="methodology.html">Method</a></li>
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub</a></li>
+    </ul>
+  </div>
 </nav>
 
 <!-- QUIZ SUMMARY BAR -->
@@ -1172,7 +1233,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           color: var(--color-text-muted);">Terrain data</span><br>
         Job rankings use county-level organizing opportunity scores
         from the Terrain model.
-        <a href="labor_organizing_national_dashboard.html"
+        <a href="labor_organizing_national_dashboard.html?view=map"
            style="color: var(--color-accent);">Explore the map →</a>
       </div>
 
@@ -1267,7 +1328,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   <div id="guided-nav">
     <div class="gn-label">Continue exploring the model</div>
     <div class="gn-cards">
-      <a class="gn-card" href="./labor_organizing_national_dashboard.html">
+      <a class="gn-card" href="./labor_organizing_national_dashboard.html?view=map">
         <div class="gn-card-step">Next: The Tool</div>
         <div class="gn-card-title">Strategic Terrain Dashboard</div>
         <div class="gn-card-desc">Interactive choropleth map of all 3,144 U.S. counties scored by organizing opportunity. Filter by sector, intervention type, and electoral goal.</div>
