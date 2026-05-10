@@ -444,6 +444,67 @@
     .legend { min-width: 0; max-width: 160px; font-size: 10px; padding: 8px 10px; }
     #detail-panel { width: calc(100vw - 24px); max-width: none; right: 12px; }
   }
+
+  /* === TERRAIN OVERRIDES === */
+  body { background: #f7f4f0 !important; }
+
+  #sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #e0d8d0 !important;
+    box-shadow: none !important;
+  }
+
+  #sidebar h2,
+  .filter-group > label {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+    font-size: 11px !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    color: #666666 !important;
+  }
+
+  .seg-btn {
+    background: #ffffff !important;
+    border: 1px solid #e0d8d0 !important;
+    color: #666666 !important;
+  }
+  .seg-btn:hover { border-color: #c8bfb5 !important; color: #1a1a1a !important; }
+  .seg-btn.active,
+  .seg-btn.goal-pres.active,
+  .seg-btn.goal-power.active,
+  .seg-btn.goal-senate.active {
+    background: #bd0026 !important;
+    border-color: #bd0026 !important;
+    color: #ffffff !important;
+  }
+
+  .int-type-card,
+  .int-type-card.card-a,
+  .int-type-card.card-b,
+  .int-type-card.card-c {
+    background: #ffffff !important;
+    border: 1px solid #e0d8d0 !important;
+    border-left: 3px solid #bd0026 !important;
+  }
+
+  .score-bar-fill,
+  .gl-fill-accent { background: #bd0026 !important; }
+
+  .gl-news-eyebrow {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+  }
+
+  #dp-summary-section::before {
+    content: "AI-generated summary";
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #999999;
+    display: block;
+    margin-bottom: 5px;
+  }
+  /* === END TERRAIN OVERRIDES === */
 </style>
 </head>
 <body>
@@ -485,13 +546,6 @@ document.querySelector('.terrain-nav__hamburger')
   <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
 </div>
 
-<div id="view-tabs">
-  <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
-  <div class="view-tab" data-view="methodology">Methodology</div>
-  <div class="view-tab" data-view="gallery">County Gallery</div>
-  <div class="view-tab active" data-view="map">Map View</div>
-  <div class="view-tab" data-view="table">Table View</div>
-</div>
 
 <div id="layout">
   <div id="sidebar" style="display:none">
