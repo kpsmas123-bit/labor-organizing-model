@@ -436,7 +436,7 @@
     .meth-flow-row { flex-wrap: wrap; }
     /* Map */
     #map-view { height: 100%; }
-    .legend { max-width: 160px; font-size: 10px; padding: 8px 10px; }
+    .legend { min-width: 0; max-width: 160px; font-size: 10px; padding: 8px 10px; }
     #detail-panel { width: calc(100vw - 24px); max-width: none; right: 12px; }
   }
 </style>
@@ -641,10 +641,11 @@
         </div>
 
         <div class="legend" id="map-legend">
-          <div class="legend-title" id="legend-title">Organizing Opportunity Score</div>
-          <div class="legend-gradient" id="legend-gradient"></div>
-          <div class="legend-labels"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
-          <div class="legend-divider"></div>
+          <div class="seg-buttons" id="color-mode-btns" style="margin-bottom:8px;">
+            <div class="seg-btn active" id="cm-type">By Type</div>
+            <div class="seg-btn" id="cm-score">By Score</div>
+          </div>
+          <div class="legend-title" id="legend-title">Intervention Type</div>
           <div id="legend-tiers"></div>
         </div>
 
@@ -1233,22 +1234,27 @@ function getDisplayScore(c) {
 // Warm palette — quantile scales built after data loads
 let oppColorScale, electoralColorScales = {};
 
-const OPP_PALETTE      = ["#D8CFC4","#F5C842","#E8A020","#E8732A","#C4512A"];
-const ELECTORAL_PALETTE = ["#D8CFC4","#DDB870","#C49940","#A06820","#7A3F10"];
+const YLORRD       = ["#FFFFB2","#FED976","#FEB24C","#FD8D3C","#F03B20","#BD0026"];
+const JENKS        = [20, 35, 50, 65, 80];
+const JENKS_LABELS = ["0–19","20–34","35–49","50–64","65–79","80–100"];
 const NO_DATA_COLOR    = "#D8CFC4";
 const FILTERED_COLOR   = "#EDE7DF";
+const TYPE_COLORS = { A: "#2d6a4f", B: "#e76f51", C: "#457b9d" };
+let colorMode = "type"; // "type" | "score"
+
+function getFillByType(typeLetter) {
+  return TYPE_COLORS[typeLetter] || "#d4d4d4";
+}
+
+function getFillByScore(score) {
+  return scoreColor(score, null);
+}
 
 function buildColorScales() {
-  const quantile = (vals, palette) =>
-    d3.scaleQuantile().domain(vals).range(palette);
-
-  const oppScores = allCounties.map(c => c.organizing_opportunity_score).filter(v => v != null);
-  oppColorScale = quantile(oppScores, OPP_PALETTE);
-
-  for (const key of ["presidential_score","statewide_score","congressional_score"]) {
-    const vals = allCounties.map(c => c[key]).filter(v => v != null);
-    electoralColorScales[key] = quantile(vals, ELECTORAL_PALETTE);
-  }
+  const thresh = d3.scaleThreshold().domain(JENKS).range(YLORRD);
+  oppColorScale = thresh;
+  for (const key of ["presidential_score","statewide_score","congressional_score"])
+    electoralColorScales[key] = thresh;
 }
 
 function scoreColor(score, scoreKey) {
@@ -1257,69 +1263,50 @@ function scoreColor(score, scoreKey) {
   return oppColorScale ? oppColorScale(score) : NO_DATA_COLOR;
 }
 
-function quantileLabels(scale) {
-  const q = scale.quantiles();
-  return [scale.domain()[0], ...q, scale.domain()[scale.domain().length - 1]]
-    .map(v => Math.round(v));
-}
+const TYPE_LEGEND = [
+  { letter: "A", color: "#2d6a4f", label: "Build New Power",             desc: "Few/no unions — high potential for new organizing" },
+  { letter: "B", color: "#e76f51", label: "Wake the Giant",              desc: "Unions exist but under-activated politically" },
+  { letter: "C", color: "#457b9d", label: "Move Together",               desc: "Strong organized base — coordinate campaigns" },
+];
 
 function updateLegend() {
-  const titles = {
-    opp: "Organizing Opportunity Score",
-    presidential: "Presidential Score",
-    statewide: "Statewide Score",
-    congressional: "Congressional Score"
-  };
-  document.getElementById("legend-title").textContent = titles[goalFilter] || "Score";
-
-  const palette = goalFilter === "opp" ? OPP_PALETTE : ELECTORAL_PALETTE;
-  const scale = goalFilter === "opp" ? oppColorScale
-    : electoralColorScales[goalFilter + "_score"];
-
-  const swatchW = 100 / palette.length;
-  document.getElementById("legend-gradient").style.background =
-    `linear-gradient(to right, ${palette.map((c,i) => `${c} ${i*swatchW}%, ${c} ${(i+1)*swatchW}%`).join(", ")})`;
-
-  if (scale) {
-    const breaks = quantileLabels(scale);
-    const labels = document.querySelector(".legend-labels");
-    labels.innerHTML = breaks.map(v => `<span>${v}</span>`).join("");
+  if (colorMode === "type") {
+    document.getElementById("legend-title").textContent = "Intervention Type";
+    document.getElementById("legend-tiers").innerHTML = TYPE_LEGEND.map(t =>
+      `<div class="legend-tier">
+        <div class="legend-tier-swatch" style="background:${t.color}"></div>
+        <div class="legend-tier-body">
+          <div class="legend-tier-label">Type ${t.letter} — ${t.label}</div>
+          <div class="legend-tier-desc">${t.desc}</div>
+        </div>
+      </div>`
+    ).join("");
+  } else {
+    const titles = { opp: "Organizing Opportunity Score", presidential: "Presidential Score", statewide: "Statewide Score", congressional: "Congressional Score" };
+    document.getElementById("legend-title").textContent = titles[goalFilter] || "Score";
+    document.getElementById("legend-tiers").innerHTML = YLORRD.map((color, i) =>
+      `<div class="legend-tier">
+        <div class="legend-tier-swatch" style="background:${color}"></div>
+        <div class="legend-tier-label">${JENKS_LABELS[i]}</div>
+      </div>`
+    ).join("");
   }
-
-  // Score tier explainers — what do different score levels actually mean?
-  const tierDefs = {
-    opp: [
-      { swatch: "#6B3A1A", label: "High (75–100)", desc: "Large unorganized workforce in chokepoint sectors — hospitals, schools, ports. Maximum terrain advantage for building power." },
-      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Moderate leverage or workforce, but not both at full strength. Real opportunity with realistic constraints." },
-      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Few strategic-sector workers or already heavily organized. Low structural advantage for new organizing." }
-    ],
-    presidential: [
-      { swatch: "#6B3A1A", label: "High (75–100)", desc: "Swing county in a must-win state (PA, WI, AZ, NV). Every mobilized union household can shift the outcome." },
-      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Competitive state, one-sided county — or toss-up county in a less decisive state. Real but partial leverage." },
-      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Safely partisan state or county. Organizing here has near-zero marginal impact on the presidential race." }
-    ],
-    statewide: [
-      { swatch: "#6B3A1A", label: "High (75–100)", desc: "True toss-up state with a competitive Senate or governor race. Organized labor can flip statewide outcomes." },
-      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Lean state — contested but not a toss-up. Organizing has real but not decisive marginal electoral value." },
-      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Safely partisan for statewide races. Legislative and governor races are not competitive; leverage is minimal." }
-    ],
-    congressional: [
-      { swatch: "#6B3A1A", label: "High (75–100)", desc: "Toss-up district or safe Democratic seat with a vulnerable incumbent open to a primary challenge." },
-      { swatch: "#B87040", label: "Mid (30–74)",  desc: "Lean district — favored but close enough that organized labor voter contact can shift the margin." },
-      { swatch: "#E8D4A8", label: "Low (0–29)",   desc: "Safe seat with entrenched incumbent. No near-term House leverage regardless of organizing effort." }
-    ]
-  };
-  const tiers = tierDefs[goalFilter] || tierDefs.opp;
-  document.getElementById("legend-tiers").innerHTML = tiers.map(t =>
-    `<div class="legend-tier">
-      <div class="legend-tier-swatch" style="background:${t.swatch}"></div>
-      <div class="legend-tier-body">
-        <div class="legend-tier-label">${t.label}</div>
-        <div class="legend-tier-desc">${t.desc}</div>
-      </div>
-    </div>`
-  ).join("");
 }
+
+document.getElementById("cm-type").addEventListener("click", () => {
+  colorMode = "type";
+  document.getElementById("cm-type").classList.add("active");
+  document.getElementById("cm-score").classList.remove("active");
+  updateMapColors();
+  updateLegend();
+});
+document.getElementById("cm-score").addEventListener("click", () => {
+  colorMode = "score";
+  document.getElementById("cm-score").classList.add("active");
+  document.getElementById("cm-type").classList.remove("active");
+  updateMapColors();
+  updateLegend();
+});
 
 // ──────────────────────────────────────────────────────────────
 // Map
@@ -1405,8 +1392,15 @@ async function initMap() {
 
   buildMsaScoreLookup();
 
+  const loadingMsg = svg.append("text")
+    .attr("x", 480).attr("y", 305)
+    .attr("text-anchor", "middle").attr("dominant-baseline", "middle")
+    .attr("fill", "#7A6F64").attr("font-size", "14")
+    .text("Loading map…");
+
   try {
     const us = await d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json");
+    loadingMsg.remove();
     const allCountyFeatures = topojson.feature(us, us.objects.counties);
     const stateMesh = topojson.mesh(us, us.objects.states, (a, b) => a !== b);
 
@@ -1457,11 +1451,12 @@ async function initMap() {
       .attr("fill", d => {
         const msa = msaScoreByName[d.properties.msaName];
         if (!msa) return NO_DATA_COLOR;
+        if (colorMode === "type") return getFillByType(msa.dominantLetter);
         const score = goalFilter === "presidential" ? msa.presidential
                     : goalFilter === "statewide"    ? msa.statewide
                     : goalFilter === "congressional" ? msa.congressional
                     : msa.opp;
-        return scoreColor(score, null);
+        return getFillByScore(score);
       })
       .attr("data-msa", d => d.properties.msaName)
       .on("mousemove", (event, d) => {
@@ -1497,7 +1492,8 @@ async function initMap() {
       .attr("fill", d => {
         const c = countyByFips[d.id];
         if (!c) return NO_DATA_COLOR;
-        return scoreColor(getDisplayScore(c), null);
+        if (colorMode === "type") return getFillByType((c.intervention_type || "").charAt(5));
+        return getFillByScore(getDisplayScore(c));
       })
       .attr("data-fips", d => d.id)
       .on("mousemove", (event, d) => {
@@ -1520,6 +1516,7 @@ async function initMap() {
     g.append("path").datum(stateMesh).attr("class", "state-boundary").attr("d", path);
     setStatus(`Map loaded · ${msaFeatures.length} metro areas`);
   } catch (e) {
+    loadingMsg.text("Map failed to load — check internet connection and reload.");
     setStatus("Map topology failed to load. Check internet connection.");
     console.error(e);
   }
@@ -1536,11 +1533,12 @@ function updateMapColors() {
     if (!msa) return NO_DATA_COLOR;
     const anyVisible = msa.counties.some(c => visibleFips.has(c.fips));
     if (!anyVisible) return FILTERED_COLOR;
+    if (colorMode === "type") return getFillByType(msa.dominantLetter);
     const score = goalFilter === "presidential" ? msa.presidential
                 : goalFilter === "statewide"    ? msa.statewide
                 : goalFilter === "congressional" ? msa.congressional
                 : msa.opp;
-    return scoreColor(score, null);
+    return getFillByScore(score);
   });
 
   // Non-metro counties
@@ -1551,7 +1549,8 @@ function updateMapColors() {
     const c = countyByFips[fips];
     if (!c) return NO_DATA_COLOR;
     if (!visibleFips.has(fips)) return FILTERED_COLOR;
-    return scoreColor(getDisplayScore(c), null);
+    if (colorMode === "type") return getFillByType((c.intervention_type || "").charAt(5));
+    return getFillByScore(getDisplayScore(c));
   });
 }
 
@@ -2013,6 +2012,7 @@ let gl_inited    = false;
 
 function glInitGallery() {
   if (gl_inited) return;
+  if (!allCounties.length) return;  // data not yet loaded; gl_inited stays false so boot IIFE can retry
   gl_inited = true;
 
   // API key input
@@ -2260,6 +2260,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   updateLegend();
   await initMap();
   applyFilters();
+  if (currentView === 'gallery') glInitGallery();  // re-run if ?view=gallery fired before data loaded
   document.getElementById("data-timestamp").textContent = `Data: ${new Date().toLocaleDateString()}`;
 })();
 </script>
