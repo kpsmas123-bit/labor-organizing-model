@@ -485,6 +485,32 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 @media (max-width: 900px) { .ig-cards-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 500px) { .ig-cards-grid { grid-template-columns: 1fr; } }
 
+/* === GRADE BADGES === */
+.grade-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px 11px; border-radius: 20px;
+  font-size: 11.5px; font-weight: 700; color: #fff;
+  font-family: 'Inter', system-ui, sans-serif; white-space: nowrap; line-height: 1.3;
+}
+.grade-badge-lg {
+  padding: 4px 13px; font-size: 13px;
+}
+.grade-green  { background: #2d7a3a; }
+.grade-orange { background: #c0572a; }
+.grade-amber  { background: #b8860b; }
+.grade-red    { background: #a0392a; }
+.grade-gray   { background: #888; }
+
+/* Grade table in detail panel */
+.grade-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+.grade-table tr { border-bottom: 1px solid #F0EAE2; }
+.grade-table tr:last-child { border-bottom: none; }
+.grade-table td { padding: 7px 4px; vertical-align: middle; font-size: 12px; color: #5A5050; }
+.grade-table .gtd-name { color: #7A6F64; font-weight: 500; width: 90px; }
+.grade-table .gtd-name-overall { color: #2C2C2C; font-weight: 700; width: 90px; }
+.grade-table .gtd-badge { width: 64px; }
+.grade-note { font-size: 10.5px; color: #9A8E85; font-style: italic; line-height: 1.5; margin-top: 2px; }
+
 /* === UTILITIES === */
 .hidden { display: none !important; }
 hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0; }
@@ -1802,13 +1828,15 @@ function getEffectiveJobs() {
     // Experience level boost/penalty
     if (state.exp) {
       const t = (job.title || '').toLowerCase();
-      const isEntry = /assistant|associate|coordinator|junior|entry.level|entry |apprentice|trainee|fellow/.test(t);
-      const isSenior = /director|senior|manager|chief|head of|\bvp\b|vice president|lead organizer|internal organizer/.test(t);
+      const isSeniorCoordinator = /political coordinator|legislative coordinator|field coordinator|communications coordinator|campaign coordinator/.test(t);
+      const isEntry = /assistant|associate|junior|entry.level|entry |apprentice|trainee|fellow/.test(t)
+        || (/coordinator/.test(t) && !isSeniorCoordinator);
+      const isSenior = /director|senior|manager|chief|head of|\bvp\b|vice president|lead organizer|internal organizer|political coordinator|legislative coordinator|field coordinator/.test(t);
       const salMin = job.salary_min;
       if (state.exp === 'new') {
         if (isEntry) boost += 10;
         if (salMin && salMin < 60000) boost += 8;
-        if (isSenior) boost -= 20;
+        if (isSenior) boost -= 35;
       } else if (state.exp === 'some') {
         if (isSenior) boost += 10;
       } else if (state.exp === 'seasoned') {
@@ -2124,6 +2152,7 @@ function showJobDetail(job) {
   const impact = job.impact_score || 50;
   const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw);
   const applyUrl = job.job_id ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}` : (job.apply_url || '');
+  const grades = computeGrades(job);
 
   const intType = (job.intervention_type || '').toUpperCase().replace('TYPE ', '');
   const intTypeKey = ['A','B','C'].includes(intType) ? intType : null;
@@ -2164,6 +2193,7 @@ function showJobDetail(job) {
       ${org ? `<div class="jdp-org">${escHtml(org)}</div>` : ''}
       ${loc ? `<div class="jdp-loc">📍 ${escHtml(loc)}</div>` : ''}
     </div>
+    <div class="jdp-section">${renderGradeTable(grades)}</div>
     ${descSnippet ? `<div class="jdp-section"><div class="jdp-eyebrow">About this role</div><div class="jdp-desc">${escHtml(descSnippet)}</div></div>` : ''}
     <div class="jdp-section">
       <div class="jdp-eyebrow">Terrain Impact</div>
@@ -2214,6 +2244,191 @@ function hideJobDetail() {
 }
 
 // ============================================================
+// GRADE SYSTEM
+// ============================================================
+function computeGrades(job) {
+  // --- Terrain ---
+  const impactScore = job.impact_score || 0;
+  let tGrade, tLabel;
+  if (impactScore >= 90)      { tGrade = 'A+'; tLabel = 'High-opportunity swing terrain'; }
+  else if (impactScore >= 80) { tGrade = 'A';  tLabel = 'High-opportunity swing terrain'; }
+  else if (impactScore >= 75) { tGrade = 'A−'; tLabel = 'Strong organizing terrain'; }
+  else if (impactScore >= 70) { tGrade = 'B+'; tLabel = 'Strong organizing terrain'; }
+  else if (impactScore >= 60) { tGrade = 'B';  tLabel = 'Solid terrain, some opportunity'; }
+  else if (impactScore >= 55) { tGrade = 'B−'; tLabel = 'Solid terrain, some opportunity'; }
+  else if (impactScore >= 50) { tGrade = 'C+'; tLabel = 'Moderate terrain'; }
+  else if (impactScore >= 40) { tGrade = 'C';  tLabel = 'Moderate terrain'; }
+  else if (impactScore >= 35) { tGrade = 'C−'; tLabel = 'Lower-priority terrain'; }
+  else                        { tGrade = 'D';  tLabel = 'Lower-priority terrain'; }
+
+  // --- Sector ---
+  const svsScore = job.svs_score;
+  let sGrade, sLabel;
+  if (svsScore == null) {
+    sGrade = 'N/A'; sLabel = 'Sector not identified';
+  } else if (svsScore >= 100) {
+    sGrade = 'A+'; sLabel = 'McAlevey top-priority sector';
+  } else if (svsScore >= 75) {
+    sGrade = 'B+'; sLabel = 'High-leverage chokepoint sector';
+  } else if (svsScore >= 50) {
+    sGrade = 'C+'; sLabel = 'Solid union sector';
+  } else {
+    sGrade = 'D'; sLabel = 'Lower-priority sector — still union';
+  }
+  if (job.is_mcalevey_priority && sGrade !== 'N/A') sGrade += '★';
+
+  // --- Organizing Opportunity ---
+  const intType = (job.intervention_type || '').replace(/Type\s*/i,'').toUpperCase();
+  let oGrade, oLabel, oSubtext;
+  if (intType === 'A') {
+    oGrade = 'A'; oLabel = 'Ground-floor opportunity';
+    oSubtext = 'No union or weak presence — build from scratch. Hardest path, highest long-term structural impact.';
+  } else if (intType === 'B') {
+    oGrade = 'B'; oLabel = 'Activation opportunity';
+    oSubtext = 'Strong union exists but isn\'t doing political work. Wake up a dormant local.';
+  } else if (intType === 'C') {
+    oGrade = 'C'; oLabel = 'Partnership opportunity';
+    oSubtext = 'High-density, politically active union. Plug in and deploy immediately.';
+  } else {
+    oGrade = '?'; oLabel = 'Terrain data unavailable'; oSubtext = '';
+  }
+
+  // --- Pay ---
+  const salMin = job.salary_min != null
+    ? job.salary_min
+    : parseSalaryMin(job.salary || job.salary_range || job.salary_raw || '');
+  let pGrade, pLabel;
+  if (salMin == null) {
+    pGrade = 'N/A'; pLabel = 'Salary not listed in posting';
+  } else if (salMin >= 80000) {
+    pGrade = 'A';  pLabel = 'Strong compensation';
+  } else if (salMin >= 60000) {
+    pGrade = 'B+'; pLabel = 'Good compensation';
+  } else if (salMin >= 50000) {
+    pGrade = 'B';  pLabel = 'Solid compensation';
+  } else if (salMin >= 40000) {
+    pGrade = 'C+'; pLabel = 'Moderate compensation';
+  } else if (salMin >= 35000) {
+    pGrade = 'C';  pLabel = 'Entry-level compensation';
+  } else {
+    pGrade = 'D';  pLabel = 'Below typical — verify before applying';
+  }
+
+  // --- Overall (composite) ---
+  const GRADE_VALS = {
+    'A+': 4.3, 'A': 4.0, 'A−': 3.7,
+    'B+': 3.3, 'B': 3.0, 'B−': 2.7,
+    'C+': 2.3, 'C': 2.0, 'C−': 1.7,
+    'D': 1.0
+  };
+  function gradeNum(g) {
+    return GRADE_VALS[g.replace('★','')] != null ? GRADE_VALS[g.replace('★','')] : null;
+  }
+
+  const tVal = gradeNum(tGrade);
+  const sVal = sGrade === 'N/A' ? null : gradeNum(sGrade);
+  const oVal = oGrade === '?'   ? null : gradeNum(oGrade);
+  const pVal = pGrade === 'N/A' ? null : gradeNum(pGrade);
+
+  // Base weights: Terrain 35, Sector 30, Organizing 20, Pay 15
+  let w = [0.35, 0.30, 0.20, 0.15];
+  if (pVal === null && sVal === null) {
+    w = [0.35/0.55, 0, 0.20/0.55, 0];
+  } else if (pVal === null) {
+    w = [0.41, 0.35, 0.24, 0];
+  } else if (sVal === null) {
+    w = [0.47, 0, 0.29, 0.24];
+  }
+  // If organizing unknown, redistribute its weight proportionally to others
+  if (oVal === null && w[2] > 0) {
+    const rem = w[0] + w[1] + w[3];
+    if (rem > 0) {
+      const ow = w[2];
+      w[0] += ow * (w[0] / rem);
+      w[1] += ow * (w[1] / rem);
+      w[3] += ow * (w[3] / rem);
+    }
+    w[2] = 0;
+  }
+
+  const vals = [tVal, sVal, oVal, pVal];
+  let wsum = 0, wt = 0;
+  for (let i = 0; i < 4; i++) {
+    if (vals[i] !== null && w[i] > 0) { wsum += vals[i] * w[i]; wt += w[i]; }
+  }
+
+  let overallGrade = 'D';
+  if (wt > 0) {
+    const avg = wsum / wt;
+    if (avg >= 4.0)      overallGrade = 'A';
+    else if (avg >= 3.7) overallGrade = 'A−';
+    else if (avg >= 3.3) overallGrade = 'B+';
+    else if (avg >= 3.0) overallGrade = 'B';
+    else if (avg >= 2.7) overallGrade = 'B−';
+    else if (avg >= 2.3) overallGrade = 'C+';
+    else if (avg >= 2.0) overallGrade = 'C';
+    else if (avg >= 1.7) overallGrade = 'C−';
+    else                 overallGrade = 'D';
+  }
+
+  function gradeColor(g) {
+    const b = g.replace('★','');
+    if (['A+','A','A−'].includes(b)) return 'green';
+    if (['B+','B','B−'].includes(b)) return 'orange';
+    if (['C+','C','C−'].includes(b)) return 'amber';
+    if (b === 'D') return 'red';
+    return 'gray';
+  }
+
+  return {
+    terrain:    { grade: tGrade, label: tLabel, color: gradeColor(tGrade) },
+    sector:     { grade: sGrade, label: sLabel, color: gradeColor(sGrade) },
+    organizing: { grade: oGrade, label: oLabel, subtext: oSubtext, color: gradeColor(oGrade) },
+    pay:        { grade: pGrade, label: pLabel, color: gradeColor(pGrade) },
+    overall:    { grade: overallGrade, color: gradeColor(overallGrade) }
+  };
+}
+
+function renderGradeBadge(gradeObj, large) {
+  const cls = 'grade-badge' + (large ? ' grade-badge-lg' : '');
+  return `<span class="${cls} grade-${gradeObj.color}">${escHtml(gradeObj.grade)}</span>`;
+}
+
+function renderGradeTable(grades) {
+  return `
+    <div class="jdp-eyebrow">Impact Grades</div>
+    <table class="grade-table">
+      <tr>
+        <td class="gtd-name-overall">Overall</td>
+        <td class="gtd-badge">${renderGradeBadge(grades.overall, false)}</td>
+        <td style="color:#7A6F64;font-size:11px">Weighted composite score</td>
+      </tr>
+      <tr>
+        <td class="gtd-name">Terrain</td>
+        <td class="gtd-badge">${renderGradeBadge(grades.terrain, false)}</td>
+        <td>${escHtml(grades.terrain.label)}</td>
+      </tr>
+      <tr>
+        <td class="gtd-name">Sector</td>
+        <td class="gtd-badge">${renderGradeBadge(grades.sector, false)}</td>
+        <td>${escHtml(grades.sector.label)}</td>
+      </tr>
+      <tr>
+        <td class="gtd-name">Organizing</td>
+        <td class="gtd-badge">${renderGradeBadge(grades.organizing, false)}</td>
+        <td>${escHtml(grades.organizing.label)}</td>
+      </tr>
+      <tr>
+        <td class="gtd-name">Pay</td>
+        <td class="gtd-badge">${renderGradeBadge(grades.pay, false)}</td>
+        <td>${escHtml(grades.pay.label)}</td>
+      </tr>
+    </table>
+    <div class="grade-note">Organizing grade reflects terrain type, not quality. Each type suits different goals.</div>
+  `;
+}
+
+// ============================================================
 // JOB CARD RENDERING
 // ============================================================
 function makeJobCard(job) {
@@ -2235,24 +2450,18 @@ function makeJobCard(job) {
   const org = job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
   const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw);
-  const impact = job.impact_score || 50;
   const applyUrl = job.job_id
     ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}`
     : (job.apply_url || '');
 
-  // Badges
-  const badgeHtml = buildBadges(job);
+  const grades = computeGrades(job);
+  const badgeHtml = buildBadges(job, grades);
 
   div.innerHTML = `
     <div class="jc-title">${escHtml(title)}</div>
     ${org ? `<div class="jc-org">${escHtml(org)}</div>` : ''}
     ${loc ? `<div class="jc-location">📍 ${escHtml(loc)}</div>` : ''}
     <div class="jc-badges">${badgeHtml}</div>
-    <div class="jc-impact-row">
-      <span class="jc-impact-label">Terrain Impact</span>
-      <div class="jc-impact-track"><div class="jc-impact-fill" style="width:${impact}%"></div></div>
-      <span class="jc-impact-val">${impact}/100</span>
-    </div>
     <div class="jc-footer">
       ${salary
         ? `<span class="jc-salary">💰 ${escHtml(salary)}</span>`
@@ -2265,24 +2474,29 @@ function makeJobCard(job) {
   return div;
 }
 
-function buildBadges(job) {
+function buildBadges(job, grades) {
+  if (!grades) grades = computeGrades(job);
   const parts = [];
-  // Sector chips — for staff roles the tag reflects the employer's sector, not the job itself
+  // Overall grade — primary visual, larger badge
+  parts.push(renderGradeBadge(grades.overall, true));
+  // Role badge
+  const roleBadge = getRoleBadge(job);
+  if (roleBadge) parts.push(roleBadge);
+  // Sector chips — cap at 1 for staff, 2 for RF; overflow shown as "+N more"
   const isStaff = (job.role_type || 'staff') === 'staff';
-  (job.sector_tags || []).forEach(s => {
+  const tags = job.sector_tags || [];
+  const maxChips = isStaff ? 1 : 2;
+  const visible = tags.slice(0, maxChips);
+  const overflow = tags.length - visible.length;
+  visible.forEach(s => {
     if (isStaff) {
       parts.push(`<span class="badge badge-sector" title="The union or org that employs this role works in this sector">Employer sector: ${escHtml(s)}</span>`);
     } else {
       parts.push(`<span class="badge badge-sector">${escHtml(s)}</span>`);
     }
   });
-  // Role badge
-  const roleBadge = getRoleBadge(job);
-  if (roleBadge) parts.push(roleBadge);
-  // Intervention type
-  if (job.intervention_type) {
-    const t = job.intervention_type.replace('Type ','').toLowerCase();
-    parts.push(`<span class="badge badge-int-${t}">${escHtml(job.intervention_type)}</span>`);
+  if (overflow > 0) {
+    parts.push(`<span class="badge badge-sector" title="${escHtml(tags.slice(maxChips).join(', '))}">+${overflow} more</span>`);
   }
   // McAlevey
   if (job.is_mcalevey_priority) {
