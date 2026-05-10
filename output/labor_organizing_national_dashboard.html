@@ -487,9 +487,9 @@ document.querySelector('.terrain-nav__hamburger')
 
 <div id="view-tabs">
   <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
-  <div class="view-tab active" data-view="methodology">Methodology</div>
+  <div class="view-tab" data-view="methodology">Methodology</div>
   <div class="view-tab" data-view="gallery">County Gallery</div>
-  <div class="view-tab" data-view="map">Map View</div>
+  <div class="view-tab active" data-view="map">Map View</div>
   <div class="view-tab" data-view="table">Table View</div>
 </div>
 
@@ -1945,7 +1945,7 @@ document.querySelectorAll("#results-table th").forEach(th => {
 // ──────────────────────────────────────────────────────────────
 function switchToView(view) {
   const valid = ["methodology","gallery","map","table"];
-  if (!valid.includes(view)) view = "methodology";
+  if (!valid.includes(view)) view = "map";
   currentView = view;
   document.querySelectorAll(".view-tab").forEach(t => {
     t.classList.toggle("active", t.dataset.view === view);
@@ -1966,7 +1966,7 @@ document.querySelectorAll(".view-tab").forEach(tab => {
 
 // Handle ?view= URL param (e.g. when navigating from jobs board)
 const _urlView = new URLSearchParams(window.location.search).get("view");
-if (_urlView) switchToView(_urlView);
+switchToView(_urlView || "map");
 
 // ──────────────────────────────────────────────────────────────
 // GALLERY VIEW
