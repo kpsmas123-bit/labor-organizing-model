@@ -6,6 +6,7 @@
 <title>National Labor Organizing Strategic Prioritization Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="terrain.css">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/topojson.v3.min.js"></script>
 <style>
@@ -452,15 +453,21 @@
   <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
 </div>
 
-<div id="header">
-  <div id="header-center">
-    <h1>National Labor Organizing Strategic Prioritization</h1>
-    <div class="subtitle">3,144 US Counties · McAlevey Framework · Organizing Opportunity Score</div>
-  </div>
-  <div id="header-right">
-    <div id="loading-indicator" class="loading" style="display:none">Loading data…</div>
-  </div>
-</div>
+<nav class="terrain-nav">
+  <a href="../index.html" class="terrain-nav-brand">TERRAIN</a>
+  <button class="terrain-nav-toggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="terrain-nav-links">
+    <li><a href="labor_organizing_national_dashboard.html"
+       class="active">Map</a></li>
+    <li><a href="jobs.html">Jobs</a></li>
+    <li><a href="education.html">Learn</a></li>
+    <li><a href="methodology.html">Method</a></li>
+    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model"
+       target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
 
 <div id="view-tabs">
   <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
