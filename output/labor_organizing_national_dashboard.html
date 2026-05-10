@@ -1739,8 +1739,11 @@ document.querySelectorAll("[data-goal]").forEach(btn => {
     document.querySelectorAll("[data-goal]").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     goalFilter = this.dataset.goal;
+    // Auto-enable swing filter for presidential, auto-disable when leaving it
+    filters.swingOnly = (goalFilter === "presidential");
+    document.getElementById("filter-swing").checked = filters.swingOnly;
+    applyFilters();
     updateLegend();
-    updateMapColors();
   });
 });
 
