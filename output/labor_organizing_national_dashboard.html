@@ -448,26 +448,42 @@
 </head>
 <body>
 
+<nav class="terrain-nav">
+  <div class="terrain-nav__inner">
+    <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
+    <ul class="terrain-nav__links">
+      <li><a href="labor_organizing_national_dashboard.html" class="active">Map</a></li>
+      <li><a href="jobs.html">Jobs</a></li>
+      <li><a href="education.html">Learn</a></li>
+      <li><a href="methodology.html">Method</a></li>
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub ↗</a></li>
+    </ul>
+    <button class="terrain-nav__hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="terrain-nav__drawer">
+  <ul>
+    <li><a href="labor_organizing_national_dashboard.html" class="active">Map</a></li>
+    <li><a href="jobs.html">Jobs</a></li>
+    <li><a href="education.html">Learn</a></li>
+    <li><a href="methodology.html">Method</a></li>
+    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub ↗</a></li>
+  </ul>
+</div>
+<script>
+document.querySelector('.terrain-nav__hamburger')
+  .addEventListener('click', function() {
+    document.querySelector('.terrain-nav__drawer')
+      .classList.toggle('open');
+  });
+</script>
+
 <div id="beta-banner" style="background:#FEF3C7;border-left:4px solid #D97706;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;padding:9px 16px;display:flex;align-items:center;gap:10px;position:relative;z-index:50;">
   <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
   <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
 </div>
-
-<nav class="terrain-nav">
-  <a href="../index.html" class="terrain-nav-brand">TERRAIN</a>
-  <button class="terrain-nav-toggle" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-  <ul class="terrain-nav-links">
-    <li><a href="labor_organizing_national_dashboard.html"
-       class="active">Map</a></li>
-    <li><a href="jobs.html">Jobs</a></li>
-    <li><a href="education.html">Learn</a></li>
-    <li><a href="methodology.html">Method</a></li>
-    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model"
-       target="_blank">GitHub ↗</a></li>
-  </ul>
-</nav>
 
 <div id="view-tabs">
   <a class="view-tab" href="./jobs.html" style="text-decoration:none">Jobs Board</a>
