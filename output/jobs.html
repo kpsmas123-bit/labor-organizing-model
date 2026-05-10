@@ -557,6 +557,42 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   margin-bottom: 10px; transition: border-color 0.15s;
 }
 #quiz-zip-input:focus { outline: none; border-color: #E8732A; }
+#quiz-zip-input.invalid { border-color: #C0392B; }
+#quiz-zip-error {
+  display: none; color: #C0392B; font-size: 12px; padding: 3px 0 4px;
+  font-weight: 500; line-height: 1.4;
+}
+
+/* Active filter pills row */
+#active-pills-row {
+  display: none; background: #F8F4EE; border-bottom: 1px solid #DDD5C8; padding: 8px 24px;
+}
+#active-pills-inner {
+  max-width: 1200px; margin: 0 auto; display: flex; align-items: center;
+  gap: 7px; flex-wrap: wrap;
+}
+.ap-pill {
+  display: inline-flex; align-items: center; background: #fff;
+  border: 1px solid #C8BFB5; border-radius: 20px; font-size: 12px;
+  color: #2C2C2C; white-space: nowrap; overflow: hidden;
+  transition: border-color 0.12s;
+}
+.ap-pill:hover { border-color: #A09385; }
+.ap-pill-label { padding: 5px 4px 5px 12px; cursor: pointer; transition: color 0.12s; }
+.ap-pill-label:hover { color: #E8732A; }
+.ap-pill-x {
+  padding: 5px 10px 5px 0; cursor: pointer; color: #9A8E85;
+  font-size: 14px; line-height: 1; transition: color 0.12s;
+}
+.ap-pill-x:hover { color: #C0392B; }
+.ap-reset {
+  background: none; border: 1px solid #C8BFB5; border-radius: 20px;
+  padding: 5px 12px; font-size: 12px; color: #7A6F64; cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif; transition: border-color 0.12s, color 0.12s;
+  margin-left: 2px;
+}
+.ap-reset:hover { border-color: #A09385; color: #2C2C2C; }
+
 .quiz-zip-or {
   text-align: center; font-size: 11px; color: #9A8E85;
   margin: 2px 0 10px; display: flex; align-items: center; gap: 10px;
@@ -787,6 +823,11 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   </div>
 </div>
 
+<!-- ACTIVE FILTER PILLS ROW -->
+<div id="active-pills-row">
+  <div id="active-pills-inner"></div>
+</div>
+
 <!-- PAGE WRAP -->
 <div id="page-wrap">
 
@@ -916,6 +957,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <div id="quiz-local-opts" style="display:none">
         <div class="quiz-local-label">ZIP code <span id="quiz-zip-state-hint" style="font-weight:400;color:#E8732A;text-transform:none;letter-spacing:0;font-size:11px;margin-left:6px"></span></div>
         <input type="text" id="quiz-zip-input" placeholder="e.g. 48201" maxlength="5" inputmode="numeric" pattern="[0-9]{5}" oninput="quizZipInput(this.value)">
+        <div id="quiz-zip-error">ZIP code not recognized — please check or select your state below</div>
         <div class="radius-row" style="margin-top:12px">
           <span class="radius-row-label">Search radius:</span>
           <div class="rpill active" data-r="0" onclick="quizSetRadius(0)">Anywhere</div>
@@ -1822,7 +1864,7 @@ const SORT_WEIGHTS = {
   rf_local:       { svs: 0.65, oos: 0.00, swing: 0.00, seniority: 0.35 },
   rf_relocate:    { svs: 0.40, oos: 0.45, swing: 0.00, seniority: 0.15 },
   staff_local:    { svs: 0.45, oos: 0.00, swing: 0.00, seniority: 0.55 },
-  staff_relocate: { svs: 0.25, oos: 0.30, swing: 0.30, seniority: 0.15 },
+  staff_relocate: { svs: 0.25, oos: 0.30, swing: 0.25, seniority: 0.15 },
 };
 
 function seniorityMatch(job, st) {
@@ -2139,7 +2181,16 @@ function quizSetRadius(r) {
 }
 
 function quizConfirmLocation() {
-  quiz.zip = document.getElementById('quiz-zip-input')?.value.trim() || null;
+  const zipVal = (document.getElementById('quiz-zip-input')?.value || '').trim();
+  // Block advancement if 5-digit ZIP isn't in the centroids table
+  if (zipVal.length === 5 && !ZIP_CENTROIDS[zipVal]) {
+    const errorEl = document.getElementById('quiz-zip-error');
+    const inputEl = document.getElementById('quiz-zip-input');
+    if (errorEl) errorEl.style.display = 'block';
+    if (inputEl) inputEl.classList.add('invalid');
+    return;
+  }
+  quiz.zip = zipVal.length === 5 ? zipVal : null;
   quiz.myState = quiz.zip ? (zipToState(quiz.zip) || null) : null;
   if (quiz.path === 'rf') {
     quizHistory.push('qstep-location');
@@ -2174,22 +2225,33 @@ function quizBack() {
 }
 
 function quizZipInput(val) {
-  quiz.zip = val.length === 5 ? val : null;
-  const hint = document.getElementById('quiz-zip-state-hint');
+  const errorEl = document.getElementById('quiz-zip-error');
+  const inputEl = document.getElementById('quiz-zip-input');
+  const hint    = document.getElementById('quiz-zip-state-hint');
   const stateSel = document.getElementById('quiz-state-sel');
-  if (quiz.zip) {
-    const st = zipToState(quiz.zip);
-    if (st) {
-      quiz.myState = st;
-      if (hint) hint.textContent = '→ ' + st;
-      if (stateSel) stateSel.value = st;
+
+  if (val.length === 5) {
+    if (ZIP_CENTROIDS[val]) {
+      quiz.zip = val;
+      const st = zipToState(val);
+      quiz.myState = st || null;
+      if (hint) hint.textContent = st ? '→ ' + st : '';
+      if (stateSel && st) stateSel.value = st;
+      if (errorEl) errorEl.style.display = 'none';
+      if (inputEl) inputEl.classList.remove('invalid');
     } else {
+      quiz.zip = null;
       quiz.myState = null;
-      if (hint) hint.textContent = '(ZIP not recognized — select state below)';
+      if (hint) hint.textContent = '';
       if (stateSel) stateSel.value = '';
+      if (errorEl) errorEl.style.display = 'block';
+      if (inputEl) inputEl.classList.add('invalid');
     }
   } else {
+    quiz.zip = null;
     if (hint) hint.textContent = '';
+    if (errorEl) errorEl.style.display = 'none';
+    if (inputEl) inputEl.classList.remove('invalid');
   }
 }
 
@@ -2295,15 +2357,104 @@ function quizUpdateSummary() {
   showTileRow();
 }
 
+// ============================================================
+// ACTIVE FILTER PILLS
+// ============================================================
+function renderActivePills() {
+  const row   = document.getElementById('active-pills-row');
+  const inner = document.getElementById('active-pills-inner');
+  if (!row || !inner) return;
+
+  const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
+  const expLabels  = { new: 'New to organizing', some: 'Some experience', seasoned: 'Seasoned' };
+
+  const defs = [];
+
+  if (state.path)
+    defs.push({ label: pathLabels[state.path] || state.path, step: 'qstep-path', clear: null });
+
+  if (state.exp && state.path === 'staff')
+    defs.push({
+      label: expLabels[state.exp] || state.exp, step: 'qstep-experience',
+      clear: () => { state.exp = null; state.page = 1; applyFiltersAndRender(); renderActivePills(); },
+    });
+
+  if (state.location === 'mystate' && state.myState)
+    defs.push({
+      label: state.myState, step: 'qstep-location',
+      clear: () => {
+        state.location = 'anywhere'; state.myState = null;
+        state.userLat = null; state.userLng = null; state.radius = 0;
+        state.page = 1; applyFiltersAndRender(); updateTileRow(); renderActivePills();
+      },
+    });
+
+  if (state.radius > 0)
+    defs.push({
+      label: 'Within ' + state.radius + ' mi', step: 'qstep-location',
+      clear: () => { state.radius = 0; state.page = 1; applyFiltersAndRender(); renderActivePills(); },
+    });
+
+  [...(state.sectors || [])].forEach(sector => defs.push({
+    label: sector.split('/')[0], step: 'qstep-sectors',
+    clear: () => {
+      state.sectors = state.sectors.filter(s => s !== sector);
+      state.page = 1; applyFiltersAndRender(); updateTileRow(); renderActivePills();
+    },
+  }));
+
+  inner.innerHTML = '';
+  if (!defs.length) { row.style.display = 'none'; return; }
+
+  defs.forEach(p => {
+    const pill = document.createElement('div');
+    pill.className = 'ap-pill';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'ap-pill-label';
+    lbl.textContent = p.label;
+    lbl.onclick = () => quizEditStep(p.step);
+    pill.appendChild(lbl);
+
+    if (p.clear) {
+      const x = document.createElement('span');
+      x.className = 'ap-pill-x';
+      x.textContent = '×';
+      x.title = 'Clear';
+      x.onclick = (e) => { e.stopPropagation(); p.clear(); };
+      pill.appendChild(x);
+    }
+    inner.appendChild(pill);
+  });
+
+  const reset = document.createElement('button');
+  reset.className = 'ap-reset';
+  reset.textContent = 'Reset all';
+  reset.onclick = quizResetAll;
+  inner.appendChild(reset);
+  row.style.display = 'block';
+}
+
+function quizResetAll() {
+  state.path = null; state.location = 'anywhere'; state.myState = null;
+  state.exp = null; state.radius = 0; state.sectors = [];
+  state.userLat = null; state.userLng = null; state.page = 1;
+  const row = document.getElementById('active-pills-row');
+  if (row) row.style.display = 'none';
+  quizEditStep('qstep-path');
+}
+
 function quizEditStep(stepId) {
   document.getElementById('quiz-summary-bar').style.display = 'none';
   hideTileRow();
+  const pr = document.getElementById('active-pills-row');
+  if (pr) pr.style.display = 'none';
   document.getElementById('intake-wizard').style.display = 'block';
   document.getElementById('page-intro').style.display = '';
   document.getElementById('results-section').classList.add('hidden');
   quizHistory = [];
   _quizShow(stepId);
-  const stepNums = { 'qstep-path': 1, 'qstep-experience': 2, 'qstep-location': 3, 'qstep-rftype': 4 };
+  const stepNums = { 'qstep-path': 1, 'qstep-sectors': 2, 'qstep-experience': 2, 'qstep-location': 3, 'qstep-rftype': 4 };
   _quizDots(stepNums[stepId] || 1);
   document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -2336,6 +2487,9 @@ function quizFinish() {
       const el = document.getElementById(id);
       if (el) el.value = quiz.myState;
     });
+  } else {
+    state.location = 'anywhere';
+    state.myState = null;
   }
   // RF role type → toggle
   if (quiz.rfType === 'apprenticeship' || (!quiz.rfType && quiz.exp === 'new')) {
@@ -2368,6 +2522,7 @@ function quizFinish() {
   document.getElementById('page-intro').style.display = 'none';
   quizUpdateSummary();
   applyPath(state.path, true);
+  renderActivePills();
 }
 
 // ============================================================
@@ -3380,6 +3535,7 @@ function tileToggleSector(sector, e) {
   state.page = 1;
   applyFiltersAndRender();
   writeUrlParams();
+  renderActivePills();
 }
 function tileClearSectors(e) {
   if (e) e.stopPropagation();
@@ -3390,6 +3546,7 @@ function tileClearSectors(e) {
   state.page = 1;
   applyFiltersAndRender();
   writeUrlParams();
+  renderActivePills();
 }
 function toggleTileDropdown(ddId, e) {
   if (e) e.stopPropagation();
@@ -3416,6 +3573,7 @@ function tileSetPath(path, e) {
   quiz.path = path;
   updateTileRow();
   applyPath(path, true);
+  renderActivePills();
 }
 function tileSetLocation(locType, e) {
   if (e) e.stopPropagation();
@@ -3434,6 +3592,7 @@ function tileSetLocation(locType, e) {
     state.page = 1;
     applyFiltersAndRender();
     writeUrlParams();
+    renderActivePills();
   }
 }
 function tileSetMyState(val) {
@@ -3445,6 +3604,7 @@ function tileSetMyState(val) {
   state.page = 1;
   applyFiltersAndRender();
   writeUrlParams();
+  renderActivePills();
 }
 function updateShowMeTabs() {
   const row = document.getElementById('show-me-row');
