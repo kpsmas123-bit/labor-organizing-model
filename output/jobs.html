@@ -1966,7 +1966,7 @@ function updateBanners() {
   }
   salting.classList.toggle('hidden', !(isRf && state.rfToggle === 'mcalevey'));
   if (entryBanner) {
-    entryBanner.classList.toggle('hidden', !(state.path === 'rf' && state.exp === 'new'));
+    entryBanner.classList.toggle('hidden', state.exp !== 'new');
   }
 }
 
