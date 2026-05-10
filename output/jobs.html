@@ -6,6 +6,7 @@
 <title>Find Your Role in the Labor Movement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="terrain.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; }
@@ -754,22 +755,20 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   <button id="beta-close" onclick="this.parentElement.style.display='none'">×</button>
 </div>
 
-<!-- HEADER -->
-<div id="header">
-  <div id="header-center">
-    <h1>Find Your Role in the Labor Movement</h1>
-    <div class="subtitle">Match your skills and situation to the highest-impact organizing opportunities</div>
-  </div>
-</div>
-
-<!-- TOP NAV TABS -->
-<div id="top-nav">
-  <span class="top-nav-tab active">Jobs Board</span>
-  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=gallery">County Gallery</a>
-  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=map">Map View</a>
-  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=table">Table View</a>
-  <a class="top-nav-tab" href="./labor_organizing_national_dashboard.html?view=methodology">Methodology</a>
-</div>
+<nav class="terrain-nav">
+  <a href="../index.html" class="terrain-nav-brand">TERRAIN</a>
+  <button class="terrain-nav-toggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="terrain-nav-links">
+    <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
+    <li><a href="jobs.html" class="active">Jobs</a></li>
+    <li><a href="education.html">Learn</a></li>
+    <li><a href="methodology.html">Method</a></li>
+    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model"
+       target="_blank">GitHub ↗</a></li>
+  </ul>
+</nav>
 
 <!-- QUIZ SUMMARY BAR -->
 <div id="quiz-summary-bar">
@@ -1167,6 +1166,16 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <!-- TERRAIN GUIDE -->
       <div id="terrain-guide">
 
+      <div class="terrain-banner info" style="margin-bottom: 16px;">
+        <span style="font-family: var(--font-mono); font-size: 11px;
+          letter-spacing: 1px; text-transform: uppercase;
+          color: var(--color-text-muted);">Terrain data</span><br>
+        Job rankings use county-level organizing opportunity scores
+        from the Terrain model.
+        <a href="labor_organizing_national_dashboard.html"
+           style="color: var(--color-accent);">Explore the map →</a>
+      </div>
+
       <!-- A: Where to Focus -->
       <div class="tp-section" id="tp-focus">
         <div class="tp-section-eyebrow">A — Where to Focus</div>
@@ -1211,7 +1220,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
         <div class="union-type-row">
           <div class="union-type-badge-wrap">
-            <span class="badge badge-int-a">Type A</span>
+            <span class="badge badge-int-a grade-pill type-a">Type A</span>
           </div>
           <div class="union-type-info">
             <div class="union-type-name">Build New Power</div>
@@ -1222,7 +1231,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
         <div class="union-type-row">
           <div class="union-type-badge-wrap">
-            <span class="badge badge-int-b">Type B</span>
+            <span class="badge badge-int-b grade-pill type-b">Type B</span>
           </div>
           <div class="union-type-info">
             <div class="union-type-name">Wake the Giant</div>
@@ -1233,7 +1242,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
         <div class="union-type-row">
           <div class="union-type-badge-wrap">
-            <span class="badge badge-int-c">Type C</span>
+            <span class="badge badge-int-c grade-pill type-c">Type C</span>
           </div>
           <div class="union-type-info">
             <div class="union-type-name">Move Together</div>
@@ -2879,7 +2888,7 @@ function renderImpactGoals() {
     const pct = Math.min(100, msa.avgOos);
     const domType = msa.domType || '';
     const typeChar = (domType.match(/Type\s+([A-Ca-c])/)?.[1] || '').toLowerCase();
-    const typeCls = typeChar ? `badge-int-${typeChar}` : '';
+    const typeCls = typeChar ? `badge-int-${typeChar} grade-pill type-${typeChar}` : '';
     const typeBadge = domType ? `<span class="badge ${typeCls}">${escHtml(domType)}</span>` : '';
     const swingBadge = msa.isSwing ? `<span style="font-size:11px" title="Swing state">🚩</span>` : '';
     const note = IG_TYPE_NOTES[typeChar] || '';
@@ -2972,7 +2981,7 @@ function renderMsaList() {
   const top6 = sorted.slice(0, 6);
 
   listEl.innerHTML = top6.map(msa => {
-    const typeBadge = msa.domType ? `<span class="badge badge-int-${(msa.domType||'').replace('Type ','').toLowerCase()}">${msa.domType||''}</span>` : '';
+    const typeBadge = msa.domType ? `<span class="badge badge-int-${(msa.domType||'').replace('Type ','').toLowerCase()} grade-pill type-${(msa.domType||'').replace('Type ','').toLowerCase()}">${msa.domType||''}</span>` : '';
     const swingBadge = msa.isSwing ? `<span style="font-size:11px;" title="Swing state">🚩</span>` : '';
     const pct = Math.min(100, msa.avgOos);
     const stateStr = msa.states.slice(0,4).join(', ');
@@ -3279,7 +3288,9 @@ function computeGrades(job) {
 }
 
 function renderGradeBadge(gradeObj, large) {
-  const cls = 'grade-badge' + (large ? ' grade-badge-lg' : '');
+  const tierMap = {green:'tier-a', orange:'tier-b', amber:'tier-c'};
+  const tierCls = tierMap[gradeObj.color] ? ' grade-pill ' + tierMap[gradeObj.color] : '';
+  const cls = 'grade-badge' + (large ? ' grade-badge-lg' : '') + tierCls;
   return `<span class="${cls} grade-${gradeObj.color}">${escHtml(gradeObj.grade)}</span>`;
 }
 
