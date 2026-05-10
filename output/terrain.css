@@ -1,0 +1,743 @@
+/* ============================================================
+   TERRAIN — Shared Design System
+   Imports: Google Fonts (Playfair Display, IBM Plex Mono, Source Serif 4)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap');
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES
+   ============================================================ */
+
+:root {
+  /* --- Color System --- */
+  --color-bg: #f7f4f0;
+  --color-bg-card: #ffffff;
+  --color-bg-subtle: #f0ece6;
+
+  --color-text: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+
+  --color-border: #e0d8d0;
+  --color-border-strong: #c8bfb5;
+
+  --color-accent: #bd0026;
+  --color-accent-hover: #8b0019;
+  --color-accent-light: #fff1f1;
+
+  /* Grade/tier pill colors */
+  --color-tier-a: #bd0026;
+  --color-tier-b: #fd8d3c;
+  --color-tier-c: #fecc5c;
+  --color-tier-a-text: #ffffff;
+  --color-tier-b-text: #1a1a1a;
+  --color-tier-c-text: #1a1a1a;
+
+  /* Intervention type colors */
+  --color-type-a: #1a1a1a;
+  --color-type-b: #555555;
+  --color-type-c: #999999;
+
+  /* Banner accent colors */
+  --color-banner-info-bg: #eff6ff;
+  --color-banner-info-border: #3b82f6;
+  --color-banner-warning-bg: #fffbeb;
+  --color-banner-warning-border: #f59e0b;
+  --color-banner-muted-bg: #f5f5f5;
+  --color-banner-muted-border: #9ca3af;
+
+  /* --- Typography --- */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --font-body: 'Source Serif 4', Georgia, serif;
+
+  /* --- Type Scale --- */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 38px;
+
+  /* --- Spacing --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* --- Radius --- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* --- Shadows --- */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.10);
+  --shadow-pill: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-nav: 0 1px 0 var(--color-border);
+
+  /* --- Breakpoints (reference values, used in media queries below) --- */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+
+  /* --- Nav --- */
+  --nav-height: 56px;
+  --nav-height-mobile: 48px;
+}
+
+/* ============================================================
+   BASE RESET & GLOBAL DEFAULTS
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ============================================================
+   1. NAVIGATION BAR (.terrain-nav)
+   ============================================================ */
+
+.terrain-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  height: var(--nav-height);
+  background-color: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+}
+
+.terrain-nav__inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Wordmark */
+.terrain-nav__brand {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--color-text);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.terrain-nav__brand:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+/* Desktop nav links */
+.terrain-nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  list-style: none;
+}
+
+.terrain-nav__links a {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.terrain-nav__links a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom-color: transparent;
+}
+
+/* Active nav link */
+.terrain-nav__links a.active,
+.terrain-nav__links a[aria-current="page"] {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* External link */
+.terrain-nav__links a[target="_blank"]::after {
+  content: ' ↗';
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Hamburger button (mobile only) */
+.terrain-nav__hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--color-text);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.terrain-nav__hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-text);
+  border-radius: 1px;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+/* Mobile drawer */
+.terrain-nav__drawer {
+  display: none;
+  position: absolute;
+  top: var(--nav-height-mobile);
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-4) var(--space-6);
+  z-index: 99;
+}
+
+.terrain-nav__drawer.open {
+  display: block;
+}
+
+.terrain-nav__drawer ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.terrain-nav__drawer a {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  transition: color 150ms ease;
+}
+
+.terrain-nav__drawer a:hover,
+.terrain-nav__drawer a.active {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.terrain-nav__drawer li:last-child a {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .terrain-nav {
+    height: var(--nav-height-mobile);
+    position: relative; /* allow drawer to position relative to nav */
+  }
+
+  .terrain-nav__links {
+    display: none;
+  }
+
+  .terrain-nav__hamburger {
+    display: flex;
+  }
+
+  .terrain-nav__inner {
+    padding: 0 var(--space-4);
+  }
+}
+
+/* ============================================================
+   2. GRADE / TIER PILLS (.grade-pill)
+   ============================================================ */
+
+.grade-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  line-height: 1.4;
+  box-shadow: var(--shadow-pill);
+  white-space: nowrap;
+}
+
+/* Grade tiers */
+.grade-pill.tier-a {
+  background-color: var(--color-tier-a);
+  color: var(--color-tier-a-text);
+}
+
+.grade-pill.tier-b {
+  background-color: var(--color-tier-b);
+  color: var(--color-tier-b-text);
+}
+
+.grade-pill.tier-c {
+  background-color: var(--color-tier-c);
+  color: var(--color-tier-c-text);
+}
+
+/* Intervention types */
+.grade-pill.type-a {
+  background-color: var(--color-type-a);
+  color: #ffffff;
+}
+
+.grade-pill.type-b {
+  background-color: var(--color-type-b);
+  color: #ffffff;
+}
+
+.grade-pill.type-c {
+  background-color: #e5e5e5;
+  color: var(--color-text-secondary);
+  box-shadow: none;
+}
+
+/* ============================================================
+   3. PROGRESS DOTS (.progress-dots)
+   ============================================================ */
+
+.progress-dots {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-border-strong);
+  flex-shrink: 0;
+  transition: background-color 200ms ease, width 200ms ease, height 200ms ease;
+}
+
+.progress-dot.active {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-accent);
+}
+
+.progress-dot.complete {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-accent);
+}
+
+/* ============================================================
+   4. CARDS (.terrain-card)
+   ============================================================ */
+
+.terrain-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.terrain-card.clickable {
+  cursor: pointer;
+}
+
+.terrain-card.clickable:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-border-strong);
+}
+
+.terrain-card.featured {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  border-left: 3px solid var(--color-accent);
+}
+
+.terrain-card.featured:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================================
+   5. STAT BLOCKS (.stat-block)
+   ============================================================ */
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stat-block__number {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.stat-block__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  line-height: 1.3;
+}
+
+/* ============================================================
+   6. SECTION HEADERS
+   ============================================================ */
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.25;
+  margin-bottom: var(--space-3);
+}
+
+.section-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  max-width: 58ch;
+}
+
+/* ============================================================
+   7. BUTTONS (.btn-*)
+   ============================================================ */
+
+.btn-primary,
+.btn-secondary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background-color 150ms ease, color 150ms ease,
+              border-color 150ms ease, box-shadow 150ms ease,
+              transform 80ms ease;
+  min-height: 40px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Primary */
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #ffffff;
+  border-color: var(--color-accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Secondary */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-accent-light);
+  text-decoration: none;
+  color: var(--color-accent);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
+/* Ghost */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-color: transparent;
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+.btn-ghost:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   8. DIVIDER WITH LABEL (.divider-label)
+   ============================================================ */
+
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.divider-label::before,
+.divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.divider-label__text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  background-color: inherit;
+  padding: 0 var(--space-2);
+}
+
+/* ============================================================
+   9. BANNERS / CALLOUTS (.terrain-banner)
+   ============================================================ */
+
+.terrain-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: 12px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid;
+}
+
+.terrain-banner p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.terrain-banner strong {
+  color: var(--color-text);
+}
+
+/* Info */
+.terrain-banner.info {
+  background-color: var(--color-banner-info-bg);
+  border-left-color: var(--color-banner-info-border);
+}
+
+/* Warning */
+.terrain-banner.warning {
+  background-color: var(--color-banner-warning-bg);
+  border-left-color: var(--color-banner-warning-border);
+}
+
+/* Muted */
+.terrain-banner.muted {
+  background-color: var(--color-banner-muted-bg);
+  border-left-color: var(--color-banner-muted-border);
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.container--narrow {
+  max-width: 780px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack--4 { gap: var(--space-4); }
+.stack--6 { gap: var(--space-6); }
+.stack--8 { gap: var(--space-8); }
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.row--gap-4 { gap: var(--space-4); }
+.row--gap-6 { gap: var(--space-6); }
+
+.text-mono {
+  font-family: var(--font-mono);
+}
+
+.text-serif {
+  font-family: var(--font-serif);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (≤768px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+  :root {
+    --text-xl: 24px;
+    --text-2xl: 30px;
+  }
+
+  .terrain-card {
+    padding: var(--space-4);
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .stat-block__number {
+    font-size: 28px;
+  }
+
+  .container {
+    padding: 0 var(--space-4);
+  }
+
+  /* Full-width cards on mobile */
+  .terrain-card--auto-full {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — TABLET (769px–1024px)
+   ============================================================ */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    padding: 0 var(--space-5);
+  }
+}

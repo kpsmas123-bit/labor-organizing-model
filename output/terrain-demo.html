@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terrain — Design System Demo</title>
+  <link rel="stylesheet" href="terrain.css">
+  <style>
+    /* Demo page scaffolding only — not part of terrain.css */
+    .demo-section {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .demo-section:last-child {
+      border-bottom: none;
+    }
+    .demo-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 24px;
+      padding: 4px 10px;
+      border: 1px dashed var(--color-border);
+      display: inline-block;
+      border-radius: 3px;
+    }
+    .demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .demo-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .demo-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .demo-stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    @media (max-width: 768px) {
+      .demo-grid-3,
+      .demo-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .demo-stat-row {
+        gap: 24px;
+      }
+    }
+    .page-header {
+      background-color: var(--color-bg-card);
+      border-bottom: 2px solid var(--color-accent);
+      padding: 32px 0 24px;
+      margin-bottom: 0;
+    }
+    .page-header__title {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .page-header__subtitle {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION BAR
+       ============================================================ -->
+  <nav class="terrain-nav" role="navigation" aria-label="Main navigation">
+    <div class="terrain-nav__inner">
+      <a href="/index.html" class="terrain-nav__brand">TERRAIN</a>
+
+      <ul class="terrain-nav__links" aria-label="Site navigation">
+        <li><a href="/output/map.html">Map</a></li>
+        <li><a href="/output/jobs.html">Jobs</a></li>
+        <li><a href="/output/education.html">Learn</a></li>
+        <li><a href="/output/methodology.html" class="active" aria-current="page">Method</a></li>
+        <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+
+      <button
+        class="terrain-nav__hamburger"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        onclick="toggleNav(this)"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="terrain-nav__drawer" id="nav-drawer" role="menu">
+      <ul>
+        <li><a href="/output/map.html" role="menuitem">Map</a></li>
+        <li><a href="/output/jobs.html" role="menuitem">Jobs</a></li>
+        <li><a href="/output/education.html" role="menuitem">Learn</a></li>
+        <li><a href="/output/methodology.html" class="active" role="menuitem">Method</a></li>
+        <li><a href="https://github.com" target="_blank" rel="noopener" role="menuitem">GitHub ↗</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       PAGE HEADER
+       ============================================================ -->
+  <div class="page-header">
+    <div class="container">
+      <div class="page-header__title">Design System Demo</div>
+      <div class="page-header__subtitle">terrain.css — all components, real content</div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ============================================================
+         GRADE / TIER PILLS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Grade &amp; Tier Pills</div>
+
+        <p class="section-label">Organizing priority tiers</p>
+        <div class="demo-row">
+          <span class="grade-pill tier-a">Tier A</span>
+          <span class="grade-pill tier-b">Tier B</span>
+          <span class="grade-pill tier-c">Tier C</span>
+        </div>
+
+        <p class="section-label" style="margin-top: 20px;">Intervention types</p>
+        <div class="demo-row">
+          <span class="grade-pill type-a">Blitz</span>
+          <span class="grade-pill type-b">Sustained</span>
+          <span class="grade-pill type-c">Monitor</span>
+        </div>
+
+        <p class="section-label" style="margin-top: 20px;">In context — county cards</p>
+        <div class="demo-row" style="margin-top: 8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="grade-pill tier-a">Tier A</span>
+            <span style="font-family:var(--font-mono); font-size:13px; color:var(--color-text-secondary);">Wayne County, MI — Score 87</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="grade-pill tier-b">Tier B</span>
+            <span style="font-family:var(--font-mono); font-size:13px; color:var(--color-text-secondary);">Cuyahoga County, OH — Score 64</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="grade-pill tier-c">Tier C</span>
+            <span style="font-family:var(--font-mono); font-size:13px; color:var(--color-text-secondary);">Maricopa County, AZ — Score 41</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PROGRESS DOTS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Progress Dots</div>
+
+        <p class="section-label">Step 1 of 4 — active</p>
+        <div class="progress-dots" style="margin-bottom: 20px;" aria-label="Step 1 of 4">
+          <div class="progress-dot active" aria-label="Step 1, current"></div>
+          <div class="progress-dot" aria-label="Step 2"></div>
+          <div class="progress-dot" aria-label="Step 3"></div>
+          <div class="progress-dot" aria-label="Step 4"></div>
+        </div>
+
+        <p class="section-label">Step 3 of 5 — two complete</p>
+        <div class="progress-dots" style="margin-bottom: 20px;" aria-label="Step 3 of 5">
+          <div class="progress-dot complete" aria-label="Step 1, complete"></div>
+          <div class="progress-dot complete" aria-label="Step 2, complete"></div>
+          <div class="progress-dot active" aria-label="Step 3, current"></div>
+          <div class="progress-dot" aria-label="Step 4"></div>
+          <div class="progress-dot" aria-label="Step 5"></div>
+        </div>
+
+        <p class="section-label">All complete</p>
+        <div class="progress-dots" aria-label="All steps complete">
+          <div class="progress-dot complete"></div>
+          <div class="progress-dot complete"></div>
+          <div class="progress-dot complete"></div>
+          <div class="progress-dot complete"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         CARDS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Cards</div>
+
+        <div class="demo-grid-3">
+
+          <!-- Standard card -->
+          <div class="terrain-card">
+            <span class="section-label">Standard card</span>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <h3 style="font-family:var(--font-serif); font-size:18px; font-weight:600;">Cook County, IL</h3>
+              <span class="grade-pill tier-a">Tier A</span>
+            </div>
+            <p style="font-family:var(--font-mono); font-size:12px; color:var(--color-text-muted); margin-bottom:12px;">FIPS 17031 · Illinois</p>
+            <p style="font-size:14px; color:var(--color-text-secondary); line-height:1.55;">Manufacturing base, high union density legacy. 2.4M workers. Strong CBA coverage in healthcare and transit sectors.</p>
+          </div>
+
+          <!-- Clickable card -->
+          <div class="terrain-card clickable" tabindex="0" role="button" aria-label="View Wayne County details">
+            <span class="section-label">Clickable card</span>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <h3 style="font-family:var(--font-serif); font-size:18px; font-weight:600;">Wayne County, MI</h3>
+              <span class="grade-pill tier-a">Tier A</span>
+            </div>
+            <p style="font-family:var(--font-mono); font-size:12px; color:var(--color-text-muted); margin-bottom:12px;">FIPS 26163 · Michigan</p>
+            <p style="font-size:14px; color:var(--color-text-secondary); line-height:1.55;">Auto industry legacy with active organizing campaigns. UAW presence, emerging healthcare targets. Score: 87/100.</p>
+          </div>
+
+          <!-- Featured card -->
+          <div class="terrain-card featured">
+            <span class="section-label">Featured card</span>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <h3 style="font-family:var(--font-serif); font-size:18px; font-weight:600;">Allegheny County, PA</h3>
+              <span class="grade-pill tier-b">Tier B</span>
+            </div>
+            <p style="font-family:var(--font-mono); font-size:12px; color:var(--color-text-muted); margin-bottom:12px;">FIPS 42003 · Pennsylvania</p>
+            <p style="font-size:14px; color:var(--color-text-secondary); line-height:1.55;">Post-industrial transition in progress. Growing tech and healthcare workforce with low current density — high upside potential.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         STAT BLOCKS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Stat Blocks</div>
+
+        <div class="demo-stat-row">
+          <div class="stat-block">
+            <span class="stat-block__number">3,144</span>
+            <span class="stat-block__label">U.S. Counties Mapped</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-block__number">11.1%</span>
+            <span class="stat-block__label">National Union Density</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-block__number">847</span>
+            <span class="stat-block__label">Tier A Counties</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-block__number">14.2M</span>
+            <span class="stat-block__label">Union Members, 2023</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SECTION HEADERS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Section Headers</div>
+
+        <span class="section-label">Data methodology</span>
+        <h2 class="section-title">How we score organizing terrain</h2>
+        <p class="section-subtitle">Each county receives a composite score drawn from BLS occupational data, NLRB election records, Census demographic indicators, and state-level policy environment ratings. Scores are normalized 0–100 and updated annually.</p>
+
+        <hr style="margin: 32px 0; border:none; border-top: 1px solid var(--color-border);">
+
+        <span class="section-label">About this tool</span>
+        <h2 class="section-title">Built for organizers, not just researchers</h2>
+        <p class="section-subtitle">Most labor data lives in spreadsheets and policy reports. Terrain puts it on a map — filterable by industry, score tier, and geography — so you can move from data to strategy in a single session.</p>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         BUTTONS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Buttons</div>
+
+        <div class="demo-row" style="align-items:center;">
+          <a href="#" class="btn-primary">Explore the Map</a>
+          <a href="#" class="btn-secondary">View Methodology</a>
+          <button class="btn-ghost">Download CSV ↓</button>
+        </div>
+
+        <div class="demo-row" style="margin-top: 24px; align-items:center;">
+          <a href="#" class="btn-primary">Find Organizing Jobs</a>
+          <a href="#" class="btn-secondary">Read the Guide</a>
+          <button class="btn-ghost">Skip for now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         DIVIDER WITH LABEL
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Divider with Label</div>
+
+        <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:4px;">Jobs Board — Primary Results (Tier A counties)</p>
+
+        <div style="background:var(--color-bg); padding: 16px 0;">
+          <div class="divider-label">
+            <span class="divider-label__text">Secondary Matches</span>
+          </div>
+        </div>
+
+        <p style="font-size:14px; color:var(--color-text-secondary); margin-top:4px;">Jobs Board — Secondary Results (Tier B counties) begin below</p>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         BANNERS / CALLOUTS
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Component — Banners &amp; Callouts</div>
+
+        <div style="display:flex; flex-direction:column; gap:16px;">
+
+          <div class="terrain-banner info">
+            <p><strong>Senate data note:</strong> State-level union density figures are sourced from the BLS Union Members survey (2023). County-level estimates are modeled from PUMS microdata and may differ from official BLS county estimates where available.</p>
+          </div>
+
+          <div class="terrain-banner warning">
+            <p><strong>Data gap:</strong> NLRB election data for this county is incomplete for 2021–2022. Scores for this period reflect interpolated estimates. Treat Tier B ratings with caution.</p>
+          </div>
+
+          <div class="terrain-banner muted">
+            <p><strong>AI disclosure:</strong> Some county summaries were generated with Claude and reviewed by a researcher. All numeric data is sourced directly from BLS, Census, and NLRB records. Flag errors at our GitHub.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         FULL COMPOSITE EXAMPLE — county card with all elements
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Composite — Full County Card</div>
+
+        <div class="terrain-card featured" style="max-width: 560px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px;">
+            <div>
+              <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:4px;">FIPS 39035 · Ohio</p>
+              <h2 style="font-family:var(--font-serif); font-size:22px; font-weight:600; line-height:1.2;">Cuyahoga County</h2>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0;">
+              <span class="grade-pill tier-a">Tier A</span>
+              <span class="grade-pill type-b">Sustained</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:32px; margin-bottom:16px;">
+            <div class="stat-block">
+              <span class="stat-block__number" style="font-size:28px;">82</span>
+              <span class="stat-block__label">Terrain Score</span>
+            </div>
+            <div class="stat-block">
+              <span class="stat-block__number" style="font-size:28px;">14.7%</span>
+              <span class="stat-block__label">Union Density</span>
+            </div>
+            <div class="stat-block">
+              <span class="stat-block__number" style="font-size:28px;">573K</span>
+              <span class="stat-block__label">Workers</span>
+            </div>
+          </div>
+
+          <p style="font-size:14px; color:var(--color-text-secondary); line-height:1.6; margin-bottom:16px;">Healthcare and education are the dominant sectors, with University Hospitals and Cleveland Clinic representing over 60,000 workers. SEIU and AFT have active campaigns; logistics and warehousing growing rapidly on the east side.</p>
+
+          <div style="margin-bottom:16px;">
+            <p style="font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--color-text-muted); margin-bottom:8px;">Methodology review progress</p>
+            <div class="progress-dots">
+              <div class="progress-dot complete"></div>
+              <div class="progress-dot complete"></div>
+              <div class="progress-dot active"></div>
+              <div class="progress-dot"></div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a href="#" class="btn-primary" style="font-size:12px; padding: 8px 16px;">View Full Profile</a>
+            <a href="#" class="btn-secondary" style="font-size:12px; padding: 8px 16px;">Find Jobs Here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         COLOR PALETTE REFERENCE
+         ============================================================ -->
+    <div class="demo-section">
+      <div class="container">
+        <div class="demo-label">Reference — Color System</div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:var(--color-bg); border:1px solid var(--color-border); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">bg</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:var(--color-bg-card); border:1px solid var(--color-border); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">card</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:var(--color-bg-subtle); border:1px solid var(--color-border); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">subtle</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:var(--color-accent); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">accent</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:var(--color-tier-b); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">tier-b</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:var(--color-tier-c); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">tier-c</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:#ffffb2; border:1px solid var(--color-border); border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">map-low</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+            <div style="width:64px; height:40px; background:#bd0026; border-radius:4px;"></div>
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--color-text-muted);">map-high</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- spacer -->
+    <div style="height: 64px;"></div>
+
+  </main>
+
+  <script>
+    function toggleNav(btn) {
+      const drawer = document.getElementById('nav-drawer');
+      const isOpen = drawer.classList.contains('open');
+      drawer.classList.toggle('open');
+      btn.setAttribute('aria-expanded', !isOpen);
+    }
+  </script>
+
+</body>
+</html>
