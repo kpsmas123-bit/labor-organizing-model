@@ -306,6 +306,14 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
   line-height: 1.65; margin-bottom: 12px;
 }
 
+#entry-banner {
+  background: rgba(74,127,193,0.09); border: 1px solid rgba(74,127,193,0.28);
+  border-radius: 7px; padding: 11px 14px; font-size: 12.5px; color: #1e3f6b;
+  line-height: 1.65; margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+}
+#entry-banner a { color: #1e3f6b; font-weight: 600; text-decoration: underline; }
+#entry-banner a:hover { color: #2e5e9a; }
+
 #jobs-list { display: flex; flex-direction: column; gap: 10px; }
 #jobs-empty {
   text-align: center; padding: 52px 20px; color: #7A6F64; font-size: 13px;
@@ -339,6 +347,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .badge-int-c { background: rgba(196,81,42,0.15); color: #7A2000; border: 1px solid rgba(196,81,42,0.4); }
 .badge-mcalevey { background: rgba(245,200,66,0.18); color: #7A5A00; border: 1px solid rgba(196,160,32,0.35); }
 .badge-swing { background: rgba(180,40,40,0.08); color: #8B1A1A; border: 1px solid rgba(180,40,40,0.22); }
+.badge-research-note { background: rgba(100,100,100,0.08); color: #5A5050; border: 1px solid #C8BFB5; cursor: help; }
 
 .jc-impact-row {
   display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
@@ -1076,6 +1085,11 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <!-- Salting framing banner (shown when path=rf and toggle=mcalevey) -->
       <div id="salting-banner" class="salting-banner hidden">
         ⭐ These listings are in high-priority organizing terrain. If you're considering <strong>salting</strong> — taking a job specifically to organize from the inside — your terrain guide shows the highest-impact locations for this strategy.
+      </div>
+
+      <!-- Education banner (entry-level path only) -->
+      <div id="entry-banner" class="hidden">
+        📚 <span>New to organizing? <a href="https://labornotes.org/secrets" target="_blank" rel="noopener">Start here →</a> — Jane McAlevey's <em>No Shortcuts</em> and the <a href="https://www.labornotes.org/podcast" target="_blank" rel="noopener">Labor Notes podcast</a> are the best places to build your foundation before applying.</span>
       </div>
 
       <!-- Jobs list -->
@@ -1825,13 +1839,10 @@ function getEffectiveJobs() {
     if (job.is_swing_state) boost += 15;
     if (state.location === 'mystate' && state.myState && job.state_abbr === state.myState) boost += 15;
     if (state.income > 0 && job.salary_min && job.salary_min < state.income) boost -= 15;
-    // Experience level boost/penalty
+    // Experience level boost/penalty — uses classifier v2 fields
     if (state.exp) {
-      const t = (job.title || '').toLowerCase();
-      const isSeniorCoordinator = /political coordinator|legislative coordinator|field coordinator|communications coordinator|campaign coordinator/.test(t);
-      const isEntry = /assistant|associate|junior|entry.level|entry |apprentice|trainee|fellow/.test(t)
-        || (/coordinator/.test(t) && !isSeniorCoordinator);
-      const isSenior = /director|senior|manager|chief|head of|\bvp\b|vice president|lead organizer|internal organizer|political coordinator|legislative coordinator|field coordinator/.test(t);
+      const isEntry = job.is_entry_level === true;
+      const isSenior = job.seniority_level === 'senior';
       const salMin = job.salary_min;
       if (state.exp === 'new') {
         if (isEntry) boost += 10;
@@ -1860,6 +1871,11 @@ function applyFiltersAndRender() {
     if (state.rfToggle === 'mcalevey') return job.is_mcalevey_priority;
     return true; // 'all'
   });
+
+  // Seniority hard-filter: entry-level path hides senior-only listings
+  if (state.exp === 'new') {
+    filtered = filtered.filter(job => !(job.is_entry_level === false && job.seniority_level === 'senior'));
+  }
 
   // Sector filter
   if (state.sectors.length) {
@@ -1941,6 +1957,7 @@ function loadMore() {
 function updateBanners() {
   const impactGoals = document.getElementById('rf-impact-goals');
   const salting = document.getElementById('salting-banner');
+  const entryBanner = document.getElementById('entry-banner');
   const isRf = state.path === 'rf';
   const notApprentice = state.rfToggle !== 'apprenticeships';
   if (impactGoals) {
@@ -1948,6 +1965,9 @@ function updateBanners() {
     if (isRf && notApprentice) renderImpactGoals();
   }
   salting.classList.toggle('hidden', !(isRf && state.rfToggle === 'mcalevey'));
+  if (entryBanner) {
+    entryBanner.classList.toggle('hidden', !(state.path === 'rf' && state.exp === 'new'));
+  }
 }
 
 // ============================================================
@@ -1982,7 +2002,14 @@ function renderImpactGoals() {
 
   if (!msaData.length) return; // keep skeleton
 
-  const sorted = [...msaData]
+  // Filter to user's state first, then fall back to all MSAs if no match
+  let pool = msaData;
+  if (state.myState) {
+    const inState = msaData.filter(m => m.states && m.states.includes(state.myState));
+    if (inState.length >= 3) pool = inState;
+  }
+
+  const sorted = [...pool]
     .sort((a, b) => (b.avgOos + (b.isSwing ? 3 : 0)) - (a.avgOos + (a.isSwing ? 3 : 0)))
     .slice(0, 6);
 
@@ -2209,6 +2236,7 @@ function showJobDetail(job) {
       ${intTypeKey ? `<div class="jdp-badge-block"><span class="badge badge-int-${intTypeKey.toLowerCase()}" style="flex-shrink:0">Type ${intTypeKey}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
       ${job.is_mcalevey_priority ? `<div class="jdp-badge-block"><span class="badge badge-mcalevey" style="flex-shrink:0">⭐ McAlevey</span><div class="jdp-badge-desc">In Jane McAlevey's highest-priority sectors: healthcare, education, logistics, or public sector.</div></div>` : ''}
       ${job.is_swing_state ? `<div class="jdp-badge-block"><span class="badge badge-swing" style="flex-shrink:0">🚩 Swing state</span><div class="jdp-badge-desc">Located in a competitive state where labor organizing has direct electoral impact.</div></div>` : ''}
+      ${job.needs_research_note ? `<div class="jdp-badge-block"><span class="badge badge-research-note" style="flex-shrink:0">ℹ️ Research local</span><div class="jdp-badge-desc">This listing is posted by SEIU International. Locals vary significantly in culture, resources, and organizing approach — research the specific local before applying.</div></div>` : ''}
       ${sectorNote}
     </div>
     <div class="jdp-section">
@@ -2505,6 +2533,10 @@ function buildBadges(job, grades) {
   // Swing state
   if (job.is_swing_state) {
     parts.push(`<span class="badge badge-swing">🚩 Swing state</span>`);
+  }
+  // SEIU research note
+  if (job.needs_research_note) {
+    parts.push(`<span class="badge badge-research-note" title="SEIU International — research your local before applying">ℹ️ Research local</span>`);
   }
   return parts.join('');
 }
