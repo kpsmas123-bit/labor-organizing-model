@@ -4,23 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Methodology — Labor Organizing Strategic Terrain Model</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="terrain.css">
 <style>
 /* ── VARIABLES ───────────────────────────── */
 :root {
-  --bg:         #0f1117;
-  --bg-card:    #181c27;
-  --bg-el:      #1e2333;
-  --text:       #f0ede6;
-  --muted:      #8b8578;
-  --accent:     #e8c547;
-  --accent-dim: rgba(232,197,71,0.11);
-  --type-a:     #d4a017;
-  --type-b:     #4a7fc1;
-  --type-c:     #3a8c5c;
-  --border:     rgba(240,237,230,0.10);
+  --bg:         #f7f4f0;
+  --bg-card:    #ffffff;
+  --bg-el:      #f0ece6;
+  --text:       #1a1a1a;
+  --muted:      #666666;
+  --accent:     #bd0026;
+  --accent-dim: rgba(189,0,38,0.06);
+  --type-a:     #c47a00;
+  --type-b:     #2d5f99;
+  --type-c:     #2d7a4f;
+  --border:     #e0d8d0;
   --danger:     #c45c3a;
 }
 
@@ -35,53 +33,7 @@ body {
   min-height: 100vh;
 }
 
-/* ── TOP NAV ─────────────────────────────── */
-#top-nav {
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  background: rgba(15,17,23,0.96);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  height: 52px;
-  display: flex;
-  align-items: center;
-  padding: 0 32px;
-  gap: 0;
-}
-.nav-back {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 500;
-  padding-right: 18px;
-  margin-right: 18px;
-  border-right: 1px solid var(--border);
-  transition: color .2s;
-  white-space: nowrap;
-}
-.nav-back:hover { color: var(--accent); }
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  flex: 1;
-}
-.nav-link {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 5px 11px;
-  border-radius: 5px;
-  transition: color .18s, background .18s;
-  white-space: nowrap;
-}
-.nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+/* terrain-nav styles from terrain.css */
 
 /* ── PAGE HERO ───────────────────────────── */
 .page-hero {
@@ -154,11 +106,11 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
   padding: 18px 22px;
   border: 1px solid;
 }
-.flow-node--input     { background: rgba(240,237,230,0.03); border-color: rgba(240,237,230,0.17); }
-.flow-node--org       { background: rgba(232,197,71,0.06);  border-color: rgba(232,197,71,0.28);  }
+.flow-node--input     { background: #f5f2ee; border-color: #d0c8c0; }
+.flow-node--org       { background: rgba(189,0,38,0.05);   border-color: rgba(189,0,38,0.22);   }
 .flow-node--interv    { background: rgba(58,140,92,0.06);   border-color: rgba(58,140,92,0.28);   }
 .flow-node--elec      { background: rgba(74,127,193,0.06);  border-color: rgba(74,127,193,0.28);  }
-.flow-node--output    { background: rgba(240,237,230,0.04); border-color: rgba(240,237,230,0.22); }
+.flow-node--output    { background: #f5f2ee; border-color: #ccc4bb; }
 .flow-label {
   font-size: 10px;
   letter-spacing: .13em;
@@ -184,8 +136,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
 .flow-subs-2 { grid-template-columns: 1fr 1fr; }
 .flow-subs-3 { grid-template-columns: 1fr 1fr 1fr; }
 .flow-sub {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: #f0ece6;
+  border: 1px solid #e0d8d0;
   border-radius: 6px;
   padding: 6px 10px;
   font-size: 11px;
@@ -200,14 +152,14 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
 .flow-connector-line {
   width: 1px;
   height: 22px;
-  background: rgba(240,237,230,0.16);
+  background: #c8bfb5;
 }
 .flow-connector-arrow {
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 7px solid rgba(240,237,230,0.16);
+  border-top: 7px solid #c8bfb5;
 }
 
 /* ── WHAT IT DOES / DOESN'T ─────────────── */
@@ -272,8 +224,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
   width: 100%;
 }
 .cell-card:hover {
-  border-color: rgba(232,197,71,0.55);
-  background: rgba(232,197,71,0.025);
+  border-color: rgba(189,0,38,0.35);
+  background: rgba(189,0,38,0.02);
 }
 .cell-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .cell-icon { font-size: 22px; line-height: 1; }
@@ -302,19 +254,19 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
   color: var(--accent);
   white-space: nowrap;
 }
-.cell-badge--theory { background: rgba(139,133,120,0.12); color: var(--muted); }
+.cell-badge--theory { background: rgba(102,102,102,0.1); color: var(--muted); }
 .cell-badge--danger { background: rgba(196,92,58,0.12); color: #dd7055; }
-.cell-source { font-size: 10px; color: rgba(139,133,120,0.65); font-style: italic; text-align: right; }
+.cell-source { font-size: 10px; color: #9a9288; font-style: italic; text-align: right; }
 .cell-expand-hint {
   position: absolute;
   bottom: 12px;
   right: 14px;
   font-size: 9.5px;
-  color: rgba(232,197,71,0.3);
+  color: rgba(189,0,38,0.25);
   transition: color .2s;
   pointer-events: none;
 }
-.cell-card:hover .cell-expand-hint { color: rgba(232,197,71,0.7); }
+.cell-card:hover .cell-expand-hint { color: rgba(189,0,38,0.6); }
 .modal-data-src { display: none; }
 
 /* ── DATA SOURCE GRID ────────────────────── */
@@ -335,8 +287,8 @@ a.source-cell {
   transition: border-color .2s, background .2s;
 }
 a.source-cell:hover {
-  border-color: rgba(232,197,71,0.5);
-  background: rgba(232,197,71,0.025);
+  border-color: rgba(189,0,38,0.35);
+  background: rgba(189,0,38,0.02);
 }
 .src-icon { font-size: 19px; margin-bottom: 10px; }
 .src-name { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
@@ -368,8 +320,8 @@ a.source-cell:hover {
   font-size: 10px;
   padding: 2px 8px;
   border-radius: 20px;
-  background: rgba(74,127,193,0.15);
-  color: #7ab3e8;
+  background: rgba(74,127,193,0.12);
+  color: #2d5f99;
 }
 
 /* ── REPLICATION SECTION ─────────────────── */
@@ -397,7 +349,7 @@ a.repo-link {
   font-family: 'DM Mono', 'Courier New', monospace;
   font-size: 12.5px;
   font-weight: 600;
-  border-bottom: 1px solid rgba(232,197,71,0.25);
+  border-bottom: 1px solid rgba(189,0,38,0.25);
   padding-bottom: 1px;
   margin-bottom: 14px;
   transition: border-color .2s;
@@ -412,7 +364,7 @@ a.repo-link:hover { border-color: var(--accent); }
   border-top: 1px solid var(--border);
 }
 .repro-quote {
-  background: rgba(240,237,230,0.03);
+  background: #f5f2ee;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 24px 28px;
@@ -433,7 +385,7 @@ a.repo-link:hover { border-color: var(--accent); }
   font-size: 10px;
   letter-spacing: .15em;
   text-transform: uppercase;
-  color: #7ab3e8;
+  color: #2d5f99;
   font-weight: 700;
   margin-bottom: 12px;
 }
@@ -445,7 +397,7 @@ a.repo-link:hover { border-color: var(--accent); }
   position: fixed;
   inset: 0;
   z-index: 500;
-  background: rgba(8,9,13,0.88);
+  background: rgba(26,26,26,0.75);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   padding: 32px 20px;
@@ -456,8 +408,8 @@ a.repo-link:hover { border-color: var(--accent); }
 .modal-box {
   max-width: 740px;
   margin: 0 auto;
-  background: #1a1f2e;
-  border: 1px solid rgba(240,237,230,0.12);
+  background: #ffffff;
+  border: 1px solid #e0d8d0;
   border-radius: 14px;
   padding: 40px 44px;
   position: relative;
@@ -481,7 +433,7 @@ a.repo-link:hover { border-color: var(--accent); }
   transition: color .18s, border-color .18s, background .18s;
   font-family: inherit;
 }
-#modal-close:hover { color: var(--text); border-color: rgba(240,237,230,0.3); background: rgba(255,255,255,0.05); }
+#modal-close:hover { color: var(--text); border-color: #c8bfb5; background: #f0ece6; }
 
 /* Modal typography — applied to dynamic content */
 .m-eyebrow {
@@ -513,8 +465,8 @@ a.repo-link:hover { border-color: var(--accent); }
 .m-p strong { color: var(--text); font-weight: 600; }
 .m-p em { font-style: italic; }
 .m-formula {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: #f0ece6;
+  border: 1px solid #e0d8d0;
   border-radius: 8px;
   padding: 14px 18px;
   font-family: 'DM Mono', 'Courier New', monospace;
@@ -534,8 +486,8 @@ a.repo-link:hover { border-color: var(--accent); }
   margin-top: 14px;
 }
 .m-caveat {
-  background: rgba(232,197,71,0.07);
-  border: 1px solid rgba(232,197,71,0.2);
+  background: rgba(189,0,38,0.04);
+  border: 1px solid rgba(189,0,38,0.15);
   border-radius: 7px;
   padding: 12px 16px;
   font-size: 12.5px;
@@ -546,7 +498,7 @@ a.repo-link:hover { border-color: var(--accent); }
 .m-table-wrap { overflow-x: auto; margin: 12px 0; }
 .m-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .m-table th {
-  background: rgba(255,255,255,0.04);
+  background: #f5f2ee;
   padding: 9px 12px;
   text-align: left;
   font-size: 9.5px;
@@ -560,24 +512,24 @@ a.repo-link:hover { border-color: var(--accent); }
 }
 .m-table td {
   padding: 7px 12px;
-  border-bottom: 1px solid rgba(240,237,230,0.05);
+  border-bottom: 1px solid #e8e2db;
   color: var(--muted);
   vertical-align: middle;
   font-family: 'DM Mono', 'Courier New', monospace;
 }
 .m-table tr:last-child td { border-bottom: none; }
-.m-table tr:hover td { background: rgba(255,255,255,0.02); }
+.m-table tr:hover td { background: rgba(0,0,0,0.02); }
 .m-table .col-nm { font-family: 'DM Sans', system-ui, sans-serif; color: var(--text); font-weight: 500; font-size: 12px; }
 .t-yes { color: #5dba80 !important; font-weight: 600; }
-.t-no  { color: rgba(139,133,120,0.45) !important; }
+.t-no  { color: #aaa09a !important; }
 .t-tbd { color: var(--accent) !important; font-weight: 600; }
 .t-brd { color: #c8a84a !important; }
 .t-flag { color: #dd7055 !important; font-weight: 600; font-style: italic; }
 .t-100 { color: var(--accent) !important; font-weight: 700; }
 .t-75  { color: #c8a84a !important; font-weight: 600; }
 .t-25  { color: var(--muted) !important; }
-.t-10  { color: rgba(139,133,120,0.5) !important; }
-.t-0   { color: rgba(139,133,120,0.3) !important; }
+.t-10  { color: #a8a099 !important; }
+.t-0   { color: #c0b8b0 !important; }
 .t-pend{ color: #dd7055 !important; font-style: italic; }
 .m-cite {
   font-size: 12px;
@@ -611,7 +563,7 @@ a.repo-link:hover { border-color: var(--accent); }
 }
 .mx-cell:last-child { border-right: none; }
 .mx-header-row .mx-cell {
-  background: rgba(255,255,255,0.03);
+  background: #f5f2ee;
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: .09em;
@@ -623,19 +575,18 @@ a.repo-link:hover { border-color: var(--accent); }
   font-size: 11px;
   color: var(--muted);
   font-weight: 600;
-  background: rgba(255,255,255,0.02);
+  background: #f5f2ee;
   font-family: 'DM Sans', system-ui, sans-serif;
 }
 .mx-type { font-size: 11.5px; font-weight: 700; margin-bottom: 3px; }
 .mx-ta { color: var(--type-a); }
 .mx-tb { color: var(--type-b); }
 .mx-tc { color: var(--type-c); }
-.mx-skip { color: rgba(139,133,120,0.3); font-size: 11px; }
+.mx-skip { color: #c0b8b0; font-size: 11px; }
 .mx-tdesc { font-size: 10.5px; color: var(--muted); font-family: 'DM Sans', system-ui, sans-serif; }
 
 /* ── RESPONSIVE ──────────────────────────── */
 @media (max-width: 900px) {
-  #top-nav { padding: 0 16px; }
   main { padding: 0 16px 80px; }
   .page-hero { padding: 40px 16px 28px; }
   .cell-grid { grid-template-columns: 1fr 1fr; }
@@ -648,8 +599,7 @@ a.repo-link:hover { border-color: var(--accent); }
   .cell-grid { grid-template-columns: 1fr; }
   .source-grid { grid-template-columns: 1fr 1fr; }
   .flow-subs-2, .flow-subs-3 { grid-template-columns: 1fr; }
-  .nav-link { display: none; }
-  .nav-link--mobile { display: block !important; }
+
 }
 @media (max-width: 400px) {
   .source-grid { grid-template-columns: 1fr; }
@@ -657,7 +607,7 @@ a.repo-link:hover { border-color: var(--accent); }
 
 /* ── PRINT ───────────────────────────────── */
 @media print {
-  #top-nav, #modal-overlay { display: none !important; }
+  #modal-overlay { display: none !important; }
   body { background: white; color: black; font-size: 10pt; }
   .page-hero { border-color: #ccc; padding: 20pt 0 14pt; }
   .hero-title { font-size: 26pt; color: black; }
@@ -713,20 +663,49 @@ a.repo-link:hover { border-color: var(--accent); }
   .repo-oneliner { color: black; }
   .ai-card h3 { color: #444; }
 }
+
+/* === TERRAIN OVERRIDES === */
+.hero-eyebrow,
+.section-eyebrow {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+}
+.m-table th {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+}
+.m-table td {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+}
+.m-table tr:nth-child(even) td { background: #f7f4f0; }
+.m-table tr:nth-child(odd) td { background: #ffffff; }
+/* === END TERRAIN OVERRIDES === */
 </style>
 </head>
 <body>
 
-<!-- ── STICKY TOP NAV ────────────────────────────────── -->
-<nav id="top-nav" aria-label="Page navigation">
-  <a href="./labor_organizing_national_dashboard.html" class="nav-back">← Dashboard</a>
-  <div class="nav-links">
-    <a href="#glance"     class="nav-link">Model at a Glance</a>
-    <a href="#components" class="nav-link">Scoring Components</a>
-    <a href="#sources"    class="nav-link">Data Sources</a>
-    <a href="#limitations" class="nav-link">Limitations</a>
+<nav class="terrain-nav">
+  <div class="terrain-nav__inner">
+    <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
+    <ul class="terrain-nav__links">
+      <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
+      <li><a href="jobs.html">Jobs</a></li>
+      <li><a href="education.html">Learn</a></li>
+      <li><a href="methodology.html" class="active">Method</a></li>
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub ↗</a></li>
+    </ul>
+    <button class="terrain-nav__hamburger" aria-label="Toggle menu" onclick="this.closest('.terrain-nav').nextElementSibling.classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<div class="terrain-nav__drawer">
+  <ul>
+    <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
+    <li><a href="jobs.html">Jobs</a></li>
+    <li><a href="education.html">Learn</a></li>
+    <li><a href="methodology.html" class="active">Method</a></li>
+    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub ↗</a></li>
+  </ul>
+</div>
 
 <!-- ── PAGE HERO ─────────────────────────────────────── -->
 <div class="page-hero">
@@ -737,6 +716,31 @@ a.repo-link:hover { border-color: var(--accent); }
     <span>May 2026</span>
     <span>Public Documentation</span>
     <span>3,144 US Counties</span>
+  </div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:16px 32px 0;">
+  <div style="display:flex;gap:20px;align-items:flex-start;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+      <span class="progress-dot active"></span>
+      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#bd0026;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Overview</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+      <span class="progress-dot"></span>
+      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Data</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+      <span class="progress-dot"></span>
+      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Scoring</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+      <span class="progress-dot"></span>
+      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Limitations</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+      <span class="progress-dot"></span>
+      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">AI</span>
+    </div>
   </div>
 </div>
 
@@ -1227,7 +1231,7 @@ a.repo-link:hover { border-color: var(--accent); }
         <p class="m-p">2. <strong>Public sector employment understated.</strong> CBP excludes government employment. Government-heavy counties (DC, state capitals) have understated sectoral scores. BLS QCEW provides partial correction.</p>
         <p class="m-p">3. <strong>28 counties missing election data.</strong> Primarily Alaska borough units. Documented, not errors.</p>
         <p class="m-p">4. <strong>~2,192 unresolvable union locals.</strong> PO boxes, international addresses, territories — approximately 20% of LM-2 filers by count. Confirmed permanent exclusion ceiling. Union member counts in every county are floors, not ceilings.</p>
-        <p class="m-p">5. <strong>Strike history not yet scored.</strong> Cornell ILR Labor Action Tracker data (2019–2024) is acquired but not incorporated. Planned Phase 2 addition.</p>
+        <p class="m-p">5. <strong>Strike history active (2019–present).</strong> Cornell ILR Labor Action Tracker data (2019–2024) is active (2019–present).</p>
         <p class="m-p">6. <strong>Organizability rubric is draft.</strong> Flagged for deeper theoretical development. The Harris critique — that some organic leaders identified by standard whole-worker methods may be pro-management — is a live validity threat to the McAlevey framework as applied here.</p>
         <p class="m-p">7. <strong>Statewide sub-score is not race-specific.</strong> Gubernatorial vs. Senate vs. presidential races require different intervention logic. Cycle-specific data is a Phase 2 refinement.</p>
         <p class="m-p">8. <strong>EMS not yet a separate sector.</strong> Emergency Medical Services are currently folded into Healthcare – Ambulatory (SVS=10). EMS workers have genuine chokepoint leverage and should score SVS=100. Phase 2 addition.</p>
@@ -1267,7 +1271,7 @@ a.repo-link:hover { border-color: var(--accent); }
     <a class="source-cell" href="https://striketracker.ilr.cornell.edu/" target="_blank" rel="noopener noreferrer">
       <span class="src-icon">🎓</span>
       <div class="src-name">Cornell ILR</div>
-      <div class="src-powers">Cornell ILR Labor Action Tracker. Strike data 2019–2024. Acquired for Phase 2 incorporation into organizing history score. Not yet active in the model.</div>
+      <div class="src-powers">Cornell ILR Labor Action Tracker. Strike data 2019–2024. Active (2019–present).</div>
       <div class="src-arrow">↗ striketracker.ilr.cornell.edu</div>
     </a>
     <a class="source-cell" href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener noreferrer">
@@ -1331,8 +1335,8 @@ a.repo-link:hover { border-color: var(--accent); }
     <div class="limit-item">
       <div class="limit-num">5</div>
       <div class="limit-body">
-        <div class="limit-title">Strike history not yet scored</div>
-        <div class="limit-desc">Cornell ILR Labor Action Tracker data (2019–2024) is acquired but not yet incorporated into the model. A county's recent strike history is a meaningful signal of organizing culture and employer vulnerability that this model currently misses.</div>
+        <div class="limit-title">Strike history active (2019–present)</div>
+        <div class="limit-desc">Cornell ILR Labor Action Tracker data (2019–2024) is active (2019–present). Strike history is now incorporated into the organizing history score.</div>
         <div><span class="limit-phase">Phase 2 addition</span></div>
       </div>
     </div>
