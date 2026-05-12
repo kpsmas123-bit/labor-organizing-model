@@ -2252,16 +2252,17 @@ function quizSetRadius(r) {
 
 function quizConfirmLocation() {
   const zipVal = (document.getElementById('quiz-zip-input')?.value || '').trim();
-  // Block advancement if 5-digit ZIP isn't in the centroids table
-  if (zipVal.length === 5 && !ZIP_CENTROIDS[zipVal]) {
+  // Block advancement only if 5-digit ZIP is unrecognized by both centroid table and state prefix lookup
+  if (zipVal.length === 5 && !ZIP_CENTROIDS[zipVal] && !zipToState(zipVal)) {
     const errorEl = document.getElementById('quiz-zip-error');
     const inputEl = document.getElementById('quiz-zip-input');
     if (errorEl) errorEl.style.display = 'block';
     if (inputEl) inputEl.classList.add('invalid');
     return;
   }
-  quiz.zip = zipVal.length === 5 ? zipVal : null;
-  quiz.myState = quiz.zip ? (zipToState(quiz.zip) || null) : null;
+  quiz.zip = (zipVal.length === 5 && ZIP_CENTROIDS[zipVal]) ? zipVal : null;
+  const stateSel = document.getElementById('quiz-state-sel');
+  quiz.myState = (zipVal.length === 5 ? zipToState(zipVal) : null) || (stateSel?.value || null);
   if (quiz.path === 'rf') {
     quizHistory.push('qstep-location');
     _quizShow('qstep-rftype');
@@ -2311,11 +2312,20 @@ function quizZipInput(val) {
       if (inputEl) inputEl.classList.remove('invalid');
     } else {
       quiz.zip = null;
-      quiz.myState = null;
-      if (hint) hint.textContent = '';
-      if (stateSel) stateSel.value = '';
-      if (errorEl) errorEl.style.display = 'block';
-      if (inputEl) inputEl.classList.add('invalid');
+      const st = zipToState(val);
+      if (st) {
+        quiz.myState = st;
+        if (hint) hint.textContent = '→ ' + st + ' (state-only — radius filter unavailable)';
+        if (stateSel) stateSel.value = st;
+        if (errorEl) errorEl.style.display = 'none';
+        if (inputEl) inputEl.classList.remove('invalid');
+      } else {
+        quiz.myState = null;
+        if (hint) hint.textContent = '';
+        if (stateSel) stateSel.value = '';
+        if (errorEl) errorEl.style.display = 'block';
+        if (inputEl) inputEl.classList.add('invalid');
+      }
     }
   } else {
     quiz.zip = null;
