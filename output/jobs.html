@@ -1315,7 +1315,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <!-- TERRAIN GUIDE -->
       <div id="terrain-guide">
 
-      <div class="terrain-banner info" style="margin-bottom: 16px;">
+      <div class="terrain-banner info" id="terrain-data-banner" style="margin-bottom: 16px;">
         <span style="font-family: var(--font-mono); font-size: 11px;
           letter-spacing: 1px; text-transform: uppercase;
           color: var(--color-text-muted);">Terrain data</span><br>
@@ -2614,6 +2614,12 @@ function updateBanners() {
   salting.classList.toggle('hidden', !(isRf && state.rfToggle === 'mcalevey'));
   if (entryBanner) {
     entryBanner.classList.toggle('hidden', state.exp !== 'new');
+  }
+  // Only show terrain data banner when user is open to relocating (anywhere)
+  const terrainDataBanner = document.getElementById('terrain-data-banner');
+  if (terrainDataBanner) {
+    const isAnywhere = state.location === 'anywhere';
+    terrainDataBanner.style.display = isAnywhere ? '' : 'none';
   }
 }
 
