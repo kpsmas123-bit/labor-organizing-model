@@ -353,22 +353,29 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 }
 #state-select:focus { outline: none; border-color: #bd0026; }
 
-/* === RESULTS SECTION === */
-#results-section { display: flex; gap: 24px; align-items: flex-start; }
+/* === RESULTS SECTION — header above, then two columns below === */
+#results-section { display: flex; flex-direction: column; gap: 0; }
 #results-section.hidden { display: none; }
 
-/* === JOBS PANEL (left 55%) === */
-#jobs-panel { flex: 55; min-width: 0; }
-
+/* Full-width centered header above the columns */
 #jobs-header-row {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: var(--space-8) 0 var(--space-6);
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
 }
 #jobs-header-row h2 {
-  font-family: var(--font-serif); font-size: 22px;
+  font-family: var(--font-serif); font-size: clamp(26px, 4vw, 34px);
   font-weight: 600; color: var(--color-text); line-height: 1.2;
 }
-.jobs-meta { font-size: 11px; color: #A09385; margin-top: 3px; }
+.jobs-meta { font-size: 11px; color: #A09385; margin-top: 6px; }
+
+/* Two-column row: jobs (left) + terrain panel (right) */
+#results-cols { display: flex; gap: 24px; align-items: flex-start; }
+
+/* === JOBS PANEL (left ~58%) === */
+#jobs-panel { flex: 58; min-width: 0; }
 #sort-tabs { display: flex; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
 .sort-tab {
   padding: 7px 14px; font-size: var(--text-xs); font-family: var(--font-mono); letter-spacing: 0.5px;
@@ -478,9 +485,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 }
 #load-more-btn:hover { background: #EDE7DF; color: #2C2C2C; }
 
-/* === TERRAIN PANEL (right 45%, sticky) === */
+/* === TERRAIN PANEL (right ~42%, sticky) === */
 #terrain-panel {
-  flex: 45; min-width: 0;
+  flex: 42; min-width: 0;
   position: sticky; top: 16px;
   max-height: calc(100vh - 90px); overflow-y: auto; overflow-x: hidden;
   border: 1px solid #DDD5C8; border-radius: 10px; background: #fff;
@@ -614,26 +621,25 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .hidden { display: none !important; }
 hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0; }
 
-/* Mobile terrain panel toggle — hidden by default, shown only on mobile */
-#tips-toggle {
-  display: none;
-}
+/* Tips toggle — hidden on desktop, shown on mobile */
+#tips-toggle { display: none; }
 
 #tips-toggle-caret { transition: transform 0.2s; font-size: 14px; }
 #tips-toggle[aria-expanded="true"] #tips-toggle-caret { transform: rotate(180deg); }
+#terrain-panel.collapsed { display: none; }
 
 @media (max-width: 800px) {
-  #results-section { flex-direction: column; }
-  #jobs-panel { order: 2; }
+  #results-cols { flex-direction: column; }
+  #jobs-panel { order: 1; }
   #terrain-panel {
-    order: 1;
+    order: 3;
     position: static;
     max-height: none;
     overflow: visible;
-    margin-bottom: 8px;
+    flex: none; width: 100%;
   }
-  #terrain-panel.collapsed { display: none; }
   #tips-toggle {
+    order: 2;
     display: flex; align-items: center; justify-content: space-between;
     width: 100%; background: #fff; border: 1px solid var(--color-border);
     border-radius: var(--radius-md); padding: 12px 16px;
@@ -1262,6 +1268,15 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   <!-- RESULTS SECTION -->
   <div id="results-section" class="hidden">
 
+    <!-- Full-width centered header above both columns -->
+    <div id="jobs-header-row">
+      <h2>Matching Opportunities</h2>
+      <div class="jobs-meta" id="jobs-meta-line">Data loading…</div>
+    </div>
+
+    <!-- Two-column row: jobs (left) + terrain panel (right) -->
+    <div id="results-cols">
+
     <!-- LEFT: JOBS PANEL -->
     <div id="jobs-panel">
 
@@ -1274,21 +1289,6 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           <div class="smt-tab" data-toggle="apprenticeships" onclick="setRfToggle('apprenticeships')">Apprenticeships</div>
         </div>
         <span id="show-me-staff-label" style="display:none">All staff &amp; organizer roles</span>
-      </div>
-
-      <!-- Header row -->
-      <div id="jobs-header-row">
-        <div>
-          <h2>Matching Opportunities</h2>
-          <div class="jobs-meta" id="jobs-meta-line">Data loading…</div>
-        </div>
-        <!-- sort-tabs hidden until sorting is fully implemented
-        <div id="sort-tabs">
-          <div class="sort-tab" data-sort="impact" onclick="setSort('impact')">Highest Impact</div>
-          <div class="sort-tab" data-sort="recent" onclick="setSort('recent')">Most Recent</div>
-          <div class="sort-tab active" data-sort="best" onclick="setSort('best')">Best Match</div>
-        </div>
-        -->
       </div>
 
       <!-- RF Impact Goals Panel (shown when path=rf and toggle ≠ apprenticeships) -->
@@ -1341,9 +1341,9 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         <button id="load-more-btn" onclick="loadMore()">Load more listings</button>
       </div>
 
-    </div>
+    </div><!-- /jobs-panel -->
 
-    <!-- MOBILE: Tips toggle (hidden on desktop via CSS) -->
+    <!-- MOBILE: Tips toggle (hidden on desktop) -->
     <button id="tips-toggle" aria-expanded="false" aria-controls="terrain-panel" onclick="toggleTipsPanel()">
       <span>Tips &amp; Tricks</span>
       <span id="tips-toggle-caret">▾</span>
@@ -1451,6 +1451,8 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       </div><!-- /terrain-guide -->
 
     </div><!-- /terrain-panel -->
+
+    </div><!-- /results-cols -->
 
   </div><!-- /results-section -->
 
@@ -2917,6 +2919,13 @@ function getContextualTips(job) {
 }
 
 function showJobDetail(job) {
+  // Auto-expand terrain panel when a job is clicked (important on mobile)
+  const panel = document.getElementById('terrain-panel');
+  const toggleBtn = document.getElementById('tips-toggle');
+  if (panel && panel.classList.contains('collapsed')) {
+    panel.classList.remove('collapsed');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+  }
   const guide = document.getElementById('terrain-guide');
   const pane = document.getElementById('job-detail-pane');
   const title = job.title || 'Untitled Position';
@@ -3384,11 +3393,13 @@ function toggleTipsPanel() {
   btn.setAttribute('aria-expanded', String(!isCollapsed));
 }
 
-// On desktop, always ensure terrain panel is visible regardless of collapsed class
+// On desktop, always keep terrain panel visible
 function ensureTerrainPanelDesktop() {
   if (window.innerWidth > 800) {
     const panel = document.getElementById('terrain-panel');
+    const btn = document.getElementById('tips-toggle');
     if (panel) panel.classList.remove('collapsed');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
   }
 }
 window.addEventListener('resize', ensureTerrainPanelDesktop);
