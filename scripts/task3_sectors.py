@@ -25,33 +25,40 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger(__name__)
 
 
-def strategic_value_score(sector: dict) -> int:
-    score = 0
-    if sector.get("non_offshoreable"): score += 30
-    if sector.get("crisis_creating"):  score += 30
-    if sector.get("community_facing"): score += 25
-    if sector.get("chokepoint_potential"): score += 15
+def calc_score_v6(cap: int, comm: int, facing: int, non_off: int) -> int:
+    REACH   = {0: 0, 1: 10, 2: 15, 3: 25}
+    FACING  = {0: 0, 1: 5,  2: 10, 3: 15}
+    NON_OFF = {0: 0, 1: 3,  2: 5}
+    score = REACH[cap] + REACH[comm] + FACING[facing] + NON_OFF[non_off]
+    if cap > 0 and comm > 0:
+        score += 5   # dual_crisis bonus
+    if comm > 0 and facing > 0:
+        score += 5   # whole_worker bonus
     return score
 
 
 def build_properties(sector: dict) -> dict:
-    sv = strategic_value_score(sector)
+    sv = calc_score_v6(
+        sector["cap_crisis_reach"],
+        sector["community_crisis_reach"],
+        sector["community_facing_reach"],
+        sector["non_off_level"],
+    )
     return {
-        "Sector Name": title_prop(sector["name"]),
-        "NAICS Code": text_prop(sector["naics"]),
-        "Sector Type": select_prop(sector["sector_type"]),
-        "Non-Offshoreable": checkbox_prop(sector.get("non_offshoreable", False)),
-        "Crisis-Creating": checkbox_prop(sector.get("crisis_creating", False)),
-        "Community-Facing": checkbox_prop(sector.get("community_facing", False)),
-        "Chokepoint Potential": checkbox_prop(sector.get("chokepoint_potential", False)),
-        "Strategic Value Score": number_prop(sv),
-        "US Total Employment": number_prop(sector.get("us_employment_est")),
-        "Avg Union Density %": number_prop(sector.get("avg_union_density")),
-        "Organizability": select_prop(sector.get("organizability", "Medium")),
-        "McAlevey Priority": checkbox_prop(sector.get("mcalevey_priority", False)),
-        "Description": {
-            "rich_text": [{"text": {"content": sector.get("description", "")[:2000]}}]
-        },
+        "Sector Name":             title_prop(sector["name"]),
+        "Sector ID":               text_prop(sector["id"]),
+        "NAICS Code":              text_prop(", ".join(sector["naics"])),
+        "Data Source":             text_prop(sector["data_source"]),
+        "Cap Crisis Reach":        number_prop(sector["cap_crisis_reach"]),
+        "Cap Crisis Label":        text_prop(sector["cap_crisis_label"]),
+        "Comm Crisis Reach":       number_prop(sector["community_crisis_reach"]),
+        "Comm Crisis Label":       text_prop(sector["community_crisis_label"]),
+        "Community Facing Reach":  number_prop(sector["community_facing_reach"]),
+        "Community Facing Label":  text_prop(sector["community_facing_label"]),
+        "Non-Off Level":           number_prop(sector["non_off_level"]),
+        "Non-Off Label":           text_prop(sector["non_off_label"]),
+        "Notation":                text_prop(sector.get("notation") or ""),
+        "Strategic Value Score":   number_prop(sv),
     }
 
 
@@ -63,27 +70,34 @@ def run(config_path: str, dry_run: bool = False):
     if not dry_run:
         client = NotionClient(config["notion"]["api_key"])
 
-    created_ids = {}  # name -> notion page_id (for export/use by later scripts)
+    created_ids = {}  # v6 sector id ("01", "07a") -> notion page_id
     ok = 0
     errors = []
     for sector in sectors_data["sectors"]:
-        props = build_properties(sector)
+        sv = calc_score_v6(
+            sector["cap_crisis_reach"],
+            sector["community_crisis_reach"],
+            sector["community_facing_reach"],
+            sector["non_off_level"],
+        )
         if dry_run:
-            print(f"{sector['name']} → Strategic Value: {strategic_value_score(sector)}")
+            spec_sv = sector.get("svs")
+            match = "✓" if sv == spec_sv else f"✗ (spec={spec_sv})"
+            print(f"{sector['id']:5s}  {sector['name']:<35s}  SVS={sv:3d}  {match}")
             ok += 1
             continue
+        props = build_properties(sector)
         try:
             result = client.create_page(db_id, props)
-            created_ids[sector["name"]] = result["id"]
+            created_ids[sector["id"]] = result["id"]
             ok += 1
-            logger.info(f"Created sector: {sector['name']}")
+            logger.info(f"Created sector: {sector['id']} {sector['name']}")
             time.sleep(0.35)
         except Exception as e:
-            logger.error(f"Failed {sector['name']}: {e}")
-            errors.append({"name": sector["name"], "error": str(e)})
+            logger.error(f"Failed {sector['id']} {sector['name']}: {e}")
+            errors.append({"id": sector["id"], "name": sector["name"], "error": str(e)})
 
     if not dry_run:
-        # Save sector IDs for later scripts to use
         out = Path("../data/sector_ids.json")
         out.write_text(json.dumps(created_ids, indent=2))
         logger.info(f"Saved {len(created_ids)} sector IDs to {out}")

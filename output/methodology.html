@@ -1,1506 +1,2024 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Methodology — Labor Organizing Strategic Terrain Model</title>
-<link rel="stylesheet" href="terrain.css">
-<style>
-/* ── VARIABLES ───────────────────────────── */
-:root {
-  --bg:         #f7f4f0;
-  --bg-card:    #ffffff;
-  --bg-el:      #f0ece6;
-  --text:       #1a1a1a;
-  --muted:      #666666;
-  --accent:     #bd0026;
-  --accent-dim: rgba(189,0,38,0.06);
-  --type-a:     #c47a00;
-  --type-b:     #2d5f99;
-  --type-c:     #2d7a4f;
-  --border:     #e0d8d0;
-  --danger:     #c45c3a;
-}
-
-/* ── RESET ───────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', system-ui, sans-serif;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-/* terrain-nav styles from terrain.css */
-
-/* ── PAGE HERO ───────────────────────────── */
-.page-hero {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 60px 32px 40px;
-  border-bottom: 1px solid var(--border);
-}
-.hero-eyebrow {
-  font-size: 10.5px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-.hero-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-  font-weight: 800;
-  line-height: 1.06;
-  margin-bottom: 18px;
-}
-.hero-meta {
-  font-size: 12px;
-  color: var(--muted);
-  display: flex;
-  gap: 0;
-  flex-wrap: wrap;
-}
-.hero-meta span { margin-right: 16px; }
-.hero-meta span::before { content: '· '; margin-right: 4px; }
-.hero-meta span:first-child::before { content: ''; margin-right: 0; }
-
-/* ── LAYOUT ──────────────────────────────── */
-main { max-width: 1200px; margin: 0 auto; padding: 0 32px 100px; }
-
-.section { padding: 68px 0 36px; }
-.section + .section { border-top: 1px solid var(--border); }
-.section-eyebrow {
-  font-size: 10.5px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-.section-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.7rem, 3vw, 2.4rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 12px;
-}
-.section-intro {
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.75;
-  max-width: 680px;
-  margin-bottom: 44px;
-}
-
-/* ── FLOW DIAGRAM ────────────────────────── */
-.flow-wrap {
-  max-width: 560px;
-  margin: 0 auto 48px;
-}
-.flow-node {
-  border-radius: 10px;
-  padding: 18px 22px;
-  border: 1px solid;
-}
-.flow-node--input     { background: #f5f2ee; border-color: #d0c8c0; }
-.flow-node--org       { background: rgba(189,0,38,0.05);   border-color: rgba(189,0,38,0.22);   }
-.flow-node--interv    { background: rgba(58,140,92,0.06);   border-color: rgba(58,140,92,0.28);   }
-.flow-node--elec      { background: rgba(74,127,193,0.06);  border-color: rgba(74,127,193,0.28);  }
-.flow-node--output    { background: #f5f2ee; border-color: #ccc4bb; }
-.flow-label {
-  font-size: 10px;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.flow-node--input  .flow-label { color: var(--muted); }
-.flow-node--org    .flow-label { color: var(--accent); }
-.flow-node--interv .flow-label { color: #5dba80; }
-.flow-node--elec   .flow-label { color: #7ab3e8; }
-.flow-node--output .flow-label { color: var(--text); }
-.flow-formula {
-  font-family: 'DM Mono', 'Courier New', monospace;
-  font-size: 12.5px;
-  color: var(--muted);
-}
-.flow-subs {
-  display: grid;
-  gap: 6px;
-  margin-top: 10px;
-}
-.flow-subs-2 { grid-template-columns: 1fr 1fr; }
-.flow-subs-3 { grid-template-columns: 1fr 1fr 1fr; }
-.flow-sub {
-  background: #f0ece6;
-  border: 1px solid #e0d8d0;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 11px;
-  color: var(--muted);
-  text-align: center;
-}
-.flow-connector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.flow-connector-line {
-  width: 1px;
-  height: 22px;
-  background: #c8bfb5;
-}
-.flow-connector-arrow {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 7px solid #c8bfb5;
-}
-
-/* ── WHAT IT DOES / DOESN'T ─────────────── */
-.desc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 36px;
-}
-.desc-block {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 22px 24px;
-}
-.desc-block h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 10px;
-}
-.desc-block p { font-size: 13.5px; color: var(--muted); line-height: 1.72; }
-
-/* ── PULL QUOTE ──────────────────────────── */
-.pull-quote {
-  border-left: 3px solid var(--accent);
-  padding: 16px 24px;
-  background: var(--accent-dim);
-  border-radius: 0 8px 8px 0;
-  max-width: 600px;
-  margin: 0 auto;
-}
-.pull-quote p {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px;
-  font-style: italic;
-  color: var(--text);
-  line-height: 1.55;
-}
-
-/* ── CELL GRID (12 scoring components) ────── */
-.cell-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-.cell-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 22px 20px 38px;
-  cursor: pointer;
-  transition: border-color .2s, background .2s;
-  text-align: left;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-family: inherit;
-  color: inherit;
-  width: 100%;
-}
-.cell-card:hover {
-  border-color: rgba(189,0,38,0.35);
-  background: rgba(189,0,38,0.02);
-}
-.cell-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.cell-icon { font-size: 22px; line-height: 1; }
-.cell-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 14.5px;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.25;
-}
-.cell-desc { font-size: 12.5px; color: var(--muted); line-height: 1.55; flex: 1; }
-.cell-footer {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.cell-badge {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  padding: 3px 9px;
-  border-radius: 20px;
-  background: var(--accent-dim);
-  color: var(--accent);
-  white-space: nowrap;
-}
-.cell-badge--theory { background: rgba(102,102,102,0.1); color: var(--muted); }
-.cell-badge--danger { background: rgba(196,92,58,0.12); color: #dd7055; }
-.cell-source { font-size: 10px; color: #9a9288; font-style: italic; text-align: right; }
-.cell-expand-hint {
-  position: absolute;
-  bottom: 12px;
-  right: 14px;
-  font-size: 9.5px;
-  color: rgba(189,0,38,0.25);
-  transition: color .2s;
-  pointer-events: none;
-}
-.cell-card:hover .cell-expand-hint { color: rgba(189,0,38,0.6); }
-.modal-data-src { display: none; }
-
-/* ── DATA SOURCE GRID ────────────────────── */
-.source-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-a.source-cell {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 18px 16px;
-  text-decoration: none;
-  color: var(--text);
-  transition: border-color .2s, background .2s;
-}
-a.source-cell:hover {
-  border-color: rgba(189,0,38,0.35);
-  background: rgba(189,0,38,0.02);
-}
-.src-icon { font-size: 19px; margin-bottom: 10px; }
-.src-name { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
-.src-powers { font-size: 11px; color: var(--muted); line-height: 1.5; flex: 1; }
-.src-arrow { font-size: 10px; color: var(--accent); margin-top: 12px; }
-
-/* ── LIMITATIONS LIST ────────────────────── */
-.limit-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 52px;
-}
-.limit-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--danger);
-  border-radius: 0 8px 8px 0;
-  padding: 16px 20px;
-  display: flex;
-  gap: 16px;
-}
-.limit-num { font-size: 11px; font-weight: 700; color: var(--danger); min-width: 18px; padding-top: 2px; }
-.limit-title { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.limit-desc { font-size: 12.5px; color: var(--muted); line-height: 1.65; }
-.limit-phase {
-  display: inline-block;
-  margin-top: 7px;
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 20px;
-  background: rgba(74,127,193,0.12);
-  color: #2d5f99;
-}
-
-/* ── REPLICATION SECTION ─────────────────── */
-.repro-section { border-top: 1px solid var(--border); padding-top: 52px; }
-.repro-section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.4rem,2.5vw,1.9rem);
-  font-weight: 800;
-  margin-bottom: 28px;
-}
-.repo-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 28px 32px;
-  margin-bottom: 18px;
-}
-.repo-card h3 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 10px; }
-a.repo-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--accent);
-  text-decoration: none;
-  font-family: 'DM Mono', 'Courier New', monospace;
-  font-size: 12.5px;
-  font-weight: 600;
-  border-bottom: 1px solid rgba(189,0,38,0.25);
-  padding-bottom: 1px;
-  margin-bottom: 14px;
-  transition: border-color .2s;
-}
-a.repo-link:hover { border-color: var(--accent); }
-.repo-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
-.repo-oneliner {
-  font-size: 13.5px;
-  color: var(--text);
-  font-style: italic;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.repro-quote {
-  background: #f5f2ee;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px 28px;
-  margin-bottom: 18px;
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  font-style: italic;
-  color: var(--text);
-  line-height: 1.7;
-}
-.ai-card {
-  background: rgba(74,127,193,0.06);
-  border: 1px solid rgba(74,127,193,0.18);
-  border-radius: 10px;
-  padding: 24px 28px;
-}
-.ai-card h3 {
-  font-size: 10px;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: #2d5f99;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-.ai-card p { font-size: 13px; color: var(--muted); line-height: 1.75; }
-
-/* ── MODAL ───────────────────────────────── */
-#modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  background: rgba(26,26,26,0.75);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  padding: 32px 20px;
-  overflow-y: auto;
-}
-#modal-overlay.is-open { display: block; animation: fadeIn .18s ease; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.modal-box {
-  max-width: 740px;
-  margin: 0 auto;
-  background: #ffffff;
-  border: 1px solid #e0d8d0;
-  border-radius: 14px;
-  padding: 40px 44px;
-  position: relative;
-}
-#modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 18px;
-  line-height: 1;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: color .18s, border-color .18s, background .18s;
-  font-family: inherit;
-}
-#modal-close:hover { color: var(--text); border-color: #c8bfb5; background: #f0ece6; }
-
-/* Modal typography — applied to dynamic content */
-.m-eyebrow {
-  font-size: 10px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.m-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 24px;
-  padding-right: 32px;
-}
-.m-section { margin-top: 22px; }
-.m-section-label {
-  font-size: 10px;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.m-p { font-size: 13.5px; color: var(--muted); line-height: 1.75; margin-bottom: 10px; }
-.m-p strong { color: var(--text); font-weight: 600; }
-.m-p em { font-style: italic; }
-.m-formula {
-  background: #f0ece6;
-  border: 1px solid #e0d8d0;
-  border-radius: 8px;
-  padding: 14px 18px;
-  font-family: 'DM Mono', 'Courier New', monospace;
-  font-size: 13px;
-  color: var(--accent);
-  line-height: 1.7;
-  margin: 10px 0;
-}
-.m-note {
-  background: rgba(196,92,58,0.08);
-  border: 1px solid rgba(196,92,58,0.2);
-  border-radius: 7px;
-  padding: 12px 16px;
-  font-size: 12.5px;
-  color: #dd7055;
-  line-height: 1.65;
-  margin-top: 14px;
-}
-.m-caveat {
-  background: rgba(189,0,38,0.04);
-  border: 1px solid rgba(189,0,38,0.15);
-  border-radius: 7px;
-  padding: 12px 16px;
-  font-size: 12.5px;
-  color: var(--accent);
-  line-height: 1.65;
-  margin-top: 14px;
-}
-.m-table-wrap { overflow-x: auto; margin: 12px 0; }
-.m-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.m-table th {
-  background: #f5f2ee;
-  padding: 9px 12px;
-  text-align: left;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-  font-family: 'DM Sans', system-ui, sans-serif;
-}
-.m-table td {
-  padding: 7px 12px;
-  border-bottom: 1px solid #e8e2db;
-  color: var(--muted);
-  vertical-align: middle;
-  font-family: 'DM Mono', 'Courier New', monospace;
-}
-.m-table tr:last-child td { border-bottom: none; }
-.m-table tr:hover td { background: rgba(0,0,0,0.02); }
-.m-table .col-nm { font-family: 'DM Sans', system-ui, sans-serif; color: var(--text); font-weight: 500; font-size: 12px; }
-.t-yes { color: #5dba80 !important; font-weight: 600; }
-.t-no  { color: #aaa09a !important; }
-.t-tbd { color: var(--accent) !important; font-weight: 600; }
-.t-brd { color: #c8a84a !important; }
-.t-flag { color: #dd7055 !important; font-weight: 600; font-style: italic; }
-.t-100 { color: var(--accent) !important; font-weight: 700; }
-.t-75  { color: #c8a84a !important; font-weight: 600; }
-.t-25  { color: var(--muted) !important; }
-.t-10  { color: #a8a099 !important; }
-.t-0   { color: #c0b8b0 !important; }
-.t-pend{ color: #dd7055 !important; font-style: italic; }
-.m-cite {
-  font-size: 12px;
-  color: var(--muted);
-  font-style: italic;
-  line-height: 1.65;
-  margin-bottom: 7px;
-  padding-left: 14px;
-  border-left: 2px solid var(--border);
-}
-/* Intervention matrix */
-.m-matrix {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 12px 0;
-  font-size: 12px;
-}
-.mx-header-row, .mx-row {
-  display: grid;
-  grid-template-columns: 130px 1fr 1fr;
-  border-bottom: 1px solid var(--border);
-}
-.mx-row:last-child { border-bottom: none; }
-.mx-cell {
-  padding: 10px 14px;
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.mx-cell:last-child { border-right: none; }
-.mx-header-row .mx-cell {
-  background: #f5f2ee;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-family: 'DM Sans', system-ui, sans-serif;
-}
-.mx-row-label {
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 600;
-  background: #f5f2ee;
-  font-family: 'DM Sans', system-ui, sans-serif;
-}
-.mx-type { font-size: 11.5px; font-weight: 700; margin-bottom: 3px; }
-.mx-ta { color: var(--type-a); }
-.mx-tb { color: var(--type-b); }
-.mx-tc { color: var(--type-c); }
-.mx-skip { color: #c0b8b0; font-size: 11px; }
-.mx-tdesc { font-size: 10.5px; color: var(--muted); font-family: 'DM Sans', system-ui, sans-serif; }
-
-/* ── RESPONSIVE ──────────────────────────── */
-@media (max-width: 900px) {
-  main { padding: 0 16px 80px; }
-  .page-hero { padding: 40px 16px 28px; }
-  .cell-grid { grid-template-columns: 1fr 1fr; }
-  .source-grid { grid-template-columns: repeat(2, 1fr); }
-  .desc-grid { grid-template-columns: 1fr; }
-  .flow-subs-3 { grid-template-columns: 1fr 1fr; }
-  .modal-box { padding: 28px 22px; }
-}
-@media (max-width: 580px) {
-  .cell-grid { grid-template-columns: 1fr; }
-  .source-grid { grid-template-columns: 1fr 1fr; }
-  .flow-subs-2, .flow-subs-3 { grid-template-columns: 1fr; }
-
-}
-@media (max-width: 400px) {
-  .source-grid { grid-template-columns: 1fr; }
-}
-
-/* ── PRINT ───────────────────────────────── */
-@media print {
-  #modal-overlay { display: none !important; }
-  body { background: white; color: black; font-size: 10pt; }
-  .page-hero { border-color: #ccc; padding: 20pt 0 14pt; }
-  .hero-title { font-size: 26pt; color: black; }
-  .hero-eyebrow, .section-eyebrow { color: #666; }
-  .section + .section { border-color: #ddd; }
-  .section { padding: 28pt 0 18pt; }
-  .cell-grid { display: block; }
-  .cell-card {
-    display: block;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    margin-bottom: 12pt;
-    break-inside: avoid;
-    cursor: default;
-    padding-bottom: 18px;
-  }
-  .cell-name { color: black; }
-  .cell-desc { color: #555; }
-  .cell-badge { background: #eee; color: #555; }
-  .cell-expand-hint { display: none; }
-  .modal-data-src {
-    display: block;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 12pt 14pt;
-    margin-top: 8pt;
-    break-inside: avoid;
-  }
-  .m-eyebrow { color: #888; font-size: 8pt; }
-  .m-title { color: black; font-size: 13pt; margin-bottom: 12pt; }
-  .m-p { color: #444; font-size: 10pt; margin-bottom: 6pt; }
-  .m-section-label { color: #666; font-size: 8pt; }
-  .m-formula { background: #eee; border-color: #ccc; color: black; font-size: 9pt; }
-  .m-note { background: #fff0ec; border-color: #ccc; color: #333; }
-  .m-caveat { background: #fffaec; border-color: #ccc; color: #333; }
-  .m-table th { background: #eee; color: #555; }
-  .m-table td { color: #444; }
-  .source-grid { display: block; }
-  a.source-cell { display: block; margin-bottom: 10pt; border: 1px solid #ddd; background: #f9f9f9; color: black; }
-  .src-name { color: black; }
-  .src-powers { color: #555; }
-  .desc-block { background: #f9f9f9; border: 1px solid #ddd; }
-  .desc-block h3, .repo-card h3 { color: black; }
-  .desc-block p, .repo-desc, .ai-card p { color: #555; }
-  .limit-item { background: #f9f9f9; border-color: #ccc; }
-  .limit-title { color: black; }
-  .limit-desc { color: #555; }
-  .pull-quote { background: #f5f5f5; border-color: #999; }
-  .pull-quote p { color: black; }
-  .repo-card, .repro-quote, .ai-card { background: #f9f9f9; border: 1px solid #ddd; }
-  a.repo-link { color: black; border-color: #999; }
-  .repo-oneliner { color: black; }
-  .ai-card h3 { color: #444; }
-}
-
-/* === TERRAIN OVERRIDES === */
-.hero-eyebrow,
-.section-eyebrow {
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
-}
-.m-table th {
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
-}
-.m-table td {
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
-}
-.m-table tr:nth-child(even) td { background: #f7f4f0; }
-.m-table tr:nth-child(odd) td { background: #ffffff; }
-/* === END TERRAIN OVERRIDES === */
-.terrain-footer { border-top: 1px solid var(--color-border); padding: var(--space-6) 0; }
-.terrain-footer__inner { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); }
-.terrain-footer__copy { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: 0.5px; }
-.terrain-footer__links { display: flex; align-items: center; gap: var(--space-5); list-style: none; padding: 0; margin: 0; }
-.terrain-footer__links a { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-muted); text-decoration: none; }
-.terrain-footer__links a:hover { color: var(--color-text-secondary); text-decoration: none; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Methodology — Terrain SVS v6</title>
+  <link rel="stylesheet" href="terrain.css">
+  <link rel="stylesheet" href="methodology.css">
 </head>
 <body>
 
-<nav class="terrain-nav">
+<!-- ── NAV ── -->
+<nav class="terrain-nav" role="navigation" aria-label="Main navigation">
   <div class="terrain-nav__inner">
     <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
     <ul class="terrain-nav__links">
       <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
       <li><a href="jobs.html">Jobs</a></li>
       <li><a href="education.html">Learn</a></li>
-      <li><a href="methodology.html" class="active">Method</a></li>
-      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub ↗</a></li>
+      <li><a href="methodology.html" aria-current="page">Method</a></li>
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">GitHub ↗</a></li>
     </ul>
-    <button class="terrain-nav__hamburger" aria-label="Toggle menu" onclick="this.closest('.terrain-nav').nextElementSibling.classList.toggle('open')">
+    <button class="terrain-nav__hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
       <span></span><span></span><span></span>
     </button>
   </div>
+  <div class="terrain-nav__drawer" id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
+    <ul>
+      <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
+      <li><a href="jobs.html">Jobs</a></li>
+      <li><a href="education.html">Learn</a></li>
+      <li><a href="methodology.html" aria-current="page">Method</a></li>
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </div>
 </nav>
-<div class="terrain-nav__drawer">
-  <ul>
-    <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
-    <li><a href="jobs.html">Jobs</a></li>
-    <li><a href="education.html">Learn</a></li>
-    <li><a href="methodology.html" class="active">Method</a></li>
-    <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank">GitHub ↗</a></li>
-  </ul>
-</div>
 
-<!-- ── PAGE HERO ─────────────────────────────────────── -->
-<div class="page-hero">
-  <div class="hero-eyebrow">Labor Organizing Strategic Terrain Model</div>
-  <h1 class="hero-title">Methodology</h1>
-  <div class="hero-meta">
-    <span>Version 1.0</span>
-    <span>May 2026</span>
-    <span>Public Documentation</span>
-    <span>3,144 US Counties</span>
-  </div>
-</div>
+<!-- ── HERO ── -->
+<header class="method-hero">
+  <span class="method-hero__eyebrow">Labor Organizing Strategic Terrain Model</span>
+  <h1 class="method-hero__title">Methodology</h1>
+  <p class="method-hero__body">
+    Terrain is a two-layer model covering 3,144 U.S. counties. The first layer scores organizing terrain — which sectors have structural leverage, and where the unorganized workforce is largest. The second layer scores electoral terrain — where that power matters most for presidential, statewide, and congressional races. This page documents the full model: the SVS v6 formula, the organizing opportunity score, electoral sub-scores, intervention type classification, all 42 sectors, data sources, and known limitations. Every number is derivable from public data and reproducible from the open-source pipeline.
+  </p>
+</header>
 
-<div style="max-width:1200px;margin:0 auto;padding:16px 32px 0;">
-  <div style="display:flex;gap:20px;align-items:flex-start;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
-      <span class="progress-dot active"></span>
-      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#bd0026;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Overview</span>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
-      <span class="progress-dot"></span>
-      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Data</span>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
-      <span class="progress-dot"></span>
-      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Scoring</span>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
-      <span class="progress-dot"></span>
-      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Limitations</span>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
-      <span class="progress-dot"></span>
-      <span style="font-family:'IBM Plex Mono','Courier New',monospace;font-size:9px;color:#999;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">AI</span>
-    </div>
-  </div>
-</div>
+<main class="method-main">
 
-<main>
+  <!-- ── 0. MODEL AT A GLANCE ── -->
+  <section class="method-section" aria-labelledby="glance-heading">
+    <span class="section-label">Overview</span>
+    <h2 class="section-title" id="glance-heading">The Model at a Glance</h2>
+    <p class="method-section__intro">Two independent layers — organizing terrain and electoral terrain — scored separately, combined by user goal.</p>
 
-<!-- ──────────────────────────────────────────────────── -->
-<!-- SECTION 1: THE MODEL AT A GLANCE                    -->
-<!-- ──────────────────────────────────────────────────── -->
-<section id="glance" class="section">
-  <div class="section-eyebrow">Section 1</div>
-  <h2 class="section-title">The Model at a Glance</h2>
-  <p class="section-intro">A two-layer model that separates the organizing question from the electoral deployment question — then combines them according to the user's stated goal.</p>
-
-  <!-- Flow diagram -->
-  <div class="flow-wrap" role="img" aria-label="Model flow diagram showing five layers from user goal to composite ranking">
-    <div class="flow-node flow-node--input">
-      <div class="flow-label">Your Goal</div>
-      <div class="flow-formula">Electoral objective — set by the user</div>
-    </div>
-    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
-
-    <div class="flow-node flow-node--org">
-      <div class="flow-label">Organizing Opportunity Score</div>
-      <div class="flow-formula">= Sectoral Value (55%) + Organizing Potential (45%)</div>
-      <div class="flow-subs flow-subs-2">
-        <div class="flow-sub">Sectoral Value Score</div>
-        <div class="flow-sub">Organizing Potential Score</div>
+    <div class="model-flow" role="table" aria-label="Model architecture">
+      <div class="model-flow__step">
+        <div class="model-flow__num">01</div>
+        <div class="model-flow__content">
+          <div class="model-flow__label">User Goal</div>
+          <div class="model-flow__formula">Electoral objective — set by the user</div>
+        </div>
       </div>
-    </div>
-    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
-
-    <div class="flow-node flow-node--interv">
-      <div class="flow-label">Intervention Type (A / B / C)</div>
-      <div class="flow-formula">= f(infrastructure score, political alignment)</div>
-      <div class="flow-subs flow-subs-2">
-        <div class="flow-sub">Infrastructure Score</div>
-        <div class="flow-sub">Political Alignment</div>
+      <div class="model-flow__step model-flow__step--org">
+        <div class="model-flow__num">02</div>
+        <div class="model-flow__content">
+          <div class="model-flow__label">Organizing Opportunity Score (OOS)</div>
+          <div class="model-flow__formula">SVS × 55% + Organizing Potential × 45%</div>
+          <div class="model-flow__subs">
+            <span class="model-flow__sub">County SVS</span>
+            <span class="model-flow__sub">Organizing Potential</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
-
-    <div class="flow-node flow-node--elec">
-      <div class="flow-label">Electoral Sub-Scores (3 independent)</div>
-      <div class="flow-subs flow-subs-3">
-        <div class="flow-sub">Presidential</div>
-        <div class="flow-sub">Statewide</div>
-        <div class="flow-sub">Congressional</div>
+      <div class="model-flow__step">
+        <div class="model-flow__num">03</div>
+        <div class="model-flow__content">
+          <div class="model-flow__label">Intervention Type (A / B / C)</div>
+          <div class="model-flow__formula">f(Infrastructure Score, Political Alignment)</div>
+          <div class="model-flow__subs">
+            <span class="model-flow__sub">Infrastructure Score</span>
+            <span class="model-flow__sub">Political Alignment</span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="flow-connector"><div class="flow-connector-line"></div><div class="flow-connector-arrow"></div></div>
-
-    <div class="flow-node flow-node--output">
-      <div class="flow-label">Composite Ranking</div>
-      <div class="flow-formula">= Opportunity × Electoral weight (goal-dependent)</div>
-    </div>
-  </div>
-
-  <!-- What it does / doesn't do -->
-  <div class="desc-grid">
-    <div class="desc-block">
-      <h3>What this model does</h3>
-      <p>Ranks U.S. counties by strategic terrain for labor organizing, filtered by electoral goal and intervention type. Uses the best available structural data as a prioritization tool — not a replacement for on-the-ground organizer judgment.</p>
-    </div>
-    <div class="desc-block">
-      <h3>What this model doesn't do</h3>
-      <p>It does not measure associational power, organic leader networks, employer-specific vulnerability, or local political dynamics. Those are the domain of organizer judgment. Omitted variables are documented in Section 4.</p>
-    </div>
-  </div>
-
-  <blockquote class="pull-quote">
-    <p>"The model does not pick the strategic goal. The user brings the goal. The model shows the terrain."</p>
-  </blockquote>
-</section>
-
-<!-- ──────────────────────────────────────────────────── -->
-<!-- SECTION 2: SCORING COMPONENTS                       -->
-<!-- ──────────────────────────────────────────────────── -->
-<section id="components" class="section">
-  <div class="section-eyebrow">Section 2</div>
-  <h2 class="section-title">Scoring Components</h2>
-  <p class="section-intro">Every score in the model is documented below. Click any cell for the full specification — formula, data sources, known limitations, and theoretical grounding.</p>
-
-  <div class="cell-grid">
-
-    <!-- CELL 1: Organizing Opportunity Score -->
-    <button class="cell-card" data-modal="1" aria-haspopup="dialog">
-      <span class="cell-icon">🎯</span>
-      <div class="cell-name">Organizing Opportunity Score</div>
-      <div class="cell-desc">The core question: how favorable is this county for building worker power?</div>
-      <div class="cell-footer">
-        <span class="cell-badge">Primary output</span>
-        <span class="cell-source">BLS QCEW · DOL LM-2</span>
+      <div class="model-flow__step">
+        <div class="model-flow__num">04</div>
+        <div class="model-flow__content">
+          <div class="model-flow__label">Electoral Sub-Scores</div>
+          <div class="model-flow__formula">3 independent dimensions</div>
+          <div class="model-flow__subs">
+            <span class="model-flow__sub">Presidential</span>
+            <span class="model-flow__sub">Statewide</span>
+            <span class="model-flow__sub">Congressional</span>
+          </div>
+        </div>
       </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-1">
-      <div class="m-eyebrow">Scoring Component 1</div>
-      <div class="m-title">Organizing Opportunity Score</div>
-      <div class="m-section">
-        <div class="m-section-label">Formula</div>
-        <div class="m-formula">OOS = (Sectoral Value Score × 0.55) + (Organizing Potential Score × 0.45)</div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Plain Language</div>
-        <p class="m-p">The Organizing Opportunity Score is the model's primary output for a county's organizing terrain. A score of 100 means maximum strategic value — a large, strategically concentrated workforce that is substantially unorganized. A score near zero means little structural leverage and little unorganized workforce to build from.</p>
-        <p class="m-p"><strong>Range:</strong> 0–100. Scores are scaled using an absolute benchmark, not relative to other counties, so they are stable across filtered views.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">What is intentionally excluded</div>
-        <p class="m-p">Electoral scores and the Infrastructure Score are <em>not</em> inputs to the Organizing Opportunity Score. This is a deliberate design choice: the organizing question (where can we build worker power?) must be answered independently of the electoral question (where does that power matter most?). Combining them would obscure both answers.</p>
-        <p class="m-p">The Composite Ranking combines the OOS with electoral sub-scores only after the user specifies a goal. Infrastructure Score is kept as a reference dimension that drives Intervention Type classification but does not inflate the organizing score.</p>
+      <div class="model-flow__step">
+        <div class="model-flow__num">05</div>
+        <div class="model-flow__content">
+          <div class="model-flow__label">Composite Ranking</div>
+          <div class="model-flow__formula">OOS × Electoral weight (goal-dependent)</div>
+        </div>
       </div>
     </div>
 
-    <!-- CELL 2: Sectoral Value Score (County) -->
-    <button class="cell-card" data-modal="2" aria-haspopup="dialog">
-      <span class="cell-icon">🏭</span>
-      <div class="cell-name">Sectoral Value Score (County)</div>
-      <div class="cell-desc">Does this county have strategically valuable workers — and enough of them?</div>
-      <div class="cell-footer">
-        <span class="cell-badge">55% of OOS</span>
-        <span class="cell-source">BLS QCEW</span>
+    <div class="does-grid">
+      <div class="does-block does-block--does">
+        <div class="does-block__heading">What it does</div>
+        <ul>
+          <li>Ranks 3,144 counties by organizing terrain</li>
+          <li>Scores electoral value across 3 race types</li>
+          <li>Classifies counties by intervention type (A/B/C)</li>
+          <li>Surfaces sector leverage at county level</li>
+        </ul>
       </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-2">
-      <div class="m-eyebrow">Scoring Component 2</div>
-      <div class="m-title">Sectoral Value Score (County-Level)</div>
-      <div class="m-section">
-        <div class="m-section-label">Formula</div>
-        <div class="m-formula">County SVS = Σ (sector_SVS × county_employment_in_sector)<br>→ scaled to 0–100 using absolute benchmark</div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Plain Language</div>
-        <p class="m-p">A county scores high on this dimension only if it has <strong>both</strong> a strategically valuable sector <strong>and</strong> a significant workforce in it. The two factors multiply. A county full of retail workers scores low even if it sits in a swing state. A county with a single large hospital serving a rural region scores high.</p>
-        <p class="m-p"><strong>Scaling approach:</strong> An absolute benchmark (the theoretical maximum weighted employment score across all sectors) anchors the scale. This means scores are comparable across counties and across filtered views — a 75 in Pennsylvania means the same as a 75 in Texas.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Known Limitation</div>
-        <div class="m-note">⚠️ Public sector employment is <strong>understated</strong> in this score. The County Business Patterns dataset (CBP), from which employment figures derive, excludes government employees by design. Counties with large government workforces — DC, state capitals, county seats — will show lower Sectoral Value Scores than their actual structural importance warrants. This is a confirmed data gap, not a model error. BLS QCEW data partially compensates but does not fully resolve it.</div>
+      <div class="does-block does-block--doesnt">
+        <div class="does-block__heading">What it doesn't do</div>
+        <ul>
+          <li>Measure associational or organic leader networks</li>
+          <li>Assess employer-specific vulnerability</li>
+          <li>Replace on-the-ground organizer judgment</li>
+          <li>Predict campaign outcomes</li>
+        </ul>
       </div>
     </div>
+  </section>
 
-    <!-- CELL 3: Strategic Value Score (Sector) -->
-    <button class="cell-card" data-modal="3" aria-haspopup="dialog">
-      <span class="cell-icon">⚡</span>
-      <div class="cell-name">Strategic Value Score (Sector)</div>
-      <div class="cell-desc">How much structural leverage does this sector have? Hospitals score 100. Retail scores 10.</div>
-      <div class="cell-footer">
-        <span class="cell-badge">Feeds into County SVS</span>
-        <span class="cell-source">NAICS · Labor literature</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-3">
-      <div class="m-eyebrow">Scoring Component 3</div>
-      <div class="m-title">Strategic Value Score (Sector-Level)</div>
-      <div class="m-section">
-        <div class="m-section-label">Boolean Rubric</div>
-        <div class="m-formula">Chokepoint Potential:   25 pts<br>Crisis-Creating:        20 pts<br>McAlevey Priority:     20 pts<br>Community-Facing:      15 pts<br>Non-Offshoreable:      10 pts<br>──────────────────────────<br>Base max:              90 pts (capped at 100)<br>Multiplier: ×1.15 if Chokepoint=YES AND Community-Facing=YES</div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Sector Comparison Table</div>
-        <div class="m-table-wrap">
-          <table class="m-table">
+  <!-- ── 1. TWO THEORIES OF CHANGE ── -->
+  <section class="method-section" aria-labelledby="theories-heading">
+    <span class="section-label">Foundation</span>
+    <h2 class="section-title" id="theories-heading">Two Theories of Change</h2>
+    <p class="method-section__intro">Both theories are correct about different things. SVS scores them independently and rewards sectors where they intersect.</p>
+
+    <div class="card-grid-2">
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Whole-Worker Organizing</div>
+            <span class="card-meta">McAlevey · Community Embeddedness</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            Whole-worker organizing, developed by Jane McAlevey from her experience in healthcare and
+            public sector campaigns, holds that durable workplace power requires workers to be embedded
+            in community relationships — churches, schools, neighborhood institutions — that extend
+            beyond the job site. A strike only wins if the community supports it. A contract only holds
+            if the workers who signed it have the density and trust to enforce it.
+          </p>
+          <p>
+            Sectors where workers are already embedded in community life — hospitals, schools, public
+            transit — have structural advantages that sectors without community embeddedness cannot
+            replicate by strategy alone. The community knows who these workers are. When they strike,
+            the community feels it immediately, and often sides with them.
+          </p>
+          <p>
+            SVS accommodates this theory through two variables: <strong>Community Crisis-Creating
+            Reach</strong> (can a strike disrupt community life?) and <strong>Community-Facing
+            Reach</strong> (are workers embedded in community relationships through their work?). The
+            Whole-Worker Bonus rewards sectors where both are present simultaneously, capturing the
+            interaction effect that the additive formula cannot.
+          </p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Capital Disruption</div>
+            <span class="card-meta">Silver · Marketplace Power</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            Capital disruption theory holds that workers' power derives primarily from their ability
+            to interrupt capital accumulation — to shut down the flows of goods, services, and
+            infrastructure that keep the economy running at scale. Ports can strand billions in
+            cargo. Rail can halt supply chains across multiple industries. Energy upstream can
+            threaten fuel supplies for entire regions.
+          </p>
+          <p>
+            These sectors can create crises not just for a single employer but for the broader
+            capitalist system. That leverage — what Beverly Silver calls "marketplace power" — is
+            qualitatively different from the leverage of a retail worker whose strike inconveniences
+            one store's customers. The employer's ability to hold out is constrained by pressure from
+            other capital interests who depend on the disrupted sector.
+          </p>
+          <p>
+            SVS accommodates this theory through <strong>Capital Crisis-Creating Reach</strong>
+            (how far does a strike disrupt capital's ability to function?) and the
+            <strong>Dual-Crisis Bonus</strong>, which rewards sectors where capital disruption and
+            community crisis leverage are both present — the most powerful organizing terrain of all.
+          </p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ── 2. ORGANIZING SCORES ── -->
+  <section class="method-section" aria-labelledby="oos-heading">
+    <span class="section-label">Layer 1 — Organizing</span>
+    <h2 class="section-title" id="oos-heading">The Organizing Opportunity Score</h2>
+    <p class="method-section__intro">OOS = SVS × 55% + Organizing Potential × 45%. Quality of workforce multiplied by quantity of unorganized opportunity.</p>
+
+    <div class="card-grid-2">
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">County Sectoral Value Score</div>
+            <span class="card-meta">55% of OOS · BLS QCEW</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <h4>Formula</h4>
+          <p style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-accent);background:var(--color-bg-subtle);border:1px solid var(--color-border);border-radius:4px;padding:var(--space-3) var(--space-4);line-height:1.7;">
+            County SVS = Σ (sector_SVS × county_employment_in_sector)<br>→ scaled to 0–100 using absolute benchmark
+          </p>
+          <p>A county scores high only if it has <strong>both</strong> a strategically valuable sector <strong>and</strong> a significant workforce in it. The two factors multiply. A county full of retail workers scores low even if it sits in a swing state. A county with a single large hospital serving a rural region scores high.</p>
+          <p>Scoring uses an absolute benchmark — the theoretical maximum weighted employment score across all sectors — so a 75 in Pennsylvania means the same as a 75 in Texas. Scores are stable across filtered views.</p>
+          <h4>Known Limitation</h4>
+          <p>Public sector employment is understated. The County Business Patterns dataset (CBP) excludes government employees by design. Counties with large government workforces — DC, state capitals, county seats — show lower Sectoral Value Scores than their actual structural importance warrants. BLS QCEW data partially compensates. See the sector SVS section for the v6 formula that feeds this calculation.</p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Organizing Potential Score</div>
+            <span class="card-meta">45% of OOS · DOL LM-2</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <h4>Calculation</h4>
+          <p style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-accent);background:var(--color-bg-subtle);border:1px solid var(--color-border);border-radius:4px;padding:var(--space-3) var(--space-4);line-height:1.7;">
+            Unorganized workforce = Total employment − Estimated union members<br>→ scaled by county employment share of national total<br>→ normalized to 0–100
+          </p>
+          <p>The OPS answers: how much untapped workforce is here to organize? It is a measure of <em>quantity</em> of opportunity, not quality. Quality is captured by the SVS. A county with a massive unorganized workforce scores high regardless of sector composition — organizing potential is a prerequisite for any strategy, even if the sectoral terrain is only moderate.</p>
+          <p>Union membership data derives from DOL LM-2 filings. Approximately 2,192 union locals are unresolvable — records with PO boxes, international addresses, or addresses that cannot be geocoded to a county FIPS. This represents roughly 20% of all LM-2 filers by count. Union member counts in every county are therefore <strong>floors, not ceilings</strong>. The model treats this as a confirmed permanent data gap, documented explicitly in the Limitations section.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ── 3. THE FOUR VARIABLES ── -->
+  <section class="method-section" aria-labelledby="variables-heading">
+    <span class="section-label">The Formula</span>
+    <h2 class="section-title" id="variables-heading">The Four Variables</h2>
+    <p class="method-section__intro">Four independent variables, summed to derive SVS. Base max: 70 pts. With both bonuses: 80 pts.</p>
+
+    <div class="card-grid-2x2">
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Capital Crisis-Creating Reach</div>
+            <span class="card-meta">0–25 pts · Cap-Crisis Reach</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            This variable measures the geographic and economic scale at which a work stoppage in
+            this sector would threaten capital accumulation — not just one employer's profits, but
+            the functioning of supply chains, infrastructure networks, or financial systems that
+            other capitalists depend on.
+          </p>
+          <table class="scale-table" aria-label="Capital Crisis Reach point scale">
             <thead>
               <tr>
-                <th class="col-nm">Sector</th>
-                <th>Chokepoint</th>
-                <th>Crisis</th>
-                <th>McAlevey</th>
-                <th>Community</th>
-                <th>Non-off.</th>
-                <th>SVS</th>
+                <th scope="col">Level</th>
+                <th scope="col" class="col-pts">Points</th>
+                <th scope="col">Definition</th>
+                <th scope="col">Sector examples</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td class="col-nm">Hospitals</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-100">100</td></tr>
-              <tr><td class="col-nm">K-12 Education</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-100">100</td></tr>
-              <tr><td class="col-nm">Public Admin – Local</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-100">100</td></tr>
-              <tr><td class="col-nm">Ports / Maritime</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-75">75</td></tr>
-              <tr><td class="col-nm">Trucking</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-75">75</td></tr>
-              <tr><td class="col-nm">Warehousing</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-75">75</td></tr>
-              <tr><td class="col-nm">Utilities</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-tbd">TBD</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-pend">~55 (pending)</td></tr>
-              <tr><td class="col-nm">Public Admin – State</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-tbd">TBD</td><td class="t-brd">BORDERLINE</td><td class="t-yes">YES</td><td class="t-flag">flagged</td></tr>
-              <tr><td class="col-nm">Higher Education</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-25">25</td></tr>
-              <tr><td class="col-nm">Manufacturing – Durable</td><td class="t-yes">YES</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-25">25</td></tr>
-              <tr><td class="col-nm">Social Assistance</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-yes">YES</td><td class="t-25">25</td></tr>
-              <tr><td class="col-nm">Public Admin – Federal</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Manufacturing – Non-durable</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Construction / Building Trades</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Retail</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Hospitality</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Healthcare – Ambulatory</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Other Services</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-yes">YES</td><td class="t-10">10</td></tr>
-              <tr><td class="col-nm">Financial Services</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-0">0</td></tr>
-              <tr><td class="col-nm">Tech / Information</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-no">NO</td><td class="t-0">0</td></tr>
+              <tr>
+                <td class="col-label">None</td>
+                <td class="col-pts">0</td>
+                <td>A strike creates no meaningful capital disruption beyond the immediate employer.</td>
+                <td>Physician offices (03c), Social Services (11), Public Libraries (17), Hospitals (01)</td>
+              </tr>
+              <tr>
+                <td class="col-label">Local</td>
+                <td class="col-pts">10</td>
+                <td>A strike disrupts a local market or regional supply chain node.</td>
+                <td>Trucking General (07a), Construction (24), Retail (25), Warehousing (08)</td>
+              </tr>
+              <tr>
+                <td class="col-label">State</td>
+                <td class="col-pts">15</td>
+                <td>A strike disrupts state-level infrastructure, markets, or financial systems.</td>
+                <td>Finance and Banking (31), Public Utilities (15), Rail Passenger (09b)</td>
+              </tr>
+              <tr>
+                <td class="col-label">National</td>
+                <td class="col-pts">25</td>
+                <td>A strike creates a national crisis — supply chains, communications infrastructure, or critical logistics networks are threatened.</td>
+                <td>Ports (06), Rail Freight (09a), Air (10), Telecom (30), Energy Upstream (28), Couriers UPS (07b)</td>
+              </tr>
             </tbody>
           </table>
+          <p>
+            Note: Hospitals score 0 on capital crisis reach. A hospital strike is devastating for
+            the community, not for capital accumulation. That community impact is captured separately
+            by Community Crisis-Creating Reach.
+          </p>
         </div>
-        <div class="m-note">⚠️ <strong>Utilities</strong> and <strong>Public Admin – State</strong> are flagged for review. Values shown are provisional and subject to revision in Phase 2. Organizability rubric scores are also flagged as draft — they require deeper theoretical development before being incorporated.</div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Coding Method</div>
-        <p class="m-p">Boolean fields were coded manually against NAICS sector definitions and peer-reviewed labor literature. Each coding decision is documented in the project Decisions Log. The table above is the most directly replicable artifact in the model — any researcher can verify or contest individual codings against the literature.</p>
-      </div>
-    </div>
+      </details>
 
-    <!-- CELL 4: Organizing Potential Score -->
-    <button class="cell-card" data-modal="4" aria-haspopup="dialog">
-      <span class="cell-icon">🌱</span>
-      <div class="cell-name">Organizing Potential Score</div>
-      <div class="cell-desc">How much unorganized workforce exists here, scaled by county size?</div>
-      <div class="cell-footer">
-        <span class="cell-badge">45% of OOS</span>
-        <span class="cell-source">BLS QCEW · DOL LM-2</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-4">
-      <div class="m-eyebrow">Scoring Component 4</div>
-      <div class="m-title">Organizing Potential Score</div>
-      <div class="m-section">
-        <div class="m-section-label">Calculation</div>
-        <div class="m-formula">Unorganized workforce = Total employment − Estimated union members<br>→ scaled by county employment share of national total<br>→ normalized to 0–100</div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Plain Language</div>
-        <p class="m-p">The Organizing Potential Score answers the question: how much untapped workforce is here to organize? It is a measure of <em>quantity of opportunity</em>, not quality. Quality is captured by the Sectoral Value Score. The two dimensions together form the Organizing Opportunity Score.</p>
-        <p class="m-p">A county with a massive unorganized workforce scores high regardless of sector composition. This is intentional: organizing potential is a prerequisite for any strategy, even if the sectoral terrain is only moderate.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Known Data Gap</div>
-        <div class="m-note">⚠️ Union membership data from DOL LM-2 filings has approximately <strong>2,192 unresolvable union locals</strong> — records with PO boxes, international addresses, U.S. territories, or addresses that cannot be geocoded to a county FIPS. These represent roughly <strong>20% of all LM-2 filers</strong> by count. This means the estimated union member count for any county is a floor, not a ceiling. The unresolvable records are a confirmed permanent exclusion — not a data error. The model treats this as a known limitation and documents it explicitly.</div>
-      </div>
-    </div>
-
-    <!-- CELL 5: Presidential Sub-score -->
-    <button class="cell-card" data-modal="5" aria-haspopup="dialog">
-      <span class="cell-icon">🗳️</span>
-      <div class="cell-name">Presidential Sub-score</div>
-      <div class="cell-desc">How much does organizing in this county matter for presidential electoral math?</div>
-      <div class="cell-footer">
-        <span class="cell-badge">Goal: Presidential Battlegrounds</span>
-        <span class="cell-source">MIT Election Lab</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-5">
-      <div class="m-eyebrow">Scoring Component 5</div>
-      <div class="m-title">Presidential Sub-score</div>
-      <div class="m-section">
-        <div class="m-section-label">Formula</div>
-        <div class="m-formula">Presidential Sub-score = Swing State Weight + f(county 2024 margin)</div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Swing State Weights</div>
-        <div class="m-table-wrap">
-          <table class="m-table">
-            <thead><tr><th>State(s)</th><th>Weight</th><th>Rationale</th></tr></thead>
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Community Crisis-Creating Reach</div>
+            <span class="card-meta">0–25 pts · Comm-Crisis Reach</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            This variable measures how far a work stoppage would disrupt the daily life of
+            communities — not capital, but people. Sectors that provide essential social
+            infrastructure (healthcare, education, transit, sanitation) score high because their
+            absence is immediately felt by the public, creating political pressure on elected
+            officials and employers that pure economic disruption cannot.
+          </p>
+          <table class="scale-table" aria-label="Community Crisis Reach point scale">
+            <thead>
+              <tr>
+                <th scope="col">Level</th>
+                <th scope="col" class="col-pts">Points</th>
+                <th scope="col">Definition</th>
+                <th scope="col">Sector examples</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td class="col-nm">Pennsylvania, Wisconsin</td><td class="t-100">100</td><td>Highest Electoral College leverage</td></tr>
-              <tr><td class="col-nm">Arizona, Nevada</td><td class="t-75">90</td><td>Competitive Sun Belt, growing labor presence</td></tr>
-              <tr><td class="col-nm">Georgia, Michigan</td><td class="t-75">85</td><td>High-value, genuine toss-ups</td></tr>
-              <tr><td class="col-nm">North Carolina, Texas</td><td class="t-25">70</td><td>Emerging competitiveness, high-upside targets</td></tr>
-              <tr><td class="col-nm">Florida</td><td class="t-10">60</td><td>Competitive in some cycles; labor infrastructure present</td></tr>
-              <tr><td class="col-nm">All others</td><td class="t-10">Scaled</td><td>Proportional to historical margin tightness</td></tr>
+              <tr>
+                <td class="col-label">None</td>
+                <td class="col-pts">0</td>
+                <td>Workers could strike indefinitely without most community members noticing.</td>
+                <td>Finance/Banking (31), Manufacturing General (23), Tech/Information (29), Telecom (30)</td>
+              </tr>
+              <tr>
+                <td class="col-label">Local</td>
+                <td class="col-pts">10</td>
+                <td>A strike creates a local community disruption felt by nearby residents and institutions.</td>
+                <td>Trucking General (07a), Social Services (11), Home Health (03a), Government Administration (19)</td>
+              </tr>
+              <tr>
+                <td class="col-label">State</td>
+                <td class="col-pts">15</td>
+                <td>A strike creates a state-level community crisis — transit stopped, sanitation halted, state health systems disrupted.</td>
+                <td>Nursing Homes (02), Public Transit (14), Rail Freight (09a), Public Sanitation (16), Energy Upstream (28)</td>
+              </tr>
+              <tr>
+                <td class="col-label">National</td>
+                <td class="col-pts">25</td>
+                <td>A strike creates a national community crisis — child education interrupted, hospital care unavailable, or aviation grounded.</td>
+                <td>K-12 Education (04), Hospitals (01), Air (10)</td>
+              </tr>
             </tbody>
           </table>
         </div>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Data Sources</div>
-        <p class="m-p">County-level presidential results from the MIT Election Data + Science Lab, 2020 and 2024 cycles. Both cycles are incorporated to capture trend as well as snapshot.</p>
-        <div class="m-note">⚠️ <strong>28 counties have no election data</strong> — primarily Alaska borough-level units that do not correspond to standard county-level election reporting. These are documented gaps, not data errors. Affected counties are flagged in the dataset.</div>
-      </div>
-    </div>
+      </details>
 
-    <!-- CELL 6: Statewide Sub-score -->
-    <button class="cell-card" data-modal="6" aria-haspopup="dialog">
-      <span class="cell-icon">🏛️</span>
-      <div class="cell-name">Statewide Sub-score</div>
-      <div class="cell-desc">How competitive is this state for statewide races — Senate, governor?</div>
-      <div class="cell-footer">
-        <span class="cell-badge">Goal: Long-Term State Transformation</span>
-        <span class="cell-source">MIT Election Lab · Cook</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-6">
-      <div class="m-eyebrow">Scoring Component 6</div>
-      <div class="m-title">Statewide Sub-score</div>
-      <div class="m-section">
-        <div class="m-section-label">Plain Language</div>
-        <p class="m-p">The Statewide Sub-score measures how much organizing in a county can move the needle on statewide electoral contests. Counties in competitive states score higher; counties in safely blue or safely red states score lower, because the electoral marginal value of organizing there is lower.</p>
-        <p class="m-p"><strong>Data sources:</strong> MIT Election Lab historical results; Cook Political Report competitiveness ratings for Senate and gubernatorial races.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Critical Caveat</div>
-        <div class="m-caveat">⚠️ <strong>The Statewide Sub-score must be interpreted differently depending on the target race.</strong> Presidential, gubernatorial, and Senate races each trigger different intervention logic — they are NOT interchangeable even within the same state. A county that is critical for a Senate race may be irrelevant for a gubernatorial race, depending on the district geography and voter composition. Cycle-specific race targeting is a planned Phase 2 refinement. Users should apply organizer judgment to distinguish race types when using this sub-score.</div>
-      </div>
-    </div>
-
-    <!-- CELL 7: Congressional Sub-score -->
-    <button class="cell-card" data-modal="7" aria-haspopup="dialog">
-      <span class="cell-icon">🏠</span>
-      <div class="cell-name">Congressional Sub-score</div>
-      <div class="cell-desc">How competitive is this county's congressional district?</div>
-      <div class="cell-footer">
-        <span class="cell-badge">Goal: Flip the House</span>
-        <span class="cell-source">MIT Election Lab · Cook</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-7">
-      <div class="m-eyebrow">Scoring Component 7</div>
-      <div class="m-title">Congressional Sub-score</div>
-      <div class="m-section">
-        <div class="m-section-label">Plain Language</div>
-        <p class="m-p">The Congressional Sub-score measures the electoral value of organizing in a county for House of Representatives races. Counties in genuinely competitive districts score highest. The score is derived from Cook Political Report district ratings and MIT Election Lab district-level historical results.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Design Decision: Primary Challenges</div>
-        <p class="m-p">This model treats primary challenges as a legitimate strategic option. Safe Democratic districts with out-of-step incumbents are scored <em>higher</em> than equivalent safe Republican districts — because a primary challenge in a safe Democratic seat has a plausible path to changing representation, whereas organizing in a safe Republican seat has no near-term electoral payoff for a House flip strategy.</p>
-        <p class="m-p">This is an explicit normative choice embedded in the framework. Users who prefer to exclude primary targeting can filter by Intervention Type to focus only on general-election-competitive districts.</p>
-      </div>
-    </div>
-
-    <!-- CELL 8: Infrastructure Score -->
-    <button class="cell-card" data-modal="8" aria-haspopup="dialog">
-      <span class="cell-icon">🏗️</span>
-      <div class="cell-name">Infrastructure Score</div>
-      <div class="cell-desc">How much organized power already exists here? Two sub-dimensions: scale and culture.</div>
-      <div class="cell-footer">
-        <span class="cell-badge cell-badge--theory">Reference score</span>
-        <span class="cell-source">DOL LM-2 · BLS</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-8">
-      <div class="m-eyebrow">Scoring Component 8</div>
-      <div class="m-title">Infrastructure Score</div>
-      <div class="m-section">
-        <div class="m-section-label">Two Sub-Components</div>
-        <p class="m-p"><strong>Organized Scale</strong> — Total union members in the county (raw count, scaled to 0–100). Measures the volume of existing organized power available for political deployment. High scale enables Type B and Type C interventions.</p>
-        <p class="m-p"><strong>Union Culture</strong> — Union members as a percentage of total county workforce (density). Measures how normalized collective action is — whether the social infrastructure for organizing exists culturally. Relevant for Type A interventions: a county where workers have neighbors and family members in unions is culturally primed for new organizing.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Why Infrastructure is Kept Separate</div>
-        <p class="m-p">The Infrastructure Score is deliberately excluded from the Organizing Opportunity Score formula. Union density is a <strong>lagging indicator</strong> — it is an outcome of past organizing strategy, not a predictor of future organizability. Including it would create a circular feedback: high-density counties would appear to be good organizing targets simply because they were organized in the past.</p>
-        <p class="m-p">More importantly: high density can <em>mask</em> a shift toward transactional servicing unionism. A county where unions are large but politically passive and internally undemocratic may score high on infrastructure while being a poor candidate for new power-building. Infrastructure feeds Intervention Type classification; it does not elevate the organizing opportunity signal.</p>
-        <div class="m-note">Do NOT use union density as a proxy for any boolean field in the Strategic Value Score rubric. These are distinct measurements.</div>
-      </div>
-    </div>
-
-    <!-- CELL 9: Intervention Type -->
-    <button class="cell-card" data-modal="9" aria-haspopup="dialog">
-      <span class="cell-icon">🔀</span>
-      <div class="cell-name">Intervention Type (A / B / C)</div>
-      <div class="cell-desc">What kind of strategy does this terrain call for? Not a score — a strategic classifier.</div>
-      <div class="cell-footer">
-        <span class="cell-badge cell-badge--theory">Categorical</span>
-        <span class="cell-source">Infrastructure + Electoral scores</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-9">
-      <div class="m-eyebrow">Scoring Component 9</div>
-      <div class="m-title">Intervention Type (A / B / C)</div>
-      <div class="m-section">
-        <div class="m-section-label">Classification Logic</div>
-        <p class="m-p"><strong>Type A — Build New Power:</strong> Infrastructure score low, opportunity score high. The terrain is favorable for organizing but existing union presence is weak. Strategy: enter the sector or geography and build from scratch. Longest ROI, highest resource intensity.</p>
-        <p class="m-p"><strong>Type B — Wake the Giant:</strong> Infrastructure score high, political alignment low. Unions exist but aren't activated. Strategy: mobilize existing members into durable electoral engagement. Medium ROI, medium resource intensity.</p>
-        <p class="m-p"><strong>Type C — Move Together:</strong> Infrastructure score high, political alignment high. Conditions are aligned. Strategy: coordinate across locals and sectors to maximize voter contact and issue pressure. Shortest deployment timeline, lowest resource intensity per impact unit.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Priority Matrix (Strategic Terrain × Infrastructure)</div>
-        <div class="m-matrix">
-          <div class="mx-header-row">
-            <div class="mx-cell mx-header-row">Opportunity Level</div>
-            <div class="mx-cell mx-header-row">Low Infrastructure</div>
-            <div class="mx-cell mx-header-row">High Infrastructure</div>
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Community-Facing Reach</div>
+            <span class="card-meta">0–15 pts · Comm-Facing Reach</span>
           </div>
-          <div class="mx-row">
-            <div class="mx-cell mx-row-label">High Opportunity</div>
-            <div class="mx-cell"><div class="mx-type mx-ta">Type A ★★★</div><div class="mx-tdesc">Build New Power — flagship campaign terrain</div></div>
-            <div class="mx-cell"><div class="mx-type mx-tc">Type C ★★★</div><div class="mx-tdesc">Move Together — ready for immediate deployment</div></div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            This variable measures whether the nature of the work itself creates ongoing community
+            relationships — not just community impact, but community embeddedness. A hospital nurse
+            knows her patients' families. A teacher is embedded in the neighborhood school. A transit
+            worker sees the same commuters every day. These relationships are the raw material of
+            whole-worker organizing: they extend the worker's social network beyond co-workers and
+            into the broader community whose support determines whether a strike holds.
+          </p>
+          <table class="scale-table" aria-label="Community Facing Reach point scale">
+            <thead>
+              <tr>
+                <th scope="col">Level</th>
+                <th scope="col" class="col-pts">Points</th>
+                <th scope="col">Definition</th>
+                <th scope="col">Sector examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-label">None</td>
+                <td class="col-pts">0</td>
+                <td>Workers operate in settings without ongoing community relationships through their work.</td>
+                <td>Ports (06), Air (10), Telecom (30), Manufacturing Auto (22), Rail Freight (09a)</td>
+              </tr>
+              <tr>
+                <td class="col-label">Local</td>
+                <td class="col-pts">5</td>
+                <td>Workers have local community relationships through their work, though not at institutional scale.</td>
+                <td>Home Health (03a), Outpatient Care (03b), Construction (24), Public Sanitation (16)</td>
+              </tr>
+              <tr>
+                <td class="col-label">State</td>
+                <td class="col-pts">10</td>
+                <td>Workers are embedded in state-level community institutions — schools, hospitals, universities, public transit systems are the defining examples.</td>
+                <td>Hospitals (01), K-12 Education (04), Public Universities (05a), Rail Passenger (09b), Public Transit (14)</td>
+              </tr>
+              <tr>
+                <td class="col-label">National</td>
+                <td class="col-pts">15</td>
+                <td>Reserved. No current v6 sector scores national community-facing reach. This tier is available for future sectors with demonstrated national-scale community embeddedness.</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Non-Offshoreable</div>
+            <span class="card-meta">0–5 pts · Non-Off Level</span>
           </div>
-          <div class="mx-row">
-            <div class="mx-cell mx-row-label">Medium Opportunity</div>
-            <div class="mx-cell"><div class="mx-type mx-ta">Type A ★★</div><div class="mx-tdesc">New organizing, longer timeline</div></div>
-            <div class="mx-cell"><div class="mx-type mx-tb">Type B ★★</div><div class="mx-tdesc">Wake the Giant — mobilize existing members</div></div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            Offshorability is a structural constraint on organizing leverage. A sector that can be
+            relocated — or that has already been partially relocated — faces a credible employer
+            threat that undercuts the strike's economic logic. Non-offshoreable work cannot be
+            moved: you cannot offshore a nurse, a garbage collector, a school bus driver, or a port
+            longshoreman. The work must happen where the people are.
+          </p>
+          <table class="scale-table" aria-label="Non-Offshoreable point scale">
+            <thead>
+              <tr>
+                <th scope="col">Level</th>
+                <th scope="col" class="col-pts">Points</th>
+                <th scope="col">Definition</th>
+                <th scope="col">Sector examples</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-label">Offshorable</td>
+                <td class="col-pts">0</td>
+                <td>This work can be substantially moved overseas, or has been. Employer relocation is a credible organizing threat.</td>
+                <td>Tech/Information (29), Manufacturing General (23), Finance/Banking (31)</td>
+              </tr>
+              <tr>
+                <td class="col-label">Partial</td>
+                <td class="col-pts">3</td>
+                <td>Some of this work is geographically anchored; some is portable. Relocation threat is partial, not total.</td>
+                <td>Medical Labs (03d), Manufacturing Auto (22), Aerospace (23b), Energy Upstream (28), Agriculture (32)</td>
+              </tr>
+              <tr>
+                <td class="col-label">Non-offshorable</td>
+                <td class="col-pts">5</td>
+                <td>This work must be done where the people are. Employer relocation threat is not credible.</td>
+                <td>Hospitals (01), K-12 Education (04), Public Transit (14), Ports (06), Construction (24), Food Service (26)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            Non-offshoreable scores 5 points at maximum — a relatively small component of the total
+            SVS — because offshorability is a floor on organizing possibility, not a ceiling on
+            organizing power. A non-offshorable sector with no crisis-creating reach is still a weak
+            organizing target.
+          </p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ── 3. THE TWO BONUSES ── -->
+  <section class="method-section" aria-labelledby="bonuses-heading">
+    <span class="section-label">Interaction Effects</span>
+    <h2 class="section-title" id="bonuses-heading">The Two Bonuses</h2>
+    <p class="method-section__intro">Additive formulas assume independence. These bonuses capture cases where two variables reinforce each other qualitatively.</p>
+
+    <div class="card-grid-2">
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Dual-Crisis Bonus <span style="font-family:var(--font-mono);font-size:var(--text-sm);color:var(--color-accent);">+5</span></div>
+            <span class="card-meta">+5 pts · Interaction Effect</span>
           </div>
-          <div class="mx-row">
-            <div class="mx-cell mx-row-label">Low Opportunity</div>
-            <div class="mx-cell"><div class="mx-skip">— Deprioritize</div></div>
-            <div class="mx-cell"><div class="mx-type mx-tb">Type B ★</div><div class="mx-tdesc">Electoral activation only; no new organizing</div></div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            A sector that can threaten both capital and community simultaneously is qualitatively
+            different from a sector that threatens only one. The Dual-Crisis Bonus captures this.
+          </p>
+          <p>
+            When organizers in a dual-crisis sector strike, they are not making one argument — they
+            are making two simultaneously: to capital ("your supply chain is disrupted"), and to the
+            community ("your essential service is gone"). These arguments reinforce each other and
+            create pressure from multiple directions at once. Employers face economic loss <em>and</em>
+            political pressure from elected officials responding to constituents. That combination is
+            more than the sum of the two pressures separately.
+          </p>
+          <p>
+            Why +5 specifically, and not incorporated into the base scale? Because the interaction is
+            conditional. A sector with cap=3 and comm=0 is powerful but one-dimensional. A sector with
+            cap=3 and comm=2 can fight on two fronts. The bonus makes this distinction explicit without
+            distorting the point values of either variable when the bonus does not apply.
+          </p>
+          <h4>Sectors receiving Dual-Crisis Bonus</h4>
+          <p style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-secondary);">
+            06 Ports · 07a Trucking General · 07d Couriers Other · 09a Rail Freight ·
+            09b Rail Passenger · 10 Air · 15 Public Utilities · 28 Energy Upstream
+          </p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Whole-Worker Bonus <span style="font-family:var(--font-mono);font-size:var(--text-sm);color:var(--color-accent);">+5</span></div>
+            <span class="card-meta">+5 pts · Interaction Effect</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            A sector where workers are embedded in the communities they can disrupt has whole-worker
+            organizing potential that is more powerful than the sum of its components. The bonus
+            captures McAlevey's core insight: community crisis leverage is most powerful when the
+            workers creating the crisis are also members of the community feeling it.
+          </p>
+          <p>
+            The teacher who goes on strike is also the neighbor, the parent, the school board meeting
+            attendee. The hospital nurse knows the families of the patients affected. These
+            relationships are not incidental to organizing — they are the mechanism through which
+            community support is built and sustained. A sector that can create a community crisis but
+            has no community-facing relationships must build those relationships from scratch. A
+            sector where the work itself creates them starts with a structural advantage.
+          </p>
+
+          <div class="worked-example">
+            <span class="worked-example__label">Worked Example — Rail Passenger vs. Rail Freight</span>
+            <div class="worked-example__rows">
+              <div class="worked-example__row">
+                <span class="worked-example__sector">09b Rail Passenger</span>
+                <span class="worked-example__breakdown">15+15+10+5 base + Dual(+5) + WW(+5)</span>
+                <span class="worked-example__svs">SVS 55</span>
+              </div>
+              <div class="worked-example__row">
+                <span class="worked-example__sector">09a Rail Freight</span>
+                <span class="worked-example__breakdown">25+15+0+5 base + Dual(+5)</span>
+                <span class="worked-example__svs">SVS 50</span>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            Rail Freight has higher capital crisis reach (national vs. state) — a freight rail strike
+            halts supply chains across multiple industries. But Rail Passenger workers interact with
+            commuters and travelers daily; they are embedded in community life in a way freight workers
+            are not. Passenger rail scores state-level capital crisis (not national — one city's commuter
+            system does not threaten national capital), but it scores both community crisis and
+            community-facing reach, triggering the Whole-Worker Bonus. The result: Rail Passenger SVS
+            55 ranks above Rail Freight SVS 50 despite lower capital crisis reach, because it combines
+            both theories of change simultaneously.
+          </p>
+          <h4>Sectors receiving Whole-Worker Bonus</h4>
+          <p style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-secondary);">
+            01 Hospitals · 02 Nursing Homes · 03a Home Health · 03b Outpatient Care ·
+            04 K-12 Education · 05a Public Universities · 05b Private Universities ·
+            09b Rail Passenger · 11 Social Services · 11b Childcare ·
+            12 Federal Hospitals &amp; VA · 13 State Public Health ·
+            14 Public Transit · 16 Public Sanitation · 21 Human Services Admin
+          </p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ── 4. THE THREE DISPLAY LENSES ── -->
+  <section class="method-section" aria-labelledby="lenses-heading">
+    <span class="section-label">Navigation</span>
+    <h2 class="section-title" id="lenses-heading">The Three Display Lenses</h2>
+    <p class="method-section__intro">Three sort modes. Same underlying data — different strategic profiles surfaced.</p>
+
+    <div class="card-grid-2x2" style="grid-template-columns:1fr 1fr 1fr;">
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Default</div>
+            <span class="card-meta">Default View</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            The default view answers: which sectors have the highest combined strategic value across
+            all four variables? It does not distinguish between capital-facing and community-facing
+            value — it ranks sectors by total SVS score, with bonuses included.
+          </p>
+          <p>
+            <strong>When to use:</strong> When you want to identify highest-priority sectors for
+            organizing investment without a theory-specific filter, or when you are presenting the
+            model to a general audience and want the most intuitive ranking.
+          </p>
+          <p>
+            Sort key: <code style="font-family:var(--font-mono);font-size:var(--text-xs);">total SVS (descending)</code>
+          </p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Community Lens</div>
+            <span class="card-meta">Community Profile</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            The community lens surfaces sectors with the highest whole-worker organizing potential.
+            It weights the community dimensions of the formula and filters by sectors where the
+            Whole-Worker Bonus applies.
+          </p>
+          <p>
+            <strong>When to use:</strong> When your organizing theory is McAlevey-aligned — you are
+            looking for sectors where community organizing and workplace organizing can reinforce each
+            other, where workers are already embedded in community trust networks, and where a strike
+            would mobilize community support rather than community resentment.
+          </p>
+          <p>
+            Sort key: <code style="font-family:var(--font-mono);font-size:var(--text-xs);">community crisis pts + community facing pts + WW bonus (descending)</code>
+          </p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Capital Lens</div>
+            <span class="card-meta">Capital Profile</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>
+            The capital lens surfaces sectors with the highest economic disruption potential — sectors
+            where collective action can threaten capital at scale. It weights the capital dimension of
+            the formula and surfaces chokepoint infrastructure sectors.
+          </p>
+          <p>
+            <strong>When to use:</strong> When your organizing theory prioritizes chokepoint leverage —
+            you are looking for the sectors where a strike creates maximum economic pressure on capital,
+            regardless of community embeddedness. Useful for industrial union strategy, supply chain
+            disruption analysis, and identifying sectors where employer incentives to settle are driven
+            by capital-side losses rather than community or political pressure.
+          </p>
+          <p>
+            Sort key: <code style="font-family:var(--font-mono);font-size:var(--text-xs);">capital crisis pts + dual bonus (descending)</code>
+          </p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ── 5. ELECTORAL TERRAIN ── -->
+  <section class="method-section" aria-labelledby="electoral-heading">
+    <span class="section-label">Layer 2 — Electoral</span>
+    <h2 class="section-title" id="electoral-heading">Electoral Terrain &amp; Intervention Types</h2>
+    <p class="method-section__intro">Three independent electoral sub-scores. Intervention type classifies what each county's terrain calls for.</p>
+
+    <div class="card-grid-2" style="margin-bottom:var(--space-5);">
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Presidential Sub-score</div>
+            <span class="card-meta">Goal: Presidential · MIT Election Lab</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <h4>Formula</h4>
+          <p>Presidential Sub-score = Swing State Weight + f(county 2024 margin)</p>
+          <h4>Swing State Weights</h4>
+          <table class="swing-table">
+            <thead><tr><th>State(s)</th><th class="col-weight">Weight</th><th>Rationale</th></tr></thead>
+            <tbody>
+              <tr><td>Pennsylvania, Wisconsin</td><td class="col-weight">100</td><td>Highest Electoral College leverage</td></tr>
+              <tr><td>Arizona, Nevada</td><td class="col-weight">90</td><td>Competitive Sun Belt, growing labor presence</td></tr>
+              <tr><td>Georgia, Michigan</td><td class="col-weight">85</td><td>High-value genuine toss-ups</td></tr>
+              <tr><td>North Carolina, Texas</td><td class="col-weight">70</td><td>Emerging competitiveness, high-upside targets</td></tr>
+              <tr><td>Florida</td><td class="col-weight">60</td><td>Competitive in some cycles; labor infrastructure present</td></tr>
+              <tr><td>All others</td><td class="col-weight">Scaled</td><td>Proportional to historical margin tightness</td></tr>
+            </tbody>
+          </table>
+          <p>County-level presidential results from the MIT Election Data + Science Lab, 2020 and 2024 cycles. Both cycles are incorporated to capture trend as well as snapshot. <strong>28 counties have no election data</strong> — primarily Alaska borough-level units that do not correspond to standard county-level reporting. Affected counties are flagged in the dataset.</p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Statewide Sub-score</div>
+            <span class="card-meta">Goal: Senate / Governor · Cook CPR</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>The Statewide Sub-score measures how much organizing in a county can move the needle on statewide electoral contests. Counties in competitive states score higher; counties in safely blue or safely red states score lower, because the electoral marginal value of organizing there is lower for statewide races.</p>
+          <p><strong>Data sources:</strong> MIT Election Lab historical results; Cook Political Report competitiveness ratings for Senate and gubernatorial races.</p>
+          <p><strong>Critical caveat:</strong> The statewide sub-score must be interpreted differently depending on the target race. Presidential, gubernatorial, and Senate races each trigger different intervention logic — they are not interchangeable even within the same state. Cycle-specific race targeting is a planned v7 refinement.</p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Congressional Sub-score</div>
+            <span class="card-meta">Goal: Flip the House · Cook CPR</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p>The Congressional Sub-score measures the electoral value of organizing in a county for House of Representatives races. Counties in genuinely competitive districts score highest. The score derives from Cook Political Report district ratings and MIT Election Lab district-level historical results.</p>
+          <p><strong>Design decision — primary challenges:</strong> This model treats primary challenges as a legitimate strategic option. Safe Democratic districts with out-of-step incumbents are scored higher than equivalent safe Republican districts, because a primary challenge in a safe Democratic seat has a plausible path to changing representation. Users who prefer to exclude primary targeting can filter by Intervention Type to focus only on general-election-competitive districts.</p>
+        </div>
+      </details>
+
+      <details class="card-expandable">
+        <summary>
+          <div>
+            <div class="card-expandable__heading">Infrastructure Score</div>
+            <span class="card-meta">Reference — Not in OOS · DOL LM-2</span>
+          </div>
+          <span class="card-expandable__indicator" aria-hidden="true"></span>
+        </summary>
+        <div class="card-expandable__body">
+          <p><strong>Organized Scale</strong> — Total union members in the county (raw count, scaled 0–100). Measures the volume of existing organized power available for political deployment. High scale enables Type B and Type C interventions.</p>
+          <p><strong>Union Culture</strong> — Union members as a percentage of total county workforce (density). Measures how normalized collective action is — whether the social infrastructure for organizing exists culturally. Relevant for Type A interventions: a county where workers have neighbors and family in unions is culturally primed for new organizing.</p>
+          <p><strong>Why kept separate:</strong> Union density is a lagging indicator — it is an outcome of past organizing strategy, not a predictor of future organizability. Including it in the OOS would create circular feedback: high-density counties would appear to be good organizing targets simply because they were organized in the past. Infrastructure feeds Intervention Type classification; it does not inflate the organizing opportunity signal.</p>
+        </div>
+      </details>
+
+    </div>
+
+    <details class="card-expandable">
+      <summary>
+        <div>
+          <div class="card-expandable__heading">Intervention Type (A / B / C)</div>
+          <span class="card-meta">Strategic Classifier · A / B / C</span>
+        </div>
+        <span class="card-expandable__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="card-expandable__body">
+        <p><strong>Type A — Build New Power:</strong> Infrastructure low, opportunity high. The terrain is favorable but existing union presence is weak. Strategy: enter the sector or geography and build from scratch. Longest ROI, highest resource intensity.</p>
+        <p><strong>Type B — Wake the Giant:</strong> Infrastructure high, political alignment low. Unions exist but aren't activated. Strategy: mobilize existing members into durable electoral engagement. Medium ROI, medium resource intensity.</p>
+        <p><strong>Type C — Move Together:</strong> Infrastructure high, political alignment high. Conditions are aligned. Strategy: coordinate across locals and sectors to maximize voter contact and issue pressure. Shortest deployment timeline, lowest resource intensity per impact unit.</p>
+        <h4>Priority Matrix</h4>
+        <div class="interv-matrix" role="table" aria-label="Intervention type priority matrix">
+          <div class="interv-matrix__header" role="row">
+            <div class="interv-matrix__cell" role="columnheader">Opportunity</div>
+            <div class="interv-matrix__cell" role="columnheader">Low Infrastructure</div>
+            <div class="interv-matrix__cell" role="columnheader">High Infrastructure</div>
+          </div>
+          <div class="interv-matrix__row" role="row">
+            <div class="interv-matrix__cell interv-matrix__row-label" role="rowheader">High</div>
+            <div class="interv-matrix__cell" role="cell"><div class="interv-type interv-type--a">Type A ★★★</div><div class="interv-desc">Build New Power — flagship campaign terrain</div></div>
+            <div class="interv-matrix__cell" role="cell"><div class="interv-type interv-type--c">Type C ★★★</div><div class="interv-desc">Move Together — ready for immediate deployment</div></div>
+          </div>
+          <div class="interv-matrix__row" role="row">
+            <div class="interv-matrix__cell interv-matrix__row-label" role="rowheader">Medium</div>
+            <div class="interv-matrix__cell" role="cell"><div class="interv-type interv-type--a">Type A ★★</div><div class="interv-desc">New organizing, longer timeline</div></div>
+            <div class="interv-matrix__cell" role="cell"><div class="interv-type interv-type--b">Type B ★★</div><div class="interv-desc">Wake the Giant — mobilize existing members</div></div>
+          </div>
+          <div class="interv-matrix__row" role="row">
+            <div class="interv-matrix__cell interv-matrix__row-label" role="rowheader">Low</div>
+            <div class="interv-matrix__cell" role="cell"><div class="interv-skip">— Deprioritize</div></div>
+            <div class="interv-matrix__cell" role="cell"><div class="interv-type interv-type--b">Type B ★</div><div class="interv-desc">Electoral activation only; no new organizing</div></div>
           </div>
         </div>
+        <p>A complete portfolio strategy deploys across all three types, not just the shortest-return quadrant. Type A requires the most resources and produces the longest ROI — 3–7 years to meaningful electoral impact. Type C requires the least marginal investment and can produce results within a single cycle.</p>
       </div>
-      <div class="m-section">
-        <div class="m-section-label">Resource Allocation Logic</div>
-        <p class="m-p">Type A requires the most resources (staff, time, money) and produces the longest ROI — 3–7 years to meaningful electoral impact. Type C requires the least marginal investment and can produce electoral results within a single cycle. Type B sits between: existing infrastructure lowers the cost but political alignment work takes sustained effort. A complete portfolio strategy deploys across all three types, not just the shortest-return quadrant.</p>
-      </div>
-    </div>
+    </details>
 
-    <!-- CELL 10: McAlevey Framework -->
-    <button class="cell-card" data-modal="10" aria-haspopup="dialog">
-      <span class="cell-icon">📖</span>
-      <div class="cell-name">McAlevey Framework</div>
-      <div class="cell-desc">The whole-worker organizing theory grounding this model's sector selection logic.</div>
-      <div class="cell-footer">
-        <span class="cell-badge cell-badge--theory">Theoretical foundation</span>
-        <span class="cell-source">McAlevey (2016, 2020)</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-10">
-      <div class="m-eyebrow">Theoretical Foundation</div>
-      <div class="m-title">McAlevey Framework</div>
-      <div class="m-section">
-        <div class="m-section-label">Theoretical Grounding</div>
-        <p class="m-p">This model is grounded in Jane McAlevey's whole-worker organizing framework. McAlevey argues that only sectors with genuine <em>chokepoint leverage</em> — the ability to create a crisis through collective action — combined with <em>community embeddedness</em> — deep roots in the social fabric beyond the workplace — can build durable political power. Her sector selection argument (organize healthcare and education workers, not gig workers or logistics temps) is operationalized directly in the Strategic Value Score rubric.</p>
-        <p class="m-p">The Boolean fields for Chokepoint Potential, Community-Facing, and McAlevey Priority directly encode her framework. The ×1.15 multiplier for sectors scoring YES on both Chokepoint and Community-Facing reflects her core theoretical claim: the combination is more powerful than either dimension alone.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Key Citations</div>
-        <p class="m-cite">McAlevey, J. (2016). <em>No Shortcuts: Organizing for Power in the New Gilded Age.</em> Oxford University Press.</p>
-        <p class="m-cite">McAlevey, J. (2020). <em>A Collective Bargain: Unions, Organizing, and the Fight for Democracy.</em> Ecco.</p>
-        <p class="m-cite">Silver, B. (2003). <em>Forces of Labor: Workers' Movements and Globalization Since 1870.</em> Cambridge University Press. [Chokepoint theory alignment — Silver's associational/marketplace power distinction maps closely onto McAlevey's leverage framework.]</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">SSI vs. McAlevey Tension</div>
-        <p class="m-p">The <strong>Strategic Sector Initiative (SSI)</strong> — an alternative labor strategy framework — prioritizes manufacturing as the organizing target, arguing that industrial workers have the greatest economic leverage and organizing tradition. McAlevey, by contrast, prioritizes social reproduction sectors (healthcare, education, public sector) as having both structural leverage and the community embeddedness necessary for durable political power.</p>
-        <p class="m-p"><strong>This model sides with McAlevey.</strong> The SVS rubric reflects her sector hierarchy. Users who prefer an SSI framework would need to recode the McAlevey Priority field and upweight the Manufacturing – Durable sector scores. The Decisions Log documents this choice explicitly as a contested theoretical commitment, not a neutral methodological judgment.</p>
-      </div>
-    </div>
+  </section>
 
-    <!-- CELL 11: Two-Actor Negotiating Logic -->
-    <button class="cell-card" data-modal="11" aria-haspopup="dialog">
-      <span class="cell-icon">⚖️</span>
-      <div class="cell-name">Two-Actor Negotiating Logic</div>
-      <div class="cell-desc">Labor negotiates differently with capitalists than with political actors. The electoral sub-scores reflect this distinction.</div>
-      <div class="cell-footer">
-        <span class="cell-badge cell-badge--theory">Theoretical context</span>
-        <span class="cell-source">Walker (2014)</span>
-      </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-11">
-      <div class="m-eyebrow">Theoretical Context</div>
-      <div class="m-title">Two-Actor Negotiating Logic</div>
-      <div class="m-section">
-        <div class="m-section-label">The Core Distinction</div>
-        <p class="m-p">Labor strategy operates across two fundamentally different actor types, each responding to a different logic of pressure:</p>
-        <p class="m-p"><strong>Capitalists</strong> are profit-maximizing actors with a legible cost-benefit calculus. A strike that disrupts production creates real, measurable losses. Conventional labor leverage — the credible threat of economic disruption — applies cleanly here. The Sectoral Value Score's Chokepoint and Crisis-Creating fields operationalize this logic.</p>
-        <p class="m-p"><strong>Political actors</strong> respond to electoral, ideological, and reputational incentives. They can be ideologically immovable in ways that capitalists typically cannot afford to be. Scott Walker and Ron DeSantis are exemplary cases: both accepted enormous economic costs (public sector dysfunction, business community opposition) to pursue ideological anti-labor agendas because their reelection calculus did not depend on material outcomes for workers.</p>
-        <p class="m-p">The electoral sub-scores reflect this distinction. When the goal is political transformation rather than collective bargaining wins, the pressure point shifts from economic disruption to electoral math. The model's two-layer architecture — organizing terrain separate from electoral scoring — encodes this distinction structurally.</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Reference</div>
-        <p class="m-cite">Walker, S. (2014). <em>The Untold Story of How the Koch Brothers Are Reshaping American Politics.</em> [Documentary evidence on ideologically immovable political actors where conventional labor leverage failed to produce expected concessions.]</p>
-      </div>
-    </div>
+  <!-- ── 6. SECTOR SCORING AT A GLANCE ── -->
+  <section class="method-section" aria-labelledby="sectors-heading">
+    <span class="section-label">All 42 Sectors</span>
+    <h2 class="section-title" id="sectors-heading">Sector Scoring — At a Glance</h2>
+    <p class="method-section__intro">All 42 sectors, grouped by industry family. Notation key below. Dual = Cap>0 &amp; Comm>0. WW = Comm>0 &amp; Facing>0.</p>
 
-    <!-- CELL 12: What This Model Cannot Do -->
-    <button class="cell-card" data-modal="12" aria-haspopup="dialog">
-      <span class="cell-icon">⚠️</span>
-      <div class="cell-name">What This Model Cannot Do</div>
-      <div class="cell-desc">The most important cell. The model's claims are bounded. Its blind spots are documented explicitly.</div>
-      <div class="cell-footer">
-        <span class="cell-badge cell-badge--danger">Epistemological limits</span>
-        <span class="cell-source">Decisions Log</span>
+    <!-- HEALTHCARE -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Healthcare</span>
+          <span class="sector-family__count">8 sectors — 01, 02, 03a–d, 12, 13</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">01</td>
+                <td>Hospitals</td>
+                <td class="col-naics">622</td>
+                <td class="col-num">none</td>
+                <td class="col-num">national</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">45</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">02</td>
+                <td>Nursing Homes</td>
+                <td class="col-naics">623</td>
+                <td class="col-num">none</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">35</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">03a</td>
+                <td>Home Health</td>
+                <td class="col-naics">6216</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">25</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">03b</td>
+                <td>Outpatient Care</td>
+                <td class="col-naics">6214</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">25</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">03c</td>
+                <td>Physician / Dentist Offices</td>
+                <td class="col-naics">6211, 6212</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">10</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">03d</td>
+                <td>Medical Labs</td>
+                <td class="col-naics">6215</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">partial</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">13</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">12</td>
+                <td><abbr title="Score reflects current organizing reality. Structural barriers (legal restrictions, workforce composition) limit active leverage below this sector's latent potential.">Federal Hospitals &amp; VA †</abbr></td>
+                <td class="col-naics">6221, 6222</td>
+                <td class="col-num">none</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">35</td>
+                <td class="col-note">†</td>
+              </tr>
+              <tr>
+                <td class="col-id">13</td>
+                <td>State Public Health</td>
+                <td class="col-naics">6222, 6231, 6232</td>
+                <td class="col-num">none</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">35</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Healthcare</span>
+          All healthcare sectors score Non-Offshorable = non-off (2), because healthcare must be delivered where the patient is.
+          Hospital workers (01) score national community crisis because hospitals are crisis infrastructure in any community; they score zero capital crisis because a hospital strike does not threaten supply chains.
+          Ambulatory and office-based care (03c–03d) score lower community crisis because their disruption is local and diffuse, not systemically crisis-creating.
+          Sectors 12 and 13 are government-employed healthcare workers (QCEW source) scored separately from private hospitals (CBP source).
+        </div>
       </div>
-      <span class="cell-expand-hint">click to expand ↗</span>
-    </button>
-    <div class="modal-data-src" id="mdata-12">
-      <div class="m-eyebrow">Epistemological Boundary</div>
-      <div class="m-title">What This Model Cannot Do</div>
-      <div class="m-section">
-        <div class="m-section-label">Structural Blind Spots</div>
-        <p class="m-p">This model operates on structural, publicly available data. It cannot see inside organizations, communities, or workplaces. The following are explicitly outside its scope — they require organizer judgment and on-the-ground intelligence:</p>
-        <p class="m-p"><strong>Not measured:</strong> organic leader networks · associational power · employer-specific vulnerability · local political dynamics · reform caucus presence · recent organizing activity · internal union democracy · worker sentiment</p>
-      </div>
-      <div class="m-section">
-        <div class="m-section-label">Documented Limitations (from Decisions Log)</div>
-        <p class="m-p">1. <strong>Progressive infrastructure / associational power absent.</strong> The model has no signal for DSA chapters, labor councils, interfaith coalitions, or other associational infrastructure. On-the-ground intel fills this gap.</p>
-        <p class="m-p">2. <strong>Public sector employment understated.</strong> CBP excludes government employment. Government-heavy counties (DC, state capitals) have understated sectoral scores. BLS QCEW provides partial correction.</p>
-        <p class="m-p">3. <strong>28 counties missing election data.</strong> Primarily Alaska borough units. Documented, not errors.</p>
-        <p class="m-p">4. <strong>~2,192 unresolvable union locals.</strong> PO boxes, international addresses, territories — approximately 20% of LM-2 filers by count. Confirmed permanent exclusion ceiling. Union member counts in every county are floors, not ceilings.</p>
-        <p class="m-p">5. <strong>Strike history active (2019–present).</strong> Cornell ILR Labor Action Tracker data (2019–2024) is active (2019–present).</p>
-        <p class="m-p">6. <strong>Organizability rubric is draft.</strong> Flagged for deeper theoretical development. The Harris critique — that some organic leaders identified by standard whole-worker methods may be pro-management — is a live validity threat to the McAlevey framework as applied here.</p>
-        <p class="m-p">7. <strong>Statewide sub-score is not race-specific.</strong> Gubernatorial vs. Senate vs. presidential races require different intervention logic. Cycle-specific data is a Phase 2 refinement.</p>
-        <p class="m-p">8. <strong>EMS not yet a separate sector.</strong> Emergency Medical Services are currently folded into Healthcare – Ambulatory (SVS=10). EMS workers have genuine chokepoint leverage and should score SVS=100. Phase 2 addition.</p>
-      </div>
-    </div>
+    </details>
 
-  </div><!-- /cell-grid -->
-</section>
+    <!-- EDUCATION -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Education</span>
+          <span class="sector-family__count">3 sectors — 04, 05a, 05b</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">04</td>
+                <td>K-12 Education</td>
+                <td class="col-naics">6111</td>
+                <td class="col-num">none</td>
+                <td class="col-num">national</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">45</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">05a</td>
+                <td>Public Universities &amp; Community Colleges</td>
+                <td class="col-naics">6112, 6113</td>
+                <td class="col-num">none</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">35</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">05b</td>
+                <td>Private Universities</td>
+                <td class="col-naics">6112, 6113</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">30</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Education</span>
+          K-12 (04) scores national community crisis — no other sector has this level of community saturation. A teachers' strike closes schools, affects every family with children, and creates immediate political pressure at every level of government.
+          Public universities (05a) score state-level community crisis; private universities (05b) score local because their crisis impact is more contained and their political relationships less institutionally embedded.
+          Employment for 04 uses CBP (private schools) + QCEW (public schools); 05a uses QCEW only (own=2,3); 05b uses CBP only (own=5).
+        </div>
+      </div>
+    </details>
 
-<!-- ──────────────────────────────────────────────────── -->
-<!-- SECTION 3: DATA SOURCES                             -->
-<!-- ──────────────────────────────────────────────────── -->
-<section id="sources" class="section">
-  <div class="section-eyebrow">Section 3</div>
-  <h2 class="section-title">Data Sources</h2>
-  <p class="section-intro">All data used in this model is publicly available from government agencies and academic institutions. No proprietary data sources were used. Click any source to visit the original.</p>
+    <!-- LOGISTICS & TRANSPORT -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Logistics &amp; Transport</span>
+          <span class="sector-family__count">9 sectors — 06, 07a–d, 08, 09a, 09b, 10</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">06</td>
+                <td>Ports</td>
+                <td class="col-naics">4883</td>
+                <td class="col-num">national</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">45</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">07a</td>
+                <td>Trucking General</td>
+                <td class="col-naics">4841</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">30</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">07b</td>
+                <td>Couriers UPS</td>
+                <td class="col-naics">4922</td>
+                <td class="col-num">national</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">30</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">07c</td>
+                <td><abbr title="Score reflects this sector's latent strategic potential. Current organizing density and strike capacity are lower than the score implies. See methodology for the v7 latent/active toggle.">Couriers FedEx *</abbr></td>
+                <td class="col-naics">4922</td>
+                <td class="col-num">national</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">30</td>
+                <td class="col-note">*</td>
+              </tr>
+              <tr>
+                <td class="col-id">07d</td>
+                <td>Couriers Other</td>
+                <td class="col-naics">4922</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">30</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">08</td>
+                <td>Warehousing</td>
+                <td class="col-naics">4931</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">09a</td>
+                <td>Rail Freight</td>
+                <td class="col-naics">482111, 482112</td>
+                <td class="col-num">national</td>
+                <td class="col-num">state</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">50</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">09b</td>
+                <td>Rail Passenger</td>
+                <td class="col-naics">482</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">55</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">10</td>
+                <td>Air</td>
+                <td class="col-naics">481</td>
+                <td class="col-num">national</td>
+                <td class="col-num">national</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">60</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Logistics &amp; Transport</span>
+          All logistics sectors score Non-Offshorable = non-off (2) — logistics work must happen where the infrastructure is.
+          Courier sub-sectors (07b/07c/07d) share NAICS 4922 employment but are tagged by hub geography: Jefferson County KY = UPS (07b), Shelby County TN = FedEx (07c), all other counties = Other (07d). UPS hub counties score national capital crisis because Worldport handles half of UPS global volume; FedEx hub counties score the same but carry the * notation. Non-hub courier counties score local reach on both axes.
+          Rail splits by passenger/freight geography: counties with known Amtrak hubs or commuter rail terminals tag to 09b; all others default to 09a.
+        </div>
+      </div>
+    </details>
 
-  <div class="source-grid">
-    <a class="source-cell" href="https://www.bls.gov/cew/" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">📊</span>
-      <div class="src-name">BLS QCEW</div>
-      <div class="src-powers">Bureau of Labor Statistics Quarterly Census of Employment and Wages. Powers county-level employment by sector — the primary input to both the Sectoral Value Score and Organizing Potential Score.</div>
-      <div class="src-arrow">↗ bls.gov/cew</div>
-    </a>
-    <a class="source-cell" href="https://www.dol.gov/agencies/olms/public-disclosure-room" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">🏛️</span>
-      <div class="src-name">DOL LM-2</div>
-      <div class="src-powers">Dept. of Labor OLMS LM-2 Union Financial Disclosure Reports. Powers union local identification, membership counts, and geographic mapping to county FIPS codes.</div>
-      <div class="src-arrow">↗ dol.gov/olms</div>
-    </a>
-    <a class="source-cell" href="https://electionlab.mit.edu/" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">🗳️</span>
-      <div class="src-name">MIT Election Lab</div>
-      <div class="src-powers">MIT Election Data + Science Lab. Powers 2020 and 2024 presidential margins by county, and historical statewide and congressional race results.</div>
-      <div class="src-arrow">↗ electionlab.mit.edu</div>
-    </a>
-    <a class="source-cell" href="https://striketracker.ilr.cornell.edu/" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">🎓</span>
-      <div class="src-name">Cornell ILR</div>
-      <div class="src-powers">Cornell ILR Labor Action Tracker. Strike data 2019–2024. Active (2019–present).</div>
-      <div class="src-arrow">↗ striketracker.ilr.cornell.edu</div>
-    </a>
-    <a class="source-cell" href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">🗺️</span>
-      <div class="src-name">Census Bureau</div>
-      <div class="src-powers">US Census Bureau ZCTA crosswalk, gazetteer files, and County Business Patterns. Powers county FIPS codes, population data, and geographic linkages across datasets.</div>
-      <div class="src-arrow">↗ census.gov</div>
-    </a>
-    <a class="source-cell" href="https://www.cookpolitical.com/" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">📚</span>
-      <div class="src-name">Cook Political Report</div>
-      <div class="src-powers">Cook Political Report district competitiveness ratings. Powers the Congressional Sub-score and informs Statewide Sub-score classification.</div>
-      <div class="src-arrow">↗ cookpolitical.com</div>
-    </a>
-    <a class="source-cell" href="https://www.census.gov/naics/" target="_blank" rel="noopener noreferrer">
-      <span class="src-icon">🔬</span>
-      <div class="src-name">NAICS</div>
-      <div class="src-powers">North American Industry Classification System. Sector definitions and industry codes used to map employment data to the model's 20 strategic sectors.</div>
-      <div class="src-arrow">↗ census.gov/naics</div>
-    </a>
-  </div>
-</section>
+    <!-- SOCIAL SERVICES -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Social Services</span>
+          <span class="sector-family__count">2 sectors — 11, 11b</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">11</td>
+                <td>Social Services</td>
+                <td class="col-naics">6241–6243</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">25</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">11b</td>
+                <td>Childcare</td>
+                <td class="col-naics">6244</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">25</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Social Services</span>
+          Childcare (11b) is carved out from the NAICS 624 aggregate. Employment = NAICS 6244 employment; Social Services (11) employment = 6241+6242+6243 (i.e., 624 total minus 6244).
+          Both sectors score identically on all four variables and both bonuses — the carve-out is for display and organizing specificity, not because the scores differ.
+          Employment source: CBP (private) + QCEW (government-owned social service agencies) for both sectors.
+        </div>
+      </div>
+    </details>
 
-<!-- ──────────────────────────────────────────────────── -->
-<!-- SECTION 4: LIMITATIONS & OPEN SOURCE                -->
-<!-- ──────────────────────────────────────────────────── -->
-<section id="limitations" class="section">
-  <div class="section-eyebrow">Section 4</div>
-  <h2 class="section-title">Limitations &amp; What This Model Cannot Do</h2>
-  <p class="section-intro">Every model has a boundary. This one's boundaries are documented here in full. These are not disclaimers — they are specifications of what organizer judgment must supply.</p>
+    <!-- PUBLIC SECTOR — SERVICES -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Public Sector — Services</span>
+          <span class="sector-family__count">5 sectors — 14, 15, 16, 17, 18</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">14</td>
+                <td>Public Transit</td>
+                <td class="col-naics">485</td>
+                <td class="col-num">none</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">35</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">15</td>
+                <td>Public Utilities</td>
+                <td class="col-naics">221</td>
+                <td class="col-num">state</td>
+                <td class="col-num">state</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">40</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">16</td>
+                <td>Public Sanitation</td>
+                <td class="col-naics">562</td>
+                <td class="col-num">none</td>
+                <td class="col-num">state</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">30</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">17</td>
+                <td>Public Libraries</td>
+                <td class="col-naics">5191</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">10</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">18</td>
+                <td>Parks and Recreation</td>
+                <td class="col-naics">7121</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">10</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Public Sector (Services)</span>
+          All sectors in this family are government-employed workers (QCEW source, own=2,3); none use CBP.
+          Transit (14) and sanitation (16) score state-level community crisis because their disruption is immediately felt by daily commuters and households. Utilities (15) scores state-level on both capital and community crisis — a utility outage is simultaneously a capital disruption and a community crisis.
+          Libraries (17) and parks (18) score zero community crisis: their absence, while a loss, does not create a systemic crisis in the way that transit or sanitation absence does.
+        </div>
+      </div>
+    </details>
 
-  <div class="limit-list">
-    <div class="limit-item">
-      <div class="limit-num">1</div>
-      <div class="limit-body">
-        <div class="limit-title">Progressive infrastructure and associational power — absent from model</div>
-        <div class="limit-desc">The model has no signal for DSA chapters, labor councils, interfaith coalitions, tenant organizations, or other associational infrastructure. These networks are often the difference between a county that looks good on paper and one that is actually ready to organize. On-the-ground intel fills this gap.</div>
+    <!-- PUBLIC SECTOR — ADMIN -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Public Sector — Admin</span>
+          <span class="sector-family__count">3 sectors — 19, 20, 21</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">19</td>
+                <td>Government Administration</td>
+                <td class="col-naics">9211</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">20</td>
+                <td><abbr title="Police union political power operates through electoral capture and party alliance, mechanisms outside this framework's worker-community solidarity scoring. Score undercounts total political influence.">Justice and Police ‡</abbr></td>
+                <td class="col-naics">9221</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note">‡</td>
+              </tr>
+              <tr>
+                <td class="col-id">21</td>
+                <td>Human Services Administration</td>
+                <td class="col-naics">9231</td>
+                <td class="col-num">none</td>
+                <td class="col-num">local</td>
+                <td class="col-num">local</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-svs">25</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Public Sector (Admin)</span>
+          All three sectors are government-employed workers (QCEW source). Community crisis reach is local for all — government administration disruption affects municipal services, not state or national systems.
+          Human Services Administration (21) scores community-facing reach because caseworkers, benefits administrators, and social workers are embedded in client relationships. Government Administration (19) and Justice/Police (20) do not score community-facing because those roles are institutional, not relational in the same sense.
+          Justice/Police (20) carries the ‡ notation — SVS measures worker-community solidarity leverage; police union political influence operates through a different mechanism not captured here.
+        </div>
       </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">2</div>
-      <div class="limit-body">
-        <div class="limit-title">Public sector employment understated</div>
-        <div class="limit-desc">The County Business Patterns dataset excludes government employees by design. Government-heavy counties — DC, state capitals, county seats — will show lower Sectoral Value Scores than their actual structural importance warrants. BLS QCEW provides partial correction but does not fully resolve the gap.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">3</div>
-      <div class="limit-body">
-        <div class="limit-title">28 counties missing election data</div>
-        <div class="limit-desc">Primarily Alaska borough-level units that do not correspond to standard county-level election reporting. These are documented gaps, not data errors. Affected counties are flagged in the dataset with null values for all electoral sub-scores.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">4</div>
-      <div class="limit-body">
-        <div class="limit-title">~2,192 unresolvable union locals (~20% of LM-2 filers)</div>
-        <div class="limit-desc">Records with PO boxes, international addresses, U.S. territories, or addresses that cannot be geocoded to a county FIPS. This is a confirmed permanent exclusion ceiling — union member counts in every county are floors, not ceilings. The model does not attempt to impute or distribute these records.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">5</div>
-      <div class="limit-body">
-        <div class="limit-title">Strike history active (2019–present)</div>
-        <div class="limit-desc">Cornell ILR Labor Action Tracker data (2019–2024) is active (2019–present). Strike history is now incorporated into the organizing history score.</div>
-        <div><span class="limit-phase">Phase 2 addition</span></div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">6</div>
-      <div class="limit-body">
-        <div class="limit-title">Organizability rubric is draft — live validity threat</div>
-        <div class="limit-desc">The organizability sub-rubric (distinct from the full SVS) is flagged for deeper theoretical development. The Harris critique — that some workers identified as organic leaders by standard whole-worker organizing methods may be pro-management — is a live validity threat to the McAlevey framework as operationalized here. This threat is not resolved in Version 1.0.</div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">7</div>
-      <div class="limit-body">
-        <div class="limit-title">Statewide sub-score is not race-specific</div>
-        <div class="limit-desc">Gubernatorial, Senate, and presidential races each trigger different intervention logic, different voter geographies, and different pressure strategies. The current Statewide Sub-score does not distinguish between them. Cycle-specific race targeting is a planned refinement.</div>
-        <div><span class="limit-phase">Phase 2 refinement</span></div>
-      </div>
-    </div>
-    <div class="limit-item">
-      <div class="limit-num">8</div>
-      <div class="limit-body">
-        <div class="limit-title">EMS not yet a separate sector</div>
-        <div class="limit-desc">Emergency Medical Services workers are currently folded into Healthcare – Ambulatory (SVS=10). EMS workers have genuine chokepoint leverage — ambulance work stoppages create immediate public crises — and should score SVS=100 by the model's own rubric. This misclassification understates the strategic value of counties with large EMS workforces.</div>
-        <div><span class="limit-phase">Phase 2 addition</span></div>
-      </div>
-    </div>
-  </div>
+    </details>
 
-  <!-- OPEN SOURCE & REPLICATION -->
-  <div class="repro-section">
-    <h3 class="repro-section-title">Open Source &amp; Replication</h3>
+    <!-- MANUFACTURING -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Manufacturing</span>
+          <span class="sector-family__count">3 sectors — 22, 23, 23b</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">22</td>
+                <td>Manufacturing Auto</td>
+                <td class="col-naics">3361</td>
+                <td class="col-num">national</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">partial</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">28</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">23</td>
+                <td>Manufacturing General</td>
+                <td class="col-naics">31–33 (excl. 3361, 3364)</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">offshorable</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">10</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">23b</td>
+                <td>Manufacturing Aerospace</td>
+                <td class="col-naics">3364</td>
+                <td class="col-num">national</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">partial</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">28</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Manufacturing</span>
+          Auto (22) and Aerospace (23b) are carved out from the NAICS 31–33 aggregate: 3361 = 9.5% of total manufacturing employment, 3364 = 3.5%. Both score national capital crisis — auto supply chains are nationally integrated; aerospace is strategically critical infrastructure. Both score partial offshorability because assembly lines are geographically anchored even if components are offshored.
+          Manufacturing General (23) gets the remainder of 31–33 employment. It scores local capital crisis only and fully offshorable — the general manufacturing workforce is the most exposed to relocation and automation pressure in the model.
+          No manufacturing sector scores community crisis or community-facing reach.
+        </div>
+      </div>
+    </details>
 
-    <div class="repo-card">
-      <h3>GitHub Repository</h3>
-      <a class="repo-link" href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener noreferrer">
-        ↗ github.com/kpsmas123-bit/labor-organizing-model
+    <!-- GOODS & CONSUMER -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Goods &amp; Consumer</span>
+          <span class="sector-family__count">4 sectors — 24, 25, 26, 27</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">24</td>
+                <td>Construction</td>
+                <td class="col-naics">23</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">25</td>
+                <td>Retail</td>
+                <td class="col-naics">44–45</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">26</td>
+                <td>Food Service</td>
+                <td class="col-naics">722</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">27</td>
+                <td>Hotels</td>
+                <td class="col-naics">721</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Goods &amp; Consumer</span>
+          All four sectors are local capital disruptors only — a construction strike stops one project, a retail strike affects one chain's local stores. None creates community crisis at scale, and none scores community-facing reach in the McAlevey sense.
+          All four score non-offshorable: construction, food service, and retail must happen where the customer is. SVS 15 across the board reflects this profile — present but not strategically high-value for organizing.
+        </div>
+      </div>
+    </details>
+
+    <!-- ENERGY & INFRASTRUCTURE -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Energy &amp; Infrastructure</span>
+          <span class="sector-family__count">2 sectors — 28, 30</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">28</td>
+                <td><abbr title="Score reflects this sector's latent strategic potential. Current organizing density and strike capacity are lower than the score implies. See methodology for the v7 latent/active toggle.">Energy Upstream *</abbr></td>
+                <td class="col-naics">211, 212, 213</td>
+                <td class="col-num">national</td>
+                <td class="col-num">state</td>
+                <td class="col-num">none</td>
+                <td class="col-num">partial</td>
+                <td class="col-bonus bonus-yes">+5</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">48</td>
+                <td class="col-note">*</td>
+              </tr>
+              <tr>
+                <td class="col-id">30</td>
+                <td>Telecom</td>
+                <td class="col-naics">517</td>
+                <td class="col-num">national</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">non-off</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">30</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Energy &amp; Infrastructure</span>
+          Telecom (30) is grouped here rather than with Tech/Finance because its capital crisis reach profile (national) matches the infrastructure chokepoint pattern, not the software/finance pattern. A telecom outage is catastrophic for capital at national scale.
+          Energy Upstream (28) scores the Dual-Crisis Bonus — an oil, gas, or mining shutdown threatens capital accumulation nationally and creates state-level community crisis (fuel prices, heating, supply disruption). It scores partial offshorability because extraction is geographically anchored but operational management is increasingly portable.
+          Telecom scores non-offshorable: physical network infrastructure must be maintained locally even as operations are centralized.
+        </div>
+      </div>
+    </details>
+
+    <!-- TECH & FINANCE -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Tech &amp; Finance</span>
+          <span class="sector-family__count">2 sectors — 29, 31</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">29</td>
+                <td>Tech and Information</td>
+                <td class="col-naics">51 (excl. 5191, 517)</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">offshorable</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">10</td>
+                <td class="col-note"></td>
+              </tr>
+              <tr>
+                <td class="col-id">31</td>
+                <td>Finance and Banking</td>
+                <td class="col-naics">52</td>
+                <td class="col-num">state</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">offshorable</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">15</td>
+                <td class="col-note"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Tech &amp; Finance</span>
+          Both sectors score Offshorable (0) — the defining characteristic of this family. Software development, data processing, and financial back-office work are highly portable; the employer relocation threat is credible and has been exercised repeatedly.
+          Tech/Information (29) excludes 5191 (Libraries, counted in sector 17) and 517 (Telecom, counted in sector 30). Finance/Banking (31) scores state-level capital crisis: regional bank failures create state-level financial disruption, but the federal backstop limits national crisis.
+          Neither sector scores community crisis or community-facing reach — these workers are not embedded in the communities they affect.
+        </div>
+      </div>
+    </details>
+
+    <!-- AGRICULTURE -->
+    <details class="sector-family">
+      <summary>
+        <span>
+          <span class="sector-family__name">Agriculture</span>
+          <span class="sector-family__count">1 sector — 32</span>
+        </span>
+        <span class="sector-family__indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="sector-family__content">
+        <div class="sector-table-wrap">
+          <table class="sector-table">
+            <thead>
+              <tr>
+                <th scope="col" class="col-id">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col" class="col-naics">NAICS</th>
+                <th scope="col" class="col-num">Cap-Crisis</th>
+                <th scope="col" class="col-num">Comm-Crisis</th>
+                <th scope="col" class="col-num">Comm-Face</th>
+                <th scope="col" class="col-num">Non-Off</th>
+                <th scope="col" class="col-bonus">Dual</th>
+                <th scope="col" class="col-bonus">WW</th>
+                <th scope="col" class="col-svs">SVS</th>
+                <th scope="col" class="col-note">Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-id">32</td>
+                <td><abbr title="Score reflects current organizing reality. Structural barriers (legal restrictions, workforce composition) limit active leverage below this sector's latent potential.">Agriculture †</abbr></td>
+                <td class="col-naics">11</td>
+                <td class="col-num">local</td>
+                <td class="col-num">none</td>
+                <td class="col-num">none</td>
+                <td class="col-num">partial</td>
+                <td class="col-bonus">—</td>
+                <td class="col-bonus">—</td>
+                <td class="col-svs">13</td>
+                <td class="col-note">†</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="coding-rules">
+          <span class="coding-rules__label">Coding rules — Agriculture</span>
+          Agriculture workers are excluded from NLRA coverage in most jurisdictions, severely limiting the formal organizing tools available. The SVS score reflects the sector's structural characteristics (local capital crisis only, partial offshorability, no community-facing reach), but the † notation flags that the score overstates active leverage given legal barriers to organizing.
+          Employment source: CBP (NAICS 11). Seasonal and migrant workers are underrepresented in CBP data.
+        </div>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- ── 6. NOTATION KEY ── -->
+  <section class="method-section" aria-labelledby="notation-heading">
+    <span class="section-label">Reference</span>
+    <h2 class="section-title" id="notation-heading">Asterisk Notation Key</h2>
+
+    <div class="notation-key" role="list">
+      <div class="notation-key__item" role="listitem">
+        <span class="notation-key__symbol">*</span>
+        <div class="notation-key__body">
+          Score reflects this sector's latent strategic potential. Current organizing density and strike capacity are lower than the score implies. See methodology for the v7 latent/active toggle.
+          <span class="notation-key__sectors">Applies to: 07c Couriers FedEx · 28 Energy Upstream</span>
+        </div>
+      </div>
+      <div class="notation-key__item" role="listitem">
+        <span class="notation-key__symbol">†</span>
+        <div class="notation-key__body">
+          Score reflects current organizing reality. Structural barriers (legal restrictions, workforce composition) limit active leverage below this sector's latent potential.
+          <span class="notation-key__sectors">Applies to: 12 Federal Hospitals &amp; VA · 32 Agriculture</span>
+        </div>
+      </div>
+      <div class="notation-key__item" role="listitem">
+        <span class="notation-key__symbol">‡</span>
+        <div class="notation-key__body">
+          Police union political power operates through electoral capture and party alliance, mechanisms outside this framework's worker-community solidarity scoring. Score undercounts total political influence.
+          <span class="notation-key__sectors">Applies to: 20 Justice and Police</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DATA SOURCES ── -->
+  <section class="method-section" aria-labelledby="sources-heading">
+    <span class="section-label">Data</span>
+    <h2 class="section-title" id="sources-heading">Data Sources</h2>
+    <p class="method-section__intro">All data used in this model is publicly available from government agencies and academic institutions. No proprietary data sources were used.</p>
+
+    <div class="source-grid">
+      <a class="source-card" href="https://www.bls.gov/cew/" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">BLS QCEW</div>
+        <div class="source-card__powers">Bureau of Labor Statistics Quarterly Census of Employment and Wages. Powers county-level employment by sector — the primary input to both the Sectoral Value Score and Organizing Potential Score.</div>
+        <div class="source-card__link">↗ bls.gov/cew</div>
       </a>
-      <p class="repo-desc">The repository contains all pipeline scripts (Tasks 1–9), configuration files, data source documentation, this methodology document, and the full Decisions Log. Every score in this model can be reproduced from public data sources using the pipeline in this repository.</p>
-      <p class="repo-desc">Contents: data ingestion pipelines · sector SVS rubric and coding decisions · county scoring logic · electoral sub-score construction · intervention type classifier · dashboard and gallery source · changelog</p>
-      <p class="repo-oneliner">"Every score in this model can be reproduced from public data sources using the pipeline in this repository."</p>
+      <a class="source-card" href="https://www.dol.gov/agencies/olms/public-disclosure-room" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">DOL LM-2</div>
+        <div class="source-card__powers">Dept. of Labor OLMS LM-2 Union Financial Disclosure Reports. Powers union local identification, membership counts, and geographic mapping to county FIPS codes.</div>
+        <div class="source-card__link">↗ dol.gov/olms</div>
+      </a>
+      <a class="source-card" href="https://electionlab.mit.edu/" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">MIT Election Lab</div>
+        <div class="source-card__powers">MIT Election Data + Science Lab. Powers 2020 and 2024 presidential margins by county, and historical statewide and congressional race results.</div>
+        <div class="source-card__link">↗ electionlab.mit.edu</div>
+      </a>
+      <a class="source-card" href="https://striketracker.ilr.cornell.edu/" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">Cornell ILR</div>
+        <div class="source-card__powers">Cornell ILR Labor Action Tracker. Strike and work stoppage data 2019–present. Powers organizing history signals.</div>
+        <div class="source-card__link">↗ striketracker.ilr.cornell.edu</div>
+      </a>
+      <a class="source-card" href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">Census Bureau</div>
+        <div class="source-card__powers">US Census Bureau County Business Patterns (CBP), ZCTA crosswalk, and gazetteer files. Powers private-sector employment by NAICS code, county FIPS linkages, and population data.</div>
+        <div class="source-card__link">↗ census.gov</div>
+      </a>
+      <a class="source-card" href="https://www.cookpolitical.com/" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">Cook Political Report</div>
+        <div class="source-card__powers">Cook Political Report district competitiveness ratings. Powers the Congressional Sub-score and informs Statewide Sub-score classification.</div>
+        <div class="source-card__link">↗ cookpolitical.com</div>
+      </a>
+      <a class="source-card" href="https://www.census.gov/naics/" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">NAICS</div>
+        <div class="source-card__powers">North American Industry Classification System. Sector definitions and industry codes used to map employment data to the model's 42 strategic sectors.</div>
+        <div class="source-card__link">↗ census.gov/naics</div>
+      </a>
+      <a class="source-card" href="https://www.npr.org/2026/05/02/nx-s1-5806271/2026-midterm-elections-control-senate-race" target="_blank" rel="noopener noreferrer">
+        <div class="source-card__name">NPR — 2026 Senate Races</div>
+        <div class="source-card__powers">NPR analysis of 2026 midterm elections and Senate control. Informs statewide sub-score targeting and competitive race classification.</div>
+        <div class="source-card__link">↗ npr.org</div>
+      </a>
     </div>
+  </section>
 
-    <blockquote class="repro-quote">
-      "This model was built entirely from public government data and peer-reviewed academic frameworks. No proprietary data was used. No results were manually adjusted after scoring. All methodological decisions are documented in the Decisions Log, which is the authoritative source of truth for this project."
+  <!-- ── LIMITATIONS ── -->
+  <section class="method-section" aria-labelledby="limits-heading">
+    <span class="section-label">Boundaries</span>
+    <h2 class="section-title" id="limits-heading">Known Limitations</h2>
+    <p class="method-section__intro">Every model has a boundary. These are not disclaimers — they are specifications of what organizer judgment must supply where the data cannot.</p>
+
+    <div class="limit-list">
+      <div class="limit-item">
+        <div class="limit-item__num">1</div>
+        <div>
+          <div class="limit-item__title">Progressive infrastructure and associational power — absent from model</div>
+          <div class="limit-item__desc">The model has no signal for DSA chapters, labor councils, interfaith coalitions, tenant organizations, or other associational infrastructure. These networks are often the difference between a county that looks good on paper and one that is actually ready to organize. On-the-ground intel fills this gap.</div>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">2</div>
+        <div>
+          <div class="limit-item__title">Public sector employment understated in CBP-derived scores</div>
+          <div class="limit-item__desc">The County Business Patterns dataset excludes government employees by design. Government-heavy counties — DC, state capitals, county seats — show lower Sectoral Value Scores than their actual structural importance warrants. BLS QCEW provides partial correction and is used for all 42 sectors in SVS v6, but the CBP-based private sector counts still reflect this gap.</div>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">3</div>
+        <div>
+          <div class="limit-item__title">28 counties missing election data</div>
+          <div class="limit-item__desc">Primarily Alaska borough-level units that do not correspond to standard county-level election reporting. These are documented gaps, not data errors. Affected counties are flagged in the dataset with null values for all electoral sub-scores.</div>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">4</div>
+        <div>
+          <div class="limit-item__title">~2,192 unresolvable union locals (~20% of LM-2 filers)</div>
+          <div class="limit-item__desc">Records with PO boxes, international addresses, U.S. territories, or addresses that cannot be geocoded to a county FIPS. This is a confirmed permanent exclusion ceiling — union member counts in every county are floors, not ceilings. The model does not attempt to impute or distribute these records.</div>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">5</div>
+        <div>
+          <div class="limit-item__title">Statewide sub-score is not race-specific</div>
+          <div class="limit-item__desc">Gubernatorial, Senate, and presidential races each trigger different intervention logic, different voter geographies, and different pressure strategies. The current Statewide Sub-score does not distinguish between them.</div>
+          <span class="limit-phase">v7 refinement</span>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">6</div>
+        <div>
+          <div class="limit-item__title">Sector latent vs. active capacity not yet separated</div>
+          <div class="limit-item__desc">SVS v6 scores structural leverage. It does not distinguish between sectors with high latent potential and sectors with active organizing capacity. The asterisk notation (*) flags sectors where this gap is most significant. A latent/active toggle is planned for v7.</div>
+          <span class="limit-phase">v7 addition</span>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">7</div>
+        <div>
+          <div class="limit-item__title">Organizability rubric is draft — live validity threat</div>
+          <div class="limit-item__desc">The Harris critique — that some workers identified as organic leaders by standard whole-worker organizing methods may be pro-management — is a live validity threat to the McAlevey framework as operationalized here. This threat is not resolved in v6.</div>
+        </div>
+      </div>
+      <div class="limit-item">
+        <div class="limit-item__num">8</div>
+        <div>
+          <div class="limit-item__title">EMS not yet a separate sector</div>
+          <div class="limit-item__desc">Emergency Medical Services workers are currently folded into the broader ambulatory healthcare sector. EMS workers have genuine chokepoint leverage — ambulance work stoppages create immediate public crises — and should score higher by the model's own rubric. This misclassification understates the strategic value of counties with large EMS workforces.</div>
+          <span class="limit-phase">v7 addition</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. METHODOLOGY NOTE FOR PEER REVIEW ── -->
+  <div class="method-note-block" role="complementary" aria-labelledby="peer-review-heading">
+    <span class="method-note-block__label">For Peer Review</span>
+    <h2 class="method-note-block__title" id="peer-review-heading">Methodology Note</h2>
+
+    <blockquote>
+      "This model was built entirely from public government data and peer-reviewed academic
+      frameworks. No proprietary data was used. No results were manually adjusted after scoring.
+      All methodological decisions are documented in the Decisions Log, which is the authoritative
+      source of truth for this project."
     </blockquote>
 
-    <div class="ai-card">
-      <h3>AI Disclosure</h3>
-      <p>This model was designed and built in collaboration with Claude (Anthropic). Claude was used for pipeline coding, data validation, theoretical literature review, and adversarial testing of model assumptions — including stress-testing the McAlevey framework operationalization, identifying the LM-2 unresolvable records ceiling, and drafting the sector SVS rubric for researcher review. All methodological decisions — sector codings, weighting choices, theoretical commitments, and scope limitations — were made by the human researcher. The role of AI in this project is documented in the GitHub repository.</p>
-    </div>
+    <p>
+      The Strategic Value Score v6 replaces the v1 boolean rubric (Chokepoint Potential /
+      Crisis-Creating / McAlevey Priority / Community-Facing / Non-Offshoreable) with a continuous
+      four-variable formula. The formula is derived from and validated against all 42 sector SVS
+      values: <code style="font-family:var(--font-mono);font-size:var(--text-sm);">SVS = REACH[cap] + REACH[comm] + FACING[facing] + NON_OFF[non_off] + dual_bonus + ww_bonus</code>,
+      where <code style="font-family:var(--font-mono);font-size:var(--text-sm);">REACH = {0:0, 1:10, 2:15, 3:25}</code>,
+      <code style="font-family:var(--font-mono);font-size:var(--text-sm);">FACING = {0:0, 1:5, 2:10, 3:15}</code>,
+      <code style="font-family:var(--font-mono);font-size:var(--text-sm);">NON_OFF = {0:0, 1:3, 2:5}</code>,
+      Dual bonus = +5 if cap &gt; 0 AND comm &gt; 0,
+      WW bonus = +5 if comm &gt; 0 AND facing &gt; 0.
+    </p>
+
+    <p>
+      Boolean fields were coded manually against NAICS sector definitions and peer-reviewed labor
+      literature. Each coding decision is documented in the project Decisions Log. The sector table
+      above is the most directly replicable artifact in the model — any researcher can verify or
+      contest individual codings against the literature.
+    </p>
+
+    <p>
+      <strong>Known data limitations relevant to peer review:</strong> County Business Patterns (CBP)
+      excludes government employment by design. Counties with large public-sector workforces — state
+      capitals, county seats, DC — will show lower county SVS scores than their actual structural
+      importance warrants. BLS QCEW data partially compensates for public sector sectors (14–21) but
+      does not cover private employers. This is a confirmed data gap documented in the pipeline.
+      Emergency Medical Services (EMS) workers are currently folded into Healthcare — Ambulatory
+      (03b, SVS 25); EMS has genuine chokepoint leverage and is a planned Phase 2 sector addition.
+    </p>
+
+    <p>
+      The full pipeline — data ingestion (Tasks 1–9), sector scoring, county scoring, and
+      dashboard source — is open source at
+      <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">github.com/kpsmas123-bit/labor-organizing-model</a>.
+      Every score in this model can be reproduced from public data sources using the pipeline
+      in that repository.
+    </p>
   </div>
-</section>
+
+  <!-- ── 8. ABOUT ── -->
+  <section class="method-section" aria-labelledby="about-heading">
+    <span class="section-label">About</span>
+    <h2 class="section-title" id="about-heading">About This Project</h2>
+    <div class="method-about">
+      <p style="font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text-secondary);line-height:1.75;margin-bottom:var(--space-4);">
+        Terrain was created by <a href="https://www.linkedin.com/in/samkaplanpettus" target="_blank" rel="noopener" style="color:var(--color-text-secondary);">Sam Kaplan Pettus</a>, an independent researcher and political organizer. Sam holds a degree in Political Science from UC Berkeley and built Terrain to surface where labor and political power-building intersect across every U.S. county.
+      </p>
+      <p style="font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text-secondary);line-height:1.75;margin-bottom:var(--space-4);">
+        The project is open to collaboration, peer review, and proposals. If you are a researcher, organizer, or data scientist interested in contributing, reach out via GitHub or email.
+      </p>
+      <p style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted);letter-spacing:0.5px;line-height:2;">
+        <a href="mailto:sam.kp@berkeley.edu" style="color:var(--color-text-muted);text-decoration:underline;">sam.kp@berkeley.edu</a>
+        &nbsp;·&nbsp;
+        <a href="https://www.linkedin.com/in/samkaplanpettus" target="_blank" rel="noopener" style="color:var(--color-text-muted);text-decoration:underline;">LinkedIn ↗</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener" style="color:var(--color-text-muted);text-decoration:underline;">GitHub ↗</a>
+      </p>
+    </div>
+  </section>
 
 </main>
 
-<!-- ── MODAL OVERLAY ──────────────────────────────────── -->
-<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
-  <div class="modal-box" id="modal-box">
-    <button id="modal-close" aria-label="Close">✕</button>
-    <div id="modal-content"></div>
-  </div>
-</div>
-
-<script>
-(function () {
-  const overlay  = document.getElementById('modal-overlay');
-  const content  = document.getElementById('modal-content');
-  const closeBtn = document.getElementById('modal-close');
-  let lastFocus  = null;
-
-  function openModal(id) {
-    const src = document.getElementById('mdata-' + id);
-    if (!src) return;
-    content.innerHTML = src.innerHTML;
-    lastFocus = document.activeElement;
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    closeBtn.focus();
-  }
-
-  function closeModal() {
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-    content.innerHTML = '';
-    if (lastFocus) lastFocus.focus();
-  }
-
-  // Cell clicks
-  document.querySelectorAll('.cell-card').forEach(function (card) {
-    card.addEventListener('click', function () {
-      openModal(card.dataset.modal);
-    });
-    card.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openModal(card.dataset.modal);
-      }
-    });
-  });
-
-  // Close button
-  closeBtn.addEventListener('click', closeModal);
-
-  // Click outside modal box
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay) closeModal();
-  });
-
-  // ESC key
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
-      closeModal();
-    }
-  });
-
-  // Focus trap inside modal
-  overlay.addEventListener('keydown', function (e) {
-    if (!overlay.classList.contains('is-open') || e.key !== 'Tab') return;
-    var focusable = overlay.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    var first = focusable[0];
-    var last  = focusable[focusable.length - 1];
-    if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-    } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
-  });
-
-  // Smooth scroll for nav links
-  document.querySelectorAll('.nav-link[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-      var target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-
-  // Active nav highlight on scroll
-  var sections = document.querySelectorAll('section[id]');
-  var navLinks = document.querySelectorAll('.nav-link[href^="#"]');
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        navLinks.forEach(function (link) {
-          link.style.color = link.getAttribute('href') === '#' + entry.target.id
-            ? 'var(--accent)' : '';
-        });
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-  sections.forEach(function (s) { observer.observe(s); });
-})();
-</script>
-
+<!-- ── FOOTER ── -->
 <footer class="terrain-footer">
   <div class="terrain-footer__inner">
     <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
@@ -1511,5 +2029,26 @@ a.repo-link:hover { border-color: var(--accent); }
     </ul>
   </div>
 </footer>
+
+<script>
+(function () {
+  const btn = document.querySelector('.terrain-nav__hamburger');
+  const drawer = document.querySelector('.terrain-nav__drawer');
+  if (!btn || !drawer) return;
+
+  btn.addEventListener('click', function () {
+    const open = drawer.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!drawer.contains(e.target) && !btn.contains(e.target)) {
+      drawer.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

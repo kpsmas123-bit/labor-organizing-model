@@ -1,0 +1,279 @@
+{
+  "object": "database",
+  "id": "708b403e-4bba-473f-8ebf-84b8d17b5b61",
+  "cover": null,
+  "icon": null,
+  "created_time": "2026-04-26T20:29:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "428a62dd-8756-4f3b-b976-f8e59ef398d5"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "34f70288-8cd1-8188-9c06-00275b026a5e"
+  },
+  "last_edited_time": "2026-04-27T16:46:00.000Z",
+  "title": [
+    {
+      "type": "text",
+      "text": {
+        "content": "SECTORS",
+        "link": null
+      },
+      "annotations": {
+        "bold": false,
+        "italic": false,
+        "strikethrough": false,
+        "underline": false,
+        "code": false,
+        "color": "default"
+      },
+      "plain_text": "SECTORS",
+      "href": null
+    }
+  ],
+  "description": [],
+  "is_inline": false,
+  "properties": {
+    "Chokepoint Potential": {
+      "id": "%3DMGB",
+      "name": "Chokepoint Potential",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Crisis-Creating": {
+      "id": "%3F_ee",
+      "name": "Crisis-Creating",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Sector Type": {
+      "id": "AS%5Dz",
+      "name": "Sector Type",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "e42e2c3e-5494-473f-8e3e-ffe8d4e962b2",
+            "name": "Healthcare",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "8205ebf5-af4a-4c17-bf0b-2bda8ef19b5c",
+            "name": "Education",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "ddcdb8c6-521c-49ce-a645-3ba94d80d40e",
+            "name": "Public",
+            "color": "purple",
+            "description": null
+          },
+          {
+            "id": "0ac1addd-d0a5-4408-a31c-95e62f376bbf",
+            "name": "Logistics",
+            "color": "orange",
+            "description": null
+          },
+          {
+            "id": "1592951c-6675-4a03-857e-726fa34e5abe",
+            "name": "Hospitality",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "4a8e99c6-44ab-48c7-acac-0dd30b69444f",
+            "name": "Manufacturing",
+            "color": "gray",
+            "description": null
+          },
+          {
+            "id": "d2e03c99-ad67-4db6-bd75-560e5b5cb0dc",
+            "name": "Building Trades",
+            "color": "brown",
+            "description": null
+          },
+          {
+            "id": "82dbde67-33cc-4f7d-9ab5-d4eff7152e45",
+            "name": "Retail",
+            "color": "pink",
+            "description": null
+          },
+          {
+            "id": "d6e8e639-b63b-4766-adae-fd53046af09c",
+            "name": "Utilities",
+            "color": "red",
+            "description": null
+          },
+          {
+            "id": "7ecdc979-26f6-4cbe-b99b-0e41fabeb205",
+            "name": "Other",
+            "color": "default",
+            "description": null
+          },
+          {
+            "id": "e1436042-56bb-4b99-8b18-ad75bcd8f540",
+            "name": "Construction",
+            "color": "orange",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Description": {
+      "id": "BOGW",
+      "name": "Description",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Notes": {
+      "id": "J~B%40",
+      "name": "Notes",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "Strategic Value Score": {
+      "id": "RqYF",
+      "name": "Strategic Value Score",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Non-Offshoreable": {
+      "id": "TtjN",
+      "name": "Non-Offshoreable",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Avg Union Density %": {
+      "id": "TuIh",
+      "name": "Avg Union Density %",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "NAICS Code": {
+      "id": "%5Bewi",
+      "name": "NAICS Code",
+      "description": null,
+      "type": "rich_text",
+      "rich_text": {}
+    },
+    "McAlevey Priority": {
+      "id": "eyDf",
+      "name": "McAlevey Priority",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Organizability": {
+      "id": "i%3Dr~",
+      "name": "Organizability",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "43d4c0d1-861b-4e63-b4bf-28775c04ad29",
+            "name": "High",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "271c73c8-eae6-466c-bf17-bb5279f66daa",
+            "name": "Medium",
+            "color": "yellow",
+            "description": null
+          },
+          {
+            "id": "b8b6bc45-f074-4907-900f-218cae33dfe9",
+            "name": "Low",
+            "color": "red",
+            "description": null
+          }
+        ]
+      }
+    },
+    "Employer Type": {
+      "id": "r%7DYe",
+      "name": "Employer Type",
+      "description": null,
+      "type": "select",
+      "select": {
+        "options": [
+          {
+            "id": "a85ac4aa-6ef4-41b6-8162-31bac5e6a9bb",
+            "name": "Private",
+            "color": "blue",
+            "description": null
+          },
+          {
+            "id": "51960d76-6b52-48d0-9911-f2291db711ed",
+            "name": "Public",
+            "color": "green",
+            "description": null
+          },
+          {
+            "id": "fefde789-450f-4c15-ae65-ebab1ef400f4",
+            "name": "Mixed",
+            "color": "yellow",
+            "description": null
+          }
+        ]
+      }
+    },
+    "US Total Employment": {
+      "id": "xSv%3D",
+      "name": "US Total Employment",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Growth Rate 2019-2024": {
+      "id": "%7D%40Q%40",
+      "name": "Growth Rate 2019-2024",
+      "description": null,
+      "type": "number",
+      "number": {
+        "format": "number"
+      }
+    },
+    "Community-Facing": {
+      "id": "%7DKrY",
+      "name": "Community-Facing",
+      "description": null,
+      "type": "checkbox",
+      "checkbox": {}
+    },
+    "Sector Name": {
+      "id": "title",
+      "name": "Sector Name",
+      "description": null,
+      "type": "title",
+      "title": {}
+    }
+  },
+  "parent": {
+    "type": "block_id",
+    "block_id": "34e70288-8cd1-80f7-a884-d95fdcf2f62d"
+  },
+  "url": "https://www.notion.so/708b403e4bba473f8ebf84b8d17b5b61",
+  "public_url": null,
+  "in_trash": false,
+  "archived": false,
+  "request_id": "5db92336-7492-4f63-8274-9b7160b9a166"
+}

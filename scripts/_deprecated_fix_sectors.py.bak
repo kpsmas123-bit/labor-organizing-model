@@ -1,3 +1,5 @@
+# DEPRECATED: Patched v5 sector scores against live Notion. Superseded by v6 naics_sectors.json
+# and calc_score_v6() in task3_sectors.py. Retained for reference only — do not run.
 """
 Re-codes all 20 SECTORS entries with the corrected rubric from the April 27 handoff doc.
 Applies corrected booleans, Organizability, Strategic Value Score, Employer Type, and Notes.
