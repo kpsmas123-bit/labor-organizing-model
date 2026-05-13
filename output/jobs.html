@@ -530,6 +530,12 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 }
 .tp-callout p { font-size: 12px; color: #4A4540; line-height: 1.7; }
 .tp-callout p strong { font-weight: 600; color: #2C2C2C; }
+.tp-callout-source {
+  margin-top: 7px; font-family: var(--font-mono); font-size: 9.5px;
+  color: var(--color-text-muted); letter-spacing: 0.04em;
+}
+.tp-callout-source a { color: var(--color-text-muted); text-decoration: underline; }
+.tp-callout-source a:hover { color: var(--color-text-secondary); }
 
 /* Union type guide */
 .union-type-row {
@@ -2723,11 +2729,26 @@ function updateLookForContent() {
   } else if (state.path === 'staff') {
     blocks.push({
       eyebrow: 'Highest-impact staff roles',
-      text: `The highest-impact staff roles are at unions in McAlevey priority sectors — healthcare workers unions, teachers unions, public sector unions — where your job is to build worker leadership, not substitute for it. McAlevey's critique of staff-driven organizing: <strong>when the staff become the campaign, you've already lost.</strong> Look for roles that put you in direct contact with workers at the worksite.`
+      text: `The highest-impact staff roles are at unions in McAlevey priority sectors — healthcare workers unions, teachers unions, public sector unions — where your job is to build worker leadership, not substitute for it. McAlevey's critique of staff-driven organizing: <strong>when the staff become the campaign, you've already lost.</strong> Look for roles that put you in direct contact with workers at the worksite.`,
+      source: `Source: Jane McAlevey, <em>No Shortcuts: Organizing for Power in the New Gilded Age</em> (Oxford University Press, 2016)`
     });
     blocks.push({
       eyebrow: 'Role types',
       text: `<strong>Organizer roles</strong> involve house calls, one-on-ones, and mapping workplace relationships. <strong>Research roles</strong> build the case for the campaign. <strong>Political director and field roles</strong> run campaigns once power is built. Each is critical at a different stage of organizing. All of them matter.`
+    });
+    blocks.push({
+      eyebrow: 'Questions to ask in your interview',
+      text: `Before accepting a staff role, ask: <strong>What is your staff-to-worker ratio on active campaigns?</strong> Anything above 1:200 is a red flag for deep organizing. <strong>How do you identify and develop internal leaders?</strong> If the answer centers on staff tactics rather than worker leadership, that's telling. <strong>What does a win look like here, and how long does it take?</strong> Sustainable campaigns take 2–4 years; pressure for short cycles pushes toward mobilizing models that don't build lasting power.`,
+      source: `Source: <a href="https://labornotes.org/secrets" target="_blank" rel="noopener">Labor Notes, <em>Secrets of a Successful Organizer</em></a> (2016)`
+    });
+    blocks.push({
+      eyebrow: 'Understanding union density by sector',
+      text: `Union density varies dramatically by sector and state. <strong>Public sector</strong> density nationally is ~33%; <strong>healthcare</strong> ~12%; <strong>education</strong> ~35%; <strong>transportation/warehousing</strong> ~17%. Low-density sectors with high worker counts — logistics, healthcare, retail — represent the largest organizing opportunities. The UC Berkeley Labor Center tracks sector-level density, wage, and organizing data annually.`,
+      source: `Source: <a href="https://laborcenter.berkeley.edu" target="_blank" rel="noopener">UC Berkeley Labor Center</a>; BLS Union Members Summary (2024)`
+    });
+    blocks.push({
+      eyebrow: 'Where to find more listings',
+      text: `<strong><a href="https://unionjobs.com" target="_blank" rel="noopener" style="color:#2C2C2C">unionjobs.com</a></strong> aggregates staff roles across international and local unions. <strong><a href="https://www.jwj.org/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">Jobs with Justice</a></strong> lists roles at worker centers and coalitions. <strong><a href="https://labornotes.org/about/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">Labor Notes</a></strong> occasionally lists openings at labor education and training organizations. For direct sector jobs (hospital, school district, warehouse), we're building dedicated listings — check back.`
     });
   }
 
@@ -2735,6 +2756,7 @@ function updateLookForContent() {
     <div class="tp-callout">
       <div class="tp-callout-eyebrow">${b.eyebrow}</div>
       <p>${b.text}</p>
+      ${b.source ? `<div class="tp-callout-source">${b.source}</div>` : ''}
     </div>
   `).join('');
 }
