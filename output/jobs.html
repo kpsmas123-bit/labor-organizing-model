@@ -3332,7 +3332,7 @@ const EXP_LEVELS = {
 };
 
 // Keywords that mark a role as union staff (non-organizing)
-const STAFF_ROLE_RE = /\b(receptionist|administrative|admin\b|office\s+manager|office\s+assistant|executive\s+assistant|assistant\s+to|communications|comms\b|media\b|digital\s+media|public\s+relations|political\s+action|political\s+staff|research(?:er)?|analyst|data\s+analyst|it\b|information\s+technology|tech\s+support|accountant|accounting|finance|financial|payroll|paralegal|legal\s+assistant|human\s+resources|\bhr\b|membership\s+coordinator|membership\s+rep|benefits|operations\s+manager|operations\s+coordinator|graphic|designer|web\s+developer|database|clerical|bookkeeper|archivist|librarian|translator|interpreter|event\s+coordinator|events?\s+staff|development\s+director|fundrais)\b/;
+const STAFF_ROLE_RE = /\b(receptionist|administrative|admin\b|office\s+manager|office\s+assistant|executive\s+assistant|assistant\s+to|communications|comms\b|media\b|digital\s+media|public\s+relations|political\s+action|political\s+staff|research(?:er)?|analyst|data\s+analyst|it\b|information\s+technology|tech\s+support|accountant|accounting|finance|financial|payroll|paralegal|legal\b|attorney|counsel|legislative|advocate|lobbyist|human\s+resources|\bhr\b|membership\s+rep|benefits|graphic|designer|web\s+developer|database|clerical|bookkeeper|archivist|librarian|translator|interpreter|events?\s+staff|fundrais)\b/;
 
 function getExpLevel(job) {
   const t = (job.title || '').toLowerCase();
