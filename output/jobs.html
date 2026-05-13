@@ -2362,6 +2362,8 @@ function quizFinish() {
   state.radius = quiz.radius;
   state.userLat = quiz.userLat || null;
   state.userLng = quiz.userLng || null;
+  state.city = quiz.city || null;
+  state.cityState = quiz.cityState || null;
   computeAllDistances();
   // Hide wizard and intro, show summary bar + board
   document.getElementById('intake-wizard').style.display = 'none';
@@ -3508,7 +3510,9 @@ function updateTileRow() {
   const locLabel = document.getElementById('qtile-loc-label');
   if (locLabel) {
     if (state.radius > 0) {
-      locLabel.textContent = 'Within ' + state.radius + ' mi';
+      locLabel.textContent = state.city
+        ? state.city + ', ' + state.cityState + ' · ' + state.radius + ' mi'
+        : 'Within ' + state.radius + ' mi';
     } else if (state.location === 'mystate' && state.myState) {
       locLabel.textContent = state.myState;
     } else if (state.location === 'mystate') {
