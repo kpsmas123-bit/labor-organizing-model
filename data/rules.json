@@ -1,0 +1,24 @@
+{
+  "manual": {},
+  "employers": {},
+  "keywords": {
+    "Healthcare": { "boost": [], "penalize": [] },
+    "Education": { "boost": [], "penalize": [] },
+    "Logistics": { "boost": [], "penalize": [] },
+    "Public Sector": { "boost": [], "penalize": [] },
+    "Building Trades": { "boost": [], "penalize": [] },
+    "Manufacturing": { "boost": [], "penalize": [] }
+  },
+  "role_keywords": {
+    "Internal organizer": [],
+    "External organizer": [],
+    "Communications": [],
+    "Legal": [],
+    "Research": [],
+    "Political/electoral": [],
+    "Admin/operations": [],
+    "Apprenticeship": [],
+    "Union job": []
+  },
+  "hide_keywords": []
+}
