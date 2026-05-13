@@ -131,7 +131,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
   border-top: 1px solid var(--color-border);
 }
 .qdots { justify-content: center; flex: 1; }
-#quiz-experience-disabled { pointer-events: none; opacity: 0.45; }
+/* #quiz-experience-disabled removed — experience filter now active */
 #quiz-back-btn {
   font-size: 12px; color: #7A6F64;
   background: none; border: 1px solid #DDD5C8; cursor: pointer; padding: 5px 12px;
@@ -1094,23 +1094,32 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
     <!-- STEP 2b: Experience (Staff path only) -->
     <div class="quiz-step" id="qstep-experience">
-      <div class="quiz-q">What's your experience level?</div>
-      <p style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.5px;color:var(--color-text-muted);margin:-12px 0 20px;text-align:center;">⚠ This filter is temporarily out of order — use Skip to continue.</p>
-      <div class="quiz-cards-row three-col" id="quiz-experience-disabled">
+      <div class="quiz-q">What type of role are you looking for?</div>
+      <div class="quiz-cards-row" style="flex-wrap:wrap;gap:10px">
 
-        <div class="quiz-card" onclick="quizPickExp('new')">
-          <div class="qc-label">New to labor</div>
-          <div class="qc-sub">Just getting started — learning how unions work and where I fit in</div>
+        <div class="quiz-card" onclick="quizPickExp('staff')" style="flex:1;min-width:180px">
+          <div class="qc-label">Union Staff</div>
+          <div class="qc-sub">Admin, comms, political, research, IT, or other support roles at union organizations</div>
         </div>
 
-        <div class="quiz-card" onclick="quizPickExp('some')">
-          <div class="qc-label">Some experience</div>
-          <div class="qc-sub">Some experience working for or in a labor union, or other strategic campaigns</div>
+        <div class="quiz-card" onclick="quizPickExp(1)" style="flex:1;min-width:180px">
+          <div class="qc-label">Level 1 — Entry Level</div>
+          <div class="qc-sub">Fellowships, internships, and first roles in labor — no prior organizing experience required</div>
         </div>
 
-        <div class="quiz-card" onclick="quizPickExp('seasoned')">
-          <div class="qc-label">Seasoned organizer</div>
-          <div class="qc-sub">I've worked in unions for years and am looking for the next move</div>
+        <div class="quiz-card" onclick="quizPickExp(2)" style="flex:1;min-width:180px">
+          <div class="qc-label">Level 2 — Organizer</div>
+          <div class="qc-sub">Organizer roles — internal (existing union members) or external (new workplace campaigns). Some experience preferred</div>
+        </div>
+
+        <div class="quiz-card" onclick="quizPickExp(3)" style="flex:1;min-width:180px">
+          <div class="qc-label">Level 3 — Lead / Coordinator</div>
+          <div class="qc-sub">Senior organizer, lead, or coordinator roles — typically 3–5 years of experience and demonstrated campaign wins</div>
+        </div>
+
+        <div class="quiz-card" onclick="quizPickExp(4)" style="flex:1;min-width:180px">
+          <div class="qc-label">Level 4 — Director / Manager</div>
+          <div class="qc-sub">Director and manager roles — leading teams, managing budgets, and running multi-site campaigns</div>
         </div>
 
       </div>
@@ -2150,7 +2159,7 @@ function quizStateInput(val) {
 
 function quizUpdateSummary() {
   const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
-  const expLabels = { new: 'New to labor', some: 'Some experience', seasoned: 'Seasoned' };
+  const expLabels = { staff: 'Union Staff', 1: 'Entry Level', 2: 'Organizer', 3: 'Lead / Coordinator', 4: 'Director / Manager' };
   const rfLabels = { strategic: 'Strategic hire', apprenticeship: 'Apprenticeship', salt: 'Salt a shop' };
   const chip = (id, val, step) => {
     const el = document.getElementById(id);
@@ -2199,7 +2208,7 @@ function renderActivePills() {
   if (!row || !inner) return;
 
   const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
-  const expLabels  = { new: 'New to organizing', some: 'Some experience', seasoned: 'Seasoned' };
+  const expLabels  = { staff: 'Union Staff', 1: 'Entry Level', 2: 'Organizer', 3: 'Lead / Coordinator', 4: 'Director / Manager' };
 
   const defs = [];
 
@@ -2340,7 +2349,7 @@ function quizFinish() {
     state.myState = null;
   }
   // RF role type → toggle
-  if (quiz.rfType === 'apprenticeship' || (!quiz.rfType && quiz.exp === 'new')) {
+  if (quiz.rfType === 'apprenticeship' || (!quiz.rfType && quiz.exp === 1)) {
     state.rfToggle = 'apprenticeships';
   } else if (quiz.rfType === 'salt') {
     state.rfToggle = 'all';
@@ -2531,9 +2540,9 @@ function applyFiltersAndRender() {
     return true; // 'all'
   });
 
-  // Seniority hard-filter: entry-level path hides senior-only listings
-  if (state.exp === 'new') {
-    filtered = filtered.filter(job => !(job.is_entry_level === false && job.seniority_level === 'senior'));
+  // Experience level filter — show only jobs matching the selected level
+  if (state.exp !== null && state.exp !== undefined) {
+    filtered = filtered.filter(job => getExpLevel(job) === state.exp);
   }
 
   // Sector filter
@@ -2664,7 +2673,7 @@ function updateBanners() {
   }
   salting.classList.toggle('hidden', !(isRf && state.rfToggle === 'mcalevey'));
   if (entryBanner) {
-    entryBanner.classList.toggle('hidden', state.exp !== 'new');
+    entryBanner.classList.toggle('hidden', state.exp !== 1);
   }
   // Only show terrain data banner when user is open to relocating (anywhere)
   const terrainDataBanner = document.getElementById('terrain-data-banner');
