@@ -88,7 +88,7 @@
   --breakpoint-tablet: 1024px;
 
   /* --- Nav --- */
-  --nav-height: 56px;
+  --nav-height: 72px;
   --nav-height-mobile: 48px;
 }
 
@@ -165,13 +165,14 @@ img, svg {
 /* Wordmark */
 .terrain-nav__brand {
   font-family: var(--font-mono);
-  font-size: 28px;
+  font-size: 42px;
   font-weight: 700;
   letter-spacing: 3.5px;
   text-transform: uppercase;
   color: var(--color-text);
   text-decoration: none;
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .terrain-nav__brand:hover {
