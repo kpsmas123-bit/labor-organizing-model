@@ -1059,6 +1059,18 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         </div>
       </div>
     </div>
+    <div class="qtile" id="qtile-exp" onclick="toggleTileDropdown('qtile-exp-dd', event)">
+      <span class="qtile-label" id="qtile-exp-label">Any level</span>
+      <span class="qtile-caret">▾</span>
+      <div class="qtile-dropdown" id="qtile-exp-dd">
+        <div class="qtile-opt" data-exp="" onclick="tileSetExp(null, event)"><span class="chk"></span>Any level</div>
+        <div class="qtile-opt" data-exp="staff" onclick="tileSetExp('staff', event)"><span class="chk"></span>Union Staff</div>
+        <div class="qtile-opt" data-exp="1" onclick="tileSetExp(1, event)"><span class="chk"></span>Level 1 — Entry Level</div>
+        <div class="qtile-opt" data-exp="2" onclick="tileSetExp(2, event)"><span class="chk"></span>Level 2 — Organizer</div>
+        <div class="qtile-opt" data-exp="3" onclick="tileSetExp(3, event)"><span class="chk"></span>Level 3 — Lead / Coordinator</div>
+        <div class="qtile-opt" data-exp="4" onclick="tileSetExp(4, event)"><span class="chk"></span>Level 4 — Director / Manager</div>
+      </div>
+    </div>
     <button class="qtile-retake" onclick="quizResetAll()">Reset all</button>
   </div>
 </div>
@@ -3579,6 +3591,30 @@ function updateTileRow() {
   if (stWrap) stWrap.style.display = state.location === 'mystate' ? '' : 'none';
   const cityWrap = document.getElementById('qtile-city-wrap');
   if (cityWrap) cityWrap.style.display = state.location === 'local' ? '' : 'none';
+
+  // Experience tile
+  const expLabel = document.getElementById('qtile-exp-label');
+  if (expLabel) {
+    const expNames = { staff: 'Union Staff', 1: 'Entry Level', 2: 'Organizer', 3: 'Lead / Coordinator', 4: 'Director / Manager' };
+    expLabel.textContent = (state.exp !== null && state.exp !== undefined) ? expNames[state.exp] || 'Any level' : 'Any level';
+  }
+  document.querySelectorAll('#qtile-exp-dd .qtile-opt').forEach(o => {
+    const val = o.dataset.exp;
+    const sel = (val === '' && (state.exp === null || state.exp === undefined)) ||
+                (val === String(state.exp));
+    o.querySelector('.chk').textContent = sel ? '✓' : '';
+    o.classList.toggle('selected', sel);
+  });
+}
+
+function tileSetExp(val, e) {
+  if (e) e.stopPropagation();
+  state.exp = val;
+  updateTileRow();
+  closeTileDropdowns();
+  state.page = 1;
+  applyFiltersAndRender();
+  renderActivePills();
 }
 function renderSectorTileDropdown() {
   const dd = document.getElementById('qtile-sector-dd');
