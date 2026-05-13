@@ -47,13 +47,13 @@ body {
   background: #fff1f1 !important;
 }
 
-.quiz-cta, .apply-btn {
+.apply-btn {
   background: #bd0026 !important;
   color: #fff !important;
   border: none !important;
   border-radius: 8px !important;
 }
-.quiz-cta:hover, .apply-btn:hover {
+.apply-btn:hover {
   background: #8b0019 !important;
 }
 .qdot.active { background: #bd0026 !important; transform: scale(1.25) !important; }
@@ -127,8 +127,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 #quiz-nav {
   display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; margin-top: var(--space-8); padding-top: var(--space-6);
-  border-top: 1px solid var(--color-border);
+  gap: 12px; padding: var(--space-4) 0 var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-4);
 }
 .qdots { justify-content: center; flex: 1; }
 /* #quiz-experience-disabled removed — experience filter now active */
@@ -148,9 +149,30 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .qdot { width: 7px; height: 7px; border-radius: 50%; background: #DDD5C8; transition: background 0.25s, transform 0.25s; }
 .qdot.active { background: #bd0026; transform: scale(1.2); }
 
-.quiz-step { display: none; }
-.quiz-step.active { display: block; animation: qFadeIn 0.22s ease; }
-@keyframes qFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+#quiz-scroll-area {
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  height: 62vh;
+  min-height: 320px;
+  position: relative;
+  scrollbar-width: none;
+}
+#quiz-scroll-area::-webkit-scrollbar { display: none; }
+
+.quiz-step {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  scroll-snap-align: start;
+  min-height: 62vh;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  opacity: 0.18;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.quiz-step.active { opacity: 1; pointer-events: auto; }
+.quiz-step.answered { opacity: 0.38; pointer-events: auto; }
+.quiz-step.answered.scroll-active { opacity: 1; }
+.quiz-step.bypassed { display: none; }
 
 .quiz-q {
   text-align: left; font-family: var(--font-serif);
@@ -172,7 +194,19 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 #qstep-location .quiz-cards-row { max-width: 760px; margin-left: auto; margin-right: auto; }
 #qstep-location .quiz-q { text-align: center; }
 #qstep-experience .quiz-q { text-align: center; }
-#qstep-experience .quiz-cards-row { max-width: 760px; margin-left: auto; margin-right: auto; justify-content: center; }
+.exp-pill-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 20px 0 12px; }
+.exp-pill {
+  padding: 8px 20px; border-radius: 999px; border: 1.5px solid var(--color-border);
+  background: #fff; cursor: pointer; font-size: 14px; font-weight: 500; color: #3a3028;
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.exp-pill:hover { border-color: #bd0026; color: #bd0026; background: #fff7f7; }
+.exp-pill.selected { border-color: #bd0026; background: #fff1f1; color: #bd0026; }
+.exp-pill-desc {
+  min-height: 36px; text-align: center; font-size: 13px; color: #7A6F64;
+  margin: 0 0 20px; transition: opacity 0.1s;
+}
 .radius-row { justify-content: center; }
 
 .quiz-card {
@@ -197,31 +231,31 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 /* Location local opts */
 #quiz-local-opts {
-  margin-top: 20px; background: var(--color-bg-subtle); border: 1px solid var(--color-border);
-  border-radius: var(--radius-md); padding: 24px 28px; max-width: 540px; margin-left: auto; margin-right: auto;
+  margin-top: 24px; max-width: 480px; margin-left: auto; margin-right: auto; text-align: center;
 }
-.quiz-local-label { font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 500; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+.quiz-local-label { font-size: 13px; color: #7A6F64; font-weight: 500; margin-bottom: 10px; }
 #quiz-state-sel {
-  width: 100%; background: #fff; border: 1px solid #C8BFB5; color: #2C2C2C;
-  border-radius: 6px; padding: 8px 12px; font-size: 13px;
-  font-family: 'Inter', system-ui, sans-serif; margin-bottom: 16px;
+  width: 100%; background: #fff; border: 1.5px solid var(--color-border); color: #2C2C2C;
+  border-radius: 999px; padding: 9px 18px; font-size: 14px;
+  font-family: 'Inter', system-ui, sans-serif; margin-bottom: 16px; cursor: pointer;
+  appearance: none; text-align: center;
 }
 #quiz-state-sel:focus { outline: none; border-color: #bd0026; }
-.radius-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
-.radius-row-label { font-size: 11.5px; color: #7A6F64; font-weight: 500; white-space: nowrap; }
+.radius-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.radius-row-label { font-size: 13px; color: #7A6F64; font-weight: 500; white-space: nowrap; }
 .rpill {
-  padding: 5px 14px; border: 1px solid #C8BFB5; border-radius: 20px;
-  font-size: 11.5px; color: #7A6F64; cursor: pointer; background: #fff;
-  transition: all 0.12s; user-select: none;
+  padding: 8px 20px; border: 1.5px solid var(--color-border); border-radius: 999px;
+  font-size: 14px; font-weight: 500; color: #3a3028; cursor: pointer; background: #fff;
+  transition: border-color 0.12s, background 0.12s, color 0.12s; user-select: none;
 }
-.rpill:hover { border-color: #A09385; color: #2C2C2C; }
-.rpill.active { background: #bd0026; border-color: #bd0026; color: #fff; }
+.rpill:hover { border-color: #bd0026; color: #bd0026; background: #fff7f7; }
+.rpill.active { border-color: #bd0026; background: #fff1f1; color: #bd0026; }
 .quiz-cta {
-  width: 100%; padding: 11px 16px; background: #bd0026; border: none; border-radius: 8px;
-  color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
-  font-family: 'Inter', system-ui, sans-serif; transition: background 0.12s;
+  padding: 8px 28px; border: 1.5px solid #DDD5C8; border-radius: 999px;
+  background: #fff; color: #9A8F85; font-size: 13px; font-weight: 500; cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif; transition: border-color 0.12s, color 0.12s, background 0.12s;
 }
-.quiz-cta:hover { background: #8b0019; }
+.quiz-cta:hover { border-color: #bd0026; color: #bd0026; background: #fff7f7; }
 
 @media (max-width: 600px) {
   .quiz-cards-row, .quiz-cards-row.three-col, .quiz-cards-row.four-col { grid-template-columns: 1fr 1fr; }
@@ -442,6 +476,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .badge-mcalevey { background: rgba(245,200,66,0.18); color: #7A5A00; border: 1px solid rgba(196,160,32,0.35); }
 .badge-swing { background: rgba(180,40,40,0.08); color: #8B1A1A; border: 1px solid rgba(180,40,40,0.22); }
 .badge-research-note { background: rgba(100,100,100,0.08); color: #5A5050; border: 1px solid #C8BFB5; cursor: help; }
+.badge-low-conf { background: rgba(220,160,0,0.10); color: #7a5a00; border: 1px solid rgba(200,140,0,0.28); font-size: 10px; cursor: help; }
+.badge-loc-unknown { background: rgba(160,140,120,0.10); color: #7A6F64; border: 1px solid rgba(160,140,120,0.30); font-size: 10px; }
 
 /* Experience level badges */
 .badge-exp-staff { background: #F0EBE3; color: #6A5F56; border: 1px solid #C8BFB5; }
@@ -963,6 +999,53 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   color: var(--color-text-secondary);
   text-decoration: none;
 }
+
+/* === ADMIN === */
+#admin-banner {
+  background: #1a1a2e; color: #e0e0ff; padding: 8px 24px;
+  font-size: 12px; display: none; align-items: center; gap: 12px;
+}
+#admin-banner span { flex: 1; }
+#admin-status { font-weight: 600; }
+#admin-status.ok { color: #4ade80; }
+#admin-status.offline { color: #f87171; }
+.admin-rerun-btn {
+  background: #bd0026; color: #fff; border: none; border-radius: 5px;
+  padding: 4px 12px; font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+.admin-rerun-btn:disabled { opacity: 0.5; cursor: wait; }
+.fix-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; background: #1a1a2e; border: 1px solid #555;
+  border-radius: 5px; color: #e0e0ff; font-size: 11px; cursor: pointer;
+  margin-left: 6px; vertical-align: middle;
+}
+.fix-btn:hover { background: #2a2a4e; }
+#admin-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+#admin-modal-overlay.open { display: flex; }
+#admin-modal {
+  background: #fff; border-radius: 10px; padding: 24px;
+  width: 480px; max-width: 95vw; max-height: 90vh;
+  overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+}
+#admin-modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+#admin-modal-subtitle { font-size: 12px; color: #888; margin-bottom: 16px; }
+.am-field { margin-bottom: 12px; }
+.am-field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #555; }
+.am-field select { width: 100%; padding: 7px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; font-family: inherit; }
+.am-checkrow { display: flex; gap: 16px; align-items: center; }
+.am-checkrow label { font-size: 13px; font-weight: 400; color: #333; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+#am-blocks { color: #C0392B; font-size: 12px; margin-bottom: 8px; }
+#am-warnings { color: #9a6700; font-size: 12px; margin-bottom: 8px; }
+.am-actions { display: flex; gap: 10px; margin-top: 16px; }
+.am-save-btn { background: #bd0026; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.am-save-btn:disabled { opacity: 0.5; cursor: wait; }
+.am-cancel-btn { background: #F0EBE3; color: #333; border: 1px solid #ccc; border-radius: 6px; padding: 8px 14px; font-size: 13px; cursor: pointer; }
+/* === END ADMIN === */
 </style>
 </head>
 <body>
@@ -996,6 +1079,12 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <span>⚠️ <strong>Beta Version</strong> — Jobs board under active development. Listings from <a href="https://unionjobs.com" target="_blank" style="color:#92400E;font-weight:600">unionjobs.com</a>. Direct sector job listings (hospitals, school districts, warehouses) coming soon. Check back for updates.</span>
     <button id="beta-close" onclick="document.getElementById('beta-banner').style.display='none'">×</button>
   </div>
+</div>
+
+<!-- ADMIN BANNER (shown only when ?admin=1) -->
+<div id="admin-banner">
+  <span>🔧 Admin mode — <span id="admin-status">checking…</span></span>
+  <button class="admin-rerun-btn" id="admin-rerun-btn" onclick="adminRerun()">Reclassify jobs</button>
 </div>
 
 <!-- QUIZ SUMMARY BAR -->
@@ -1100,6 +1189,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
   <!-- INTAKE QUIZ -->
   <div id="intake-wizard">
+  <div id="quiz-scroll-area">
 
     <!-- STEP 1: Path -->
     <div class="quiz-step active" id="qstep-path">
@@ -1144,68 +1234,84 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         <div class="sector-chip" data-sector="Transportation" onclick="quizToggleSector('Transportation')">🚌 Transportation</div>
         <div class="sector-chip" data-sector="Communications/Digital" onclick="quizToggleSector('Communications/Digital')">💻 Tech/Digital</div>
       </div>
-      <button id="sectors-cta" class="quiz-cta" style="max-width:320px;margin:0 auto;display:block" onclick="quizConfirmSectors()">Skip →</button>
+      <div style="text-align:center;margin-top:12px">
+        <button id="sectors-cta" class="exp-pill" onclick="quizConfirmSectors()" style="font-size:13px;color:#9A8F85;border-color:#DDD5C8">Skip →</button>
+      </div>
     </div><!-- /step-sectors -->
 
     <!-- STEP 2b: Experience (Staff path only) -->
     <div class="quiz-step" id="qstep-experience">
-      <div class="quiz-q">What type of role are you looking for?</div>
-      <div class="quiz-cards-row" style="flex-wrap:wrap;gap:10px">
-
-        <div class="quiz-card" onclick="quizPickExp('staff')" style="flex:1;min-width:180px">
-          <div class="qc-label">Union Staff</div>
-          <div class="qc-sub">Admin, ops, comms, research, IT — the roles that keep the labor movement on time and organized</div>
-        </div>
-
-        <div class="quiz-card" onclick="quizPickExp(1)" style="flex:1;min-width:180px">
-          <div class="qc-label">Level 1 — Entry Level</div>
-          <div class="qc-sub">Fellowships, internships, and first roles in labor — no prior organizing experience required</div>
-        </div>
-
-        <div class="quiz-card" onclick="quizPickExp(2)" style="flex:1;min-width:180px">
-          <div class="qc-label">Level 2 — Organizer</div>
-          <div class="qc-sub">Organizer roles — internal (existing union members) or external (new workplace campaigns). Some experience preferred</div>
-        </div>
-
-        <div class="quiz-card" onclick="quizPickExp(3)" style="flex:1;min-width:180px">
-          <div class="qc-label">Level 3 — Lead / Coordinator</div>
-          <div class="qc-sub">Senior organizer, lead, or coordinator roles — typically 3–5 years of experience and demonstrated campaign wins</div>
-        </div>
-
-        <div class="quiz-card" onclick="quizPickExp(4)" style="flex:1;min-width:180px">
-          <div class="qc-label">Level 4 — Director / Manager</div>
-          <div class="qc-sub">Director and manager roles — leading teams, managing budgets, and running multi-site campaigns</div>
-        </div>
-
+      <div class="quiz-q">What's your experience level?</div>
+      <div class="exp-pill-row">
+        <button class="exp-pill" data-exp="staff"
+          data-desc="Admin, ops, comms, research, IT — the roles that keep the labor movement on time and organized"
+          onclick="quizPickExp('staff')">Union Staff</button>
+        <button class="exp-pill" data-exp="1"
+          data-desc="Fellowships, internships, and first roles in labor — no prior organizing experience required"
+          onclick="quizPickExp(1)">Entry Level</button>
+        <button class="exp-pill" data-exp="2"
+          data-desc="Organizer roles — internal (existing union members) or external (new workplace campaigns). Some experience preferred"
+          onclick="quizPickExp(2)">Organizer</button>
+        <button class="exp-pill" data-exp="3"
+          data-desc="Senior organizer, lead, or coordinator roles — typically 3–5 years of experience and demonstrated campaign wins"
+          onclick="quizPickExp(3)">Lead / Coordinator</button>
+        <button class="exp-pill" data-exp="4"
+          data-desc="Director and manager roles — leading teams, managing budgets, and running multi-site campaigns"
+          onclick="quizPickExp(4)">Director / Manager</button>
       </div>
+      <div class="exp-pill-desc" id="exp-pill-desc">We'll show your level first, but you'll see all jobs — feel free to apply to roles above or below.</div>
     </div><!-- /step-experience -->
 
-    <!-- STEP 3: Location -->
+    <!-- STEP 3: Role Type -->
+    <div class="quiz-step" id="qstep-roletype">
+      <div class="quiz-q" style="text-align:center">What kind of role are you looking for?</div>
+      <div class="exp-pill-row" id="qroletypes-grid">
+        <button class="exp-pill roletype-chip" data-role-type="Organizing"
+          data-desc="Internal &amp; external organizer roles"
+          onclick="quizToggleRoleType('Organizing')">Organizing</button>
+        <button class="exp-pill roletype-chip" data-role-type="Communications"
+          data-desc="Comms, media, digital, narrative work"
+          onclick="quizToggleRoleType('Communications')">Communications</button>
+        <button class="exp-pill roletype-chip" data-role-type="Political/electoral"
+          data-desc="Legislative, electoral, political action"
+          onclick="quizToggleRoleType('Political/electoral')">Political / Electoral</button>
+        <button class="exp-pill roletype-chip" data-role-type="Legal"
+          data-desc="Labor law, contracts, grievances"
+          onclick="quizToggleRoleType('Legal')">Legal</button>
+        <button class="exp-pill roletype-chip" data-role-type="Research"
+          data-desc="Research, data, strategic analysis"
+          onclick="quizToggleRoleType('Research')">Research</button>
+        <button class="exp-pill roletype-chip" data-role-type="Admin &amp; Operations"
+          data-desc="Finance, HR, ops, IT, admin"
+          onclick="quizToggleRoleType('Admin &amp; Operations')">Admin &amp; Operations</button>
+      </div>
+      <div class="exp-pill-desc" id="roletype-pill-desc">Select any that apply — or skip for all roles</div>
+      <div style="text-align:center;margin-top:12px">
+        <button id="roletypes-cta" class="exp-pill" onclick="quizConfirmRoleTypes()" style="font-size:13px;color:#9A8F85;border-color:#DDD5C8">Skip →</button>
+      </div>
+    </div><!-- /step-roletype -->
+
+    <!-- STEP 4: Location -->
     <div class="quiz-step" id="qstep-location">
       <div class="quiz-q">Where can you work?</div>
-      <div class="quiz-cards-row four-col">
+      <div class="exp-pill-row">
 
-        <div class="quiz-card" id="qcard-local" onclick="quizPickLocation('local')">
-          <div class="qc-label">Stay local</div>
-          <div class="qc-sub">Find opportunities near where I live — search by city and radius</div>
-        </div>
-
-        <div class="quiz-card" id="qcard-mystate" onclick="quizPickLocation('mystate')">
-          <div class="qc-label">Around my state</div>
-          <div class="qc-sub">Show me jobs anywhere in my state — I can travel but not relocate</div>
-        </div>
-
-        <div class="quiz-card" id="qcard-anywhere" onclick="quizPickLocation('anywhere')">
-          <div class="qc-label">Explore nationally</div>
-          <div class="qc-sub">Show me the highest-impact opportunities anywhere in the US</div>
-        </div>
-
-        <div class="quiz-card" id="qcard-remote" onclick="quizToggleRemote()" style="position:relative">
-          <span style="position:absolute;top:8px;right:10px;font-size:11px;font-weight:700;color:var(--color-red);opacity:.7;letter-spacing:.03em">+ ADD</span>
-          <div class="qc-label">Remote / Hybrid</div>
-          <div class="qc-sub">Include jobs that are fully remote or hybrid — location flexible</div>
-        </div>
-
+        <button class="exp-pill" id="qcard-local"
+          data-desc="Find opportunities near where I live — search by city and radius"
+          onclick="quizPickLocation('local')">Stay local</button>
+        <button class="exp-pill" id="qcard-mystate"
+          data-desc="Show me jobs anywhere in my state — I can travel but not relocate"
+          onclick="quizPickLocation('mystate')">Around my state</button>
+        <button class="exp-pill" id="qcard-anywhere"
+          data-desc="Show me the highest-impact opportunities anywhere in the US"
+          onclick="quizPickLocation('anywhere')">Explore nationally</button>
+        <button class="exp-pill" id="qcard-remote"
+          data-desc="Include jobs that are fully remote or hybrid — location flexible"
+          onclick="quizToggleRemote()">+ Remote / Hybrid</button>
+      </div>
+      <div class="exp-pill-desc" id="location-pill-desc">Choose how far you can go</div>
+      <div style="text-align:center;margin-top:12px">
+        <button id="location-cta" class="exp-pill" onclick="quizConfirmLocation()" style="display:none;font-size:13px;color:#9A8F85;border-color:#DDD5C8">Continue →</button>
       </div>
 
       <!-- City + radius (appears when "Stay local" clicked) -->
@@ -1245,40 +1351,18 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <!-- STEP 4: RF Role Type (rank & file only) -->
     <div class="quiz-step" id="qstep-rftype">
       <div class="quiz-q">What kind of role?</div>
-      <div class="quiz-cards-row three-col">
-
-        <div class="quiz-card" onclick="quizPickRfType('strategic')">
-          <div class="qc-label">Strategic hire</div>
-          <div class="qc-sub">Find work in a high-impact sector and build an organizing committee from within</div>
-          <span class="qc-tag tag-mcalevey">Priority sectors</span>
-        </div>
-
-        <div class="quiz-card" onclick="quizPickRfType('apprenticeship')">
-          <div class="qc-label">Apprenticeship</div>
-          <div class="qc-sub">Join a union apprenticeship program and enter a trade with union wages from day one</div>
-        </div>
-
-        <div class="quiz-card" onclick="quizPickRfType('salt')">
-          <div class="qc-label">Salt a shop</div>
-          <div class="qc-sub">Take a job at a non-union employer specifically to build an organizing committee</div>
-          <span class="qc-tag tag-mcalevey">Lowest entry point</span>
-        </div>
-
+      <div class="exp-pill-row">
+        <button class="exp-pill" data-desc="Find work in a high-impact sector and build an organizing committee from within"
+          onclick="quizPickRfType('strategic')">Strategic hire</button>
+        <button class="exp-pill" data-desc="Join a union apprenticeship program and enter a trade with union wages from day one"
+          onclick="quizPickRfType('apprenticeship')">Apprenticeship</button>
+        <button class="exp-pill" data-desc="Take a job at a non-union employer specifically to build an organizing committee"
+          onclick="quizPickRfType('salt')">Salt a shop</button>
       </div>
+      <div class="exp-pill-desc" id="rftype-pill-desc"></div>
     </div><!-- /step-rftype -->
 
-    <!-- Progress: back button + step dots (hidden on step 1) -->
-    <div id="quiz-nav" style="display:none">
-      <button id="quiz-back-btn" style="display:none" onclick="quizBack()">← Back</button>
-      <div class="qdots">
-        <span class="qdot" id="qdot-1"></span>
-        <span class="qdot" id="qdot-2"></span>
-        <span class="qdot" id="qdot-3" style="display:none"></span>
-        <span class="qdot" id="qdot-4" style="display:none"></span>
-      </div>
-      <button id="quiz-skip-btn" style="display:none" onclick="quizSkipExp()">Skip →</button>
-    </div>
-
+  </div><!-- /quiz-scroll-area -->
   </div><!-- /intake-wizard -->
 
   <!-- FILTER BAR -->
@@ -1362,7 +1446,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
     <!-- Full-width centered header above both columns -->
     <div id="jobs-header-row">
-      <h2>Matching Opportunities</h2>
+      <h2>Find Your Role</h2>
       <div class="jobs-meta" id="jobs-meta-line">Data loading…</div>
     </div>
 
@@ -1372,16 +1456,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <!-- LEFT: JOBS PANEL -->
     <div id="jobs-panel">
 
-      <!-- Show-me row (shown post-quiz) -->
-      <div id="show-me-row">
-        <span class="smt-label">Show me:</span>
-        <div id="show-me-tabs">
-          <div class="smt-tab active" data-toggle="mcalevey" onclick="setRfToggle('mcalevey')">Priority sectors</div>
-          <div class="smt-tab" data-toggle="all" onclick="setRfToggle('all')">All union jobs</div>
-          <div class="smt-tab" data-toggle="apprenticeships" onclick="setRfToggle('apprenticeships')">Apprenticeships</div>
-        </div>
-        <span id="show-me-staff-label" style="display:none">All staff &amp; organizer roles</span>
-      </div>
+      <!-- Show-me row removed -->
 
       <!-- RF Impact Goals Panel (shown when path=rf and toggle ≠ apprenticeships) -->
       <div id="rf-impact-goals" class="hidden">
@@ -1449,6 +1524,18 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
       <!-- TERRAIN GUIDE -->
       <div id="terrain-guide">
+
+      <!-- Quiz nav lives here so it appears in the side panel during the quiz -->
+      <div id="quiz-nav" style="display:none">
+        <button id="quiz-back-btn" style="display:none" onclick="quizBack()">← Back</button>
+        <div class="qdots">
+          <span class="qdot" id="qdot-1"></span>
+          <span class="qdot" id="qdot-2"></span>
+          <span class="qdot" id="qdot-3" style="display:none"></span>
+          <span class="qdot" id="qdot-4" style="display:none"></span>
+        </div>
+        <button id="quiz-skip-btn" style="display:none" onclick="quizNavCta()">Skip →</button>
+      </div>
 
       <div class="terrain-banner info" id="terrain-data-banner" style="margin-bottom: 16px;">
         <span style="font-family: var(--font-mono); font-size: 11px;
@@ -1859,6 +1946,43 @@ function haversine(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+// Metro-area aliases: checked (lowercased) BEFORE state-center fallback.
+// Covers common non-canonical location_raw strings that don't parse as "City, ST".
+const METRO_ALIASES = {
+  // Bay Area
+  'the bay area':              [37.7749, -122.4194],
+  'east bay':                  [37.8044, -122.2712],
+  'east sf bay area':          [37.8044, -122.2712],
+  'sf bay area':               [37.7749, -122.4194],
+  'san francisco bay area':    [37.7749, -122.4194],
+  'berkeley and san francisco':[37.8044, -122.2712],
+  'bay area, ca':              [37.7749, -122.4194],
+  'bay area':                  [37.7749, -122.4194],
+  // NYC Metro
+  'nyc':                       [40.7128, -74.0060],
+  'nyc metro':                 [40.7128, -74.0060],
+  'new york city':             [40.7128, -74.0060],
+  'new york city, ny area':    [40.7128, -74.0060],
+  'new york metro':            [40.7128, -74.0060],
+  'new york city metro area':  [40.7128, -74.0060],
+  'north brunswick':           [40.4862, -74.4518],
+  'north brunswick, nj':       [40.4862, -74.4518],
+  // LA Metro
+  'los angeles area':          [34.0522, -118.2437],
+  'la metro':                  [34.0522, -118.2437],
+  'greater los angeles':       [34.0522, -118.2437],
+  'southern california':       [34.0522, -118.2437],
+  // DC Metro
+  'dc metro':                  [38.9072, -77.0369],
+  'washington dc area':        [38.9072, -77.0369],
+  'dc / virginia':             [38.9072, -77.0369],
+  'national capital region':   [38.9072, -77.0369],
+  // Chicago Metro
+  'chicagoland':               [41.8781, -87.6298],
+  'chicago metro':             [41.8781, -87.6298],
+  'greater chicago':           [41.8781, -87.6298],
+};
+
 function lookupJobCentroid(job) {
   const raw = (job.location_raw || '').trim();
   const st  = job.state_abbr || '';
@@ -1866,6 +1990,10 @@ function lookupJobCentroid(job) {
   function tryCity(name, stCode) {
     const k = name.trim().toLowerCase() + '|' + (stCode || st).toUpperCase();
     return CITY_CENTROIDS[k] || null;
+  }
+
+  function tryAlias(name) {
+    return METRO_ALIASES[name.trim().toLowerCase()] || null;
   }
 
   // Strip trailing state/preferred text: "Berkeley and SF, CA preferred" → "Berkeley and SF"
@@ -1892,6 +2020,11 @@ function lookupJobCentroid(job) {
     const c = tryCity(msaFirst, st); if (c) return c;
   }
 
+  // Metro-alias lookup (lowercased raw + stripped + firstCity)
+  const a1 = tryAlias(raw);      if (a1) return a1;
+  const a2 = tryAlias(stripped); if (a2) return a2;
+  if (firstCity) { const a3 = tryAlias(firstCity); if (a3) return a3; }
+
   // State center fallback
   if (STATE_CENTERS[st]) return STATE_CENTERS[st];
   return null;
@@ -1899,7 +2032,7 @@ function lookupJobCentroid(job) {
 
 function computeAllDistances() {
   if (state.userLat === null) {
-    allJobs.forEach(j => { j.distance_miles = null; });
+    allJobs.forEach(j => { j.distance_miles = null; j._locUnknown = false; });
     return;
   }
   allJobs.forEach(job => {
@@ -1907,6 +2040,7 @@ function computeAllDistances() {
     job.distance_miles = coords
       ? Math.round(haversine(state.userLat, state.userLng, coords[0], coords[1]))
       : null;
+    job._locUnknown = coords === null;
   });
 }
 
@@ -1916,6 +2050,7 @@ let state = {
   path: null,
   rfToggle: 'mcalevey',
   sectors: [],
+  roleTypes: [],
   location: 'anywhere',
   myState: null,
   income: 0,
@@ -1970,6 +2105,7 @@ function readUrlParams() {
   if (p.get('path')) state.path = p.get('path');
   if (p.get('toggle')) state.rfToggle = p.get('toggle');
   if (p.get('sectors')) state.sectors = p.get('sectors').split(',').filter(Boolean);
+  if (p.get('roleTypes')) state.roleTypes = p.get('roleTypes').split(',').filter(Boolean);
   if (p.get('location')) state.location = p.get('location');
   if (p.get('state')) state.myState = p.get('state');
   if (p.get('income')) state.income = parseInt(p.get('income')) || 0;
@@ -1991,6 +2127,7 @@ function writeUrlParams() {
   if (state.path) p.set('path', state.path);
   if (state.rfToggle !== 'mcalevey') p.set('toggle', state.rfToggle);
   if (state.sectors.length) p.set('sectors', state.sectors.join(','));
+  if (state.roleTypes && state.roleTypes.length) p.set('roleTypes', state.roleTypes.join(','));
   if (state.location !== 'anywhere') p.set('location', state.location);
   if (state.myState) p.set('state', state.myState);
   if (state.income) p.set('income', state.income);
@@ -2013,10 +2150,11 @@ async function loadData() {
   await Promise.allSettled([loadJobs(), loadCountyScores()]);
 }
 
-async function loadJobs() {
+async function loadJobs(bustCache = false) {
   let raw = null;
-  // Try jobs_data.json first, then fall back to unionjobs_raw.json
-  for (const url of ['./jobs_data.json', './unionjobs_raw.json']) {
+  const cb = bustCache ? ('?_cb=' + Date.now()) : '';
+  // Load pre-classified jobs; fall back to jobs_data.json for legacy compatibility
+  for (const url of ['../data/classified_jobs.json' + cb, './jobs_data.json']) {
     try {
       const res = await fetch(url);
       if (!res.ok) continue;
@@ -2027,7 +2165,7 @@ async function loadJobs() {
   if (!raw) return;
   const listings = Array.isArray(raw) ? raw : (raw.listings || []);
   const lastScraped = raw.last_scraped || raw.last_updated || null;
-  allJobs = listings.map(classifyJob);
+  allJobs = listings.filter(j => !j.hidden);
   updateMetaLine(lastScraped, listings.length);
 }
 
@@ -2070,58 +2208,7 @@ function computeMsaData(counties) {
 // ============================================================
 // CLASSIFICATION
 // ============================================================
-function classifyJob(job) {
-  const title = (job.title || '').toLowerCase();
-  const desc = (job.description || '').toLowerCase();
-
-  // Role type
-  let role_type = 'staff';
-  let rf_subtype_label = 'Staff & Organizer';
-  if (/apprentic/.test(title + ' ' + desc)) {
-    role_type = 'R3_apprenticeship';
-    rf_subtype_label = 'Apprenticeship';
-  }
-
-  // Sector detection
-  const sector_tags = [];
-  if (/nurs|health|hospital|medical|patient|pharmac|dental|clinic|ems|ambulanc|care worker|home care/.test(title+' '+desc)) sector_tags.push('Healthcare');
-  if (/teacher|school|education|faculty|professor|tutor|instruct|k-12|k12|higher ed|university|college/.test(title+' '+desc)) sector_tags.push('Education');
-  if (/warehouse|logistics|shipping|trucking|transport|driver|freight|supply chain|port|dock|longshore/.test(title+' '+desc)) sector_tags.push('Logistics');
-  if (/municipal|county gov|public sector|government|state worker|public employee|civil service/.test(title+' '+desc)) sector_tags.push('Public Sector');
-  if (/construction|building trade|electrician|plumber|carpenter|iron worker|pipefitter|sheet metal|hvac|tile|bricklayer/.test(title+' '+desc)) sector_tags.push('Building Trades');
-  if (/manufactur|factory|plant|production|assembly|steel|auto worker|machinist/.test(title+' '+desc)) sector_tags.push('Manufacturing');
-
-  let svs_score = 10;
-  for (const s of sector_tags) {
-    if ((SECTOR_SVS[s] || 10) > svs_score) svs_score = SECTOR_SVS[s];
-  }
-  const is_mcalevey_priority = svs_score >= 75;
-  const is_swing_state = SWING_STATES.has(job.state_abbr || '');
-
-  const salary_min = parseSalaryMin(job.salary || job.salary_range || job.salary_raw || '');
-
-  // Impact score (base 50 = no county match)
-  let impact_score = 50;
-  if (is_swing_state) impact_score += 15;
-  if (is_mcalevey_priority) impact_score += 10;
-  if (role_type === 'R3_apprenticeship' && is_mcalevey_priority) impact_score += 5;
-  impact_score = Math.min(impact_score, 100);
-
-  // If jobs_data.json provides these fields already, use them
-  return {
-    ...job,
-    role_type: job.role_type || role_type,
-    rf_subtype_label: job.rf_subtype_label || rf_subtype_label,
-    sector_tags: job.sector_tags || sector_tags,
-    svs_score: job.svs_score != null ? job.svs_score : svs_score,
-    is_mcalevey_priority: job.is_mcalevey_priority != null ? job.is_mcalevey_priority : is_mcalevey_priority,
-    is_swing_state: job.is_swing_state != null ? job.is_swing_state : is_swing_state,
-    salary_min: job.salary_min != null ? job.salary_min : salary_min,
-    impact_score: job.impact_score != null ? job.impact_score : impact_score,
-    oos_score: job.oos_score || null,
-    intervention_type: job.intervention_type || null,
-  };
-}
+// classifyJob() removed — sector, role_type, exp_level are pre-classified in classified_jobs.json
 
 function parseSalaryMin(s) {
   if (!s || typeof s !== 'string') return null;
@@ -2149,7 +2236,16 @@ function formatSalary(salary_min, salaryRaw) {
 // ============================================================
 // INTAKE QUIZ
 // ============================================================
-const quiz = { path: null, exp: null, sectors: [], locType: null, myState: null, radius: 25, rfType: null, city: null, cityState: null, userLat: null, userLng: null, remote: false };
+const quiz = { path: null, exp: null, sectors: [], roleTypes: [], locType: null, myState: null, radius: 25, rfType: null, city: null, cityState: null, userLat: null, userLng: null, remote: false };
+
+const ROLE_TYPE_GROUPS = {
+  'Organizing':          ['Internal organizer', 'External organizer'],
+  'Communications':      ['Communications'],
+  'Political/electoral': ['Political/electoral'],
+  'Legal':               ['Legal'],
+  'Research':            ['Research'],
+  'Admin & Operations':  ['Admin/operations'],
+};
 let quizHistory = [];
 let CITY_LIST = [];
 let _lastMatches = [];
@@ -2157,8 +2253,17 @@ let _lastMatches = [];
 function quizPickPath(path) {
   quiz.path = path;
   quiz.sectors = [];
+  quiz.roleTypes = [];
   quizHistory.push('qstep-path');
   document.getElementById('page-intro').style.display = 'none';
+  // Bypass steps not used on this path so they take no scroll space
+  const bypass = path === 'staff'
+    ? ['qstep-sectors', 'qstep-rftype']
+    : [];
+  document.querySelectorAll('#quiz-scroll-area .quiz-step').forEach(s => {
+    if (bypass.includes(s.id)) s.classList.add('bypassed');
+    else s.classList.remove('bypassed');
+  });
   if (path === 'rf') {
     _quizShow('qstep-sectors');
   } else {
@@ -2172,21 +2277,89 @@ function quizToggleSector(sector) {
   if (idx > -1) quiz.sectors.splice(idx, 1); else quiz.sectors.push(sector);
   document.querySelectorAll('#qsectors-grid .sector-chip').forEach(c =>
     c.classList.toggle('selected', quiz.sectors.includes(c.dataset.sector)));
+  const label = quiz.sectors.length > 0 ? 'Continue →' : 'Skip →';
   const cta = document.getElementById('sectors-cta');
-  if (cta) cta.textContent = quiz.sectors.length > 0 ? 'Continue →' : 'Skip →';
+  if (cta) cta.textContent = label;
+  const skipBtn = document.getElementById('quiz-skip-btn');
+  if (skipBtn) skipBtn.textContent = label;
 }
 
 function quizConfirmSectors() {
   quizHistory.push('qstep-sectors');
-  _quizShow('qstep-location');
+  _quizShow('qstep-roletype');
   _quizDots(3);
 }
 
 function quizPickExp(exp) {
   quiz.exp = exp;
+  document.querySelectorAll('.exp-pill').forEach(p =>
+    p.classList.toggle('selected', String(p.dataset.exp) === String(exp)));
   quizHistory.push('qstep-experience');
-  _quizShow('qstep-location');
+  _quizShow('qstep-roletype');
   _quizDots(3);
+}
+
+(function initPillHovers() {
+  document.addEventListener('DOMContentLoaded', () => {
+    function wireHovers(pillSelector, descId) {
+      const desc = document.getElementById(descId);
+      if (!desc) return;
+      const defaultText = desc.textContent;
+      document.querySelectorAll(pillSelector).forEach(pill => {
+        pill.addEventListener('mouseenter', () => { desc.textContent = pill.dataset.desc || ''; });
+        pill.addEventListener('mouseleave', () => { desc.textContent = defaultText; });
+      });
+    }
+    wireHovers('#qstep-experience .exp-pill', 'exp-pill-desc');
+    wireHovers('#qroletypes-grid .roletype-chip', 'roletype-pill-desc');
+    wireHovers('#qstep-location .exp-pill', 'location-pill-desc');
+    wireHovers('#qstep-rftype .exp-pill', 'rftype-pill-desc');
+  });
+}());
+
+(function initQuizScrollHighlight() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const scrollArea = document.getElementById('quiz-scroll-area');
+    if (!scrollArea) return;
+    let scrollTimer;
+    scrollArea.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const scrollTop = scrollArea.scrollTop;
+        const steps = Array.from(scrollArea.querySelectorAll('.quiz-step:not(.bypassed)'));
+        let closest = null, minDist = Infinity;
+        steps.forEach(step => {
+          const dist = Math.abs(step.offsetTop - scrollTop);
+          if (dist < minDist) { minDist = dist; closest = step; }
+        });
+        steps.forEach(step => {
+          if (step === closest && step.classList.contains('answered')) {
+            step.classList.add('scroll-active');
+          } else {
+            step.classList.remove('scroll-active');
+          }
+        });
+      }, 50);
+    });
+  });
+}());
+
+function quizToggleRoleType(group) {
+  const idx = quiz.roleTypes.indexOf(group);
+  if (idx > -1) quiz.roleTypes.splice(idx, 1); else quiz.roleTypes.push(group);
+  document.querySelectorAll('#qroletypes-grid .roletype-chip').forEach(c =>
+    c.classList.toggle('selected', quiz.roleTypes.includes(c.dataset.roleType)));
+  const label = quiz.roleTypes.length > 0 ? 'Continue →' : 'Skip →';
+  const cta = document.getElementById('roletypes-cta');
+  if (cta) cta.textContent = label;
+  const skipBtn = document.getElementById('quiz-skip-btn');
+  if (skipBtn) skipBtn.textContent = label;
+}
+
+function quizConfirmRoleTypes() {
+  quizHistory.push('qstep-roletype');
+  _quizShow('qstep-location');
+  _quizDots(4);
 }
 
 function _quizRemoteOnlyCheck() {
@@ -2211,23 +2384,20 @@ function quizPickLocation(type) {
   document.getElementById('quiz-local-opts').style.display = 'none';
   document.getElementById('quiz-state-opts').style.display = 'none';
 
+  const locationCta = document.getElementById('location-cta');
   if (type === 'anywhere') {
     document.getElementById('qcard-anywhere').classList.add('selected');
     _quizRemoteOnlyCheck();
-    if (quiz.path === 'rf') {
-      quizHistory.push('qstep-location');
-      _quizShow('qstep-rftype');
-      _quizDots(4);
-    } else {
-      quizFinish();
-    }
+    if (locationCta) locationCta.style.display = '';
   } else if (type === 'local') {
     document.getElementById('qcard-local').classList.add('selected');
     document.getElementById('quiz-local-opts').style.display = 'block';
+    if (locationCta) locationCta.style.display = 'none';
     _quizRemoteOnlyCheck();
   } else if (type === 'mystate') {
     document.getElementById('qcard-mystate').classList.add('selected');
     document.getElementById('quiz-state-opts').style.display = 'block';
+    if (locationCta) locationCta.style.display = 'none';
     _quizRemoteOnlyCheck();
   }
 }
@@ -2262,7 +2432,7 @@ function quizConfirmLocation() {
   if (quiz.path === 'rf') {
     quizHistory.push('qstep-location');
     _quizShow('qstep-rftype');
-    _quizDots(4);
+    _quizDots(5);
   } else {
     quizFinish();
   }
@@ -2298,6 +2468,12 @@ function quizBack() {
       c.classList.toggle('selected', quiz.sectors.includes(c.dataset.sector)));
     const cta = document.getElementById('sectors-cta');
     if (cta) cta.textContent = quiz.sectors.length > 0 ? 'Continue →' : 'Skip →';
+  }
+  if (prev === 'qstep-roletype') {
+    document.querySelectorAll('#qroletypes-grid .roletype-chip').forEach(c =>
+      c.classList.toggle('selected', quiz.roleTypes.includes(c.dataset.roleType)));
+    const cta = document.getElementById('roletypes-cta');
+    if (cta) cta.textContent = quiz.roleTypes.length > 0 ? 'Continue →' : 'Skip →';
   }
 }
 
@@ -2458,7 +2634,7 @@ function renderActivePills() {
 
 function quizResetAll() {
   state.path = null; state.location = 'anywhere'; state.myState = null;
-  state.exp = null; state.radius = 0; state.sectors = [];
+  state.exp = null; state.radius = 0; state.sectors = []; state.roleTypes = [];
   state.userLat = null; state.userLng = null; state.page = 1; state.remote = false;
   const row = document.getElementById('active-pills-row');
   if (row) row.style.display = 'none';
@@ -2475,27 +2651,63 @@ function quizEditStep(stepId) {
   document.getElementById('results-section').classList.add('hidden');
   quizHistory = [];
   _quizShow(stepId);
-  const stepNums = { 'qstep-path': 1, 'qstep-sectors': 2, 'qstep-experience': 2, 'qstep-location': 3, 'qstep-rftype': 4 };
+  const stepNums = { 'qstep-path': 1, 'qstep-sectors': 2, 'qstep-experience': 2, 'qstep-roletype': 3, 'qstep-location': 4, 'qstep-rftype': 5 };
   _quizDots(stepNums[stepId] || 1);
   document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+const _QUIZ_SKIP_STEPS = new Set(['qstep-sectors', 'qstep-experience', 'qstep-roletype']);
+
+function _quizSkipLabel(stepId) {
+  if (stepId === 'qstep-sectors')   return quiz.sectors.length   > 0 ? 'Continue →' : 'Skip →';
+  if (stepId === 'qstep-roletype')  return quiz.roleTypes.length  > 0 ? 'Continue →' : 'Skip →';
+  return 'Skip →';
+}
+
 function _quizShow(stepId) {
-  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
-  document.getElementById(stepId).classList.add('active');
+  // Update state classes on all steps
+  document.querySelectorAll('#quiz-scroll-area .quiz-step').forEach(s => {
+    const id = s.id;
+    s.classList.remove('active', 'answered');
+    if (id === stepId) s.classList.add('active');
+    else if (quizHistory.includes(id)) s.classList.add('answered');
+    // else: stays at default opacity (locked)
+  });
+
+  // Snap-scroll after layout settles (bypassed steps may have just changed display)
+  requestAnimationFrame(() => {
+    const scrollArea = document.getElementById('quiz-scroll-area');
+    const target = document.getElementById(stepId);
+    if (scrollArea && target) {
+      scrollArea.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+    }
+  });
+
+  // Nav visibility
   const nav = document.getElementById('quiz-nav');
   const onPath = stepId === 'qstep-path';
   nav.style.display = onPath ? 'none' : 'flex';
   document.getElementById('quiz-back-btn').style.display = quizHistory.length > 0 ? 'inline-block' : 'none';
   const skipBtn = document.getElementById('quiz-skip-btn');
-  if (skipBtn) skipBtn.style.display = stepId === 'qstep-experience' ? 'inline-block' : 'none';
-  document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (skipBtn) {
+    const show = _QUIZ_SKIP_STEPS.has(stepId);
+    skipBtn.style.display = show ? 'inline-block' : 'none';
+    if (show) skipBtn.textContent = _quizSkipLabel(stepId);
+  }
+}
+
+function quizNavCta() {
+  const active = document.querySelector('.quiz-step.active');
+  const stepId = active ? active.id : '';
+  if (stepId === 'qstep-sectors')   { quizConfirmSectors(); return; }
+  if (stepId === 'qstep-roletype')  { quizConfirmRoleTypes(); return; }
+  if (stepId === 'qstep-experience') { quizSkipExp(); return; }
 }
 
 function quizSkipExp() {
   quiz.exp = null;
   quizHistory.push('qstep-experience');
-  _quizShow('qstep-location');
+  _quizShow('qstep-roletype');
   _quizDots(3);
 }
 
@@ -2503,7 +2715,7 @@ function _quizDots(step) {
   // Path step (1) is hidden; adjust to 0-based relative progress
   const adjustedStep = step - 1;
   const isRF = quiz.path === 'rf';
-  const totalDots = isRF ? 3 : 2;
+  const totalDots = isRF ? 4 : 3;
   [1, 2, 3, 4].forEach(i => {
     const d = document.getElementById('qdot-' + i);
     if (!d) return;
@@ -2545,6 +2757,7 @@ function quizFinish() {
   }
   // Apply sector selection (RF path, non-strict)
   state.sectors = quiz.sectors.length ? [...quiz.sectors] : [];
+  state.roleTypes = quiz.roleTypes.length ? [...quiz.roleTypes] : [];
   state.exp = quiz.exp;
   state.radius = quiz.radius;
   state.userLat = quiz.userLat || null;
@@ -2581,8 +2794,10 @@ function applyPath(path, animate) {
   document.getElementById('intake-prompt').classList.add('hidden');
   updateShowMeTabs();
 
-  // Show results
+  // Show results, hide quiz nav
   document.getElementById('results-section').classList.remove('hidden');
+  const qnav = document.getElementById('quiz-nav');
+  if (qnav) qnav.style.display = 'none';
 
   // Update filter UI
   updateRfToggleUI();
@@ -2726,19 +2941,21 @@ function applyFiltersAndRender() {
     if (!state.path) return true;
     if (state.path === 'staff') return true; // show all for staff (boost handles ranking)
     // RF path: apply toggle filter
-    if (state.rfToggle === 'apprenticeships') return job.role_type === 'R3_apprenticeship';
+    if (state.rfToggle === 'apprenticeships') return job.role_type === 'Apprenticeship';
     if (state.rfToggle === 'mcalevey') return job.is_mcalevey_priority;
     return true; // 'all'
   });
 
   // Sector filter
   if (state.sectors.length) {
-    filtered = filtered.filter(job => state.sectors.some(s => (job.sector_tags||[]).includes(s)));
+    filtered = filtered.filter(job => state.sectors.some(s => job.sector === s));
   }
 
-  // Experience level filter — applied BEFORE radius so fallback pool contains right-level jobs
-  if (state.exp !== null && state.exp !== undefined) {
-    filtered = filtered.filter(job => getExpLevel(job) === state.exp);
+  // Role type filter
+  if (state.roleTypes && state.roleTypes.length) {
+    const allowedRoles = new Set();
+    state.roleTypes.forEach(group => (ROLE_TYPE_GROUPS[group] || []).forEach(rt => allowedRoles.add(rt)));
+    filtered = filtered.filter(job => allowedRoles.has(job.role_type));
   }
 
   // Split remote jobs out before geographic filtering if remote toggle is on
@@ -2766,7 +2983,8 @@ function applyFiltersAndRender() {
       const inRadius = filtered.filter(j => j.distance_miles !== null && j.distance_miles <= state.radius);
       const unknownDist = filtered.filter(j => j.distance_miles === null);
       if (inRadius.length >= 10) {
-        filtered = inRadius;
+        // Known-distance jobs fill the list; append unknown-location jobs at the bottom
+        filtered = [...inRadius, ...unknownDist];
       } else {
         const outRadius = filtered
           .filter(j => j.distance_miles !== null && j.distance_miles > state.radius)
@@ -2808,6 +3026,24 @@ function applyFiltersAndRender() {
   } else if (state.sort === 'recent') {
     filtered.sort((a, b) => (b.impact_score || 0) - (a.impact_score || 0));
     radiusFallback.sort((a, b) => (b.impact_score || 0) - (a.impact_score || 0));
+  }
+
+  // Exp proximity sort — applied after score sort so score is tiebreaker within each exp group.
+  // Only activates when user selected a numeric level (not null/'staff').
+  if (state.exp !== null && state.exp !== undefined && typeof state.exp === 'number') {
+    const n = state.exp;
+    const expOrder = [n];
+    for (let d = 1; d <= 3; d++) {
+      if (n + d <= 4) expOrder.push(n + d);
+      if (n - d >= 1) expOrder.push(n - d);
+    }
+    const expRank = job => {
+      const idx = expOrder.indexOf(job.exp_level ?? null);
+      return idx === -1 ? 999 : idx;
+    };
+    const expCmp = (a, b) => expRank(a) - expRank(b);
+    filtered.sort(expCmp);
+    radiusFallback.sort(expCmp);
   }
 
   state._filtered = filtered;
@@ -2975,55 +3211,127 @@ function updateLookForContent() {
   if (!state.path) { el.innerHTML = ''; return; }
 
   const blocks = [];
-  if (state.path === 'rf' && state.rfToggle === 'mcalevey') {
+
+  if (state.path === 'staff') {
+
+    // 1. BEFORE YOU APPLY
     blocks.push({
-      eyebrow: 'Strategic terrain',
-      text: `You're looking at sectors where McAlevey's whole-worker organizing model is most applicable — healthcare, education, public sector, and logistics. These sectors share three things: the work can't be sent offshore, a work stoppage creates immediate crisis, and workers have direct relationships with community members who can become campaign allies.`
+      eyebrow: 'Internal vs. external — ask which one',
+      text: `<strong>Internal organizing</strong> = building power with existing members: contract campaigns, grievances, mobilization. <strong>External organizing</strong> = bringing unorganized workers into a union for the first time. Different skills, different career tracks. Most postings don't say clearly which it is — <strong>ask before the first interview.</strong>`
     });
     blocks.push({
-      eyebrow: 'Salting',
-      text: `If you're considering <strong>salting</strong> — taking a job in a strategic sector with the specific intent to organize from the inside — look at the terrain guide above. <strong>Type A MSAs</strong> are where new organizing is most needed. Your goal is to become a recognized organic leader before anyone knows you're building a structure. This is a 3–5 year commitment.`
-    });
-  } else if (state.path === 'rf' && state.rfToggle === 'all') {
-    blocks.push({
-      eyebrow: 'All union jobs',
-      text: `These are all publicly listed union jobs. Most are staff and professional roles at labor organizations. For career-track jobs inside strategic sectors — nurses, teachers, warehouse workers — we're building direct sector job listings. See the terrain guide for where those jobs will matter most.`
-    });
-  } else if (state.path === 'rf' && state.rfToggle === 'apprenticeships') {
-    blocks.push({
-      eyebrow: 'Apprenticeship strategy',
-      text: `Union apprenticeships give you immediate union membership and established wage standards. Strategic value varies by sector: healthcare and public sector apprenticeships are in McAlevey priority terrain (SVS=100). Building trades apprenticeships are in moderate-SVS terrain — important and valuable, but not where McAlevey would focus scarce new organizing resources.`
-    });
-  } else if (state.path === 'staff') {
-    blocks.push({
-      eyebrow: 'Highest-impact staff roles',
-      text: `The highest-impact staff roles are at unions in McAlevey priority sectors — healthcare workers unions, teachers unions, public sector unions — where your job is to build worker leadership, not substitute for it. McAlevey's critique of staff-driven organizing: <strong>when the staff become the campaign, you've already lost.</strong> Look for roles that put you in direct contact with workers at the worksite.`,
-      source: `Source: Jane McAlevey, <em>No Shortcuts: Organizing for Power in the New Gilded Age</em> (Oxford University Press, 2016)`
+      eyebrow: 'Most people volunteer before they get hired',
+      text: `The fastest path into staff work is volunteering on a campaign first — phone banking, door-knocking, picket support. <strong>Unions hire people they've already seen in action.</strong> If you don't have organizing experience, find a local campaign and get on the volunteer list before applying.`,
+      source: `<a href="https://labornotes.org" target="_blank" rel="noopener">Labor Notes</a>`
     });
     blocks.push({
-      eyebrow: 'Role types',
-      text: `Before anything else: understand the difference between <strong>internal</strong> and <strong>external organizing</strong>. <strong>Internal organizing</strong> means working with workers who are already in a union — deepening their participation, building leadership, and activating power that already exists on paper. This is the work of contract campaigns, political mobilization, and member-to-member organizing. <strong>External organizing</strong> means bringing unorganized workers into a union for the first time — from first one-on-one conversations to NLRB election or voluntary recognition. Most staff jobs are one or the other; very few are both. Know which you're applying for, and ask directly.<br><br><strong>Organizer roles</strong> are the core of any campaign — house calls, one-on-ones, workplace mapping, and building an internal structure of leaders. You're not convincing people; you're identifying who already has credibility on the shop floor and helping them act on what they already believe. <strong>Research roles</strong> build the public and legal case: wage theft data, OSHA violations, employer financials, comparable contracts. Good research turns workers' lived experience into an airtight argument. <strong>Political director and field roles</strong> run the electoral and legislative side — turnout, endorsements, ballot campaigns — and matter most where unions already have density (Type B and C terrain). <strong>Communications roles</strong> amplify worker voice externally; the best ones are embedded in campaigns, not managing a brand. All of these roles are interdependent. The most durable campaigns have all of them working together under worker leadership.`,
-      source: `Source: <a href="https://labornotes.org/secrets" target="_blank" rel="noopener">Labor Notes, <em>Secrets of a Successful Organizer</em></a> (2016); McAlevey, <em>No Shortcuts</em> (2016), ch. 3`
+      eyebrow: 'Entry-level comp: $40–55k, travel-heavy',
+      text: `Field organizer roles typically start at <strong>$40–55k</strong> with defined step increases under a staff contract. Expect <strong>relocation or 6-day weeks</strong> on active campaigns — burnout from travel is a leading reason people leave the field. Research, comms, and legal roles are more location-stable and often higher. Wages are usually public: <strong>search "[union name] staff contract"</strong> before applying.`,
+      source: `UC Berkeley Labor Center; AFL-CIO staff contracts`
+    });
+
+    // 2. HOW TERRAIN HELPS
+    blocks.push({
+      eyebrow: 'Sector matters: some terrain is higher-leverage',
+      text: `Terrain prioritizes <strong>healthcare, logistics, public sector, and education</strong> — the work can't be offshored, a strike creates immediate community impact, and workers have existing relationships with patients, students, and neighbors who become campaign allies. A win in these sectors tends to hold.`,
+      source: `McAlevey, <em>No Shortcuts</em> (Oxford, 2016), ch. 2`
     });
     blocks.push({
-      eyebrow: 'Questions to ask in your interview',
-      text: `Before accepting a staff role, ask: <strong>What is your staff-to-worker ratio on active campaigns?</strong> Anything above 1:200 is a red flag for deep organizing. <strong>How do you identify and develop internal leaders?</strong> If the answer centers on staff tactics rather than worker leadership, that's telling. <strong>What does a win look like here, and how long does it take?</strong> Sustainable campaigns take 2–4 years; pressure for short cycles pushes toward mobilizing models that don't build lasting power.`,
-      source: `Source: <a href="https://labornotes.org/secrets" target="_blank" rel="noopener">Labor Notes, <em>Secrets of a Successful Organizer</em></a> (2016)`
+      eyebrow: 'Place matters: match county type to role type',
+      text: `Terrain scores counties by organizing opportunity type. <strong>Type A counties</strong> (low union density) are best for new organizing and salting. <strong>Type B counties</strong> (existing unions, low political engagement) have leverage for electoral and mobilization roles. <strong>Type C counties</strong> (high density, politically active) are where coordinated campaigns and strike support carry the most weight. <a href="./labor_organizing_national_dashboard.html?view=map" style="color:var(--color-accent)">Explore the map →</a>`
     });
     blocks.push({
-      eyebrow: 'Understanding union density by sector',
-      text: `Union density varies dramatically by sector and state. <strong>Public sector</strong> density nationally is ~33%; <strong>healthcare</strong> ~12%; <strong>education</strong> ~35%; <strong>transportation/warehousing</strong> ~17%. Low-density sectors with high worker counts — logistics, healthcare, retail — represent the largest organizing opportunities. The UC Berkeley Labor Center tracks sector-level density, wage, and organizing data annually.`,
-      source: `Source: <a href="https://laborcenter.berkeley.edu" target="_blank" rel="noopener">UC Berkeley Labor Center</a>; BLS Union Members Summary (2024)`
+      eyebrow: 'Lens matters: what kind of power are you building?',
+      text: `Most staff jobs fall into one of three approaches. <strong>Workplace organizing</strong> (the McAlevey model) builds majority participation among workers themselves. <strong>Electoral mobilization</strong> activates union members for political campaigns. <strong>Strike support</strong> coordinates external pressure during contract fights. Different lenses build different careers — pick one to go deep on first.`
+    });
+
+    // 3. EVALUATING A POSTING
+    blocks.push({
+      eyebrow: 'Questions to ask before you accept',
+      text: `Ask the hiring manager: <strong>What's the staff-to-worker ratio on your campaigns?</strong> (1:10–50 is intensive organizing; 1:200+ is mobilizing, not organizing.) <strong>Who identifies and develops internal leaders?</strong> (If the answer is "staff do," that's a red flag.) <strong>What's a typical campaign timeline to first contract?</strong> (Under 18 months usually means shortcuts.)`,
+      source: `McAlevey, <em>Raising Expectations (and Raising Hell)</em> (Verso, 2012)`
+    });
+    blocks.push({
+      eyebrow: 'Red flags in a job posting',
+      text: `Watch for: language about "high-volume" outreach without structural development, emphasis on digital over face-to-face contact, and short win cycles. <strong>Ask if organizing staff are unionized</strong> — NOLSW or OPEIU coverage is a green flag. An evasive answer is information.`
     });
     blocks.push({
       eyebrow: 'A note on SEIU',
-      text: `SEIU (Service Employees International Union) is one of the largest unions in the country and posts a high volume of staff jobs. It has a very strong political and research department and has won major campaigns in healthcare and building services. That said, SEIU tends toward a <strong>top-down, staff-driven model</strong> — organizers often run campaigns with high staff-to-worker ratios and limited internal leader development. Work culture and organizing philosophy vary significantly by local. <strong>Before applying, research the specific local:</strong> look at their contract campaigns, staff turnover, and whether workers or staff are driving the work. Some locals are excellent; others are not a good fit if you want to do deep whole-worker organizing.`,
-      source: `McAlevey worked as an SEIU organizer and discusses its model directly in <em>Raising Expectations (and Raising Hell)</em> (Verso, 2012) — she distinguishes between unions that build worker leadership and those that substitute staff activity for it. Her taxonomy of "organizing vs. mobilizing vs. advocacy" models in <em>No Shortcuts</em> (Oxford, 2016), ch. 1–2, is the academic framework behind this note.`
+      text: `SEIU posts a high volume of staff jobs and has a strong political department. Work culture varies significantly by local — <strong>before applying, research the specific local:</strong> look at their contract campaigns, staff turnover, and whether workers or staff are driving the work.`,
+      source: `McAlevey, <em>Raising Expectations</em> (Verso, 2012); <em>No Shortcuts</em> (Oxford, 2016), ch. 1–2`
     });
+
+    // 4. WHERE TO LOOK
     blocks.push({
       eyebrow: 'Where to find more listings',
-      text: `<strong><a href="https://unionjobs.com" target="_blank" rel="noopener" style="color:#2C2C2C">unionjobs.com</a></strong> aggregates staff roles across international and local unions. <strong><a href="https://www.jwj.org/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">Jobs with Justice</a></strong> lists roles at worker centers and coalitions. <strong><a href="https://labornotes.org/about/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">Labor Notes</a></strong> occasionally lists openings at labor education and training organizations. For direct sector jobs (hospital, school district, warehouse), we're building dedicated listings — check back.`
+      text: `<strong><a href="https://unionjobs.com" target="_blank" rel="noopener" style="color:#2C2C2C">unionjobs.com</a></strong> — broadest union staff aggregator. <strong><a href="https://www.jwj.org/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">Jobs with Justice</a></strong> — worker centers and coalitions. <strong><a href="https://labornotes.org/about/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">Labor Notes</a></strong> — labor education orgs. <strong><a href="https://aflcio.org/about/jobs" target="_blank" rel="noopener" style="color:#2C2C2C">AFL-CIO</a></strong> — fellowships for people new to organizing.`
     });
+
+    // 5. FURTHER READING
+    blocks.push({
+      eyebrow: 'Further reading',
+      text: `McAlevey, <em>No Shortcuts: Organizing for Power in the New Gilded Age</em> (Oxford, 2016). McAlevey, <em>Raising Expectations (and Raising Hell)</em> (Verso, 2012). <em>Labor Notes: <a href="https://labornotes.org/secrets" target="_blank" rel="noopener" style="color:var(--color-accent)">Secrets of a Successful Organizer</a></em> (2016). UC Berkeley Labor Center, <em>The State of Unions</em> (annual). BLS, <em>Union Members Summary</em> (annual).`
+    });
+
+  } else if (state.path === 'rf' && state.rfToggle === 'mcalevey') {
+
+    blocks.push({
+      eyebrow: 'This is a 3–5 year commitment',
+      text: `Taking a job in a priority sector to organize from inside isn't a short game. Expect <strong>1–2 years before you're building any real structure</strong>. Think carefully about housing, finances, and relationships before you start.`
+    });
+    blocks.push({
+      eyebrow: 'Strategic hire vs. salting',
+      text: `<strong>Strategic hire</strong> = get a union job in a priority sector and organize your coworkers from within. <strong>Salting</strong> = deliberately take a non-union job specifically to build a campaign. Both require long commitment; salting carries more legal and financial risk.`
+    });
+    blocks.push({
+      eyebrow: 'Pick a sector you can stay in',
+      text: `<strong>Healthcare, education, and public sector</strong> are the highest-leverage terrain — can't be offshored, a strike creates immediate crisis. Logistics (warehouses, trucking) is growing fast. Pick somewhere you can build real expertise over years, not just pass through.`,
+      source: `McAlevey, <em>No Shortcuts</em> (Oxford, 2016), ch. 2`
+    });
+    blocks.push({
+      eyebrow: 'County type shapes your strategy',
+      text: `<strong>Type A counties</strong> (low union density) give you room to build from scratch with fewer existing structures to navigate. <strong>Type B counties</strong> have organized power that isn't fully active — better for connecting workplace campaigns to political leverage. Check the Terrain map before deciding where to land. <a href="./labor_organizing_national_dashboard.html?view=map" style="color:var(--color-accent)">Explore the map →</a>`,
+      source: `McAlevey, <em>No Shortcuts</em> (Oxford, 2016)`
+    });
+    blocks.push({
+      eyebrow: 'How people actually get in',
+      text: `Most rank-and-file organizers start by getting involved in an existing campaign as a coworker — not by applying to a program. Talk to your union rep, attend member meetings, find out who the organic leaders are. The formal pathway (staff apprenticeship, fellowship) comes later for most people.`
+    });
+    blocks.push({
+      eyebrow: 'Further reading',
+      text: `McAlevey, <em>No Shortcuts</em> (Oxford, 2016). <em>Labor Notes: Secrets of a Successful Organizer</em> (2016). BLS, <em>Union Members Summary</em> (annual).`
+    });
+
+  } else if (state.path === 'rf' && state.rfToggle === 'all') {
+
+    blocks.push({
+      eyebrow: 'Most of these are staff jobs',
+      text: `Publicly listed union jobs skew toward <strong>staff and professional roles</strong> at labor organizations — not rank-and-file positions inside workplaces. For jobs as a nurse, teacher, or warehouse worker at a unionized employer, we're building direct sector listings.`
+    });
+    blocks.push({
+      eyebrow: 'Entry points for rank-and-file work',
+      text: `If you want to work inside a union workplace rather than for a union as staff, the practical path is: pick a high-leverage sector (healthcare, public sector, logistics), get the job, then get active. Union apprenticeships are the fastest structured entry — see the Apprenticeships tab for programs with defined wages from day one.`
+    });
+
+  } else if (state.path === 'rf' && state.rfToggle === 'apprenticeships') {
+
+    blocks.push({
+      eyebrow: 'What you get',
+      text: `Union apprenticeships give you <strong>immediate union membership, defined wages, and structured training</strong> — no degree required. You earn while you learn, wages step up automatically. Programs typically run 3–5 years.`
+    });
+    blocks.push({
+      eyebrow: 'How to apply',
+      text: `Applications open on <strong>fixed cycles</strong> — check the local union's website directly, not job boards. Timing varies by trade and region. Many programs have eligibility requirements (age, residency, physical). Apply early; <strong>waitlists are common</strong> in high-demand trades.`
+    });
+    blocks.push({
+      eyebrow: 'Which trades to consider',
+      text: `The building trades (IBEW, UA, Carpenters, Ironworkers) have the most apprenticeship slots nationally. <strong>Healthcare and public sector</strong> apprenticeships are growing — check SEIU, AFSCME, and 1199. Wages and conditions vary dramatically by local; research the specific local, not just the international.`
+    });
+    blocks.push({
+      eyebrow: 'Further reading',
+      text: `<a href="https://www.dol.gov/agencies/eta/apprenticeship" target="_blank" rel="noopener" style="color:var(--color-accent)">DOL Apprenticeship Finder</a>. UC Berkeley Labor Center, <em>The State of Apprenticeship</em>. AFL-CIO, <em>Building the Future</em> (apprenticeship guide).`
+    });
+
   }
 
   el.innerHTML = blocks.map(b => `
@@ -3091,10 +3399,15 @@ const INT_DESCS = {
   'C': 'High-density, politically active terrain — best suited for coordinated campaigns and electoral leverage.',
 };
 const ROLE_DESCS = {
-  'staff': 'Professional staff role working for a union or labor organization.',
-  'R3_apprenticeship': 'Structured apprenticeship to develop organizing skills with mentorship and real campaigns.',
-  'R2_career': 'Take a job in a strategic sector (healthcare, education, logistics) to build worker power from the inside.',
-  'R4_union_job': 'A good union job in an organized workplace.',
+  'Internal organizer':  'Work with existing union members on contract campaigns, grievances, and member mobilization.',
+  'External organizer':  'Run new workplace organizing campaigns to bring unorganized workers into the union.',
+  'Communications':      'Communications, press, digital, and media roles supporting the labor movement.',
+  'Legal':               'Labor law, counsel, and paralegal roles supporting union campaigns and workers.',
+  'Research':            'Research, policy analysis, and data roles that strengthen organizing strategy.',
+  'Political/electoral': 'Political action, electoral campaigns, and GOTV work in the labor movement.',
+  'Admin/operations':    'Operations, finance, HR, and administrative roles that keep unions running.',
+  'Apprenticeship':      'Structured apprenticeship to develop organizing skills with mentorship and real campaigns.',
+  'Union job':           'A job in an organized workplace — build power from the inside as a union member.',
 };
 const SECTOR_ICONS = {
   'Education': '🎓', 'Healthcare': '🏥', 'Logistics/Warehousing': '📦',
@@ -3104,7 +3417,8 @@ const SECTOR_ICONS = {
 };
 const STAFF_ICON_SVG = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="12" width="22" height="13" rx="2.5" stroke="#7A6F64" stroke-width="2" fill="none"/><path d="M10 12V9a4 4 0 0 1 8 0v3" stroke="#7A6F64" stroke-width="2" stroke-linecap="round" fill="none"/><line x1="3" y1="18" x2="25" y2="18" stroke="#7A6F64" stroke-width="1.5"/></svg>`;
 function getSectorIcon(tags, roleType) {
-  if (roleType === 'staff') return STAFF_ICON_SVG;
+  const staffTypes = new Set(['Communications', 'Legal', 'Research', 'Political/electoral', 'Admin/operations']);
+  if (!roleType || staffTypes.has(roleType)) return STAFF_ICON_SVG;
   if (!tags || !tags.length) return '🔷';
   for (const t of tags) { if (SECTOR_ICONS[t]) return SECTOR_ICONS[t]; }
   return '🔷';
@@ -3112,7 +3426,7 @@ function getSectorIcon(tags, roleType) {
 
 function getContextualTips(job) {
   const tips = [];
-  const org = (job.organization || '').toLowerCase();
+  const org = (job.employer || job.organization || '').toLowerCase();
   const intType = (job.intervention_type || '').toUpperCase().replace('TYPE ', '');
 
   if (job.needs_research_note || org.includes('seiu')) {
@@ -3150,21 +3464,22 @@ function showJobDetail(job) {
   const guide = document.getElementById('terrain-guide');
   const pane = document.getElementById('job-detail-pane');
   const { title, embeddedSalary } = cleanJobTitle(job.title);
-  const org = job.organization || '';
+  const org = job.employer || job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
   const impact = Math.round(job.impact_score || 50);
   const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw) || embeddedSalary;
-  const applyUrl = job.job_id ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}` : (job.apply_url || '');
+  const applyUrl = job.source_url || (job.apply_url || '');
   const grades = computeGrades(job);
 
   const intType = (job.intervention_type || '').toUpperCase().replace('TYPE ', '');
   const intTypeKey = ['A','B','C'].includes(intType) ? intType : null;
   const intDesc = intTypeKey ? INT_DESCS[intTypeKey] : '';
-  const roleDesc = ROLE_DESCS[job.role_type || 'staff'] || '';
+  const roleDesc = ROLE_DESCS[job.role_type] || '';
   const scoreContext = impact >= 90 ? 'Top-tier organizing terrain' : impact >= 70 ? 'High-opportunity terrain' : impact >= 50 ? 'Moderate organizing opportunity' : 'Developing terrain';
-  const isStaff = job.role_type === 'staff' || !job.role_type;
+  const _STAFF_ROLE_TYPES = new Set(['Communications', 'Legal', 'Research', 'Political/electoral', 'Admin/operations']);
+  const isStaff = !job.role_type || _STAFF_ROLE_TYPES.has(job.role_type);
 
-  const sectorIcon = getSectorIcon(job.sector_tags, job.role_type);
+  const sectorIcon = getSectorIcon(job.sector ? [job.sector] : [], job.role_type);
 
   // Section 2: description snippet
   const desc = (job.description || '').trim();
@@ -3182,10 +3497,10 @@ function showJobDetail(job) {
             : 'This score reflects union infrastructure, sector density, and electoral opportunity in the surrounding area.');
 
   // Section 4: sector note for staff
-  const sectorNote = isStaff && (job.sector_tags||[]).length
-    ? `<div class="jdp-badge-desc" style="margin-top:6px"><strong>Employer's sector:</strong> ${escHtml(job.sector_tags.join(', '))}<br><span style="color:#9A8E85;font-size:11px">The employer's industry — relevant when assessing organizing terrain around this workplace.</span></div>`
-    : (job.sector_tags||[]).length
-      ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>Sector:</strong> ${escHtml(job.sector_tags.join(', '))}</div>`
+  const sectorNote = isStaff && job.sector
+    ? `<div class="jdp-badge-desc" style="margin-top:6px"><strong>Employer's sector:</strong> ${escHtml(job.sector)}<br><span style="color:#9A8E85;font-size:11px">The employer's industry — relevant when assessing organizing terrain around this workplace.</span></div>`
+    : job.sector
+      ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>Sector:</strong> ${escHtml(job.sector)}</div>`
       : '';
 
   pane.innerHTML = `
@@ -3199,7 +3514,7 @@ function showJobDetail(job) {
     <div class="jdp-section">
       <div class="jdp-eyebrow">Experience Level</div>
       ${(() => {
-        const lvl = getExpLevel(job);
+        const lvl = job.exp_level ?? 2;
         const info = EXP_LEVELS[lvl];
         const lbl = typeof lvl === 'number' ? `Level ${lvl} — ${info.label}` : info.label;
         return `<div class="jdp-badge-block">
@@ -3477,30 +3792,7 @@ const EXP_LEVELS = {
 // Keywords that mark a role as union staff (non-organizing)
 const STAFF_ROLE_RE = /\b(receptionist|administrative|admin\b|office\s+manager|office\s+assistant|executive\s+assistant|assistant\s+to|communications|comms\b|media\b|digital\s+media|public\s+relations|research(?:er)?|analyst|data\s+analyst|it\b|information\s+technology|tech\s+support|accountant|accounting|finance|financial|payroll|paralegal|legal\b|attorney|counsel|lobbyist|human\s+resources|\bhr\b|membership\s+rep|benefits|graphic|designer|web\s+developer|database|clerical|bookkeeper|archivist|librarian|translator|interpreter|events?\s+staff|fundrais)\b/;
 
-function getExpLevel(job) {
-  const t = (job.title || '').toLowerCase();
-  const rt = (job.role_type || '').toLowerCase();
-
-  // Level 4 checked FIRST — director/manager/executive always outranks staff classification
-  if (/\b(director|manager|vice[\s-]?president|\bvp\b|chief|executive|president)\b/.test(t)) return 4;
-
-  // Level 3 — Lead / Senior / Coordinator / Supervisor / Advocate
-  if (/\b(coordinator|supervisor|advocate)\b/.test(t)) return 3;
-  if (/\b(lead|senior|\bsr\.?\b)\b/.test(t)) return 3;
-
-  // Level 1 — Entry / Fellow / Intern / Apprentice
-  if (/\b(fellow|intern|internship|fellowship|apprentice|apprenticeship|entry[\s-]level|associate\s+organizer|new\s+organizer|junior)\b/.test(t)) return 1;
-  if (rt === 'r3_apprenticeship') return 1;
-
-  // "Good Union Job" role type → union staff (support/ops)
-  if (rt === 'r4_union_job') return 'staff';
-
-  // Title-based non-organizing staff detection
-  if (STAFF_ROLE_RE.test(t)) return 'staff';
-
-  // Level 2 — Organizer (default for remaining staff/organizing roles)
-  return 2;
-}
+// getExpLevel() removed — exp_level is pre-classified as integer 1–4 in classified_jobs.json
 
 // ============================================================
 // TITLE CLEANING — strips embedded salary text from raw titles
@@ -3548,12 +3840,10 @@ function makeJobCard(job) {
   });
 
   const { title, embeddedSalary } = cleanJobTitle(job.title);
-  const org = job.organization || '';
+  const org = job.employer || job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
   const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw) || embeddedSalary;
-  const applyUrl = job.job_id
-    ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}`
-    : (job.apply_url || '');
+  const applyUrl = job.source_url || (job.apply_url || '');
 
   const grades = computeGrades(job);
   const badgeHtml = buildBadges(job, grades);
@@ -3570,25 +3860,26 @@ function makeJobCard(job) {
       ${applyUrl
         ? `<a class="apply-btn" href="${escHtml(applyUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Apply →</a>`
         : `<span class="apply-btn disabled">See listing</span>`}
+      ${isAdmin ? `<button class="fix-btn">🔧 Fix</button>` : ''}
     </div>
   `;
+  if (isAdmin) {
+    const fixBtn = div.querySelector('.fix-btn');
+    if (fixBtn) fixBtn.addEventListener('click', e => { e.stopPropagation(); adminOpenModal(job); });
+  }
   return div;
 }
 
 function buildBadges(job, grades) {
   if (!grades) grades = computeGrades(job);
   const parts = [];
-  // Experience level — shown first
-  const expLvl = getExpLevel(job);
-  const expInfo = EXP_LEVELS[expLvl];
-  const expLabel = typeof expLvl === 'number' ? `Level ${expLvl} — ${expInfo.label}` : expInfo.label;
-  parts.push(`<span class="badge ${expInfo.cls}" title="${escHtml(expInfo.desc)}">${escHtml(expLabel)}</span>`);
   // Role badge
   const roleBadge = getRoleBadge(job);
   if (roleBadge) parts.push(roleBadge);
   // Sector chips — cap at 1 for staff, 2 for RF; overflow shown as "+N more"
-  const isStaff = (job.role_type || 'staff') === 'staff';
-  const tags = job.sector_tags || [];
+  const _staffTypes = new Set(['Communications', 'Legal', 'Research', 'Political/electoral', 'Admin/operations']);
+  const isStaff = !job.role_type || _staffTypes.has(job.role_type);
+  const tags = job.sector ? [job.sector] : [];
   const maxChips = isStaff ? 1 : 2;
   const visible = tags.slice(0, maxChips);
   const overflow = tags.length - visible.length;
@@ -3614,16 +3905,25 @@ function buildBadges(job, grades) {
   if (job.needs_research_note) {
     parts.push(`<span class="badge badge-research-note" title="SEIU International — research your local before applying">ℹ️ Research local</span>`);
   }
+  // Low-confidence classifier flag (dev signal — non-intrusive)
+  if (job.low_confidence && job.low_confidence.length > 0) {
+    parts.push(`<span class="badge badge-low-conf" title="Low-confidence classification: ${escHtml(job.low_confidence.join(', '))}">⚠ review</span>`);
+  }
+  // Location unknown — city couldn't be geocoded
+  if (job._locUnknown) {
+    parts.push(`<span class="badge badge-loc-unknown" title="Exact location couldn't be determined — this job may still be near you">📍 location unknown</span>`);
+  }
   return parts.join('');
 }
 
 function getRoleBadge(job) {
-  const rt = job.role_type || 'staff';
-  const label = job.rf_subtype_label || '';
-  if (rt === 'R3_apprenticeship') return `<span class="badge badge-role-apprenticeship">${escHtml(label || 'Apprenticeship')}</span>`;
-  if (rt === 'R2_career') return `<span class="badge badge-role-career">${escHtml(label || 'Career in Strategic Sector')}</span>`;
-  if (rt === 'R4_union_job') return `<span class="badge badge-role-union">${escHtml(label || 'Good Union Job')}</span>`;
-  return `<span class="badge badge-role-staff">${escHtml(label || 'Staff & Organizer')}</span>`;
+  const rt = job.role_type || '';
+  const label = job.rf_subtype_label || rt;
+  if (rt === 'Apprenticeship') return `<span class="badge badge-role-apprenticeship">${escHtml(label)}</span>`;
+  if (rt === 'Union job') return `<span class="badge badge-role-union">${escHtml(label)}</span>`;
+  if (rt === 'Internal organizer' || rt === 'External organizer') return `<span class="badge badge-role-career">${escHtml(label)}</span>`;
+  if (rt) return `<span class="badge badge-role-staff">${escHtml(label)}</span>`;
+  return `<span class="badge badge-role-staff">Staff &amp; Organizer</span>`;
 }
 
 function makeSkeletonCard() {
@@ -4017,6 +4317,171 @@ function escHtml(s) {
 function escId(s) {
   return String(s || '').replace(/[^a-zA-Z0-9]/g,'-');
 }
+
+// ============================================================
+// ADMIN
+// ============================================================
+const isAdmin = new URLSearchParams(window.location.search).has('admin');
+let _adminJob = null;
+
+(function initAdmin() {
+  if (!isAdmin) return;
+  const banner = document.getElementById('admin-banner');
+  if (banner) banner.style.display = 'flex';
+  adminPingServer();
+  setInterval(adminPingServer, 30000);
+})();
+
+function adminPingServer() {
+  fetch('http://localhost:5001/health')
+    .then(r => r.json())
+    .then(() => {
+      const el = document.getElementById('admin-status');
+      const btn = document.getElementById('admin-rerun-btn');
+      if (el) { el.textContent = 'server online'; el.className = 'ok'; }
+      if (btn) btn.disabled = false;
+    })
+    .catch(() => {
+      const el = document.getElementById('admin-status');
+      const btn = document.getElementById('admin-rerun-btn');
+      if (el) { el.textContent = 'server offline — run: python -m pipeline.admin_server'; el.className = 'offline'; }
+      if (btn) btn.disabled = true;
+    });
+}
+
+function adminOpenModal(job) {
+  _adminJob = job;
+  document.getElementById('am-title').textContent = 'Fix: ' + (job.title || '').slice(0, 55);
+  document.getElementById('admin-modal-subtitle').textContent =
+    (job.job_id || '') + ' · ' + (job.employer || job.organization || '');
+  const secEl = document.getElementById('am-sector');
+  secEl.value = job.sector || 'no_change';
+  if (!secEl.value) secEl.value = 'no_change';
+  const roleEl = document.getElementById('am-role-type');
+  roleEl.value = job.role_type || 'no_change';
+  if (!roleEl.value) roleEl.value = 'no_change';
+  const expEl = document.getElementById('am-exp-level');
+  expEl.value = (job.exp_level != null) ? job.exp_level : 'no_change';
+  document.getElementById('am-hide').checked = !!job.hidden;
+  document.getElementById('am-boost').checked = !!job.boosted;
+  document.getElementById('am-blocks').textContent = '';
+  document.getElementById('am-warnings').textContent = '';
+  document.getElementById('am-save-btn').disabled = false;
+  document.getElementById('admin-modal-overlay').classList.add('open');
+}
+
+function adminCloseModal() {
+  document.getElementById('admin-modal-overlay').classList.remove('open');
+  _adminJob = null;
+}
+
+function adminSaveRule() {
+  if (!_adminJob) return;
+  const btn = document.getElementById('am-save-btn');
+  btn.disabled = true;
+  const expRaw = document.getElementById('am-exp-level').value;
+  const payload = {
+    scope: 'manual',
+    job_id: _adminJob.job_id,
+    sector:    document.getElementById('am-sector').value,
+    role_type: document.getElementById('am-role-type').value,
+    exp_level: expRaw === 'no_change' ? null : parseInt(expRaw),
+    hide:  document.getElementById('am-hide').checked,
+    boost: document.getElementById('am-boost').checked,
+  };
+  fetch('http://localhost:5001/save_rule', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload),
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) {
+        document.getElementById('am-blocks').textContent = (data.blocks || []).join(' ');
+        if (data.warnings && data.warnings.length)
+          document.getElementById('am-warnings').textContent = data.warnings.join(' ');
+        btn.disabled = false;
+        return;
+      }
+      if (data.warnings && data.warnings.length)
+        document.getElementById('am-warnings').textContent = data.warnings.join(' ');
+      adminCloseModal();
+    })
+    .catch(err => {
+      document.getElementById('am-blocks').textContent = 'Server error: ' + err.message;
+      btn.disabled = false;
+    });
+}
+
+function adminRerun() {
+  const btn = document.getElementById('admin-rerun-btn');
+  const statusEl = document.getElementById('admin-status');
+  if (btn) btn.disabled = true;
+  if (statusEl) { statusEl.textContent = 'reclassifying…'; statusEl.className = ''; }
+  fetch('http://localhost:5001/rerun', { method: 'POST' })
+    .then(r => r.json())
+    .then(async data => {
+      if (data.ok) {
+        if (statusEl) statusEl.textContent = 'done — reloading…';
+        await loadJobs(true);
+        applyFiltersAndRender();
+        if (statusEl) { statusEl.textContent = 'server online'; statusEl.className = 'ok'; }
+      } else {
+        if (statusEl) { statusEl.textContent = 'error — check terminal'; statusEl.className = 'offline'; }
+      }
+      if (btn) btn.disabled = false;
+    })
+    .catch(() => {
+      if (statusEl) { statusEl.textContent = 'server offline'; statusEl.className = 'offline'; }
+      if (btn) btn.disabled = false;
+    });
+}
 </script>
+
+<!-- ADMIN CORRECTION MODAL -->
+<div id="admin-modal-overlay" onclick="if(event.target===this)adminCloseModal()">
+  <div id="admin-modal">
+    <h3 id="am-title">Fix classification</h3>
+    <div id="admin-modal-subtitle"></div>
+    <div id="am-blocks"></div>
+    <div id="am-warnings"></div>
+    <div class="am-field">
+      <label>Sector</label>
+      <select id="am-sector">
+        <option value="no_change">— no change —</option>
+        <option>Healthcare</option><option>Education</option><option>Logistics</option>
+        <option>Public Sector</option><option>Building Trades</option><option>Manufacturing</option>
+      </select>
+    </div>
+    <div class="am-field">
+      <label>Role type</label>
+      <select id="am-role-type">
+        <option value="no_change">— no change —</option>
+        <option>Internal organizer</option><option>External organizer</option>
+        <option>Communications</option><option>Legal</option><option>Research</option>
+        <option>Political/electoral</option><option>Admin/operations</option>
+        <option>Apprenticeship</option><option>Union job</option>
+      </select>
+    </div>
+    <div class="am-field">
+      <label>Experience level</label>
+      <select id="am-exp-level">
+        <option value="no_change">— no change —</option>
+        <option value="1">1 — Entry</option><option value="2">2 — Organizer</option>
+        <option value="3">3 — Lead / Coordinator</option><option value="4">4 — Director / Manager</option>
+      </select>
+    </div>
+    <div class="am-field">
+      <div class="am-checkrow">
+        <label><input type="checkbox" id="am-hide"> Hide this job</label>
+        <label><input type="checkbox" id="am-boost"> Boost this job</label>
+      </div>
+    </div>
+    <div class="am-actions">
+      <button class="am-save-btn" id="am-save-btn" onclick="adminSaveRule()">Save rule</button>
+      <button class="am-cancel-btn" onclick="adminCloseModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
