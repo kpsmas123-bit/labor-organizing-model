@@ -64,12 +64,18 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 /* === BETA BANNER === */
 #beta-banner {
-  background: var(--color-banner-warning-bg); border-left: 3px solid var(--color-banner-warning-border); color: var(--color-text-secondary);
-  font-family: var(--font-body); font-size: var(--text-sm); line-height: 1.55; padding: 10px 24px;
-  display: flex; align-items: center; gap: 10px; position: relative; z-index: 50;
+  padding: 9px 0;
+  background: transparent;
+  position: relative; z-index: 50;
 }
-#beta-banner span { flex: 1; }
-#beta-close { background: none; border: none; color: var(--color-text-muted); font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1; }
+#beta-banner-inner {
+  max-width: 1280px; margin: 0 auto; padding: 6px 24px;
+  display: flex; align-items: center; gap: 10px;
+  background: #FEF3C7; border: 1px solid #F6D860; border-radius: 4px;
+  color: #92400E; font-family: var(--font-body); font-size: var(--text-sm); line-height: 1.55;
+}
+#beta-banner-inner span { flex: 1; }
+#beta-close { background: none; border: none; color: #92400E; font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1; }
 
 /* === HEADER === */
 #header {
@@ -876,12 +882,6 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 </head>
 <body>
 
-<!-- BETA BANNER -->
-<div id="beta-banner">
-  <span>⚠️ <strong>Beta Version</strong> — Jobs board under active development. Listings from <a href="https://unionjobs.com" target="_blank" style="color:#92400E;font-weight:600">unionjobs.com</a>. Direct sector job listings (hospitals, school districts, warehouses) coming soon. Check back for updates.</span>
-  <button id="beta-close" onclick="this.parentElement.style.display='none'">×</button>
-</div>
-
 <nav class="terrain-nav">
   <div class="terrain-nav__inner">
     <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
@@ -906,6 +906,14 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     </ul>
   </div>
 </nav>
+
+<!-- BETA BANNER -->
+<div id="beta-banner">
+  <div id="beta-banner-inner">
+    <span>⚠️ <strong>Beta Version</strong> — Jobs board under active development. Listings from <a href="https://unionjobs.com" target="_blank" style="color:#92400E;font-weight:600">unionjobs.com</a>. Direct sector job listings (hospitals, school districts, warehouses) coming soon. Check back for updates.</span>
+    <button id="beta-close" onclick="document.getElementById('beta-banner').style.display='none'">×</button>
+  </div>
+</div>
 
 <!-- QUIZ SUMMARY BAR -->
 <div id="quiz-summary-bar">
