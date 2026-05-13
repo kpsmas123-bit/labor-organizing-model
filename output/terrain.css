@@ -164,10 +164,11 @@ img, svg {
 
 /* Wordmark */
 .terrain-nav__brand {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
   color: var(--color-text);
   text-decoration: none;
   flex-shrink: 0;
