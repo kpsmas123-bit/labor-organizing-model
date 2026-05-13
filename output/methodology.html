@@ -52,54 +52,44 @@
     <h2 class="section-title" id="glance-heading">The Model at a Glance</h2>
     <p class="method-section__intro">Two independent layers — organizing terrain and electoral terrain — scored separately, combined by user goal.</p>
 
-    <div class="model-flow" role="table" aria-label="Model architecture">
-      <div class="model-flow__step">
-        <div class="model-flow__num">01</div>
-        <div class="model-flow__content">
-          <div class="model-flow__label">User Goal</div>
-          <div class="model-flow__formula">Electoral objective — set by the user</div>
+    <div class="model-flow" aria-label="Model architecture">
+      <div class="model-flow__tile">
+        <span class="model-flow__step-label">01</span>
+        <div class="model-flow__tile-title">User Goal</div>
+        <div class="model-flow__tile-formula">Electoral objective — set by the user</div>
+      </div>
+      <div class="model-flow__tile model-flow__tile--org">
+        <span class="model-flow__step-label">02</span>
+        <div class="model-flow__tile-title">Organizing Opportunity Score</div>
+        <div class="model-flow__tile-formula">SVS × 55% + OPS × 45%</div>
+        <div class="model-flow__pills">
+          <span class="card-meta">County SVS</span>
+          <span class="card-meta">Org. Potential</span>
         </div>
       </div>
-      <div class="model-flow__step model-flow__step--org">
-        <div class="model-flow__num">02</div>
-        <div class="model-flow__content">
-          <div class="model-flow__label">Organizing Opportunity Score (OOS)</div>
-          <div class="model-flow__formula">SVS × 55% + Organizing Potential × 45%</div>
-          <div class="model-flow__subs">
-            <span class="model-flow__sub">County SVS</span>
-            <span class="model-flow__sub">Organizing Potential</span>
-          </div>
+      <div class="model-flow__tile">
+        <span class="model-flow__step-label">03</span>
+        <div class="model-flow__tile-title">Intervention Type</div>
+        <div class="model-flow__tile-formula">A / B / C</div>
+        <div class="model-flow__pills">
+          <span class="card-meta">Infrastructure</span>
+          <span class="card-meta">Alignment</span>
         </div>
       </div>
-      <div class="model-flow__step">
-        <div class="model-flow__num">03</div>
-        <div class="model-flow__content">
-          <div class="model-flow__label">Intervention Type (A / B / C)</div>
-          <div class="model-flow__formula">f(Infrastructure Score, Political Alignment)</div>
-          <div class="model-flow__subs">
-            <span class="model-flow__sub">Infrastructure Score</span>
-            <span class="model-flow__sub">Political Alignment</span>
-          </div>
+      <div class="model-flow__tile">
+        <span class="model-flow__step-label">04</span>
+        <div class="model-flow__tile-title">Electoral Sub-Scores</div>
+        <div class="model-flow__tile-formula">3 independent dimensions</div>
+        <div class="model-flow__pills">
+          <span class="card-meta">Presidential</span>
+          <span class="card-meta">Statewide</span>
+          <span class="card-meta">Congressional</span>
         </div>
       </div>
-      <div class="model-flow__step">
-        <div class="model-flow__num">04</div>
-        <div class="model-flow__content">
-          <div class="model-flow__label">Electoral Sub-Scores</div>
-          <div class="model-flow__formula">3 independent dimensions</div>
-          <div class="model-flow__subs">
-            <span class="model-flow__sub">Presidential</span>
-            <span class="model-flow__sub">Statewide</span>
-            <span class="model-flow__sub">Congressional</span>
-          </div>
-        </div>
-      </div>
-      <div class="model-flow__step">
-        <div class="model-flow__num">05</div>
-        <div class="model-flow__content">
-          <div class="model-flow__label">Composite Ranking</div>
-          <div class="model-flow__formula">OOS × Electoral weight (goal-dependent)</div>
-        </div>
+      <div class="model-flow__tile">
+        <span class="model-flow__step-label">05</span>
+        <div class="model-flow__tile-title">Composite Ranking</div>
+        <div class="model-flow__tile-formula">OOS × Electoral weight</div>
       </div>
     </div>
 

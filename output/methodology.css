@@ -538,80 +538,61 @@
 
 /* ── RESPONSIVE ── */
 
-/* ── MODEL FLOW DIAGRAM (step-table) ── */
+/* ── MODEL FLOW DIAGRAM (card tiles) ── */
 
 .model-flow {
-  max-width: 600px;
-  margin: 0 auto var(--space-8);
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.model-flow__tile {
+  flex: 1;
+  background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.model-flow__step {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.model-flow__step:last-child { border-bottom: none; }
-
-.model-flow__num {
-  background-color: var(--color-bg-subtle);
-  border-right: 1px solid var(--color-border);
+  padding: var(--space-5) var(--space-4);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  letter-spacing: 0.5px;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
-.model-flow__content {
-  padding: var(--space-4) var(--space-5);
-  background-color: var(--color-bg-card);
-}
-
-.model-flow__step--org .model-flow__content {
+.model-flow__tile--org {
+  border-top: 3px solid var(--color-accent);
   background-color: var(--color-accent-light);
 }
 
-.model-flow__label {
+.model-flow__step-label {
   font-family: var(--font-mono);
   font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
   color: var(--color-text-muted);
-  margin-bottom: 4px;
+  letter-spacing: 1px;
+  display: block;
 }
 
-.model-flow__step--org .model-flow__label { color: var(--color-accent); }
+.model-flow__tile-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+}
 
-.model-flow__formula {
+.model-flow__tile-formula {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  line-height: 1.5;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  line-height: 1.45;
 }
 
-.model-flow__subs {
+.model-flow__pills {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-}
-
-.model-flow__sub {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
-  background-color: var(--color-bg-subtle);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  padding: 3px 10px;
-  white-space: nowrap;
+  gap: var(--space-1);
+  margin-top: auto;
+  padding-top: var(--space-2);
 }
 
 /* ── CARD META BADGE ── */
@@ -931,7 +912,7 @@ a.source-card:hover {
   }
 
   .model-flow {
-    max-width: 100%;
+    flex-direction: column;
   }
 
   .interv-matrix__header,
@@ -943,10 +924,5 @@ a.source-card:hover {
 @media (max-width: 480px) {
   .source-grid {
     grid-template-columns: 1fr;
-  }
-
-  .model-flow__num {
-    font-size: 9px;
-    padding: var(--space-2);
   }
 }
