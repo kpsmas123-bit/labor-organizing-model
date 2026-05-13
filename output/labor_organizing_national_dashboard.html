@@ -20,7 +20,7 @@
   #header-right { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; }
 
   #view-tabs { display: flex; background: #F0EBE3; border-bottom: 1px solid #DDD5C8; overflow-x: auto; }
-  #layout { display: flex; height: calc(100vh - 91px); }
+  #layout { display: flex; height: calc(100vh - 91px); max-width: 1280px; margin: 0 auto; width: 100%; }
 
   #sidebar { width: 300px; min-width: 260px; background: #F0EBE3; border-right: 1px solid #DDD5C8; overflow-y: auto; padding: 16px; flex-shrink: 0; }
   #sidebar.sidebar-hidden { display: none; }
@@ -362,6 +362,13 @@
   #onboarding-got-it:hover { background: #E8732A; }
 
   .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.97); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; min-width: 200px; max-width: 230px; }
+  .legend-toggle { display: none; width: 100%; background: none; border: none; cursor: pointer; font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: #7A6F64; text-align: right; padding: 0 0 6px; letter-spacing: 0.5px; }
+  .legend.collapsed .legend-body { display: none; }
+  .legend.collapsed { padding-bottom: 4px; }
+  @media (max-width: 640px) {
+    .legend-toggle { display: block; }
+    .legend { min-width: 0; max-width: 160px; }
+  }
   .legend-title { font-size: 10px; font-weight: 600; color: #2C2C2C; margin-bottom: 6px; }
   .legend-gradient { height: 8px; border-radius: 3px; margin-bottom: 4px; }
   .legend-labels { display: flex; justify-content: space-between; font-size: 9px; color: #A09385; }
@@ -439,9 +446,26 @@
     .meth-intro-head { font-size: 1.3rem; }
     .meth-flow { padding: 12px 14px; }
     .meth-flow-row { flex-wrap: wrap; }
-    /* Map */
+    /* Map — stack vertically, map on top */
+    #layout { flex-direction: column; height: auto; overflow-y: auto; }
+    #main { order: 1; flex: none; height: 56vw; min-height: 240px; max-height: 380px; overflow: hidden; }
+    #views { height: 100%; }
     #map-view { height: 100%; }
-    .legend { min-width: 0; max-width: 160px; font-size: 10px; padding: 8px 10px; }
+    #sidebar {
+      order: 2; width: 100%; min-width: 0; border-right: none;
+      border-top: 1px solid #DDD5C8; max-height: 260px; overflow-y: auto;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+    }
+    #sidebar.mobile-collapsed { max-height: 0; overflow: hidden; padding: 0; border-top: none; }
+    #mobile-filter-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 14px; background: #fff; border-top: 1px solid #DDD5C8;
+      font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px;
+      text-transform: uppercase; color: #7A6F64; cursor: pointer; order: 2;
+      flex-shrink: 0; user-select: none;
+    }
+    #mobile-filter-toggle .mft-arrow { transition: transform 0.25s; }
+    #mobile-filter-toggle.open .mft-arrow { transform: rotate(180deg); }
     #detail-panel { width: calc(100vw - 24px); max-width: none; right: 12px; }
   }
 
@@ -650,6 +674,11 @@ document.querySelector('.terrain-nav__hamburger')
     <div id="top10-list"></div>
   </div>
 
+  <div id="mobile-filter-toggle" style="display:none" onclick="mobileToggleFilters()">
+    <span>Filters</span>
+    <span class="mft-arrow">▼</span>
+  </div>
+
   <div id="main">
     <div id="views">
       <div id="map-view">
@@ -732,12 +761,15 @@ document.querySelector('.terrain-nav__hamburger')
         </div>
 
         <div class="legend" id="map-legend">
-          <div class="seg-buttons" id="color-mode-btns" style="margin-bottom:8px;">
-            <div class="seg-btn active" id="cm-type">By Type</div>
-            <div class="seg-btn" id="cm-score">By Score</div>
+          <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">▼ Legend</button>
+          <div class="legend-body">
+            <div class="seg-buttons" id="color-mode-btns" style="margin-bottom:8px;">
+              <div class="seg-btn active" id="cm-type">By Type</div>
+              <div class="seg-btn" id="cm-score">By Score</div>
+            </div>
+            <div class="legend-title" id="legend-title">Intervention Type</div>
+            <div id="legend-tiers"></div>
           </div>
-          <div class="legend-title" id="legend-title">Intervention Type</div>
-          <div id="legend-tiers"></div>
         </div>
 
         <div class="tooltip" id="tooltip"></div>
@@ -2017,8 +2049,26 @@ function switchToView(view) {
   document.getElementById("methodology-view").style.display = view === "methodology" ? "block" : "none";
   const sb = document.getElementById("sidebar");
   sb.style.display = view === "map" ? "block" : "none";
+  const mft = document.getElementById("mobile-filter-toggle");
+  if (mft) mft.style.display = (view === "map" && window.innerWidth <= 640) ? "flex" : "none";
   if (view === "table") renderTable();
   if (view === "gallery") glInitGallery();
+}
+
+function toggleLegend() {
+  const legend = document.getElementById("map-legend");
+  const btn = document.getElementById("legend-toggle-btn");
+  if (!legend || !btn) return;
+  const collapsed = legend.classList.toggle("collapsed");
+  btn.textContent = collapsed ? "▲ Legend" : "▼ Legend";
+}
+
+function mobileToggleFilters() {
+  const sb = document.getElementById("sidebar");
+  const btn = document.getElementById("mobile-filter-toggle");
+  if (!sb || !btn) return;
+  const collapsed = sb.classList.toggle("mobile-collapsed");
+  btn.classList.toggle("open", !collapsed);
 }
 
 document.querySelectorAll(".view-tab").forEach(tab => {
