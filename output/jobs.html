@@ -899,9 +899,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
   <!-- PAGE INTRO -->
   <div id="page-intro">
-    <p>
-      This tool scores every U.S. county by organizing opportunity — using sector data, union infrastructure, and electoral terrain — grounded in Jane McAlevey's <em>whole-worker</em> framework. <strong>Answer a few quick questions to find your highest-impact role.</strong>
-    </p>
+    <p>Everyone has a role to play in the labor movement. Let's find yours.</p>
   </div>
 
   <!-- Hidden legacy elements applyPath() references -->
@@ -1889,6 +1887,7 @@ function quizPickPath(path) {
   quiz.path = path;
   quiz.sectors = [];
   quizHistory.push('qstep-path');
+  document.getElementById('page-intro').style.display = 'none';
   if (path === 'rf') {
     _quizShow('qstep-sectors');
   } else {
