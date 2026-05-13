@@ -478,6 +478,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .badge-research-note { background: rgba(100,100,100,0.08); color: #5A5050; border: 1px solid #C8BFB5; cursor: help; }
 .badge-low-conf { background: rgba(220,160,0,0.10); color: #7a5a00; border: 1px solid rgba(200,140,0,0.28); font-size: 10px; cursor: help; }
 .badge-loc-unknown { background: rgba(160,140,120,0.10); color: #7A6F64; border: 1px solid rgba(160,140,120,0.30); font-size: 10px; }
+.badge-uncertain-role { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; font-size: 10px; cursor: help; }
 
 /* Experience level badges */
 .badge-exp-staff { background: #F0EBE3; color: #6A5F56; border: 1px solid #C8BFB5; }
@@ -2957,7 +2958,11 @@ function applyFiltersAndRender() {
   if (state.roleTypes && state.roleTypes.length) {
     const allowedRoles = new Set();
     state.roleTypes.forEach(group => (ROLE_TYPE_GROUPS[group] || []).forEach(rt => allowedRoles.add(rt)));
-    filtered = filtered.filter(job => allowedRoles.has(job.role_type));
+    filtered = filtered.filter(job => {
+      if (allowedRoles.has(job.role_type)) return true;
+      const roleConf = job._confidences && job._confidences.role_type;
+      return typeof roleConf === 'number' && roleConf < 0.5;
+    });
   }
 
   // Split remote jobs out before geographic filtering if remote toggle is on
@@ -3047,6 +3052,15 @@ function applyFiltersAndRender() {
     filtered.sort(expCmp);
     radiusFallback.sort(expCmp);
   }
+
+  // Certainty tier — uncertain role_type jobs always sort below confident ones
+  const certCmp = (a, b) => {
+    const aConf = (a._confidences && a._confidences.role_type) ?? 1.0;
+    const bConf = (b._confidences && b._confidences.role_type) ?? 1.0;
+    return (aConf < 0.5 ? 1 : 0) - (bConf < 0.5 ? 1 : 0);
+  };
+  filtered.sort(certCmp);
+  radiusFallback.sort(certCmp);
 
   state._filtered = filtered;
   state._radiusFallback = radiusFallback;
@@ -3907,9 +3921,15 @@ function buildBadges(job, grades) {
   if (job.needs_research_note) {
     parts.push(`<span class="badge badge-research-note" title="SEIU International — research your local before applying">ℹ️ Research local</span>`);
   }
-  // Low-confidence classifier flag (dev signal — non-intrusive)
-  if (job.low_confidence && job.low_confidence.length > 0) {
-    parts.push(`<span class="badge badge-low-conf" title="Low-confidence classification: ${escHtml(job.low_confidence.join(', '))}">⚠ review</span>`);
+  // Low-confidence classifier flags — role_type gets a specific badge,
+  // other fields fall back to the generic "review" badge
+  const _roleConf = job._confidences && job._confidences.role_type;
+  if (typeof _roleConf === 'number' && _roleConf < 0.5) {
+    parts.push(`<span class="badge badge-uncertain-role" title="Role type classification is uncertain (${Math.round(_roleConf * 100)}% confidence) — this job may be miscategorized">⚠ uncertain role</span>`);
+  }
+  const _otherLowConf = (job.low_confidence || []).filter(f => f !== 'role_type');
+  if (_otherLowConf.length > 0) {
+    parts.push(`<span class="badge badge-low-conf" title="Low-confidence classification: ${escHtml(_otherLowConf.join(', '))}">⚠ review</span>`);
   }
   // Location unknown — city couldn't be geocoded
   if (job._locUnknown) {

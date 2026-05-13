@@ -15,7 +15,12 @@
     "Communications": [],
     "Legal": [],
     "Research": [],
-    "Political/electoral": [],
+    "Political/electoral": [
+      "government affairs",
+      "legislative advocacy",
+      "political mobilization",
+      "political and community"
+    ],
     "Admin/operations": [],
     "Apprenticeship": [],
     "Union job": []

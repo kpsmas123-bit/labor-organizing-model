@@ -985,7 +985,7 @@
     "employer": "American Federation of State, County, and Municipal Employees",
     "salary_raw": "Legislative Affairs Specialist I/II/III Federal Government Affairs Department Location: Washington, DC – Headquarters USU Grade 8/9/10 Salary Range: $87,796 – $154,291",
     "sector": "Public Sector",
-    "role_type": "Union job",
+    "role_type": "Political/electoral",
     "exp_level": 2,
     "special_requirements": [],
     "posted_date": null,
@@ -1000,13 +1000,13 @@
     "scraped_at": null,
     "svs_score": 100,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Union Job",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Public Sector"
     ],
     "_confidences": {
       "sector": 1.0,
-      "role_type": 0.3,
+      "role_type": 0.8,
       "exp_level": 0.6
     },
     "_sector_confidences": {
@@ -1017,9 +1017,7 @@
       "Building Trades": 0.0,
       "Manufacturing": 0.0
     },
-    "low_confidence": [
-      "role_type"
-    ]
+    "low_confidence": []
   },
   {
     "title": "Political & Legislative Advocacy Apprentice Political Action Department",
@@ -1029,7 +1027,7 @@
     "employer": "American Federation of State, County, and Municipal Employees",
     "salary_raw": "Department: Political Action Location: Tucson, AZ; Sacramento, CA; and Lansing, MI Salary Range: $3,900 per month Benefits: List of benefits",
     "sector": null,
-    "role_type": "Apprenticeship",
+    "role_type": "Political/electoral",
     "exp_level": 1,
     "special_requirements": [],
     "posted_date": null,
@@ -1044,11 +1042,11 @@
     "scraped_at": null,
     "svs_score": 10,
     "is_mcalevey_priority": false,
-    "rf_subtype_label": "Apprenticeship",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [],
     "_confidences": {
       "sector": 0.0,
-      "role_type": 1.0,
+      "role_type": 0.8,
       "exp_level": 1.0
     },
     "_sector_confidences": {
@@ -8083,7 +8081,7 @@
     "employer": "SEIU Local 221",
     "salary_raw": "Compensation:",
     "sector": "Education",
-    "role_type": "Admin/operations",
+    "role_type": "Political/electoral",
     "exp_level": 2,
     "special_requirements": [],
     "posted_date": null,
@@ -8098,13 +8096,13 @@
     "scraped_at": null,
     "svs_score": 100,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Admin & Operations",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Education"
     ],
     "_confidences": {
       "sector": 0.7,
-      "role_type": 0.5,
+      "role_type": 0.8,
       "exp_level": 0.5
     },
     "_sector_confidences": {
@@ -12266,7 +12264,7 @@
     "employer": "SEIU6 Property Services NW",
     "salary_raw": "SALARY & BENEFITS:",
     "sector": "Logistics",
-    "role_type": "Union job",
+    "role_type": "Political/electoral",
     "exp_level": 2,
     "special_requirements": [],
     "posted_date": null,
@@ -12281,13 +12279,13 @@
     "scraped_at": null,
     "svs_score": 75,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Union Job",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Logistics"
     ],
     "_confidences": {
       "sector": 0.7,
-      "role_type": 0.3,
+      "role_type": 0.8,
       "exp_level": 0.6
     },
     "_sector_confidences": {
@@ -12298,9 +12296,7 @@
       "Building Trades": 0.0,
       "Manufacturing": 0.0
     },
-    "low_confidence": [
-      "role_type"
-    ]
+    "low_confidence": []
   },
   {
     "title": "Internal Organizer",
@@ -14407,7 +14403,7 @@
     "employer": "United Domestic Workers of America AFSCME Local 3930",
     "salary_raw": "Job Information: Job Title: Executive Assistant Job Type: Exempt (Salaried) Department: State Government Affairs Reports to: Political Director Job Location: Based in Sacramento, CA Schedule: In Person, Monday to Friday, 9:00 AM to 6:00 PM Salary Range: $75,000 to $96,737.00 (depending on experience",
     "sector": "Public Sector",
-    "role_type": "Admin/operations",
+    "role_type": "Political/electoral",
     "exp_level": 4,
     "special_requirements": [],
     "posted_date": null,
@@ -14422,13 +14418,13 @@
     "scraped_at": null,
     "svs_score": 100,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Admin & Operations",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Public Sector"
     ],
     "_confidences": {
       "sector": 1.0,
-      "role_type": 1.0,
+      "role_type": 0.8,
       "exp_level": 1.0
     },
     "_sector_confidences": {
@@ -15372,7 +15368,7 @@
     "sector_tags": [],
     "_confidences": {
       "sector": 0.0,
-      "role_type": 1.0,
+      "role_type": 0.8,
       "exp_level": 1.0
     },
     "_sector_confidences": {
@@ -16175,7 +16171,7 @@
     "employer": "University Professional & Technical Employees CWA Local 9119",
     "salary_raw": "Compensation: Starting salary range of $130,000 – $160,000 commensurate with experience, and an excellent benefits package including a 14% 401k match, all university holidays, auto allowance, and flexible work arrangements.",
     "sector": "Education",
-    "role_type": "Union job",
+    "role_type": "Political/electoral",
     "exp_level": 4,
     "special_requirements": [],
     "posted_date": null,
@@ -16190,13 +16186,13 @@
     "scraped_at": null,
     "svs_score": 100,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Union Job",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Education"
     ],
     "_confidences": {
       "sector": 0.7,
-      "role_type": 0.3,
+      "role_type": 0.8,
       "exp_level": 1.0
     },
     "_sector_confidences": {
@@ -16207,9 +16203,7 @@
       "Building Trades": 0.0,
       "Manufacturing": 0.0
     },
-    "low_confidence": [
-      "role_type"
-    ]
+    "low_confidence": []
   },
   {
     "title": "Organizer-in-Training (Los Angeles)",
@@ -16521,7 +16515,7 @@
     "employer": "University Professional & Technical Employees CWA Local 9119",
     "salary_raw": "Compensation: Starting salary range of $80,750.63 – $108,534.20 commensurate with experience, and an excellent benefits package including a defined benefit pension, all university holidays, health benefits, wellness stipend, and flexible work arrangements.",
     "sector": "Education",
-    "role_type": "Union job",
+    "role_type": "Political/electoral",
     "exp_level": 2,
     "special_requirements": [],
     "posted_date": null,
@@ -16536,13 +16530,13 @@
     "scraped_at": null,
     "svs_score": 100,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Union Job",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Education"
     ],
     "_confidences": {
       "sector": 0.7,
-      "role_type": 0.3,
+      "role_type": 0.8,
       "exp_level": 0.6
     },
     "_sector_confidences": {
@@ -16553,9 +16547,7 @@
       "Building Trades": 0.0,
       "Manufacturing": 0.0
     },
-    "low_confidence": [
-      "role_type"
-    ]
+    "low_confidence": []
   },
   {
     "title": "Communications Specialist",
@@ -16739,7 +16731,7 @@
     "employer": "University Professional & Technical Employees CWA Local 9119",
     "salary_raw": "Annual compensation for the Government Affairs Fellow will be $70,000 for an expected period of several months.",
     "sector": "Public Sector",
-    "role_type": "Union job",
+    "role_type": "Political/electoral",
     "exp_level": 1,
     "special_requirements": [],
     "posted_date": null,
@@ -16754,13 +16746,13 @@
     "scraped_at": null,
     "svs_score": 100,
     "is_mcalevey_priority": true,
-    "rf_subtype_label": "Union Job",
+    "rf_subtype_label": "Political & Electoral",
     "sector_tags": [
       "Public Sector"
     ],
     "_confidences": {
       "sector": 1.0,
-      "role_type": 0.3,
+      "role_type": 0.8,
       "exp_level": 1.0
     },
     "_sector_confidences": {
@@ -16771,9 +16763,7 @@
       "Building Trades": 0.0,
       "Manufacturing": 0.0
     },
-    "low_confidence": [
-      "role_type"
-    ]
+    "low_confidence": []
   },
   {
     "title": "Director of Credits Credits Department",
