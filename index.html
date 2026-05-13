@@ -28,7 +28,7 @@
 
     .hero {
       padding: var(--space-10) 0 var(--space-6);
-      max-width: 680px;
+      max-width: 100%;
     }
 
     .hero__eyebrow {
@@ -42,6 +42,15 @@
       line-height: 1.15;
       color: var(--color-text);
       margin-bottom: var(--space-6);
+      max-width: 820px;
+    }
+
+    .hero__line {
+      display: block;
+    }
+
+    .hero__line + .hero__line {
+      margin-top: 0.35em;
     }
 
     .hero__subhead {
@@ -49,7 +58,12 @@
       font-size: var(--text-base);
       color: var(--color-text-secondary);
       line-height: 1.65;
-      max-width: 520px;
+      max-width: 680px;
+    }
+
+    .hero__subhead--note {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
     }
 
     /* ── Cards ── */
@@ -250,10 +264,13 @@
       <!-- ── Hero ── -->
       <section class="hero">
         <span class="section-label hero__eyebrow">Terrain</span>
-        <h1 class="hero__headline">When workers organize, they win.<br>When workers win, we all win.</h1>
+        <h1 class="hero__headline">
+          <span class="hero__line">When workers organize, they win.</span>
+          <span class="hero__line">When workers win, we all&nbsp;win.</span>
+        </h1>
         <p class="hero__subhead">Terrain is a data-driven model that surfaces where workplace and political organizing intersect — and which fights are worth building toward first.</p>
         <p class="hero__subhead" style="margin-top: var(--space-4);">Built on public data covering every U.S. county and industry sector. For researchers, job seekers, and organizers planning where to build power next.</p>
-        <p class="hero__subhead" style="margin-top: var(--space-5); font-size: var(--text-sm); color: var(--color-text-muted);">Open source. Inspired by Jane McAlevey's whole-worker organizing framework. Ideas, peer review, and project proposals welcome.</p>
+        <p class="hero__subhead hero__subhead--note" style="margin-top: var(--space-5);">Open source. Inspired by Jane McAlevey's whole-worker organizing framework. Ideas, peer review, and project proposals welcome.</p>
       </section>
 
       <!-- ── Entry Cards ── -->
