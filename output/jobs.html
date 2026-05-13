@@ -100,18 +100,24 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .top-nav-tab.active { color: #2C2C2C; border-bottom-color: #bd0026; }
 
 /* === PAGE WRAP === */
-#page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+#page-wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--space-6) 80px; }
 
 /* === PAGE INTRO === */
 #page-intro {
-  max-width: 640px; margin: 32px auto 0; text-align: center; padding: 0 8px;
+  max-width: 680px; margin: 0; padding: var(--space-10) 0 var(--space-8); text-align: left;
 }
-#page-intro p { font-size: 14px; color: #5A5050; line-height: 1.72; margin-bottom: 0; }
-#page-intro p em { font-style: italic; }
-#page-intro p strong { color: #2C2C2C; font-weight: 600; }
+#page-intro .page-intro__eyebrow {
+  display: block; margin-bottom: var(--space-5);
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-text-muted);
+}
+#page-intro p {
+  font-family: var(--font-serif); font-size: clamp(32px, 5vw, 52px);
+  font-weight: 600; line-height: 1.15; color: var(--color-text); margin-bottom: 0;
+}
 
 /* === INTAKE QUIZ === */
-#intake-wizard { padding: 28px 0 24px; max-width: 860px; margin: 0 auto; }
+#intake-wizard { padding: 0 0 var(--space-8); max-width: 860px; margin: 0; }
 
 #quiz-nav {
   display: flex; align-items: center; justify-content: center;
@@ -133,16 +139,16 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 .quiz-q {
   text-align: center; font-family: var(--font-serif);
-  font-size: clamp(1.2rem, 2.5vw, 1.45rem); font-weight: 600; color: var(--color-text);
-  margin-bottom: 24px; line-height: 1.3;
+  font-size: clamp(1.4rem, 2.8vw, 1.75rem); font-weight: 600; color: var(--color-text);
+  margin-bottom: var(--space-6); line-height: 1.25;
 }
 
-.quiz-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.quiz-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
 .quiz-cards-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
 
 .quiz-card {
   background: #fff; border: 1px solid var(--color-border); border-radius: 8px;
-  padding: 28px 20px; cursor: pointer;
+  padding: var(--space-8) var(--space-8); cursor: pointer;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
   display: flex; flex-direction: column; align-items: center; text-align: center;
   gap: 10px; user-select: none; box-shadow: var(--shadow-card);
@@ -940,6 +946,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
   <!-- PAGE INTRO -->
   <div id="page-intro">
+    <span class="page-intro__eyebrow">Jobs &amp; Pathways</span>
     <p>Everyone has a role to play in the labor movement. Let's find yours.</p>
   </div>
 
