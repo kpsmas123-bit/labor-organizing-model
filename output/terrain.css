@@ -165,7 +165,7 @@ img, svg {
 /* Wordmark */
 .terrain-nav__brand {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: 3.5px;
   text-transform: uppercase;
