@@ -994,14 +994,15 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <div class="quiz-q">What kind of organizer do you want to be?</div>
       <div class="quiz-cards-row">
 
-        <div class="terrain-card clickable featured entry-card" id="qcard-rf" onclick="quizPickPath('rf')">
+        <div class="terrain-card featured entry-card" id="qcard-rf" style="opacity:0.5;cursor:not-allowed;position:relative;">
+          <span style="position:absolute;top:var(--space-4);right:var(--space-4);font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;background:#e0d8d0;color:var(--color-text-muted);padding:3px 8px;border-radius:20px;">Coming Soon</span>
           <svg class="entry-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 7v4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M14 9h-4"/><path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/>
           </svg>
           <span class="section-label entry-card__label">Rank &amp; File</span>
           <h2 class="entry-card__heading">Organize from the Inside</h2>
           <p class="entry-card__body">Take a union job and build power from the inside — the McAlevey whole-worker model in practice.</p>
-          <span class="btn-primary">Find Rank &amp; File Jobs →</span>
+          <span class="btn-primary" style="opacity:0.5;">Find Rank &amp; File Jobs →</span>
         </div>
 
         <div class="terrain-card clickable entry-card" id="qcard-staff" onclick="quizPickPath('staff')">
