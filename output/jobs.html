@@ -3006,11 +3006,11 @@ function showJobDetail(job) {
   }
   const guide = document.getElementById('terrain-guide');
   const pane = document.getElementById('job-detail-pane');
-  const title = job.title || 'Untitled Position';
+  const { title, embeddedSalary } = cleanJobTitle(job.title);
   const org = job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
   const impact = Math.round(job.impact_score || 50);
-  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw);
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw) || embeddedSalary;
   const applyUrl = job.job_id ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}` : (job.apply_url || '');
   const grades = computeGrades(job);
 
@@ -3360,6 +3360,33 @@ function getExpLevel(job) {
 }
 
 // ============================================================
+// TITLE CLEANING — strips embedded salary text from raw titles
+// ============================================================
+function cleanJobTitle(rawTitle) {
+  if (!rawTitle) return { title: 'Untitled Position', embeddedSalary: null };
+  // Patterns like "- Salary is $238,096 per year", "Salary $75k/yr", "- $65,000/year", " ($80,000)", etc.
+  const patterns = [
+    /[\s\-–—]+salary\s+is\s+\$[\d,]+(?:\s+per\s+\w+)?/i,
+    /[\s\-–—]+salary[\s:]+\$[\d,]+(?:[\/\s]\w+)?/i,
+    /[\s\-–—]+\$[\d,]+(?:[\s\-–]+\$[\d,]+)?(?:\s+(?:per\s+)?\w+)?$/i,
+    /\s*\(\s*\$[\d,]+(?:[\s\-–]+\$[\d,]+)?\s*(?:\/\s*\w+)?\s*\)/i,
+  ];
+  let title = rawTitle;
+  let embeddedSalary = null;
+  for (const re of patterns) {
+    const m = title.match(re);
+    if (m) {
+      // Extract the dollar figure for display
+      const dollarMatch = m[0].match(/\$[\d,]+/g);
+      if (dollarMatch) embeddedSalary = dollarMatch[0];
+      title = title.replace(re, '').trim().replace(/[\s\-–—,]+$/, '').trim();
+      break;
+    }
+  }
+  return { title: title || 'Untitled Position', embeddedSalary };
+}
+
+// ============================================================
 // JOB CARD RENDERING
 // ============================================================
 function makeJobCard(job) {
@@ -3377,10 +3404,10 @@ function makeJobCard(job) {
     }
   });
 
-  const title = job.title || 'Untitled Position';
+  const { title, embeddedSalary } = cleanJobTitle(job.title);
   const org = job.organization || '';
   const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
-  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw);
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw) || embeddedSalary;
   const applyUrl = job.job_id
     ? `https://www.unionjobs.com/listing.php?id=${encodeURIComponent(job.job_id)}`
     : (job.apply_url || '');
