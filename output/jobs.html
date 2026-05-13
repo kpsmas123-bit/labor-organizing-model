@@ -440,6 +440,12 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .badge-swing { background: rgba(180,40,40,0.08); color: #8B1A1A; border: 1px solid rgba(180,40,40,0.22); }
 .badge-research-note { background: rgba(100,100,100,0.08); color: #5A5050; border: 1px solid #C8BFB5; cursor: help; }
 
+/* Experience level badges */
+.badge-exp-1 { background: rgba(38,140,72,0.12); color: #1a5c2e; border: 1px solid rgba(38,140,72,0.28); }
+.badge-exp-2 { background: rgba(74,127,193,0.14); color: #2e5e9a; border: 1px solid rgba(74,127,193,0.30); }
+.badge-exp-3 { background: rgba(200,120,0,0.13); color: #7a4800; border: 1px solid rgba(200,120,0,0.28); }
+.badge-exp-4 { background: rgba(100,60,180,0.12); color: #4a2080; border: 1px solid rgba(100,60,180,0.25); }
+
 .jc-impact-row {
   display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
   font-size: 10px; color: #7A6F64;
@@ -2975,15 +2981,31 @@ function showJobDetail(job) {
       ${org ? `<div class="jdp-org">${escHtml(org)}</div>` : ''}
       ${loc ? `<div class="jdp-loc">📍 ${escHtml(loc)}</div>` : ''}
     </div>
-    <div class="jdp-section">${renderGradeTable(grades)}</div>
+    <div class="jdp-section">
+      <div class="jdp-eyebrow">Experience Level</div>
+      ${(() => {
+        const lvl = getExpLevel(job);
+        const info = EXP_LEVELS[lvl];
+        return `<div class="jdp-badge-block">
+          <span class="badge ${info.cls}" style="flex-shrink:0;font-size:11px;padding:3px 10px">Level ${lvl} — ${escHtml(info.label)}</span>
+          <div class="jdp-badge-desc">${escHtml(info.desc)}</div>
+        </div>`;
+      })()}
+    </div>
+    <div class="jdp-section">
+      <div class="jdp-eyebrow">Impact Grades</div>
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 0 4px">
+        <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);background:#F5F0E8;border:1px dashed #C8BFB5;border-radius:4px;padding:4px 10px">Rescoring in progress</span>
+        <span style="font-size:11px;color:var(--color-text-muted)">County terrain scores are being updated — check back soon.</span>
+      </div>
+    </div>
     ${descSnippet ? `<div class="jdp-section"><div class="jdp-eyebrow">About this role</div><div class="jdp-desc">${escHtml(descSnippet)}</div></div>` : ''}
     <div class="jdp-section">
       <div class="jdp-eyebrow">Terrain Impact</div>
-      <div class="jdp-score-row">
-        <div class="jdp-score-num">${impact}</div>
-        <div class="jdp-score-sub"><strong>${scoreContext}</strong><br>${escHtml(terrainCopy)}</div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0 4px">
+        <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);background:#F5F0E8;border:1px dashed #C8BFB5;border-radius:4px;padding:4px 10px">Coming soon</span>
+        <span style="font-size:11px;color:var(--color-text-muted)">Scores will reflect updated county-level terrain data.</span>
       </div>
-      <div class="jdp-track"><div class="jdp-fill" style="width:${impact}%"></div></div>
     </div>
     <div class="jdp-section">
       <div class="jdp-eyebrow">Role &amp; Context</div>
@@ -3227,6 +3249,29 @@ function renderGradeTable(grades) {
 }
 
 // ============================================================
+// EXPERIENCE LEVEL CLASSIFICATION (1–4)
+// ============================================================
+const EXP_LEVELS = {
+  1: { label: 'Entry Level',       cls: 'badge-exp-1', desc: 'Fellowships, internships, and first roles in labor — no prior organizing experience required.' },
+  2: { label: 'Organizer',         cls: 'badge-exp-2', desc: 'Organizer roles — internal (union staff working with existing members) or external (new workplace campaigns). Some experience preferred.' },
+  3: { label: 'Lead / Coordinator',cls: 'badge-exp-3', desc: 'Senior organizer, lead, or coordinator roles — typically requires 3–5 years of organizing experience and demonstrated campaign wins.' },
+  4: { label: 'Director / Manager',cls: 'badge-exp-4', desc: 'Director and manager roles — substantial experience leading teams, managing budgets, and running multi-site campaigns.' },
+};
+
+function getExpLevel(job) {
+  const t = (job.title || '').toLowerCase();
+  // Level 4 — Director / Manager / Executive
+  if (/\b(director|manager|vice[\s-]?president|\bvp\b|chief|executive|president)\b/.test(t)) return 4;
+  // Level 3 — Lead / Senior / Coordinator
+  if (/\b(lead|senior|\bsr\.?\b|coordinator|campaign manager|regional manager|political director)\b/.test(t)) return 3;
+  // Level 1 — Entry / Fellow / Intern / Apprentice
+  if (/\b(fellow|intern|internship|fellowship|apprentice|apprenticeship|entry[\s-]level|associate organizer|new organizer|junior)\b/.test(t)) return 1;
+  if ((job.role_type || '') === 'R3_apprenticeship') return 1;
+  // Level 2 — default for all remaining organizer / staff roles
+  return 2;
+}
+
+// ============================================================
 // JOB CARD RENDERING
 // ============================================================
 function makeJobCard(job) {
@@ -3275,8 +3320,10 @@ function makeJobCard(job) {
 function buildBadges(job, grades) {
   if (!grades) grades = computeGrades(job);
   const parts = [];
-  // Overall grade — primary visual, larger badge
-  parts.push(renderGradeBadge(grades.overall, true));
+  // Experience level — shown first
+  const expLvl = getExpLevel(job);
+  const expInfo = EXP_LEVELS[expLvl];
+  parts.push(`<span class="badge ${expInfo.cls}" title="${escHtml(expInfo.desc)}">Level ${expLvl} — ${escHtml(expInfo.label)}</span>`);
   // Role badge
   const roleBadge = getRoleBadge(job);
   if (roleBadge) parts.push(roleBadge);
