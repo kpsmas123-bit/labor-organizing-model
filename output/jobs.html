@@ -123,7 +123,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 }
 
 /* === INTAKE QUIZ === */
-#intake-wizard { padding: 0 0 var(--space-8); max-width: 860px; margin: 0; }
+#intake-wizard { padding: 0 0 var(--space-8); max-width: 100%; }
 
 #quiz-nav {
   display: flex; align-items: center; justify-content: space-between;
@@ -153,7 +153,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 @keyframes qFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 .quiz-q {
-  text-align: center; font-family: var(--font-serif);
+  text-align: left; font-family: var(--font-serif);
   font-size: clamp(1.4rem, 2.8vw, 1.75rem); font-weight: 600; color: var(--color-text);
   margin-bottom: var(--space-6); line-height: 1.25;
 }
@@ -171,7 +171,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
   background: #fff; border: 1px solid var(--color-border); border-radius: 8px;
   padding: var(--space-8) var(--space-8); cursor: pointer;
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
+  display: flex; flex-direction: column; align-items: flex-start; text-align: left;
   gap: 10px; user-select: none; box-shadow: var(--shadow-card);
 }
 .quiz-card:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-card-hover); }
@@ -190,7 +190,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 /* Location local opts */
 #quiz-local-opts {
   margin-top: 20px; background: var(--color-bg-subtle); border: 1px solid var(--color-border);
-  border-radius: var(--radius-md); padding: 20px 24px; max-width: 480px; margin-left: auto; margin-right: auto;
+  border-radius: var(--radius-md); padding: 20px 24px; max-width: 480px; margin-left: 0; margin-right: auto;
 }
 .quiz-local-label { font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 500; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
 #quiz-state-sel {
@@ -648,7 +648,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 }
 
 /* Sector selection step */
-.quiz-q-sub { font-size: 13px; color: #7A6F64; text-align: center; margin: -16px 0 20px; }
+.quiz-q-sub { font-size: 13px; color: #7A6F64; text-align: left; margin: -16px 0 20px; }
 .sectors-grid {
   display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
   max-width: 620px; margin: 0 auto 24px;
