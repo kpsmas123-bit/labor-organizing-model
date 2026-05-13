@@ -120,8 +120,9 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 #intake-wizard { padding: 0 0 var(--space-8); max-width: 860px; margin: 0; }
 
 #quiz-nav {
-  display: flex; align-items: center; justify-content: center;
-  gap: 12px; margin-bottom: 28px; min-height: 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-top: var(--space-8); padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
 }
 #quiz-back-btn {
   font-size: 12px; color: #7A6F64;
@@ -141,6 +142,12 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
   text-align: center; font-family: var(--font-serif);
   font-size: clamp(1.4rem, 2.8vw, 1.75rem); font-weight: 600; color: var(--color-text);
   margin-bottom: var(--space-6); line-height: 1.25;
+}
+#qstep-path .quiz-q {
+  text-align: left; font-family: var(--font-body);
+  font-size: var(--text-base); font-weight: 400;
+  color: var(--color-text-secondary); line-height: 1.65;
+  margin-bottom: var(--space-6);
 }
 
 .quiz-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
@@ -966,17 +973,6 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   <!-- INTAKE QUIZ -->
   <div id="intake-wizard">
 
-    <!-- Nav: back button + step dots -->
-    <div id="quiz-nav">
-      <button id="quiz-back-btn" style="display:none" onclick="quizBack()">← Back</button>
-      <div class="qdots">
-        <span class="qdot active" id="qdot-1"></span>
-        <span class="qdot" id="qdot-2"></span>
-        <span class="qdot" id="qdot-3"></span>
-        <span class="qdot" id="qdot-4" style="display:none"></span>
-      </div>
-    </div>
-
     <!-- STEP 1: Path -->
     <div class="quiz-step active" id="qstep-path">
       <div class="quiz-q">What kind of organizer do you want to be?</div>
@@ -1110,6 +1106,17 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
       </div>
     </div><!-- /step-rftype -->
+
+    <!-- Progress: back button + step dots (hidden on step 1) -->
+    <div id="quiz-nav" style="display:none">
+      <button id="quiz-back-btn" style="display:none" onclick="quizBack()">← Back</button>
+      <div class="qdots">
+        <span class="qdot" id="qdot-1"></span>
+        <span class="qdot" id="qdot-2"></span>
+        <span class="qdot" id="qdot-3" style="display:none"></span>
+        <span class="qdot" id="qdot-4" style="display:none"></span>
+      </div>
+    </div>
 
   </div><!-- /intake-wizard -->
 
@@ -2210,17 +2217,23 @@ function quizEditStep(stepId) {
 function _quizShow(stepId) {
   document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
   document.getElementById(stepId).classList.add('active');
+  const nav = document.getElementById('quiz-nav');
+  const onPath = stepId === 'qstep-path';
+  nav.style.display = onPath ? 'none' : 'flex';
   document.getElementById('quiz-back-btn').style.display = quizHistory.length > 0 ? 'inline-block' : 'none';
   document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function _quizDots(step) {
-  // Show dot 4 only for RF path (which has the role-type step)
-  const hasStep4 = quiz.path === 'rf';
-  document.getElementById('qdot-4').style.display = hasStep4 ? 'inline-block' : 'none';
+  // Path step (1) is hidden; adjust to 0-based relative progress
+  const adjustedStep = step - 1;
+  const isRF = quiz.path === 'rf';
+  const totalDots = isRF ? 3 : 2;
   [1, 2, 3, 4].forEach(i => {
     const d = document.getElementById('qdot-' + i);
-    if (d) d.classList.toggle('active', i <= step);
+    if (!d) return;
+    d.style.display = i <= totalDots ? 'inline-block' : 'none';
+    d.classList.toggle('active', i <= adjustedStep);
   });
 }
 
