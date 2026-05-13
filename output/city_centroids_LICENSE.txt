@@ -1,0 +1,12 @@
+City centroid data in city_centroids.json is derived from the GeoNames geographical
+database (https://www.geonames.org), used under the Creative Commons Attribution 4.0
+International License (CC BY 4.0).
+
+Attribution: GeoNames (https://www.geonames.org)
+License: https://creativecommons.org/licenses/by/4.0/
+
+Source file used: cities1000.zip (places with population >= 1,000)
+Filtered to: United States only (country_code = US), top 5,000 by population,
+             excluding sub-city sections (feature_code PPLX/PPLCH/PPLQ/PPLW).
+Fields retained: city name, state abbreviation (admin1_code), latitude, longitude.
+Population field used for sorting only; not included in output.
