@@ -1203,7 +1203,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           </svg>
           <span class="section-label entry-card__label">Rank &amp; File</span>
           <h2 class="entry-card__heading">Organize from the Inside</h2>
-          <p class="entry-card__body">Take a union job and build power from the inside — the McAlevey whole-worker model in practice.</p>
+          <p class="entry-card__body">Take a union job and build power from the inside — the tradition of workplace organizing that built the American labor movement.</p>
           <span class="btn-primary" style="opacity:0.5;">Find Rank &amp; File Jobs →</span>
         </div>
 
@@ -1213,7 +1213,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           </svg>
           <span class="section-label entry-card__label">Staff Organizer</span>
           <h2 class="entry-card__heading">Work for the Movement</h2>
-          <p class="entry-card__body">Get paid to organize — find staff roles at unions and labor organizations matched to your terrain.</p>
+          <p class="entry-card__body">Keep unions running and help execute their political goals — find staff roles at unions and labor organizations.</p>
           <span class="btn-primary">Find Staff Jobs →</span>
         </div>
 
@@ -2694,6 +2694,8 @@ function _quizShow(stepId) {
     skipBtn.style.display = show ? 'inline-block' : 'none';
     if (show) skipBtn.textContent = _quizSkipLabel(stepId);
   }
+  // Reflect current quiz step in URL
+  history.replaceState(null, '', window.location.pathname + '?step=' + stepId);
 }
 
 function quizNavCta() {
