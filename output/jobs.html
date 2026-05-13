@@ -1099,7 +1099,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
         <div class="quiz-card" onclick="quizPickExp('staff')" style="flex:1;min-width:180px">
           <div class="qc-label">Union Staff</div>
-          <div class="qc-sub">Admin, comms, political, research, IT, or other support roles at union organizations</div>
+          <div class="qc-sub">Admin, ops, comms, research, IT — the roles that keep the labor movement on time and organized</div>
         </div>
 
         <div class="quiz-card" onclick="quizPickExp(1)" style="flex:1;min-width:180px">
@@ -3263,7 +3263,7 @@ function renderGradeTable(grades) {
 // EXPERIENCE LEVEL CLASSIFICATION (1–4)
 // ============================================================
 const EXP_LEVELS = {
-  'staff': { label: 'Union Staff',        cls: 'badge-exp-staff', desc: 'Administrative, communications, political, research, IT, and other operational roles at union organizations. Not a direct organizing role, but essential union infrastructure.' },
+  'staff': { label: 'Union Staff',        cls: 'badge-exp-staff', desc: 'Admin, operations, communications, political, research, IT, and other roles that keep the labor movement on time and organized. Not a direct organizing role — but essential union infrastructure.' },
   1:       { label: 'Entry Level',        cls: 'badge-exp-1',     desc: 'Fellowships, internships, and first roles in labor — no prior organizing experience required.' },
   2:       { label: 'Organizer',          cls: 'badge-exp-2',     desc: 'Organizer roles — internal (working with existing union members) or external (running new workplace campaigns). Some experience preferred.' },
   3:       { label: 'Lead / Coordinator', cls: 'badge-exp-3',     desc: 'Senior organizer, lead, or coordinator roles — typically requires 3–5 years of organizing experience and demonstrated campaign wins.' },
@@ -3277,13 +3277,7 @@ function getExpLevel(job) {
   const t = (job.title || '').toLowerCase();
   const rt = (job.role_type || '').toLowerCase();
 
-  // "Good Union Job" role type is always union staff (support/ops)
-  if (rt === 'r4_union_job') return 'staff';
-
-  // Title-based non-organizing staff detection (check before level 4 to catch "communications director" etc.)
-  if (STAFF_ROLE_RE.test(t)) return 'staff';
-
-  // Level 4 — Director / Manager / Executive (organizing or field leadership)
+  // Level 4 checked FIRST — director/manager/executive always outranks staff classification
   if (/\b(director|manager|vice[\s-]?president|\bvp\b|chief|executive|president)\b/.test(t)) return 4;
 
   // Level 3 — Lead / Senior / Coordinator (organizing context)
@@ -3293,6 +3287,12 @@ function getExpLevel(job) {
   // Level 1 — Entry / Fellow / Intern / Apprentice
   if (/\b(fellow|intern|internship|fellowship|apprentice|apprenticeship|entry[\s-]level|associate\s+organizer|new\s+organizer|junior)\b/.test(t)) return 1;
   if (rt === 'r3_apprenticeship') return 1;
+
+  // "Good Union Job" role type → union staff (support/ops)
+  if (rt === 'r4_union_job') return 'staff';
+
+  // Title-based non-organizing staff detection
+  if (STAFF_ROLE_RE.test(t)) return 'staff';
 
   // Level 2 — Organizer (default for remaining staff/organizing roles)
   return 2;
