@@ -196,6 +196,50 @@ def reset_rule():
     return jsonify({"ok": True})
 
 
+def _parse_int_from_output(text, key):
+    """Extract integer from machine-parseable lines like 'INGEST_NEW=5'."""
+    import re
+    m = re.search(rf'{re.escape(key)}=(\d+)', text)
+    return int(m.group(1)) if m else None
+
+
+@app.route('/ingest_url', methods=['POST'])
+def ingest_url():
+    data = request.get_json(force=True) or {}
+    url  = (data.get('url') or '').strip()
+    mode = (data.get('mode') or 'auto').strip()
+
+    if not url:
+        return jsonify({"ok": False, "error": "url required"}), 400
+    if mode not in ('auto', 'single', 'board'):
+        return jsonify({"ok": False, "error": "mode must be auto, single, or board"}), 400
+
+    result = subprocess.run(
+        [sys.executable, '-m', 'pipeline.ingest_url', '--url', url, '--mode', mode],
+        capture_output=True, text=True,
+        cwd=os.getcwd(),
+    )
+    output = (result.stdout or '') + (result.stderr or '')
+
+    new_count   = _parse_int_from_output(output, 'INGEST_NEW')
+    skipped     = _parse_int_from_output(output, 'INGEST_SKIPPED')
+    total_count = _parse_int_from_output(output, 'INGEST_TOTAL')
+
+    return jsonify({
+        "ok":          result.returncode == 0,
+        "output":      output,
+        "new_count":   new_count,
+        "skipped":     skipped,
+        "total_count": total_count,
+    })
+
+
+@app.route('/supported_boards')
+def supported_boards():
+    from pipeline.ingestors.router import SUPPORTED_BOARDS
+    return jsonify({"ok": True, "boards": SUPPORTED_BOARDS})
+
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------

@@ -1003,9 +1003,10 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 /* === ADMIN === */
 #admin-banner {
   background: #1a1a2e; color: #e0e0ff; padding: 8px 24px;
-  font-size: 12px; display: none; align-items: center; gap: 12px;
+  font-size: 12px; display: none; flex-direction: column; gap: 6px;
 }
-#admin-banner span { flex: 1; }
+.admin-row { display: flex; align-items: center; gap: 12px; }
+.admin-row:first-child span { flex: 1; }
 #admin-status { font-weight: 600; }
 #admin-status.ok { color: #4ade80; }
 #admin-status.offline { color: #f87171; }
@@ -1014,6 +1015,18 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   padding: 4px 12px; font-size: 12px; cursor: pointer; white-space: nowrap;
 }
 .admin-rerun-btn:disabled { opacity: 0.5; cursor: wait; }
+#admin-ingest-input {
+  flex: 1; background: #2a2a4e; color: #e0e0ff;
+  border: 1px solid #555; border-radius: 5px;
+  padding: 3px 8px; font-size: 12px; min-width: 0;
+}
+#admin-ingest-input::placeholder { color: #888; }
+.admin-ingest-btn {
+  background: #1d4ed8; color: #fff; border: none; border-radius: 5px;
+  padding: 4px 12px; font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+.admin-ingest-btn:disabled { opacity: 0.5; cursor: wait; }
+#admin-ingest-status { font-size: 11px; color: #a0a0cc; white-space: nowrap; }
 .fix-btn {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 9px; background: #1a1a2e; border: 1px solid #555;
@@ -1083,8 +1096,16 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
 <!-- ADMIN BANNER (shown only when ?admin=1) -->
 <div id="admin-banner">
-  <span>🔧 Admin mode — <span id="admin-status">checking…</span></span>
-  <button class="admin-rerun-btn" id="admin-rerun-btn" onclick="adminRerun()">Reclassify jobs</button>
+  <div class="admin-row">
+    <span>🔧 Admin mode — <span id="admin-status">checking…</span></span>
+    <button class="admin-rerun-btn" id="admin-rerun-btn" onclick="adminRerun()">Reclassify jobs</button>
+  </div>
+  <div class="admin-row">
+    <input id="admin-ingest-input" type="url" placeholder="Paste a job board URL or single job URL…" />
+    <button class="admin-ingest-btn" id="admin-ingest-btn" onclick="adminIngest()">Ingest</button>
+    <span id="admin-ingest-status"></span>
+    <span style="margin-left:auto;font-size:11px;color:#888;cursor:pointer" onclick="adminShowBoards()">Supported boards ▾</span>
+  </div>
 </div>
 
 <!-- QUIZ SUMMARY BAR -->
@@ -4340,14 +4361,18 @@ function adminPingServer() {
     .then(() => {
       const el = document.getElementById('admin-status');
       const btn = document.getElementById('admin-rerun-btn');
+      const ingestBtn = document.getElementById('admin-ingest-btn');
       if (el) { el.textContent = 'server online'; el.className = 'ok'; }
       if (btn) btn.disabled = false;
+      if (ingestBtn) ingestBtn.disabled = false;
     })
     .catch(() => {
       const el = document.getElementById('admin-status');
       const btn = document.getElementById('admin-rerun-btn');
+      const ingestBtn = document.getElementById('admin-ingest-btn');
       if (el) { el.textContent = 'server offline — run: python -m pipeline.admin_server'; el.className = 'offline'; }
       if (btn) btn.disabled = true;
+      if (ingestBtn) ingestBtn.disabled = true;
     });
 }
 
@@ -4437,6 +4462,47 @@ function adminRerun() {
       if (statusEl) { statusEl.textContent = 'server offline'; statusEl.className = 'offline'; }
       if (btn) btn.disabled = false;
     });
+}
+
+function adminIngest() {
+  const input = document.getElementById('admin-ingest-input');
+  const btn = document.getElementById('admin-ingest-btn');
+  const statusEl = document.getElementById('admin-ingest-status');
+  const url = (input.value || '').trim();
+  if (!url) { if (statusEl) statusEl.textContent = 'Enter a URL first.'; return; }
+  btn.disabled = true;
+  if (statusEl) statusEl.textContent = 'ingesting…';
+  fetch('http://localhost:5001/ingest_url', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({url: url, mode: 'auto'}),
+  })
+    .then(r => r.json())
+    .then(async data => {
+      if (data.ok) {
+        const msg = data.new_count != null ? `done — ${data.new_count} new job(s) added` : 'done';
+        if (statusEl) statusEl.textContent = msg;
+        await loadJobs(true);
+        applyFiltersAndRender();
+      } else {
+        if (statusEl) statusEl.textContent = 'error — ' + (data.error || 'check terminal');
+      }
+      btn.disabled = false;
+    })
+    .catch(() => {
+      if (statusEl) statusEl.textContent = 'server offline';
+      btn.disabled = false;
+    });
+}
+
+function adminShowBoards() {
+  fetch('http://localhost:5001/supported_boards')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok || !data.boards) return;
+      alert('Supported boards:\n\n' + data.boards.map(b => b.name + ': ' + b.url).join('\n'));
+    })
+    .catch(() => alert('Server offline — supported boards unavailable.'));
 }
 </script>
 
