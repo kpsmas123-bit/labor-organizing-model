@@ -970,7 +970,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         <div class="sector-chip" data-sector="Transportation" onclick="quizToggleSector('Transportation')">🚌 Transportation</div>
         <div class="sector-chip" data-sector="Communications/Digital" onclick="quizToggleSector('Communications/Digital')">💻 Tech/Digital</div>
       </div>
-      <button class="quiz-cta" style="max-width:320px;margin:0 auto;display:block" onclick="quizConfirmSectors()">Continue →</button>
+      <button id="sectors-cta" class="quiz-cta" style="max-width:320px;margin:0 auto;display:block" onclick="quizConfirmSectors()">Skip →</button>
     </div><!-- /step-sectors -->
 
     <!-- STEP 2b: Experience (Staff path only) -->
@@ -1902,6 +1902,8 @@ function quizToggleSector(sector) {
   if (idx > -1) quiz.sectors.splice(idx, 1); else quiz.sectors.push(sector);
   document.querySelectorAll('#qsectors-grid .sector-chip').forEach(c =>
     c.classList.toggle('selected', quiz.sectors.includes(c.dataset.sector)));
+  const cta = document.getElementById('sectors-cta');
+  if (cta) cta.textContent = quiz.sectors.length > 0 ? 'Continue →' : 'Skip →';
 }
 
 function quizConfirmSectors() {
@@ -1976,9 +1978,10 @@ function quizBack() {
     quiz.city = null; quiz.cityState = null; quiz.userLat = null; quiz.userLng = null;
   }
   if (prev === 'qstep-sectors') {
-    // re-render selected state on chips
     document.querySelectorAll('#qsectors-grid .sector-chip').forEach(c =>
       c.classList.toggle('selected', quiz.sectors.includes(c.dataset.sector)));
+    const cta = document.getElementById('sectors-cta');
+    if (cta) cta.textContent = quiz.sectors.length > 0 ? 'Continue →' : 'Skip →';
   }
 }
 
