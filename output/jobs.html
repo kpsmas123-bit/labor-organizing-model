@@ -824,6 +824,29 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   padding: 6px 8px; font-size: 12px; font-family: 'Inter', system-ui, sans-serif;
   background: #fff;
 }
+#qtile-city-wrap { padding: 6px 10px 10px; }
+#tile-city-input {
+  width: 100%; box-sizing: border-box; background: #fff;
+  border: 1px solid #C8BFB5; color: #2C2C2C; border-radius: 6px;
+  padding: 7px 10px; font-size: 13px; font-family: 'Inter', system-ui, sans-serif;
+  transition: border-color 0.15s;
+}
+#tile-city-input:focus { outline: none; border-color: #bd0026; }
+#tile-city-dropdown {
+  display: none; position: absolute; left: 10px; right: 10px;
+  background: #fff; border: 1px solid #C8BFB5; border-top: none;
+  border-radius: 0 0 6px 6px; z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.tile-radius-row {
+  display: flex; align-items: center; gap: 6px; margin-top: 8px;
+}
+.tile-radius-row label { font-size: 11px; color: #7A6F64; white-space: nowrap; }
+#tile-radius-sel {
+  flex: 1; border: 1px solid #C8BFB5; border-radius: 5px;
+  padding: 4px 6px; font-size: 11px; font-family: 'Inter', system-ui, sans-serif;
+  background: #fff; color: #2C2C2C;
+}
 .qtile-retake {
   margin-left: auto; background: none; border: none; font-size: 12px;
   color: #9A8E85; cursor: pointer; padding: 3px 6px;
@@ -1017,6 +1040,22 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           <select id="qtile-state-sel" onchange="tileSetMyState(this.value)" onclick="event.stopPropagation()">
             <option value="">Select state…</option>
           </select>
+        </div>
+        <div class="qtile-opt" data-loc="local" onclick="tileSetLocation('local', event)"><span class="chk"></span>Near a city</div>
+        <div id="qtile-city-wrap" style="display:none">
+          <input type="text" id="tile-city-input" placeholder="Type your city…"
+                 autocomplete="off" oninput="tileCityInput(this.value)"
+                 onclick="event.stopPropagation()" />
+          <div id="tile-city-dropdown"></div>
+          <div class="tile-radius-row">
+            <label for="tile-radius-sel">Radius:</label>
+            <select id="tile-radius-sel" onclick="event.stopPropagation()" onchange="tileSetRadius(this.value)">
+              <option value="10">10 mi</option>
+              <option value="25" selected>25 mi</option>
+              <option value="50">50 mi</option>
+              <option value="100">100 mi</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -1840,10 +1879,14 @@ window.addEventListener('DOMContentLoaded', async () => {
       const inp = document.getElementById('quiz-city-input');
       if (inp && inp.placeholder.startsWith('Loading')) inp.placeholder = 'Type your city name…';
     });
-  // Close city dropdown on outside click
+  // Close city dropdowns on outside click
   document.addEventListener('click', (e) => {
     if (!e.target.closest('#quiz-city-input, #quiz-city-dropdown')) {
       const dd = document.getElementById('quiz-city-dropdown');
+      if (dd) dd.style.display = 'none';
+    }
+    if (!e.target.closest('#tile-city-input, #tile-city-dropdown')) {
+      const dd = document.getElementById('tile-city-dropdown');
       if (dd) dd.style.display = 'none';
     }
   });
@@ -2336,10 +2379,14 @@ function _quizDots(step) {
 function quizFinish() {
   // Apply quiz answers to filter state
   state.path = quiz.path;
-  if (quiz.locType === 'local' && quiz.myState) {
+  if (quiz.locType === 'local' && quiz.userLat != null) {
+    // City radius selected
+    state.location = 'local';
+    state.myState = quiz.cityState || null;
+  } else if (quiz.locType === 'local' && quiz.myState) {
+    // State-only selected
     state.location = 'mystate';
     state.myState = quiz.myState;
-    // Sync all state selects in the UI
     ['state-select', 'qtile-state-sel'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = quiz.myState;
@@ -3528,6 +3575,8 @@ function updateTileRow() {
   });
   const stWrap = document.getElementById('qtile-state-wrap');
   if (stWrap) stWrap.style.display = state.location === 'mystate' ? '' : 'none';
+  const cityWrap = document.getElementById('qtile-city-wrap');
+  if (cityWrap) cityWrap.style.display = state.location === 'local' ? '' : 'none';
 }
 function renderSectorTileDropdown() {
   const dd = document.getElementById('qtile-sector-dd');
@@ -3588,6 +3637,59 @@ function tileSetPath(path, e) {
   applyPath(path, true);
   renderActivePills();
 }
+let _tileCityMatches = [];
+
+function tileCityInput(val) {
+  const dd = document.getElementById('tile-city-dropdown');
+  if (!val || val.length < 2) { if (dd) dd.style.display = 'none'; return; }
+  const q = val.toLowerCase();
+  _tileCityMatches = (CITY_LIST || []).filter(c =>
+    c.city.toLowerCase().startsWith(q) ||
+    (c.city.toLowerCase() + ', ' + c.state.toLowerCase()).startsWith(q)
+  ).slice(0, 8);
+  if (!_tileCityMatches.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = _tileCityMatches.map((c, i) =>
+    `<div class="city-option" onclick="tileCitySelectByIdx(${i})">${_PIN_SVG}${c.city}, ${c.state}</div>`
+  ).join('');
+  dd.style.display = 'block';
+}
+
+function tileCitySelectByIdx(i) {
+  const city = _tileCityMatches[i];
+  if (!city) return;
+  const inp = document.getElementById('tile-city-input');
+  if (inp) inp.value = city.city + ', ' + city.state;
+  const dd = document.getElementById('tile-city-dropdown');
+  if (dd) dd.style.display = 'none';
+  state.city = city.city;
+  state.cityState = city.state;
+  state.userLat = city.lat;
+  state.userLng = city.lng;
+  state.location = 'local';
+  if (!state.radius || state.radius === 0) state.radius = 25;
+  // Sync radius selector
+  const radSel = document.getElementById('tile-radius-sel');
+  if (radSel) radSel.value = String(state.radius);
+  computeAllDistances();
+  updateTileRow();
+  closeTileDropdowns();
+  state.page = 1;
+  applyFiltersAndRender();
+  writeUrlParams();
+  renderActivePills();
+}
+
+function tileSetRadius(val) {
+  state.radius = parseInt(val, 10) || 25;
+  if (state.city && state.userLat != null) {
+    computeAllDistances();
+    updateTileRow();
+    state.page = 1;
+    applyFiltersAndRender();
+    writeUrlParams();
+  }
+}
+
 function tileSetLocation(locType, e) {
   if (e) e.stopPropagation();
   state.location = locType;
@@ -3598,9 +3700,22 @@ function tileSetLocation(locType, e) {
   });
   const stWrap = document.getElementById('qtile-state-wrap');
   if (stWrap) stWrap.style.display = locType === 'mystate' ? '' : 'none';
+  const cityWrap = document.getElementById('qtile-city-wrap');
+  if (cityWrap) cityWrap.style.display = locType === 'local' ? '' : 'none';
+  if (locType === 'local') {
+    // Pre-fill city input if already set; don't close the dropdown
+    const inp = document.getElementById('tile-city-input');
+    if (inp && state.city) inp.value = state.city + ', ' + (state.cityState || '');
+    const radSel = document.getElementById('tile-radius-sel');
+    if (radSel && state.radius) radSel.value = String(state.radius);
+    return;
+  }
+  if (locType === 'anywhere') {
+    state.radius = 0; state.city = null; state.cityState = null;
+    state.userLat = null; state.userLng = null;
+  }
   if (locType !== 'mystate') {
-    const label = document.getElementById('qtile-loc-label');
-    if (label) label.textContent = 'Anywhere';
+    updateTileRow();
     closeTileDropdowns();
     state.page = 1;
     applyFiltersAndRender();
