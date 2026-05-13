@@ -3332,7 +3332,7 @@ const EXP_LEVELS = {
 };
 
 // Keywords that mark a role as union staff (non-organizing)
-const STAFF_ROLE_RE = /\b(receptionist|administrative|admin\b|office\s+manager|office\s+assistant|executive\s+assistant|assistant\s+to|communications|comms\b|media\b|digital\s+media|public\s+relations|political\s+action|political\s+staff|research(?:er)?|analyst|data\s+analyst|it\b|information\s+technology|tech\s+support|accountant|accounting|finance|financial|payroll|paralegal|legal\b|attorney|counsel|legislative|advocate|lobbyist|human\s+resources|\bhr\b|membership\s+rep|benefits|graphic|designer|web\s+developer|database|clerical|bookkeeper|archivist|librarian|translator|interpreter|events?\s+staff|fundrais)\b/;
+const STAFF_ROLE_RE = /\b(receptionist|administrative|admin\b|office\s+manager|office\s+assistant|executive\s+assistant|assistant\s+to|communications|comms\b|media\b|digital\s+media|public\s+relations|research(?:er)?|analyst|data\s+analyst|it\b|information\s+technology|tech\s+support|accountant|accounting|finance|financial|payroll|paralegal|legal\b|attorney|counsel|lobbyist|human\s+resources|\bhr\b|membership\s+rep|benefits|graphic|designer|web\s+developer|database|clerical|bookkeeper|archivist|librarian|translator|interpreter|events?\s+staff|fundrais)\b/;
 
 function getExpLevel(job) {
   const t = (job.title || '').toLowerCase();
@@ -3341,8 +3341,8 @@ function getExpLevel(job) {
   // Level 4 checked FIRST — director/manager/executive always outranks staff classification
   if (/\b(director|manager|vice[\s-]?president|\bvp\b|chief|executive|president)\b/.test(t)) return 4;
 
-  // Level 3 — Lead / Senior / Coordinator / Supervisor
-  if (/\b(coordinator|supervisor)\b/.test(t)) return 3;
+  // Level 3 — Lead / Senior / Coordinator / Supervisor / Advocate
+  if (/\b(coordinator|supervisor|advocate)\b/.test(t)) return 3;
   if (/\b(lead|senior|\bsr\.?\b)\b/.test(t)) return 3;
 
   // Level 1 — Entry / Fellow / Intern / Apprentice
