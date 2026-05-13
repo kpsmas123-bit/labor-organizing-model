@@ -3024,7 +3024,6 @@ function showJobDetail(job) {
       ${intTypeKey ? `<div class="jdp-badge-block"><span class="badge badge-int-${intTypeKey.toLowerCase()}" style="flex-shrink:0">Type ${intTypeKey}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
       ${job.is_mcalevey_priority ? `<div class="jdp-badge-block"><span class="badge badge-mcalevey" style="flex-shrink:0">⭐ McAlevey</span><div class="jdp-badge-desc">In Jane McAlevey's highest-priority sectors: healthcare, education, logistics, or public sector.</div></div>` : ''}
       ${job.is_swing_state ? `<div class="jdp-badge-block"><span class="badge badge-swing" style="flex-shrink:0">🚩 Swing state</span><div class="jdp-badge-desc">Located in a competitive state where labor organizing has direct electoral impact.</div></div>` : ''}
-      ${job.needs_research_note ? `<div class="jdp-badge-block"><span class="badge badge-research-note" style="flex-shrink:0">ℹ️ Research local</span><div class="jdp-badge-desc">This listing is posted by SEIU International. Locals vary significantly in culture, resources, and organizing approach — research the specific local before applying.</div></div>` : ''}
       ${sectorNote}
     </div>
     <div class="jdp-section">
