@@ -166,10 +166,13 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 .quiz-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
 .quiz-cards-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
+.quiz-cards-row.four-col { grid-template-columns: repeat(4, 1fr); }
 
 /* Location step: center the 2-card row and form */
-#qstep-location .quiz-cards-row { max-width: 540px; margin-left: auto; margin-right: auto; }
+#qstep-location .quiz-cards-row { max-width: 760px; margin-left: auto; margin-right: auto; }
 #qstep-location .quiz-q { text-align: center; }
+#qstep-experience .quiz-q { text-align: center; }
+#qstep-experience .quiz-cards-row { max-width: 760px; margin-left: auto; margin-right: auto; justify-content: center; }
 .radius-row { justify-content: center; }
 
 .quiz-card {
@@ -221,7 +224,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .quiz-cta:hover { background: #8b0019; }
 
 @media (max-width: 600px) {
-  .quiz-cards-row, .quiz-cards-row.three-col { grid-template-columns: 1fr; }
+  .quiz-cards-row, .quiz-cards-row.three-col, .quiz-cards-row.four-col { grid-template-columns: 1fr 1fr; }
   .quiz-q { font-size: 1.15rem; }
 }
 
@@ -1031,17 +1034,17 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <div class="qtile-dropdown" id="qtile-sector-dd"><!-- populated by renderSectorTileDropdown() --></div>
     </div>
     <div class="qtile" id="qtile-loc" onclick="toggleTileDropdown('qtile-loc-dd', event)">
-      <span class="qtile-label" id="qtile-loc-label">Anywhere</span>
+      <span class="qtile-label" id="qtile-loc-label">Nationally</span>
       <span class="qtile-caret">▾</span>
       <div class="qtile-dropdown" id="qtile-loc-dd">
-        <div class="qtile-opt selected" data-loc="anywhere" onclick="tileSetLocation('anywhere', event)"><span class="chk">✓</span>Anywhere US</div>
-        <div class="qtile-opt" data-loc="mystate" onclick="tileSetLocation('mystate', event)"><span class="chk"></span>My state</div>
+        <div class="qtile-opt selected" data-loc="anywhere" onclick="tileSetLocation('anywhere', event)"><span class="chk">✓</span>Explore nationally</div>
+        <div class="qtile-opt" data-loc="mystate" onclick="tileSetLocation('mystate', event)"><span class="chk"></span>Around my state</div>
         <div id="qtile-state-wrap" style="display:none">
           <select id="qtile-state-sel" onchange="tileSetMyState(this.value)" onclick="event.stopPropagation()">
             <option value="">Select state…</option>
           </select>
         </div>
-        <div class="qtile-opt" data-loc="local" onclick="tileSetLocation('local', event)"><span class="chk"></span>Near a city</div>
+        <div class="qtile-opt" data-loc="local" onclick="tileSetLocation('local', event)"><span class="chk"></span>Stay local</div>
         <div id="qtile-city-wrap" style="display:none">
           <input type="text" id="tile-city-input" placeholder="Type your city…"
                  autocomplete="off" oninput="tileCityInput(this.value)"
@@ -1057,6 +1060,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
             </select>
           </div>
         </div>
+        <div class="qtile-opt" id="qtile-remote-opt" onclick="tileToggleRemote(event)"><span class="chk" id="qtile-remote-chk"></span>+ Remote / Hybrid</div>
       </div>
     </div>
     <div class="qtile" id="qtile-exp" onclick="toggleTileDropdown('qtile-exp-dd', event)">
@@ -1179,25 +1183,36 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <!-- STEP 3: Location -->
     <div class="quiz-step" id="qstep-location">
       <div class="quiz-q">Where can you work?</div>
-      <div class="quiz-cards-row">
+      <div class="quiz-cards-row four-col">
 
-        <div class="quiz-card" onclick="quizPickLocation('anywhere')">
-          <div class="qc-label">Open to relocating</div>
+        <div class="quiz-card" id="qcard-local" onclick="quizPickLocation('local')">
+          <div class="qc-label">Stay local</div>
+          <div class="qc-sub">Find opportunities near where I live — search by city and radius</div>
+        </div>
+
+        <div class="quiz-card" id="qcard-mystate" onclick="quizPickLocation('mystate')">
+          <div class="qc-label">Around my state</div>
+          <div class="qc-sub">Show me jobs anywhere in my state — I can travel but not relocate</div>
+        </div>
+
+        <div class="quiz-card" id="qcard-anywhere" onclick="quizPickLocation('anywhere')">
+          <div class="qc-label">Explore nationally</div>
           <div class="qc-sub">Show me the highest-impact opportunities anywhere in the US</div>
         </div>
 
-        <div class="quiz-card" id="qcard-local" onclick="quizPickLocation('local')">
-          <div class="qc-label">Staying local</div>
-          <div class="qc-sub">I want to find opportunities near where I live</div>
+        <div class="quiz-card" id="qcard-remote" onclick="quizToggleRemote()" style="position:relative">
+          <span style="position:absolute;top:8px;right:10px;font-size:11px;font-weight:700;color:var(--color-red);opacity:.7;letter-spacing:.03em">+ ADD</span>
+          <div class="qc-label">Remote / Hybrid</div>
+          <div class="qc-sub">Include jobs that are fully remote or hybrid — location flexible</div>
         </div>
 
       </div>
 
-      <!-- State + radius (appears when "Staying local" clicked) -->
+      <!-- City + radius (appears when "Stay local" clicked) -->
       <div id="quiz-local-opts" style="display:none">
         <div class="quiz-local-label">City</div>
         <div style="position:relative">
-          <input type="text" id="quiz-city-input" placeholder="Loading cities…"
+          <input type="text" id="quiz-city-input" placeholder="Type your city name…"
                  autocomplete="off" oninput="quizCityInput(this.value)"
                  onfocus="if(this.value.length>=2)quizCityInput(this.value)">
           <div id="quiz-city-dropdown"></div>
@@ -1209,11 +1224,21 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           <div class="rpill active" data-r="25" onclick="quizSetRadius(25)">25 mi</div>
           <div class="rpill" data-r="999" onclick="quizSetRadius(999)">50+ mi</div>
         </div>
-        <div class="quiz-local-label" style="margin-top:14px">Or select your state</div>
+        <button class="quiz-cta" style="margin-top:16px" onclick="quizConfirmLocation()">Find opportunities near me →</button>
+      </div>
+
+      <!-- State selector (appears when "Around my state" clicked) -->
+      <div id="quiz-state-opts" style="display:none">
+        <div class="quiz-local-label">Select your state</div>
         <select id="quiz-state-sel" onchange="quizStateInput(this.value)">
           <option value="">— choose state —</option>
         </select>
-        <button class="quiz-cta" style="margin-top:16px" onclick="quizConfirmLocation()">Find opportunities near me →</button>
+        <button class="quiz-cta" style="margin-top:16px" onclick="quizConfirmLocation()">Show jobs in my state →</button>
+      </div>
+
+      <!-- Remote-only confirm (appears when Remote selected with no geo option) -->
+      <div id="quiz-remote-only" style="display:none">
+        <button class="quiz-cta" onclick="quizConfirmLocation()">Show remote jobs →</button>
       </div>
     </div><!-- /step-location -->
 
@@ -1572,6 +1597,15 @@ const CITY_CENTROIDS = {
   'pomona|CA':[34.055,-117.752],'torrance|CA':[33.836,-118.340],'hayward|CA':[37.669,-122.081],
   'escondido|CA':[33.119,-117.086],'sunnyvale|CA':[37.369,-122.036],'pasadena|CA':[34.148,-118.144],
   'palo alto|CA':[37.441,-122.143],'berkeley|CA':[37.872,-122.273],'santa barbara|CA':[34.421,-119.702],
+  'alameda|CA':[37.765,-122.242],'davis|CA':[38.545,-121.741],'hayward|CA':[37.669,-122.081],
+  'santa clara|CA':[37.354,-121.955],'sunnyvale|CA':[37.369,-122.036],'torrance|CA':[33.836,-118.340],
+  'pasadena|CA':[34.148,-118.144],'roseville|CA':[38.752,-121.288],'salinas|CA':[36.678,-121.655],
+  'santa cruz|CA':[36.974,-122.031],'ventura|CA':[34.274,-119.229],'oxnard|CA':[34.197,-119.177],
+  'escondido|CA':[33.119,-117.086],'pomona|CA':[34.055,-117.751],'el monte|CA':[34.069,-118.027],
+  'concord|CA':[37.978,-122.031],'vallejo|CA':[38.104,-122.257],'antioch|CA':[37.996,-121.806],
+  'richmond|CA':[37.935,-122.348],'daly city|CA':[37.706,-122.469],'san mateo|CA':[37.563,-122.323],
+  'orange|CA':[33.788,-117.853],'elk grove|CA':[38.409,-121.371],'corona|CA':[33.875,-117.566],
+  'east los angeles|CA':[34.022,-118.172],'west los angeles|CA':[34.037,-118.441],
   // Texas
   'houston|TX':[29.760,-95.370],'san antonio|TX':[29.425,-98.494],'dallas|TX':[32.776,-96.797],
   'austin|TX':[30.268,-97.743],'fort worth|TX':[32.726,-97.321],'el paso|TX':[31.761,-106.487],
@@ -1828,12 +1862,37 @@ function haversine(lat1, lng1, lat2, lng2) {
 function lookupJobCentroid(job) {
   const raw = (job.location_raw || '').trim();
   const st  = job.state_abbr || '';
-  // Parse "City, ST" → try exact match then fuzzy
-  const m = raw.match(/^(.+?),?\s*([A-Z]{2})$/);
-  const city = m ? m[1].trim().toLowerCase() : raw.toLowerCase();
-  const key = city + '|' + st.toUpperCase();
-  if (CITY_CENTROIDS[key]) return CITY_CENTROIDS[key];
-  // Try just the state capital as last resort
+
+  function tryCity(name, stCode) {
+    const k = name.trim().toLowerCase() + '|' + (stCode || st).toUpperCase();
+    return CITY_CENTROIDS[k] || null;
+  }
+
+  // Strip trailing state/preferred text: "Berkeley and SF, CA preferred" → "Berkeley and SF"
+  const stripped = raw.replace(/,?\s*[A-Z]{2}(?:\s+preferred|\s+area)?\s*$/i, '').trim();
+
+  // Try the first city in a complex location ("Berkeley and SF" → "Berkeley")
+  const firstCity = stripped.split(/\s+(?:and|or)\s+|[\/;,]/)[0].trim();
+  if (firstCity) {
+    const c = tryCity(firstCity, st); if (c) return c;
+  }
+
+  // Try standard "City, ST" exact parse on raw
+  const m = raw.match(/^(.+?),?\s*([A-Z]{2})(?:\s|$|,)/);
+  if (m) {
+    const c = tryCity(m[1], m[2]); if (c) return c;
+  }
+
+  // Try full stripped string as city name
+  const c2 = tryCity(stripped, st); if (c2) return c2;
+
+  // Try first city from msa_name: "San Francisco-Oakland-Fremont, CA" → "San Francisco"
+  if (job.msa_name) {
+    const msaFirst = job.msa_name.split(/[-,]/)[0].trim();
+    const c = tryCity(msaFirst, st); if (c) return c;
+  }
+
+  // State center fallback
   if (STATE_CENTERS[st]) return STATE_CENTERS[st];
   return null;
 }
@@ -1866,6 +1925,7 @@ let state = {
   radius: 0,
   userLat: null,
   userLng: null,
+  remote: false,
 };
 const PAGE_SIZE = 20;
 
@@ -1879,6 +1939,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (state.path) {
     // URL param bypasses quiz — hide wizard and go straight to board
     document.getElementById('intake-wizard').style.display = 'none';
+    if (state.userLat != null) computeAllDistances();
     applyPath(state.path, false);
   }
   closeAllDropdowns();
@@ -1913,6 +1974,16 @@ function readUrlParams() {
   if (p.get('state')) state.myState = p.get('state');
   if (p.get('income')) state.income = parseInt(p.get('income')) || 0;
   if (p.get('sort')) state.sort = p.get('sort');
+  if (p.get('exp') !== null && p.has('exp')) {
+    const v = p.get('exp');
+    state.exp = v === 'staff' ? 'staff' : (parseInt(v) || null);
+  }
+  if (p.get('radius')) state.radius = parseInt(p.get('radius')) || 0;
+  if (p.get('city')) state.city = p.get('city');
+  if (p.get('cityState')) state.cityState = p.get('cityState');
+  if (p.get('lat')) state.userLat = parseFloat(p.get('lat'));
+  if (p.get('lng')) state.userLng = parseFloat(p.get('lng'));
+  if (p.get('remote') === '1') state.remote = true;
 }
 
 function writeUrlParams() {
@@ -1924,6 +1995,13 @@ function writeUrlParams() {
   if (state.myState) p.set('state', state.myState);
   if (state.income) p.set('income', state.income);
   if (state.sort !== 'best') p.set('sort', state.sort);
+  if (state.exp !== null && state.exp !== undefined) p.set('exp', state.exp);
+  if (state.radius > 0) p.set('radius', state.radius);
+  if (state.city) p.set('city', state.city);
+  if (state.cityState) p.set('cityState', state.cityState);
+  if (state.userLat != null) p.set('lat', state.userLat);
+  if (state.userLng != null) p.set('lng', state.userLng);
+  if (state.remote) p.set('remote', '1');
   const url = window.location.pathname + (p.toString() ? '?' + p.toString() : '');
   history.replaceState(null, '', url);
 }
@@ -2071,7 +2149,7 @@ function formatSalary(salary_min, salaryRaw) {
 // ============================================================
 // INTAKE QUIZ
 // ============================================================
-const quiz = { path: null, exp: null, sectors: [], locType: 'anywhere', myState: null, radius: 25, rfType: null, city: null, cityState: null, userLat: null, userLng: null };
+const quiz = { path: null, exp: null, sectors: [], locType: null, myState: null, radius: 25, rfType: null, city: null, cityState: null, userLat: null, userLng: null, remote: false };
 let quizHistory = [];
 let CITY_LIST = [];
 let _lastMatches = [];
@@ -2111,9 +2189,31 @@ function quizPickExp(exp) {
   _quizDots(3);
 }
 
+function _quizRemoteOnlyCheck() {
+  const hasGeo = quiz.locType && quiz.locType !== null;
+  const remoteOnly = document.getElementById('quiz-remote-only');
+  if (remoteOnly) remoteOnly.style.display = (quiz.remote && !hasGeo) ? 'block' : 'none';
+}
+
+function quizToggleRemote() {
+  quiz.remote = !quiz.remote;
+  document.getElementById('qcard-remote').classList.toggle('selected', quiz.remote);
+  _quizRemoteOnlyCheck();
+}
+
 function quizPickLocation(type) {
   quiz.locType = type;
+  // Clear geographic card selections (not remote)
+  ['qcard-local', 'qcard-mystate', 'qcard-anywhere'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  document.getElementById('quiz-local-opts').style.display = 'none';
+  document.getElementById('quiz-state-opts').style.display = 'none';
+
   if (type === 'anywhere') {
+    document.getElementById('qcard-anywhere').classList.add('selected');
+    _quizRemoteOnlyCheck();
     if (quiz.path === 'rf') {
       quizHistory.push('qstep-location');
       _quizShow('qstep-rftype');
@@ -2121,9 +2221,14 @@ function quizPickLocation(type) {
     } else {
       quizFinish();
     }
-  } else {
+  } else if (type === 'local') {
     document.getElementById('qcard-local').classList.add('selected');
     document.getElementById('quiz-local-opts').style.display = 'block';
+    _quizRemoteOnlyCheck();
+  } else if (type === 'mystate') {
+    document.getElementById('qcard-mystate').classList.add('selected');
+    document.getElementById('quiz-state-opts').style.display = 'block';
+    _quizRemoteOnlyCheck();
   }
 }
 
@@ -2134,13 +2239,26 @@ function quizSetRadius(r) {
 }
 
 function quizConfirmLocation() {
-  const stateSel = document.getElementById('quiz-state-sel');
-  if (!quiz.userLat && !stateSel?.value) {
-    const inp = document.getElementById('quiz-city-input');
-    if (inp) { inp.style.borderColor = '#C0392B'; setTimeout(() => inp.style.borderColor = '', 1500); }
+  if (quiz.locType === 'local') {
+    if (!quiz.userLat) {
+      const inp = document.getElementById('quiz-city-input');
+      if (inp) { inp.style.borderColor = '#C0392B'; setTimeout(() => inp.style.borderColor = '', 1500); }
+      return;
+    }
+    quiz.myState = quiz.cityState || null;
+  } else if (quiz.locType === 'mystate') {
+    const stateSel = document.getElementById('quiz-state-sel');
+    if (!stateSel?.value) {
+      if (stateSel) { stateSel.style.outline = '2px solid #C0392B'; setTimeout(() => stateSel.style.outline = '', 1500); }
+      return;
+    }
+    quiz.myState = stateSel.value;
+  }
+  // Remote-only (no geo selection) — just finish
+  if (!quiz.locType && quiz.remote) {
+    quizFinish();
     return;
   }
-  quiz.myState = quiz.cityState || stateSel?.value || null;
   if (quiz.path === 'rf') {
     quizHistory.push('qstep-location');
     _quizShow('qstep-rftype');
@@ -2162,12 +2280,18 @@ function quizBack() {
   _quizDots(quizHistory.length + 1);
   if (prev === 'qstep-location') {
     document.getElementById('quiz-local-opts').style.display = 'none';
-    document.getElementById('qcard-local').classList.remove('selected');
+    document.getElementById('quiz-state-opts').style.display = 'none';
+    document.getElementById('quiz-remote-only').style.display = 'none';
+    ['qcard-local', 'qcard-mystate', 'qcard-anywhere', 'qcard-remote'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('selected');
+    });
     const ci = document.getElementById('quiz-city-input');
     if (ci) ci.value = '';
     const dd = document.getElementById('quiz-city-dropdown');
     if (dd) dd.style.display = 'none';
     quiz.city = null; quiz.cityState = null; quiz.userLat = null; quiz.userLng = null;
+    quiz.remote = false; quiz.locType = null;
   }
   if (prev === 'qstep-sectors') {
     document.querySelectorAll('#qsectors-grid .sector-chip').forEach(c =>
@@ -2335,7 +2459,7 @@ function renderActivePills() {
 function quizResetAll() {
   state.path = null; state.location = 'anywhere'; state.myState = null;
   state.exp = null; state.radius = 0; state.sectors = [];
-  state.userLat = null; state.userLng = null; state.page = 1;
+  state.userLat = null; state.userLng = null; state.page = 1; state.remote = false;
   const row = document.getElementById('active-pills-row');
   if (row) row.style.display = 'none';
   quizEditStep('qstep-path');
@@ -2403,7 +2527,11 @@ function quizFinish() {
       const el = document.getElementById(id);
       if (el) el.value = quiz.myState;
     });
+  } else if (quiz.locType === 'mystate') {
+    state.location = 'mystate';
+    state.myState = quiz.myState;
   } else {
+    // 'anywhere' or null (remote-only)
     state.location = 'anywhere';
     state.myState = null;
   }
@@ -2423,6 +2551,7 @@ function quizFinish() {
   state.userLng = quiz.userLng || null;
   state.city = quiz.city || null;
   state.cityState = quiz.cityState || null;
+  state.remote = quiz.remote || false;
   computeAllDistances();
   // Hide wizard and intro, show summary bar + board
   document.getElementById('intake-wizard').style.display = 'none';
@@ -2460,6 +2589,7 @@ function applyPath(path, animate) {
   updateBanners();
   updateLookForContent();
   renderMsaList();
+  showTileRow();
   applyFiltersAndRender();
   writeUrlParams();
 }
@@ -2606,7 +2736,20 @@ function applyFiltersAndRender() {
     filtered = filtered.filter(job => state.sectors.some(s => (job.sector_tags||[]).includes(s)));
   }
 
-  // Location filter — state-level when no city radius active (runs BEFORE experience)
+  // Experience level filter — applied BEFORE radius so fallback pool contains right-level jobs
+  if (state.exp !== null && state.exp !== undefined) {
+    filtered = filtered.filter(job => getExpLevel(job) === state.exp);
+  }
+
+  // Split remote jobs out before geographic filtering if remote toggle is on
+  const isRemote = j => /remote/i.test(j.location_raw || '');
+  let remotePool = [];
+  if (state.remote) {
+    remotePool = filtered.filter(isRemote);
+    filtered = filtered.filter(j => !isRemote(j));
+  }
+
+  // Location filter — state-level when no city radius active
   if (state.location === 'mystate' && state.myState && !(state.radius > 0 && state.radius < 999 && state.userLat !== null)) {
     filtered = filtered.filter(job => !job.state_abbr || job.state_abbr === state.myState);
   }
@@ -2646,10 +2789,10 @@ function applyFiltersAndRender() {
     }
   }
 
-  // Experience level filter — applied AFTER location so radius fallback uses geographic pool first
-  if (state.exp !== null && state.exp !== undefined) {
-    filtered = filtered.filter(job => getExpLevel(job) === state.exp);
-    radiusFallback = radiusFallback.filter(job => getExpLevel(job) === state.exp);
+  // Merge remote jobs back in (after geo filter)
+  if (state.remote && remotePool.length) {
+    const ids = new Set(filtered.map(j => j.job_id));
+    filtered = [...filtered, ...remotePool.filter(j => !ids.has(j.job_id))];
   }
 
   // Sort
@@ -3596,23 +3739,35 @@ function updateTileRow() {
 
   const locLabel = document.getElementById('qtile-loc-label');
   if (locLabel) {
-    if (state.radius > 0) {
-      locLabel.textContent = state.city
+    let geoText;
+    if (state.location === 'anywhere' && !state.remote) {
+      geoText = 'Nationally';
+    } else if (state.location === 'anywhere' && state.remote) {
+      geoText = 'Remote';
+    } else if (state.radius > 0) {
+      geoText = state.city
         ? state.city + ', ' + state.cityState + ' · ' + state.radius + ' mi'
         : 'Within ' + state.radius + ' mi';
+      if (state.remote) geoText += ' + Remote';
     } else if (state.location === 'mystate' && state.myState) {
-      locLabel.textContent = state.myState;
+      geoText = state.myState;
+      if (state.remote) geoText += ' + Remote';
     } else if (state.location === 'mystate') {
-      locLabel.textContent = 'My state';
+      geoText = state.remote ? 'My state + Remote' : 'My state';
     } else {
-      locLabel.textContent = 'Anywhere';
+      geoText = state.remote ? 'Remote' : 'Nationally';
     }
+    locLabel.textContent = geoText;
   }
   document.querySelectorAll('#qtile-loc-dd .qtile-opt[data-loc]').forEach(o => {
     const sel = o.dataset.loc === state.location;
     o.querySelector('.chk').textContent = sel ? '✓' : '';
     o.classList.toggle('selected', sel);
   });
+  const remoteChk = document.getElementById('qtile-remote-chk');
+  const remoteOpt = document.getElementById('qtile-remote-opt');
+  if (remoteChk) remoteChk.textContent = state.remote ? '✓' : '';
+  if (remoteOpt) remoteOpt.classList.toggle('selected', !!state.remote);
   const stWrap = document.getElementById('qtile-state-wrap');
   if (stWrap) stWrap.style.display = state.location === 'mystate' ? '' : 'none';
   const cityWrap = document.getElementById('qtile-city-wrap');
@@ -3737,6 +3892,16 @@ function tileCitySelectByIdx(i) {
   computeAllDistances();
   updateTileRow();
   closeTileDropdowns();
+  state.page = 1;
+  applyFiltersAndRender();
+  writeUrlParams();
+  renderActivePills();
+}
+
+function tileToggleRemote(e) {
+  if (e) e.stopPropagation();
+  state.remote = !state.remote;
+  updateTileRow();
   state.page = 1;
   applyFiltersAndRender();
   writeUrlParams();
