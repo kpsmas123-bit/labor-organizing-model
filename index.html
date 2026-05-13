@@ -120,7 +120,8 @@
     /* ── Stats row ── */
     .stats-row {
       display: flex;
-      gap: var(--space-12);
+      justify-content: flex-start;
+      gap: var(--space-10);
       margin-bottom: var(--space-12);
       padding-top: var(--space-8);
       border-top: 1px solid var(--color-border);
@@ -128,7 +129,7 @@
 
     /* ── Method note ── */
     .method-note {
-      max-width: 560px;
+      max-width: 760px;
       margin: 0 auto var(--space-16);
       text-align: center;
     }
@@ -313,19 +314,23 @@
           <span class="stat-block__label">Counties scored</span>
         </div>
         <div class="stat-block">
-          <span class="stat-block__number">20</span>
+          <span class="stat-block__number">36</span>
           <span class="stat-block__label">Sectors analyzed</span>
         </div>
         <div class="stat-block">
           <span class="stat-block__number">411</span>
           <span class="stat-block__label">Jobs listed</span>
         </div>
+        <div class="stat-block">
+          <span class="stat-block__number">100%</span>
+          <span class="stat-block__label">Public data</span>
+        </div>
       </section>
 
       <!-- ── Method Note ── -->
       <div class="method-note">
         <p class="method-note__text">
-          Terrain scores counties on sectoral strategic value, organizing infrastructure, and electoral opportunity — and prescribes what kind of intervention each place needs, not just a ranking.
+          Terrain aggregates dispersed labor and political data, interprets it through open-source and peer-reviewable social science prioritization models, and surfaces insights into how labor and political organizing can work together. This is a constantly evolving project — we invite you to follow our methodology as we continue to grow.
           <a href="output/methodology.html">Read the methodology →</a>
         </p>
       </div>
