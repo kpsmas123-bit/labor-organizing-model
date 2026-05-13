@@ -809,6 +809,14 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 }
 .jdp-apply:hover { background: #bd0026; }
 
+/* === ENTRY CARDS (match landing page) === */
+.entry-card { display: flex; flex-direction: column; padding: var(--space-8); text-decoration: none; color: inherit; }
+.entry-card:hover { text-decoration: none; color: inherit; }
+.entry-card__icon { width: 20px; height: 20px; margin-bottom: var(--space-5); color: var(--color-accent); flex-shrink: 0; }
+.entry-card__label { margin-bottom: var(--space-3); }
+.entry-card__heading { font-family: var(--font-serif); font-size: var(--text-xl); font-weight: 600; color: var(--color-text); line-height: 1.25; margin-bottom: var(--space-4); }
+.entry-card__body { font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text-secondary); line-height: 1.65; flex: 1; margin-bottom: var(--space-6); }
+
 .terrain-footer {
   border-top: 1px solid var(--color-border);
   padding: var(--space-6) 0;
@@ -974,22 +982,24 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <div class="quiz-q">What kind of organizer do you want to be?</div>
       <div class="quiz-cards-row">
 
-        <div class="quiz-card" id="qcard-rf" onclick="quizPickPath('rf')">
-          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#bd0026" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="terrain-card clickable featured entry-card" id="qcard-rf" onclick="quizPickPath('rf')">
+          <svg class="entry-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 7v4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M14 9h-4"/><path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/>
           </svg>
-          <div class="qc-label">Rank &amp; File</div>
-          <div class="qc-sub">Take a job and organize from the inside</div>
-          <span class="qc-tag tag-mcalevey">Organize from the inside</span>
+          <span class="section-label entry-card__label">Rank &amp; File</span>
+          <h2 class="entry-card__heading">Organize from the Inside</h2>
+          <p class="entry-card__body">Take a union job and build power from the inside — the McAlevey whole-worker model in practice.</p>
+          <span class="btn-primary">Find Rank &amp; File Jobs →</span>
         </div>
 
-        <div class="quiz-card" id="qcard-staff" onclick="quizPickPath('staff')">
-          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#bd0026" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <div class="terrain-card clickable entry-card" id="qcard-staff" onclick="quizPickPath('staff')">
+          <svg class="entry-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"/><path d="M8 6v8"/>
           </svg>
-          <div class="qc-label">Staff Organizer</div>
-          <div class="qc-sub">Work professionally for a union or labor org</div>
-          <span class="qc-tag tag-staff">Professional organizing</span>
+          <span class="section-label entry-card__label">Staff Organizer</span>
+          <h2 class="entry-card__heading">Work for the Movement</h2>
+          <p class="entry-card__body">Get paid to organize — find staff roles at unions and labor organizations matched to your terrain.</p>
+          <span class="btn-primary">Find Staff Jobs →</span>
         </div>
 
       </div>
