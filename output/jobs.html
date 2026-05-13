@@ -718,8 +718,9 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 }
 .qs-retake:hover { color: rgba(255,255,255,0.75); }
 
-/* Suppress legacy quiz summary bar */
+/* Suppress legacy quiz summary bar and pills row (merged into tile row) */
 #quiz-summary-bar { display: none !important; }
+#active-pills-row { display: none !important; }
 
 /* Quiz tile row */
 #quiz-tile-row { background: var(--color-bg-card); border-bottom: 1px solid var(--color-border); display: none; }
@@ -963,7 +964,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
         </div>
       </div>
     </div>
-    <button class="qtile-retake" onclick="quizEditStep('qstep-path')">Start over</button>
+    <button class="qtile-retake" onclick="quizResetAll()">Reset all</button>
   </div>
 </div>
 
@@ -3286,9 +3287,15 @@ function updateTileRow() {
 
   const locLabel = document.getElementById('qtile-loc-label');
   if (locLabel) {
-    locLabel.textContent = (state.location === 'mystate' && state.myState)
-      ? state.myState
-      : state.location === 'mystate' ? 'My state' : 'Anywhere';
+    if (state.radius > 0) {
+      locLabel.textContent = 'Within ' + state.radius + ' mi';
+    } else if (state.location === 'mystate' && state.myState) {
+      locLabel.textContent = state.myState;
+    } else if (state.location === 'mystate') {
+      locLabel.textContent = 'My state';
+    } else {
+      locLabel.textContent = 'Anywhere';
+    }
   }
   document.querySelectorAll('#qtile-loc-dd .qtile-opt[data-loc]').forEach(o => {
     const sel = o.dataset.loc === state.location;
