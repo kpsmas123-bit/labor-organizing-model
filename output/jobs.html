@@ -3341,10 +3341,9 @@ function getExpLevel(job) {
   // Level 4 checked FIRST — director/manager/executive always outranks staff classification
   if (/\b(director|manager|vice[\s-]?president|\bvp\b|chief|executive|president)\b/.test(t)) return 4;
 
-  // Level 3 — Lead / Senior / Coordinator / Supervisor (organizing or membership context)
-  if (/\b(lead\s+organizer|senior\s+organizer|lead\s+campaign|senior\s+campaign|\bsr\.?\s+organizer|field\s+coordinator|organizing\s+coordinator|campaign\s+coordinator|regional\s+coordinator|membership\s+supervisor|membership\s+coordinator|membership\s+lead)\b/.test(t)) return 3;
-  if (/\b(supervisor)\b/.test(t)) return 3;
-  if (/\b(lead|senior|\bsr\.?\b|coordinator)\b/.test(t) && /\b(organiz|campaign|field|labor|union|worker|member)\b/.test(t)) return 3;
+  // Level 3 — Lead / Senior / Coordinator / Supervisor
+  if (/\b(coordinator|supervisor)\b/.test(t)) return 3;
+  if (/\b(lead|senior|\bsr\.?\b)\b/.test(t)) return 3;
 
   // Level 1 — Entry / Fellow / Intern / Apprentice
   if (/\b(fellow|intern|internship|fellowship|apprentice|apprenticeship|entry[\s-]level|associate\s+organizer|new\s+organizer|junior)\b/.test(t)) return 1;
