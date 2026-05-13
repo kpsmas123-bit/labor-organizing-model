@@ -802,6 +802,47 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   transition: background 0.15s;
 }
 .jdp-apply:hover { background: #bd0026; }
+
+.terrain-footer {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-6) 0;
+}
+.terrain-footer__inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+.terrain-footer__copy {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.5px;
+}
+.terrain-footer__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.terrain-footer__links a {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.terrain-footer__links a:hover {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
@@ -1320,25 +1361,18 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   </div><!-- /results-section -->
 
   <!-- GUIDED NAV FOOTER -->
-  <div id="guided-nav">
-    <div class="gn-label">Continue exploring the model</div>
-    <div class="gn-cards">
-      <a class="gn-card" href="./labor_organizing_national_dashboard.html?view=map">
-        <div class="gn-card-step">Next: The Tool</div>
-        <div class="gn-card-title">Strategic Terrain Dashboard</div>
-        <div class="gn-card-desc">Interactive choropleth map of all 3,144 U.S. counties scored by organizing opportunity. Filter by sector, intervention type, and electoral goal.</div>
-        <div class="gn-card-arrow">Explore the data →</div>
-      </a>
-      <a class="gn-card" href="./methodology.html">
-        <div class="gn-card-step">The Method</div>
-        <div class="gn-card-title">How the Model Works</div>
-        <div class="gn-card-desc">Full methodology: sector coding, scoring formulas, data sources, known limitations, and the McAlevey framework behind the rankings.</div>
-        <div class="gn-card-arrow">Read the methodology →</div>
-      </a>
-    </div>
-  </div>
-
 </div><!-- /page-wrap -->
+
+<footer class="terrain-footer">
+  <div class="terrain-footer__inner">
+    <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
+    <ul class="terrain-footer__links">
+      <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">GitHub ↗</a></li>
+      <li><a href="./methodology.html">Methodology</a></li>
+      <li><a href="./labor_organizing_national_dashboard.html">Data Sources</a></li>
+    </ul>
+  </div>
+</footer>
 
 <script>
 // ============================================================
