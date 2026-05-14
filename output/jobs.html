@@ -258,8 +258,15 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .quiz-cta:hover { border-color: #bd0026; color: #bd0026; background: #fff7f7; }
 
 @media (max-width: 600px) {
-  .quiz-cards-row, .quiz-cards-row.three-col, .quiz-cards-row.four-col { grid-template-columns: 1fr 1fr; }
+  .quiz-cards-row.three-col, .quiz-cards-row.four-col { grid-template-columns: 1fr 1fr; }
   .quiz-q { font-size: 1.15rem; }
+}
+
+@media (max-width: 480px) {
+  .quiz-cards-row, .quiz-cards-row.three-col, .quiz-cards-row.four-col { grid-template-columns: 1fr; }
+  .entry-card { padding: var(--space-5) var(--space-4); }
+  .entry-card__heading { font-size: var(--text-lg); }
+  #page-wrap { padding: 0 var(--space-4) 60px; }
 }
 
 /* === GUIDED NAV FOOTER === */
