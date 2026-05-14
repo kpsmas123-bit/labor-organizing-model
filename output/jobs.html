@@ -264,9 +264,27 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 
 @media (max-width: 480px) {
   .quiz-cards-row, .quiz-cards-row.three-col, .quiz-cards-row.four-col { grid-template-columns: 1fr; }
-  .entry-card { padding: var(--space-5) var(--space-4); }
+  .entry-card { padding: var(--space-4); }
+  .entry-card__icon { margin-bottom: var(--space-3); }
   .entry-card__heading { font-size: var(--text-lg); }
+  .entry-card__body { font-size: var(--text-sm); margin-bottom: var(--space-4); }
   #page-wrap { padding: 0 var(--space-4) 60px; }
+
+  /* Remove scroll-snap on mobile — quiz becomes a normal scrolling form */
+  #quiz-scroll-area {
+    height: auto;
+    min-height: 0;
+    overflow-y: visible;
+    scroll-snap-type: none;
+  }
+  .quiz-step {
+    min-height: 0;
+    padding: var(--space-6) 0;
+    scroll-snap-align: none;
+    align-items: flex-start;
+  }
+  .quiz-q { font-size: 1.1rem; }
+  .exp-pill { font-size: 13px; padding: 7px 16px; }
 }
 
 /* === GUIDED NAV FOOTER === */
