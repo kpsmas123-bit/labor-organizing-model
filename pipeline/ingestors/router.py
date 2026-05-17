@@ -42,6 +42,7 @@ SUPPORTED_BOARDS = [
         "key": "apprenticeship_gov",
         "name": "Apprenticeship.gov Job Finder",
         "url": "https://www.apprenticeship.gov/apprenticeship-job-finder",
+        "note": "JS-rendered; static scraping returns page shell, not real listings",
     },
     {
         "key": "arena",
@@ -61,6 +62,13 @@ SUPPORTED_BOARDS = [
         "url": "https://*.aflcio.org",
     },
 ]
+
+
+# Board keys that are permanently disabled for automated/cron runs.
+# Boards here are skipped silently (return []) rather than raising errors.
+#   gain_power       — careercenter.gainpower.org returns 403 for all automated requests
+#   apprenticeship_gov — JS-rendered; static scraping returns the page shell, not real jobs
+DISABLED_BOARDS = {"gain_power", "apprenticeship_gov"}
 
 
 class RobotsDisallowedError(Exception):
@@ -96,13 +104,31 @@ def check_robots(url):
     """
     Raise RobotsDisallowedError if robots.txt disallows the URL.
     If robots.txt is unreachable, log a warning and proceed.
+
+    FIX (2026-05-17): urllib.robotparser.read() uses Python's default User-Agent,
+    which some sites (e.g. nysaflcio.org) block with 403. Python then sets
+    disallow_all=True and blocks all scraping — a false positive. We now fetch
+    robots.txt manually with browser headers and call rp.parse() directly.
     """
     parsed = urlparse(url)
     robots_url = f"{parsed.scheme}://{parsed.netloc}/robots.txt"
     rp = urllib.robotparser.RobotFileParser()
     rp.set_url(robots_url)
+
     try:
-        rp.read()
+        resp = requests.get(robots_url, headers=DEFAULT_HEADERS, timeout=10, allow_redirects=True)
+        if resp.status_code in (401, 403):
+            # Server explicitly blocks access to robots.txt — treat as disallow-all per RFC
+            raise RobotsDisallowedError(
+                f"robots.txt at {robots_url} returned HTTP {resp.status_code} — treating as disallow-all"
+            )
+        if resp.status_code == 404 or resp.status_code >= 500:
+            # robots.txt not found or server error — proceed cautiously
+            print(f"WARNING: robots.txt at {robots_url} returned HTTP {resp.status_code}. Proceeding cautiously.")
+            return
+        rp.parse(resp.text.splitlines())
+    except RobotsDisallowedError:
+        raise
     except Exception as e:
         print(f"WARNING: Could not fetch robots.txt from {robots_url}: {e}. Proceeding cautiously.")
         return
@@ -129,18 +155,31 @@ def get_html(url, sleep_before=False, timeout=20, verify=True):
             verify=verify,
         )
     except requests.exceptions.SSLError as e:
-        # Try without SSL verification as a fallback (with warning)
-        print(f"WARNING: SSL error for {url}: {e}. Retrying with verify=False.")
-        try:
-            resp = requests.get(
-                url,
-                headers=DEFAULT_HEADERS,
-                timeout=timeout,
-                allow_redirects=True,
-                verify=False,
-            )
-        except Exception as e2:
-            raise FetchError(f"Failed to fetch {url}: {e2}") from e2
+        err_str = str(e)
+        # TLSV1_ALERT_INTERNAL_ERROR is a server-side TLS failure — verify=False won't help.
+        # (mattlockshin.com as of 2026-05-17: LibreSSL on macOS can't complete handshake
+        # because the server sends an internal error alert during the TLS exchange.)
+        if "TLSV1_ALERT_INTERNAL_ERROR" in err_str or "internal error" in err_str.lower():
+            raise FetchError(
+                f"Server-side TLS error fetching {url} — the remote host has a broken SSL "
+                f"configuration that cannot be bypassed from the client. "
+                f"Original error: {e}"
+            ) from e
+        # Other SSL errors (e.g. cert verification) — retry without cert check
+        if verify:
+            print(f"WARNING: SSL cert error for {url}: {e}. Retrying with verify=False.")
+            try:
+                resp = requests.get(
+                    url,
+                    headers=DEFAULT_HEADERS,
+                    timeout=timeout,
+                    allow_redirects=True,
+                    verify=False,
+                )
+            except Exception as e2:
+                raise FetchError(f"Failed to fetch {url}: {e2}") from e2
+        else:
+            raise FetchError(f"Failed to fetch {url}: {e}") from e
     except requests.exceptions.Timeout:
         raise FetchError(f"Timeout fetching {url}")
     except requests.exceptions.RequestException as e:
@@ -167,9 +206,13 @@ def ingest(url, mode="auto"):
     """
     from pipeline.ingestors import generic
 
-    check_robots(url)
-
     board_key = detect_board(url)
+
+    if board_key in DISABLED_BOARDS:
+        print(f"INFO [router]: {board_key} is disabled — skipping {url}")
+        return []
+
+    check_robots(url)
 
     if mode == "single":
         return generic.extract_single_job(url)

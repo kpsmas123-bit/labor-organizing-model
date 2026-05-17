@@ -174,7 +174,11 @@ def _parse_html_cards(html_text, base_url):
 
     for card in cards:
         title_el = card.find(["h2", "h3", "h4", "strong", "[class*='title']"])
-        title = title_el.get_text(strip=True) if title_el else None
+        if not title_el:
+            continue
+        # Prefer itemprop="title" child to avoid concatenating badge text ("Featured", etc.)
+        itemprop_el = title_el.find(itemprop="title")
+        title = itemprop_el.get_text(strip=True) if itemprop_el else title_el.get_text(strip=True)
         if not title:
             continue
 
@@ -183,8 +187,16 @@ def _parse_html_cards(html_text, base_url):
         if not location_raw:
             location_raw = generic._extract_location_from_text(card.get_text(" ", strip=True))
 
-        link = card.find("a", href=True)
-        job_url = urljoin(base_url, link["href"]) if link else base_url
+        # Prefer job-specific link (contains /jobs/) over company link
+        job_link = None
+        for a in card.find_all("a", href=True):
+            href = a["href"]
+            if "/jobs/" in href:
+                job_link = a
+                break
+        if not job_link:
+            job_link = card.find("a", href=True)
+        job_url = urljoin(base_url, job_link["href"].split("#")[0]) if job_link else base_url
 
         results.append({
             "title": title,
