@@ -243,6 +243,14 @@ def append_to_manifest(base: Path, record_ids: List[str]) -> None:
             f.write(rid + "\n")
 
 
+# ── Census API exception ───────────────────────────────────────────────────────
+
+class NoCBPData(Exception):
+    """Census API returned empty response — county has no CBP data (e.g. Kalawao HI).
+    Not counted as an error; logged to no_cbp_data_counties.json for post-run review."""
+    pass
+
+
 # ── Census API helpers ─────────────────────────────────────────────────────────
 
 def load_census_key(config_path: str) -> str:
@@ -261,14 +269,22 @@ def load_census_key(config_path: str) -> str:
     raise ValueError("CENSUS_API_KEY not found in .env or environment. Add it before running task4.")
 
 
+CBP_FETCH_RETRIES = 3       # attempts per county before giving up
+CBP_RETRY_BACKOFF = 5       # seconds between retries on transient failures
+
+
 def fetch_county_employment(
     state_fips: str, county_fips: str, census_key: str
-) -> Tuple[Dict[str, Optional[int]], Set[str]]:
+) -> Tuple[Dict[str, Optional[int]], Set[str], int]:
     """
     Fetch ALL NAICS employment for one county in a single CBP API call.
-    Returns (emp_by_naics, suppressed_set).
+    Returns (emp_by_naics, suppressed_set, attempts_used).
       emp_by_naics[naics] = int(employment) or None (if suppressed)
       suppressed_set = set of NAICS codes with suppressed ("N") employment
+      attempts_used = 1 (first try) to CBP_FETCH_RETRIES (needed retries)
+
+    Raises NoCBPData if Census returns empty body (county has no data — not an error).
+    Raises Exception after CBP_FETCH_RETRIES failed attempts (503 / timeout).
     """
     params = {
         "get": "EMP,NAICS2017",
@@ -276,30 +292,54 @@ def fetch_county_employment(
         "in": f"state:{state_fips}",
         "key": census_key,
     }
-    resp = requests.get(CBP_API, params=params, timeout=30)
-    resp.raise_for_status()
-    if resp.text.strip().startswith("<"):
-        raise ValueError(f"Census API returned HTML (auth error?): {resp.text[:300]}")
-    data = resp.json()
-    header = data[0]
-    # CBP API quirk: NAICS2017 appears twice (code + label); first occurrence = code
-    naics_idx = header.index("NAICS2017")
-    emp_idx   = header.index("EMP")
+    last_exc: Exception = RuntimeError("CBP fetch: no attempts made")
+    for attempt in range(CBP_FETCH_RETRIES):
+        try:
+            resp = requests.get(CBP_API, params=params, timeout=30)
 
-    emp: Dict[str, Optional[int]] = {}
-    suppressed: Set[str] = set()
-    for row in data[1:]:
-        naics   = row[naics_idx]
-        emp_raw = row[emp_idx]
-        if emp_raw == "N":
-            emp[naics] = None
-            suppressed.add(naics)
-        elif emp_raw not in ("", "0", None):
-            try:
-                emp[naics] = int(str(emp_raw).replace(",", ""))
-            except (ValueError, TypeError):
-                pass
-    return emp, suppressed
+            # Empty body: county has no CBP data — not a transient error, don't retry
+            if not resp.text.strip():
+                raise NoCBPData(f"{state_fips}/{county_fips}")
+
+            resp.raise_for_status()
+
+            if resp.text.strip().startswith("<"):
+                raise ValueError(f"Census API returned HTML (auth error?): {resp.text[:300]}")
+
+            data = resp.json()
+            header = data[0]
+            # CBP API quirk: NAICS2017 appears twice (code + label); first = code
+            naics_idx = header.index("NAICS2017")
+            emp_idx   = header.index("EMP")
+
+            emp: Dict[str, Optional[int]] = {}
+            suppressed: Set[str] = set()
+            for row in data[1:]:
+                naics   = row[naics_idx]
+                emp_raw = row[emp_idx]
+                if emp_raw == "N":
+                    emp[naics] = None
+                    suppressed.add(naics)
+                elif emp_raw not in ("", "0", None):
+                    try:
+                        emp[naics] = int(str(emp_raw).replace(",", ""))
+                    except (ValueError, TypeError):
+                        pass
+            return emp, suppressed, attempt + 1
+
+        except NoCBPData:
+            raise  # Don't retry empty responses — they're permanent, not transient
+        except Exception as e:
+            last_exc = e
+            if attempt < CBP_FETCH_RETRIES - 1:
+                logger.warning(
+                    f"CBP fetch attempt {attempt + 1}/{CBP_FETCH_RETRIES} "
+                    f"for {state_fips}/{county_fips}: {e} — retrying in {CBP_RETRY_BACKOFF}s"
+                )
+                time.sleep(CBP_RETRY_BACKOFF)
+            # else: fall through, raise below
+
+    raise last_exc  # All retries exhausted
 
 
 # ── Carve-out resolvers ────────────────────────────────────────────────────────
@@ -597,13 +637,31 @@ def run(
     no_county        = 0
     no_sector        = 0
     no_data          = 0   # NAICS code absent in this county
-    errors: List[dict] = []
+    census_errors: List[dict] = []      # CBP fetch failures (503/timeout after retries)
+    notion_errors: List[dict] = []      # Notion write failures
+    no_cbp_data_counties: List[str] = []  # Counties with empty CBP response (not errors)
+    cbp_retry_counties: List[dict] = []   # Counties that needed >1 CBP attempt
 
-    # Per-state error monitoring (halt if >1% error rate with ≥10 attempts)
-    ERROR_RATE_THRESHOLD   = 0.01
-    ERROR_RATE_MIN_ATTEMPTS = 10
-    state_attempts:   Dict[str, int] = {}
-    state_errors_map: Dict[str, int] = {}
+    # ── Census API error thresholds (more lenient — external API reliability) ──
+    # Halt if: per-state Census error rate > 5% (with ≥10 attempts), OR
+    #          total run-wide Census errors > 50 counties.
+    # Empty-body responses (NoCBPData) are NOT counted as errors.
+    CENSUS_STATE_THRESHOLD   = 0.05   # 5% per-state Census error rate
+    CENSUS_TOTAL_CAP         = 50     # 50 county hard cap across whole run
+    CENSUS_MIN_ATTEMPTS      = 10
+
+    census_state_attempts: Dict[str, int] = {}
+    census_state_errors:   Dict[str, int] = {}
+
+    # ── Notion API error thresholds (strict — our own infrastructure) ──────────
+    # Halt if: per-state Notion error rate > 1% (with ≥10 attempts).
+    # Sectorless records detected during pre-flight also halt immediately (see above).
+    NOTION_STATE_THRESHOLD   = 0.01   # 1% per-state Notion error rate
+    NOTION_MIN_ATTEMPTS      = 10
+
+    notion_state_attempts: Dict[str, int] = {}
+    notion_state_errors:   Dict[str, int] = {}
+
     halt_triggered = False
 
     logger.info(f"Processing {len(fips_list)} counties")
@@ -627,17 +685,39 @@ def run(
             ok += 1
             continue
 
-        # Fetch all NAICS employment for this county (one API call)
+        # Fetch all NAICS employment for this county (one API call, with retries)
         try:
-            emp, suppressed = fetch_county_employment(state_fips, county_fips3, census_key)
+            emp, suppressed, attempts_used = fetch_county_employment(
+                state_fips, county_fips3, census_key
+            )
+            if attempts_used > 1:
+                cbp_retry_counties.append({"fips": fips, "attempts": attempts_used})
+                logger.info(f"CBP fetch for {fips} succeeded on attempt {attempts_used}")
+        except NoCBPData:
+            # Empty response: county has no CBP data — silent skip, not an error
+            logger.info(f"No CBP data for {fips} (empty response) — skipped")
+            no_cbp_data_counties.append(fips)
+            continue
         except Exception as e:
-            logger.error(f"CBP fetch failed for {fips}: {e}")
-            errors.append({"fips": fips, "error": str(e)})
-            state_errors_map[state_fips] = state_errors_map.get(state_fips, 0) + 1
-            state_attempts[state_fips]   = state_attempts.get(state_fips, 0) + 1
-            att = state_attempts[state_fips]; err = state_errors_map[state_fips]
-            if att >= ERROR_RATE_MIN_ATTEMPTS and err / att > ERROR_RATE_THRESHOLD:
-                logger.critical(f"HALT: state {state_fips} error rate {err}/{att} ({100*err/att:.1f}%) > 1%")
+            logger.error(f"CBP fetch failed for {fips} (all {CBP_FETCH_RETRIES} attempts): {e}")
+            census_errors.append({"fips": fips, "error": str(e)})
+            census_state_attempts[state_fips] = census_state_attempts.get(state_fips, 0) + 1
+            census_state_errors[state_fips]   = census_state_errors.get(state_fips, 0) + 1
+            att = census_state_attempts[state_fips]
+            err = census_state_errors[state_fips]
+            total_census_errors = len(census_errors)
+            # Halt only on sustained Census failure — transient spikes are expected
+            if total_census_errors >= CENSUS_TOTAL_CAP:
+                logger.critical(
+                    f"HALT: Census API total error cap reached "
+                    f"({total_census_errors} counties failed run-wide)"
+                )
+                halt_triggered = True
+            elif att >= CENSUS_MIN_ATTEMPTS and err / att > CENSUS_STATE_THRESHOLD:
+                logger.critical(
+                    f"HALT: state {state_fips} Census error rate "
+                    f"{err}/{att} ({100*err/att:.1f}%) > 5%"
+                )
                 halt_triggered = True
             time.sleep(2)
             continue
@@ -696,7 +776,7 @@ def run(
                 fips, record_id, naics_key, emp_val,
                 county_id, sector_id, state_id, confidence
             )
-            state_attempts[state_fips] = state_attempts.get(state_fips, 0) + 1
+            notion_state_attempts[state_fips] = notion_state_attempts.get(state_fips, 0) + 1
             try:
                 client.create_page(db_id, props)
                 existing_ids.add(record_id)
@@ -704,13 +784,14 @@ def run(
                 ok += 1
             except Exception as e:
                 logger.error(f"Notion error {record_id}: {e}")
-                errors.append({"record_id": record_id, "error": str(e)})
-                state_errors_map[state_fips] = state_errors_map.get(state_fips, 0) + 1
-                att = state_attempts[state_fips]; err_cnt = state_errors_map[state_fips]
-                if att >= ERROR_RATE_MIN_ATTEMPTS and err_cnt / att > ERROR_RATE_THRESHOLD:
+                notion_errors.append({"record_id": record_id, "error": str(e)})
+                notion_state_errors[state_fips] = notion_state_errors.get(state_fips, 0) + 1
+                att = notion_state_attempts[state_fips]
+                err_cnt = notion_state_errors[state_fips]
+                if att >= NOTION_MIN_ATTEMPTS and err_cnt / att > NOTION_STATE_THRESHOLD:
                     logger.critical(
-                        f"HALT: state {state_fips} error rate {err_cnt}/{att} "
-                        f"({100*err_cnt/att:.1f}%) > 1% threshold"
+                        f"HALT: state {state_fips} Notion error rate "
+                        f"{err_cnt}/{att} ({100*err_cnt/att:.1f}%) > 1% threshold"
                     )
                     halt_triggered = True
 
@@ -721,20 +802,51 @@ def run(
             append_to_manifest(base, new_ids_this_county)
 
         if i % 25 == 0:
-            logger.info(f"Progress: {i}/{len(fips_list)} counties | new={ok} skip={skipped} err={len(errors)}")
+            logger.info(
+                f"Progress: {i}/{len(fips_list)} counties | new={ok} skip={skipped} "
+                f"census_err={len(census_errors)} notion_err={len(notion_errors)} "
+                f"no_cbp={len(no_cbp_data_counties)}"
+            )
 
         time.sleep(0.3)  # CBP rate limit (API allows ~3–5 req/s; be polite)
 
+    total_errors = len(census_errors) + len(notion_errors)
     status = "HALTED (error rate exceeded)" if halt_triggered else "complete"
     logger.info(
         f"Run {status}: {ok} new records, {skipped} skipped (already exist), "
-        f"{no_data} no data, {no_county} no county_id, {no_sector} no sector_id, "
-        f"{len(errors)} errors"
+        f"{no_data} no data, {no_county} no county_id, {no_sector} no sector_id | "
+        f"Census errors={len(census_errors)}, Notion errors={len(notion_errors)} | "
+        f"No-CBP-data counties={len(no_cbp_data_counties)}, "
+        f"CBP retry counties={len(cbp_retry_counties)}"
     )
-    if errors:
-        err_path = Path(config_path).parent / "logs/task4_cbp_errors.json"
-        err_path.write_text(json.dumps(errors, indent=2))
-        logger.warning(f"Errors saved to {err_path}")
+    base_path = Path(config_path).parent
+
+    # Write no-CBP-data counties (empty responses — expected for tiny counties)
+    no_cbp_path = base_path / "logs/no_cbp_data_counties.json"
+    existing_no_cbp: List[str] = []
+    if no_cbp_path.exists():
+        try:
+            existing_no_cbp = json.loads(no_cbp_path.read_text())
+        except Exception:
+            pass
+    all_no_cbp = list(dict.fromkeys(existing_no_cbp + no_cbp_data_counties))  # dedup, preserve order
+    no_cbp_path.write_text(json.dumps(all_no_cbp, indent=2))
+    if no_cbp_data_counties:
+        logger.info(f"No-CBP-data counties logged to {no_cbp_path} ({len(all_no_cbp)} total)")
+
+    # Write error files
+    if census_errors:
+        err_path = base_path / "logs/task4_cbp_errors.json"
+        err_path.write_text(json.dumps(census_errors, indent=2))
+        logger.warning(f"Census errors saved to {err_path}")
+    if notion_errors:
+        n_err_path = base_path / "logs/task4_notion_errors.json"
+        n_err_path.write_text(json.dumps(notion_errors, indent=2))
+        logger.warning(f"Notion errors saved to {n_err_path}")
+    if cbp_retry_counties:
+        retry_path = base_path / "logs/task4_cbp_retries.json"
+        retry_path.write_text(json.dumps(cbp_retry_counties, indent=2))
+        logger.info(f"CBP retry counties saved to {retry_path}")
 
 
 # ── Entry point ────────────────────────────────────────────────────────────────
