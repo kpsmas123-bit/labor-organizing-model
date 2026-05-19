@@ -327,8 +327,11 @@
     100% { transform: scale(2.4); opacity: 0;    }
   }
   #terrain-intro {
-    position: fixed; inset: 0; z-index: 2000;
-    background: #f7f4f0;
+    position: fixed; top: var(--nav-height); left: 0; right: 0; bottom: 0;
+    z-index: 2000; background: #f7f4f0;
+  }
+  @media (max-width: 768px) {
+    #terrain-intro { top: var(--nav-height-mobile); }
   }
   #terrain-intro.hidden { display: none; }
   #intro-slides {
