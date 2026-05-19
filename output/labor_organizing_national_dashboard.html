@@ -327,11 +327,12 @@
     100% { transform: scale(2.4); opacity: 0;    }
   }
   #terrain-intro {
-    position: fixed; top: var(--nav-height); left: 0; right: 0; bottom: 0;
-    z-index: 2000; background: #f7f4f0;
+    position: fixed; top: var(--nav-height); left: 0; right: auto; bottom: 0;
+    width: 50%; z-index: 2000; background: #f7f4f0;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.08);
   }
   @media (max-width: 768px) {
-    #terrain-intro { top: var(--nav-height-mobile); }
+    #terrain-intro { top: var(--nav-height-mobile); width: 100%; right: 0; }
   }
   #terrain-intro.hidden { display: none; }
   #intro-slides {
@@ -2953,7 +2954,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     localStorage.setItem('terrain_intro_seen', '1');
     overlay.classList.add('hidden');
     restoreRing();
-    overlay.style.background = '';
   }
 
   function renderDots(activeIdx) {
@@ -2965,8 +2965,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   }
   renderDots(0);
 
-  const mapGradient = 'linear-gradient(to right, #f7f4f0 55%, rgba(247,244,240,0.3) 80%, transparent 100%)';
-
   // Track visible slide via IntersectionObserver
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -2974,15 +2972,8 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       const idx = slides.indexOf(e.target);
       renderDots(idx);
       restoreRing();
-      if (idx === 0) {                   // slide 1 — stakes: map peeks right
-        overlay.style.background = mapGradient;
-      } else if (idx === 4) {            // slide 5 — goals-types: dim + pulse goal toggle
-        overlay.style.background = 'rgba(247,244,240,0.7)';
+      if (idx === 4) {            // slide 5 — goals-types: pulse goal toggle
         schedulePulse('.seg-buttons', 400);
-      } else if (idx === 6) {            // slide 7 — explore (final): map strip
-        overlay.style.background = mapGradient;
-      } else {
-        overlay.style.background = '#f7f4f0';
       }
     });
   }, { root: slidesEl, threshold: 0.65 });
