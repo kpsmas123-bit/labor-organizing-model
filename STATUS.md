@@ -1,5 +1,5 @@
 # STATUS.md
-_Last updated: 2026-05-19 — generated from repo audit + Decisions Log reconciliation_
+_Last updated: 2026-05-19 — intro overlay session (suspicious-heyrovsky-e12991)_
 _Update this file at the end of every session. Commit with the session's git commit._
 
 ---
@@ -58,6 +58,8 @@ Root cause: single source (unionjobs.com), missing enrichment fields, orphan com
 
 ## 🟢 RECENTLY SHIPPED
 
+- **Terrain intro overlay** (5318ffd, May 19) — 9-slide scroll-snap walkthrough on `labor_organizing_national_dashboard.html`. Replaces orphaned `#onboarding-overlay` CSS. Includes: all 9 slides with final copy, slides 5–6 dim + pulse animation targeting `#lens-badge` / `#lens-btns`, skip button (3s delay), slide progress counter, localStorage `terrain_intro_seen` gate, "Start exploring →" and "Explore case studies ↓" CTAs, horizontally scrollable 8-county case study panel with real scores from `county_scores.json` (Kanawha 40.6, Logan 19.21, Clark 86.5, Cook 86.5, Allegheny 86.5, Maricopa 75.25, Philadelphia 86.5, Multnomah 70.31).
+- Map UI v6: lens toggle, goal alignment, intervention type overlay (13b6211, May 19)
 - Task 4 v6 CBP employment pipeline (cae6303, May 17)
 - Task 9 v6 parallelised scorer — 3,144 counties, A=407/B=1021/C=1716 (test run)
 - New `pipeline/` module: ingest, normalize, classify, reclassify, admin server
