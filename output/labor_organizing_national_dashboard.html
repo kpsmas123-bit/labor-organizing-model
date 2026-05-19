@@ -40,6 +40,13 @@
   .seg-btn.goal-power.active { background: #6B4A1A; border-color: #6B4A1A; }
   .seg-btn.goal-senate.active{ background: #1A3A5A; border-color: #1A3A5A; }
   .seg-btn.goal-cong { opacity: 0.4; cursor: not-allowed !important; }
+  .lens-btn.active[data-lens="default"]   { background: #2C2C2C !important; border-color: #2C2C2C !important; color: #FAF7F2 !important; }
+  .lens-btn.active[data-lens="community"] { background: #2C5A3C !important; border-color: #2C5A3C !important; color: #FAF7F2 !important; }
+  .lens-btn.active[data-lens="capital"]   { background: #1A3A5A !important; border-color: #1A3A5A !important; color: #FAF7F2 !important; }
+  #lens-badge { position: absolute; top: 12px; left: 12px; z-index: 20; background: rgba(44,44,44,0.80); color: #FAF7F2; font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 20px; pointer-events: none; letter-spacing: 0.03em; }
+  #btn-int-types { width: 100%; font-size: 11px; text-align: center; }
+  #btn-int-types.active { background: #2C3A5A !important; border-color: #2C3A5A !important; color: #FAF7F2 !important; }
+  #int-type-legend { font-size: 10px; color: #7A6F64; line-height: 1.9; margin-top: 4px; }
 
   .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 12px; color: #2C2C2C; }
   .toggle-btn input { accent-color: #E8732A; width: 14px; height: 14px; }
@@ -587,7 +594,7 @@ document.querySelector('.terrain-nav__hamburger')
         <div class="seg-btn goal-pres active" data-goal="presidential">Presidential Swing</div>
         <div class="seg-btn goal-power" data-goal="power">Long-Term Power Building</div>
         <div class="seg-btn goal-senate" data-goal="senate">Senate Battlegrounds</div>
-        <div class="seg-btn goal-cong" data-goal="congressional" title="Paused — mid-decade redistricting makes district data unreliable. Returning after 2026 elections.">Congressional Districts</div>
+        <div class="seg-btn goal-cong" data-goal="congressional" title="Paused — mid-decade redistricting makes district data unreliable. Returning after 2026 elections.">Congressional Districts <span style="font-size:9px;font-weight:700;letter-spacing:.06em;opacity:0.75">[PAUSED]</span></div>
       </div>
     </div>
 
@@ -682,6 +689,7 @@ document.querySelector('.terrain-nav__hamburger')
   <div id="main">
     <div id="views">
       <div id="map-view">
+        <div id="lens-badge">Viewing: Default lens</div>
         <svg id="map-svg"></svg>
         <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
           (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
@@ -763,12 +771,21 @@ document.querySelector('.terrain-nav__hamburger')
         <div class="legend" id="map-legend">
           <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">▼ Legend</button>
           <div class="legend-body">
-            <div class="seg-buttons" id="color-mode-btns" style="margin-bottom:8px;">
-              <div class="seg-btn active" id="cm-type">By Type</div>
-              <div class="seg-btn" id="cm-score">By Score</div>
+            <div class="seg-buttons" id="lens-btns" style="margin-bottom:8px;">
+              <div class="seg-btn lens-btn active" data-lens="default">Default</div>
+              <div class="seg-btn lens-btn" data-lens="community">Community</div>
+              <div class="seg-btn lens-btn" data-lens="capital">Capital</div>
             </div>
             <div class="legend-title" id="legend-title">Intervention Type</div>
             <div id="legend-tiers"></div>
+            <div style="margin-top:8px;border-top:1px solid #DDD5C8;padding-top:8px;">
+              <div class="seg-btn" id="btn-int-types" onclick="toggleIntTypes()">Show Intervention Types</div>
+              <div id="int-type-legend" style="display:none">
+                <div>▲ Type A — Build New Power</div>
+                <div>● Type B — Wake the Giant</div>
+                <div>■ Type C — Move Together</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -810,17 +827,17 @@ document.querySelector('.terrain-nav__hamburger')
         <div id="gl-goal-filter">
           <div class="gl-filter-label">Strategic goal</div>
           <div id="gl-goal-cards">
-            <div class="gl-goal-card" data-goal="congressional">
-              <div class="gl-gc-title">Flip the House</div>
+            <div class="gl-goal-card" data-goal="congressional" style="opacity:0.45;cursor:not-allowed" title="Paused — mid-decade redistricting makes district data unreliable. Returning after 2026 elections.">
+              <div class="gl-gc-title">Congressional Districts <span style="font-size:9px;font-weight:700;letter-spacing:.06em">[PAUSED]</span></div>
               <div class="gl-gc-desc">Metros with the highest congressional leverage — where labor can shift competitive district outcomes.</div>
             </div>
             <div class="gl-goal-card" data-goal="presidential">
-              <div class="gl-gc-title">Presidential Battlegrounds</div>
+              <div class="gl-gc-title">Presidential Swing</div>
               <div class="gl-gc-desc">Swing-state metros where labor density and mobilization infrastructure converge for presidential impact.</div>
             </div>
-            <div class="gl-goal-card" data-goal="statewide">
-              <div class="gl-gc-title">Long-Term State Transformation</div>
-              <div class="gl-gc-desc">Metros that anchor statewide power — Senate races, governorships, and labor law reform.</div>
+            <div class="gl-goal-card" data-goal="power">
+              <div class="gl-gc-title">Long-Term Power Building</div>
+              <div class="gl-gc-desc">Metros that anchor durable statewide power — Senate races, governorships, and labor law reform.</div>
             </div>
           </div>
         </div>
@@ -1363,7 +1380,7 @@ const JENKS_LABELS = ["0–19","20–34","35–49","50–64","65–79","80–100
 const NO_DATA_COLOR    = "#D8CFC4";
 const FILTERED_COLOR   = "#EDE7DF";
 const TYPE_COLORS = { A: "#2d6a4f", B: "#e76f51", C: "#457b9d" };
-let colorMode = "type"; // "type" | "score"
+let activeLens = "default"; // "default" | "community" | "capital"
 
 // ── Goal-view constants ───────────────────────────────────────
 const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV"]);
@@ -1410,19 +1427,25 @@ function getSenateColor(state) {
 function getGoalFill(c) {
   if (goalFilter === "presidential") {
     return SWING_STATES_PRES.has(c.state)
-      ? getFillByScore(c.organizing_opportunity_score)
+      ? getFillByScore(getCountyLensScore(c, activeLens))
       : NON_SWING_COLOR;
   }
-  if (goalFilter === "power")  return getFillByScore(getCountyPowerScore(c));
+  if (goalFilter === "power")  return getFillByScore(getCountyLensScore(c, activeLens));
   if (goalFilter === "senate") return getSenateColor(c.state);
   return NO_DATA_COLOR;
 }
 
+function getMsaLensScore(msa) {
+  if (activeLens === "community") return msa.communityScore;
+  if (activeLens === "capital")   return msa.capitalScore;
+  return msa.opp;
+}
+
 function getMsaGoalFill(msa) {
   if (goalFilter === "presidential") {
-    return msa.hasSwingers ? getFillByScore(msa.opp) : NON_SWING_COLOR;
+    return msa.hasSwingers ? getFillByScore(getMsaLensScore(msa)) : NON_SWING_COLOR;
   }
-  if (goalFilter === "power") return getFillByScore(msa.power);
+  if (goalFilter === "power") return getFillByScore(getMsaLensScore(msa));
   if (goalFilter === "senate") {
     const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
     if (!tierNums.length) return NON_SWING_COLOR;
@@ -1433,6 +1456,19 @@ function getMsaGoalFill(msa) {
 
 function getFillByType(typeLetter) {
   return TYPE_COLORS[typeLetter] || "#d4d4d4";
+}
+
+function getCountyLensScore(c, lens) {
+  const oos = c.organizing_opportunity_score || 0;
+  if (lens === "community") {
+    const factor = 1 + 0.2 * ((c.union_culture_score || 0) / 40);
+    return Math.min(100, oos * factor);
+  }
+  if (lens === "capital") {
+    const factor = 1 + 0.2 * ((c.sectoral_score || 0) / 100);
+    return Math.min(100, oos * factor);
+  }
+  return oos;
 }
 
 function getFillByScore(score) {
@@ -1506,19 +1542,28 @@ function updateLegend() {
   document.getElementById("legend-tiers").innerHTML = "";
 }
 
-document.getElementById("cm-type").addEventListener("click", () => {
-  colorMode = "type";
-  document.getElementById("cm-type").classList.add("active");
-  document.getElementById("cm-score").classList.remove("active");
-  updateMapColors();
-  updateLegend();
-});
-document.getElementById("cm-score").addEventListener("click", () => {
-  colorMode = "score";
-  document.getElementById("cm-score").classList.add("active");
-  document.getElementById("cm-type").classList.remove("active");
-  updateMapColors();
-  updateLegend();
+let showIntTypes = false;
+function toggleIntTypes() {
+  showIntTypes = !showIntTypes;
+  const overlay = document.getElementById("int-type-overlay");
+  const btn = document.getElementById("btn-int-types");
+  const legend = document.getElementById("int-type-legend");
+  if (overlay) overlay.style.display = showIntTypes ? "" : "none";
+  btn.classList.toggle("active", showIntTypes);
+  btn.textContent = showIntTypes ? "Hide Intervention Types" : "Show Intervention Types";
+  if (legend) legend.style.display = showIntTypes ? "" : "none";
+}
+
+document.querySelectorAll(".lens-btn").forEach(btn => {
+  btn.addEventListener("click", function() {
+    activeLens = this.dataset.lens;
+    document.querySelectorAll(".lens-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    const labels = { default: "Default", community: "Community", capital: "Capital" };
+    document.getElementById("lens-badge").textContent = `Viewing: ${labels[activeLens]} lens`;
+    updateMapColors();
+    updateLegend();
+  });
 });
 
 // ──────────────────────────────────────────────────────────────
@@ -1561,8 +1606,20 @@ function buildMsaScoreLookup() {
     const powerRaw = totalPowerRaw / totalPop;
     const powerScaled = (globalPowerMax === globalPowerMin) ? 50
       : (powerRaw - globalPowerMin) / (globalPowerMax - globalPowerMin) * 100;
+    const communityScore = Math.round(
+      counties.reduce((s, c) => s + Math.min(100,
+        (c.organizing_opportunity_score || 0) * (1 + 0.2 * ((c.union_culture_score || 0) / 40))
+      ) * (c.population || 1), 0) / totalPop
+    );
+    const capitalScore = Math.round(
+      counties.reduce((s, c) => s + Math.min(100,
+        (c.organizing_opportunity_score || 0) * (1 + 0.2 * ((c.sectoral_score || 0) / 100))
+      ) * (c.population || 1), 0) / totalPop
+    );
     const msaScore = {
       opp:              wavg("organizing_opportunity_score"),
+      communityScore,
+      capitalScore,
       presidential:     wavg("presidential_score"),
       statewide:        wavg("statewide_score"),
       congressional:    wavg("congressional_score"),
@@ -1592,10 +1649,9 @@ function buildMsaScoreLookup() {
 function getMsaDisplayScore(c) {
   const msa = msaScoreByFips[c.fips];
   if (!msa) return getDisplayScore(c); // non-metro: fall back to county score
-  if (goalFilter === "opp")           return msa.opp;
-  if (goalFilter === "presidential")  return msa.presidential;
-  if (goalFilter === "statewide")     return msa.statewide;
-  if (goalFilter === "congressional") return msa.congressional;
+  if (goalFilter === "presidential")  return getMsaLensScore(msa);
+  if (goalFilter === "power")         return getMsaLensScore(msa);
+  if (goalFilter === "senate")        return msa.power; // unused for senate (tier-based)
   return msa.opp;
 }
 
@@ -1682,11 +1738,13 @@ async function initMap() {
         tt.style.top = (event.offsetY - 10) + "px";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
-          scoreHtml = msa.hasSwingers
-            ? `<br><span class="tt-opp">OPP ${Math.round(msa.opp)}</span>`
-            : `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
+          if (msa.hasSwingers) {
+            scoreHtml = `<br><span class="tt-opp">Default: ${Math.round(msa.opp)} · Community: ${Math.round(msa.communityScore)} · Capital: ${Math.round(msa.capitalScore)}</span>`;
+          } else {
+            scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
+          }
         } else if (goalFilter === "power") {
-          scoreHtml = `<br><span class="tt-opp">Power ${Math.round(msa.power)}</span>`;
+          scoreHtml = `<br><span class="tt-opp">Default: ${Math.round(msa.opp)} · Community: ${Math.round(msa.communityScore)} · Capital: ${Math.round(msa.capitalScore)}</span>`;
         } else if (goalFilter === "senate") {
           const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
           scoreHtml = tierNums.length
@@ -1726,11 +1784,19 @@ async function initMap() {
         tt.style.top = (event.offsetY - 10) + "px";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
-          scoreHtml = SWING_STATES_PRES.has(c.state)
-            ? `<br><span class="tt-opp">OPP ${Math.round(c.organizing_opportunity_score ?? 0)}</span>`
-            : `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
+          if (SWING_STATES_PRES.has(c.state)) {
+            const d = Math.round(getCountyLensScore(c, "default"));
+            const com = Math.round(getCountyLensScore(c, "community"));
+            const cap = Math.round(getCountyLensScore(c, "capital"));
+            scoreHtml = `<br><span class="tt-opp">Default: ${d} · Community: ${com} · Capital: ${cap}</span>`;
+          } else {
+            scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
+          }
         } else if (goalFilter === "power") {
-          scoreHtml = `<br><span class="tt-opp">Power ${Math.round(getCountyPowerScore(c))}</span>`;
+          const d = Math.round(getCountyLensScore(c, "default"));
+          const com = Math.round(getCountyLensScore(c, "community"));
+          const cap = Math.round(getCountyLensScore(c, "capital"));
+          scoreHtml = `<br><span class="tt-opp">Default: ${d} · Community: ${com} · Capital: ${cap}</span>`;
         } else if (goalFilter === "senate") {
           const tier = SENATE_TIERS[c.state];
           scoreHtml = tier
@@ -1748,6 +1814,42 @@ async function initMap() {
       });
 
     g.append("path").datum(stateMesh).attr("class", "state-boundary").attr("d", path);
+
+    // ── Intervention-type symbol overlay ─────────────────────────
+    const symGen = d3.symbol().size(28);
+    const intG = g.append("g").attr("id", "int-type-overlay").style("display", "none").style("pointer-events", "none");
+
+    function addIntSymbol(cx, cy, letter) {
+      if (isNaN(cx) || isNaN(cy)) return;
+      const symType = letter === "A" ? d3.symbolTriangle
+                    : letter === "B" ? d3.symbolCircle
+                    : d3.symbolSquare;
+      intG.append("path")
+        .attr("d", symGen.type(symType)())
+        .attr("transform", `translate(${cx},${cy})`)
+        .attr("fill", TYPE_COLORS[letter])
+        .attr("fill-opacity", 0.78)
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 0.5);
+    }
+
+    for (const f of nonMetroFeatures) {
+      const c = countyByFips[f.id];
+      if (!c) continue;
+      const letter = (c.intervention_type || "").charAt(5);
+      if (!["A","B","C"].includes(letter)) continue;
+      const [cx, cy] = path.centroid(f);
+      addIntSymbol(cx, cy, letter);
+    }
+    for (const f of msaFeatures) {
+      const msa = msaScoreByName[f.properties.msaName];
+      if (!msa) continue;
+      const letter = msa.dominantLetter;
+      if (!["A","B","C"].includes(letter)) continue;
+      const [cx, cy] = path.centroid(f);
+      addIntSymbol(cx, cy, letter);
+    }
+
     setStatus(`Map loaded · ${msaFeatures.length} metro areas`);
   } catch (e) {
     loadingMsg.text("Map failed to load — check internet connection and reload.");
@@ -1832,7 +1934,7 @@ function showMsaDetail(msaName) {
   _setBar("bar-org",   "val-org",   "lbl-bar-org",  msa.organizing,    false);
   _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", msa.sectoral,      false);
   _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", msa.presidential,  goalFilter === "presidential");
-  _setBar("bar-state", "val-state", "lbl-bar-state",msa.statewide,     goalFilter === "statewide");
+  _setBar("bar-state", "val-state", "lbl-bar-state",msa.statewide,     goalFilter === "power");
   _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", msa.congressional, goalFilter === "congressional");
   _setBar("bar-infra", "val-infra", "lbl-bar-infra",msa.infra,         false);
 
@@ -1873,7 +1975,7 @@ function showDetail(c) {
   _setBar("bar-org",   "val-org",   "lbl-bar-org",  c.organizing_score,    false);
   _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sectoral_score,      false);
   _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.presidential_score,  goalFilter === "presidential");
-  _setBar("bar-state", "val-state", "lbl-bar-state",c.statewide_score,     goalFilter === "statewide");
+  _setBar("bar-state", "val-state", "lbl-bar-state",c.statewide_score,     goalFilter === "power");
   _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.congressional_score, goalFilter === "congressional");
   _setBar("bar-infra", "val-infra", "lbl-bar-infra",c.infra_score,         false);
 
@@ -2244,9 +2346,9 @@ const GL_MSA_SECTORS = {
 };
 
 const GL_GOALS = {
-  congressional:{ label:"Flip the House",               icon:"🏛️", key:"congressional_score", short:"Congressional" },
-  presidential: { label:"Presidential Battlegrounds",    icon:"🗳️", key:"presidential_score",  short:"Presidential"  },
-  statewide:    { label:"Long-Term State Transformation",icon:"🌱", key:"statewide_score",      short:"Statewide"     }
+  congressional:{ label:"Congressional Districts",    icon:"🏛️", key:"congressional_score", short:"Congressional" },
+  presidential: { label:"Presidential Swing",         icon:"🗳️", key:"presidential_score",  short:"Presidential"  },
+  power:        { label:"Long-Term Power Building",   icon:"🌱", key:"power_score",          short:"Power"         }
 };
 
 let gl_msaMap    = null;
@@ -2316,12 +2418,17 @@ function glBuildMSAMap() {
     const tw = {A:0,B:0,C:0};
     for (const c of counties) { const t=(c.intervention_type||"").charAt(5); if(tw[t]!==undefined) tw[t]+=(c.population||1); }
     const domType = Object.entries(tw).sort((a,b)=>b[1]-a[1])[0][0];
+    const totalPowerRaw = counties.reduce((s,c) => s + computeRawPowerScore(c) * (c.population||1), 0);
+    const powerRaw = totalPowerRaw / totalPop;
+    const power_score = (globalPowerMax === globalPowerMin) ? 50
+      : (powerRaw - globalPowerMin) / (globalPowerMax - globalPowerMin) * 100;
     gl_msaMap[name] = {
       name, states:[...new Set(counties.map(c=>c.state))].sort().join(", "), totalPop, dominantType:domType,
       organizing_opportunity_score: wavg("organizing_opportunity_score"),
       presidential_score:  wavg("presidential_score"),
       congressional_score: wavg("congressional_score"),
       statewide_score:     wavg("statewide_score"),
+      power_score,
       organized_scale_score: wavg("organized_scale_score"),
       union_culture_score:   wavg("union_culture_score"),
     };
