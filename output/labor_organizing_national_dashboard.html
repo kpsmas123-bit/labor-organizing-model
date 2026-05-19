@@ -328,21 +328,23 @@
   }
   #terrain-intro {
     position: fixed; inset: 0; z-index: 2000;
-    background: #f7f4f0; transition: background 0.4s;
+    background: #f7f4f0;
   }
   #terrain-intro.hidden { display: none; }
   #intro-slides {
     height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory;
-    scrollbar-width: none;
+    scrollbar-width: none; position: relative; z-index: 2;
   }
   #intro-slides::-webkit-scrollbar { display: none; }
   .intro-slide {
     height: 100vh; scroll-snap-align: start;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 0 clamp(24px, 10vw, 160px); box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: flex-start;
+    align-items: flex-start;
+    padding: clamp(80px, 12vh, 140px) 0 0 clamp(48px, 10vw, 140px);
+    box-sizing: border-box;
   }
   .intro-slide-last { min-height: 100vh; height: auto; padding-bottom: 56px; }
-  .intro-slide-inner { max-width: 640px; }
+  .intro-slide-inner { max-width: min(640px, 55vw); }
   .intro-eyebrow {
     font-family: 'IBM Plex Mono', monospace; font-size: 11px;
     letter-spacing: 0.12em; text-transform: uppercase; color: #bd0026;
@@ -352,11 +354,11 @@
     font-family: 'Playfair Display', Georgia, serif;
     font-size: clamp(1.5rem, 3.2vw, 2.6rem); font-weight: 700;
     color: #1a1a1a; line-height: 1.18; letter-spacing: -0.02em;
-    margin: 0 0 22px;
+    margin: 0 0 22px; text-align: left;
   }
   .intro-body {
     font-size: 16px; line-height: 1.7; color: #4a4a4a;
-    max-width: 600px; margin: 0 0 20px;
+    max-width: 600px; margin: 0 0 20px; text-align: left;
   }
   .intro-link {
     font-family: 'IBM Plex Mono', monospace; font-size: 13px;
@@ -365,26 +367,30 @@
   }
   .intro-link:hover { text-decoration: underline; }
   #intro-skip {
-    position: fixed; bottom: 24px; right: 28px; z-index: 2010;
-    background: none; border: 1px solid #c8c0b8;
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
-    color: #7a6f64; padding: 6px 16px; border-radius: 2px;
-    cursor: pointer; opacity: 0; transition: opacity 0.5s;
+    position: fixed; top: 20px; right: 28px; z-index: 2020;
+    background: none; border: 1.5px solid #bd0026;
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+    color: #bd0026; padding: 8px 20px; border-radius: 2px;
+    cursor: pointer; opacity: 1;
     letter-spacing: 0.06em;
   }
-  #intro-skip:hover { color: #1a1a1a; border-color: #1a1a1a; }
+  #intro-skip:hover { color: #a00020; border-color: #a00020; }
   #intro-progress {
-    position: fixed; top: 20px; right: 24px; z-index: 2010;
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-    color: #a09385; letter-spacing: 0.08em;
+    position: fixed; bottom: 24px; left: clamp(48px, 10vw, 140px); z-index: 2010;
+    display: flex; align-items: center; gap: 0;
   }
+  .intro-dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: #c8c0b8; margin-right: 7px; transition: background 0.3s;
+  }
+  .intro-dot.active { background: #bd0026; }
   .pulse-ring {
     position: absolute; inset: -8px; border-radius: 6px;
     border: 2px solid #bd0026;
     animation: pulse-ring 1.4s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
     pointer-events: none;
   }
-  /* In-slide county cards (slides 5–6) */
+  /* In-slide county cards (slides 4–5) */
   .slide-county-pair { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
   .slide-cs-card {
     border: 1px solid #d4cfc9; padding: 16px 18px; background: #fff;
@@ -406,32 +412,36 @@
     font-family: 'IBM Plex Mono', monospace; font-size: 10px;
     color: #a09385; letter-spacing: 0.04em; margin-top: 4px;
   }
-  /* Inline case study card (slide 4) */
-  .inline-cs-card {
-    border-left: 3px solid #bd0026; padding: 12px 16px;
-    background: #fff; margin: 20px 0 16px; max-width: 520px;
+  .slide-cs-story { font-size: 12px; color: #4a4a4a; line-height: 1.55; margin: 8px 0 0; }
+  .slide-cs-link {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    color: #bd0026; text-decoration: none; display: block; margin-top: 8px;
   }
-  .inline-cs-label {
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    color: #bd0026; letter-spacing: 0.1em; text-transform: uppercase;
-    margin-bottom: 6px;
+  .slide-cs-link:hover { text-decoration: underline; }
+  /* Methodology tables (slide 3) */
+  .intro-table-pair { display: flex; gap: 32px; margin-top: 20px; flex-wrap: wrap; }
+  .intro-table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .intro-table th {
+    color: #bd0026; text-align: left; padding: 4px 20px 4px 0;
+    letter-spacing: 0.06em; border-bottom: 1px solid #d4cfc9; white-space: nowrap;
   }
-  .inline-cs-text { font-size: 14px; color: #4a4a4a; line-height: 1.55; margin: 0; }
-  /* CTA buttons (slide 9) */
+  .intro-table td { padding: 5px 20px 5px 0; color: #4a4a4a; border-bottom: 1px solid #eee; }
+  .intro-table tr:last-child td { border-bottom: none; }
+  /* CTA buttons (slide 7) */
   .intro-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
   .intro-btn-primary {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600;
+    font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700;
     background: #bd0026; color: #fff; border: none; padding: 12px 28px;
-    cursor: pointer; letter-spacing: 0.06em;
+    cursor: pointer; letter-spacing: 0.01em;
   }
   .intro-btn-primary:hover { background: #a00020; }
   .intro-btn-secondary {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600;
+    font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700;
     background: none; color: #1a1a1a; border: 1px solid #1a1a1a;
-    padding: 12px 28px; cursor: pointer; letter-spacing: 0.06em;
+    padding: 12px 28px; cursor: pointer;
   }
   .intro-btn-secondary:hover { background: #ede9e3; }
-  /* Case study panel (slide 9, below CTA) */
+  /* Case study panel (slide 7, below CTA) */
   #intro-case-panel {
     display: flex; overflow-x: auto; gap: 16px;
     padding: 0 clamp(24px, 10vw, 160px) 0 0;
@@ -688,111 +698,114 @@ document.querySelector('.terrain-nav__hamburger')
 </div>
 
 <div id="terrain-intro">
-  <button id="intro-skip">Skip →</button>
-  <div id="intro-progress">1 / 9</div>
+  <button id="intro-skip">Skip intro →</button>
+  <div id="intro-progress"></div>
   <div id="intro-slides">
 
     <!-- Slide 1 — stakes -->
-    <div class="intro-slide" data-slide="1">
+    <div class="intro-slide" id="stakes" data-slide="1">
       <div class="intro-slide-inner">
         <div class="intro-eyebrow">Terrain</div>
-        <h1 class="intro-h">In a time of redistricting, voter suppression, and unlimited money — deeply organized workers can't be beat.</h1>
-        <p class="intro-body">Labor organizing is the most durable form of political power we have. But it only works if we're strategic about where we invest. We don't have time to ask the wrong questions.</p>
+        <h1 class="intro-h">When fascists and billionaires are rigging elections, electoral organizing gets hard. But there is one force that can never be stopped.</h1>
+        <p class="intro-body">The ability for workers to cause a crisis — to deny their labor — is the most durable form of political power ever created. No gerrymandering touches it. No dark money buys it. The real question is: what is the fastest and most strategic way to build that power? This project offers some ideas. But it is designed to inform — not to direct real on-the-ground organizing.</p>
       </div>
     </div>
 
-    <!-- Slide 2 — wrong-metric -->
-    <div class="intro-slide" data-slide="2">
+    <!-- Slide 2 — urgency -->
+    <div class="intro-slide" id="urgency" data-slide="2">
       <div class="intro-slide-inner">
-        <h1 class="intro-h">How many workers are organized is the wrong question.</h1>
-        <p class="intro-body">Traditional strategy looks at existing organization. But that's a lagging indicator — it tells you where organizing worked decades ago. The right questions are: Are those organizations active? Are they strategic? And where can we build new power fast enough to matter?</p>
+        <h1 class="intro-h">Urgency requires strategy and prioritization.</h1>
+        <p class="intro-body">We don't have the time or the luxury to not build the strongest labor movement capable of transforming this country. That requires an important distinction. Every worker deserves a union — the hospital worker, the farm worker, the software engineer. But not all workers are equally strategic for large-scale political change. That does not mean they don't deserve democracy in their workplace. It means that if we want to win fast, we need to prioritize some sectors in some locations.</p>
       </div>
     </div>
 
-    <!-- Slide 3 — what-terrain -->
-    <div class="intro-slide" data-slide="3">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">Terrain scores every U.S. county on its organizing potential — not its organizing history.</h1>
-        <p class="intro-body">Five dimensions: sector strategy, strike capacity, community embeddedness, existing infrastructure, and electoral alignment. The result is a map of where power can be built — and what kind.</p>
-        <a href="methodology.html" class="intro-link">→ Full methodology</a>
-      </div>
-    </div>
-
-    <!-- Slide 4 — sector-strategy -->
-    <div class="intro-slide" data-slide="4">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">Where you organize matters as much as how you organize.</h1>
-        <p class="intro-body">A hospital strike creates a crisis in days. A retail walkout gets absorbed in weeks. We score every sector on a Strategic Value Score — chokepoint potential, community relationships, crisis speed. Hospitals and K-12 schools score 100. Retail scores 10.</p>
-        <div class="inline-cs-card">
-          <div class="inline-cs-label">Case study</div>
-          <p class="inline-cs-text">Massachusetts nurses: tight hospital-community relationships turned a contract fight into a county-wide campaign.</p>
+    <!-- Slide 3 — methodology -->
+    <div class="intro-slide" id="methodology" data-slide="3">
+      <div class="intro-slide-inner" style="max-width: min(760px, 60vw)">
+        <h1 class="intro-h">We score every U.S. county on five variables. We score every sector on its strategic value.</h1>
+        <p class="intro-body">The result is a map of where power can be built — and what kind.</p>
+        <div class="intro-table-pair">
+          <table class="intro-table">
+            <thead>
+              <tr><th>Variable</th><th>What it measures</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Strike Capacity</td><td>Can workers cause a crisis?</td></tr>
+              <tr><td>Political Alignment</td><td>Is terrain winnable electorally?</td></tr>
+              <tr><td>Community Embeddedness</td><td>Are workers embedded in community relationships?</td></tr>
+              <tr><td>Existing Infrastructure</td><td>Are unions already organized here?</td></tr>
+              <tr><td>Electoral Alignment</td><td>Is the county competitive?</td></tr>
+            </tbody>
+          </table>
+          <table class="intro-table">
+            <thead>
+              <tr><th>Sector</th><th>SVS Score</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hospitals</td><td>100</td></tr>
+              <tr><td>K-12 Education</td><td>100</td></tr>
+              <tr><td>Ports</td><td>95</td></tr>
+              <tr><td>Utilities</td><td>85</td></tr>
+              <tr><td>Retail</td><td>10</td></tr>
+              <tr><td>Tech</td><td>0</td></tr>
+            </tbody>
+          </table>
         </div>
-        <a href="methodology.html#svs" class="intro-link">→ How SVS is calculated</a>
+        <a href="/output/methodology.html" class="intro-link" style="margin-top: 20px; display: inline-block;">→ Full methodology</a>
       </div>
     </div>
 
-    <!-- Slide 5 — two-leverage (dims overlay, pulses #lens-badge) -->
-    <div class="intro-slide" data-slide="5">
-      <div class="intro-slide-inner" style="max-width:700px">
-        <h1 class="intro-h">Two kinds of leverage. Capital chokepoints and community chokepoints.</h1>
-        <p class="intro-body">A port strike squeezes capital — economic pressure forces a response. A teachers strike squeezes the community — parents, students, churches become active allies. Jane McAlevey called this whole-worker organizing: workers aren't just employees, they're embedded in relationships that can be mobilized. Logan County WV: capital dominates everything. Kanawha County next door: deep community embeddedness. Same state. Opposite terrain.</p>
+    <!-- Slide 4 — leverage -->
+    <div class="intro-slide" id="leverage" data-slide="4">
+      <div class="intro-slide-inner">
+        <h1 class="intro-h">Different workers are powerful in different ways. We've divided leverage into two buckets.</h1>
+        <p class="intro-body">A port strike chokes capital flow — economic pressure forces a response. A teachers strike chokes the community — parents, students, churches mobilize as active allies. Jane McAlevey called this whole-worker organizing: workers aren't just employees, they're embedded in relationships that can be mobilized into power. Same county, completely different organizing strategy.</p>
         <div class="slide-county-pair">
           <div class="slide-cs-card">
             <div class="slide-cs-county">Logan County</div>
-            <div class="slide-cs-badge">WV · Type B: Political Activation</div>
+            <div class="slide-cs-badge">WV · Type B</div>
             <div class="slide-cs-oos">19.21</div>
             <div class="slide-cs-meta">OPP SCORE · Sectoral: 2.2 · Scale: 10</div>
+            <p class="slide-cs-story">Once the largest coal-producing county in WV. Nearly 28% poverty rate today. Capital extracted the wealth and left. High chokepoint potential, low community infrastructure.</p>
+            <a class="slide-cs-link" href="https://dialogic.blogspot.com/2011/03/npr-coal-reignites-mighty-battle-of.html" target="_blank" rel="noopener">Coal Reignites A Mighty Battle of Labor History ↗</a>
           </div>
           <div class="slide-cs-card">
             <div class="slide-cs-county">Kanawha County</div>
-            <div class="slide-cs-badge">WV · Type B: Political Activation</div>
+            <div class="slide-cs-badge">WV · Type B</div>
             <div class="slide-cs-oos">40.6</div>
             <div class="slide-cs-meta">OPP SCORE · Union Culture: 80 · Scale: 60</div>
+            <p class="slide-cs-story">2018 wildcat strike shut down all 55 counties. Rank-and-file refused back-to-work orders from their own union leaders. Launched the national Red for Ed movement.</p>
+            <a class="slide-cs-link" href="https://www.bloomberg.com/news/articles/2018-03-02/biggest-wildcat-strike-in-decades-hints-at-new-u-s-labor-unrest" target="_blank" rel="noopener">Biggest Wildcat Strike in Decades Hints at New U.S. Labor Unrest ↗</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Slide 6 — strike-power (dims overlay, pulses #lens-btns) -->
-    <div class="intro-slide" data-slide="6">
-      <div class="intro-slide-inner" style="max-width:700px">
-        <h1 class="intro-h">Kanawha County, WV. Near the bottom in labor density. In 2018 — 20,000 workers shut down all 55 counties.</h1>
-        <p class="intro-body">A wildcat strike that launched a national movement — without majority membership, without leadership support, in a state where strikes were technically illegal. Clark County NV tells a similar story: hospitality workers built one of the most effective political operations in the country in a right-to-work state. The terrain was there in both places. Traditional metrics never saw it coming.</p>
-        <div class="slide-county-pair">
-          <div class="slide-cs-card">
-            <div class="slide-cs-county">Kanawha County</div>
-            <div class="slide-cs-badge">WV · Type B: Political Activation</div>
-            <div class="slide-cs-oos">40.6</div>
-            <div class="slide-cs-meta">OPP SCORE · Union Culture: 80 · Scale: 60</div>
-          </div>
-          <div class="slide-cs-card">
-            <div class="slide-cs-county">Clark County</div>
-            <div class="slide-cs-badge">NV · Type C: Partnership</div>
-            <div class="slide-cs-oos">86.5</div>
-            <div class="slide-cs-meta">OPP SCORE · Union Culture: 80 · Scale: 100</div>
-          </div>
-        </div>
+    <!-- Slide 5 — goals-types (dims overlay, pulses .seg-buttons) -->
+    <div class="intro-slide" id="goals-types" data-slide="5">
+      <div class="intro-slide-inner" style="max-width: min(680px, 55vw)">
+        <h1 class="intro-h">Your goal shapes what you see. Your terrain type tells you what to do with it.</h1>
+        <p class="intro-body">A Senate race in 2026 needs you to activate existing organized power fast. A decade of power building in Texas means finding places where new organizing can take root. Switch the goal — the map responds.</p>
+        <p class="intro-body" style="margin-bottom: 8px;">Three intervention types. No rankings — just different strategic situations:</p>
+        <p class="intro-body" style="margin: 0 0 6px;">▲ <strong>Type A</strong> — Low existing infrastructure, high potential. Build from scratch. Find the organic leaders.</p>
+        <p class="intro-body" style="margin: 0 0 6px;">● <strong>Type B</strong> — Organizations exist but aren't moving politically. The power is there. It needs activation.</p>
+        <p class="intro-body" style="margin: 0 0 16px;">■ <strong>Type C</strong> — Strong, aligned organizations ready for coordinated action. Best terrain for electoral leverage.</p>
+        <p class="intro-body">Examples: Clark County NV is Type C — Culinary Union knocked on 900,000 doors in 2024. Cook County IL is Type B — CTU's 2012 strike launched a national movement but the organized power still isn't fully activated politically. Kanawha County WV is Type B — 20,000 workers shut down 55 counties without leadership support.</p>
       </div>
     </div>
 
-    <!-- Slide 7 — goals -->
-    <div class="intro-slide" data-slide="7">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">The map doesn't tell you what to do. You bring the goal.</h1>
-        <p class="intro-body">A Senate race in 2026 requires activating existing organized infrastructure fast — Type B and C terrain. A decade of power building in Texas means finding places where new organizing can take root — Type A terrain. Switch the goal — the map responds. Terrain shows the landscape. You decide where to march.</p>
+    <!-- Slide 6 — why-different -->
+    <div class="intro-slide" id="why-different" data-slide="6">
+      <div class="intro-slide-inner" style="max-width: min(680px, 55vw)">
+        <h1 class="intro-h">Why Terrain is different from traditional labor strategy.</h1>
+        <p class="intro-body">Since the 1970s, much of the labor movement has used union density — how many workers have unions in a given sector or region — as the primary goal and metric for success. We push back against that.</p>
+        <p class="intro-body">The real power of workers is not in their technical membership. It's whether the actual workers on the ground are actively organized and ready to ultimately force the hand of those in power. A union more focused on increasing membership numbers than on strikes, contract negotiations, and competitive elections is doing little to change the country.</p>
+        <p class="intro-body">We focus on political impact. And this is a good moment to be clear: just because a sector isn't strategic for large-scale change doesn't mean those workers don't matter. Hospitality workers often have some of the worst working conditions in the country and have built some of the strongest organizations — Clark County NV is proof. But a hotel strike is unlikely to create the kind of community or capital crisis that moves elections. Terrain helps you see the difference.</p>
       </div>
     </div>
 
-    <!-- Slide 8 — types -->
-    <div class="intro-slide" data-slide="8">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">Type A. Type B. Type C. No rankings — just different strategic situations.</h1>
-        <p class="intro-body">Type A: Low existing infrastructure, high potential. Build from scratch. Type B: Organizations exist but aren't moving politically — the power is there, needs activation. Type C: Strong, aligned organizations ready for coordinated action. Every campaign needs all three.</p>
-      </div>
-    </div>
-
-    <!-- Slide 9 — explore (final) -->
-    <div class="intro-slide intro-slide-last" data-slide="9">
+    <!-- Slide 7 — explore (final) -->
+    <div class="intro-slide intro-slide-last" id="explore" data-slide="7">
       <div class="intro-slide-inner">
         <h1 class="intro-h">3,144 counties. Every one scored. Start with a goal.</h1>
         <p class="intro-body">Explore the map or dig into case studies below.</p>
@@ -810,10 +823,9 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
             <span>Union Culture: 80</span>
-            <span>Sectoral: 16.55</span>
+            <span>Scale: 60</span>
           </div>
           <p class="cs-story">2018 wildcat strike shut down all 55 counties. Rank-and-file refused back-to-work orders from their own union leaders. Launched the national Red for Ed movement.</p>
-          <div class="cs-source">Source: Bloomberg, 2018</div>
         </div>
         <!-- Logan WV -->
         <div class="cs-card">
@@ -822,11 +834,10 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos">19.21</div>
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
-            <span>Organized Scale: 10</span>
             <span>Sectoral: 2.2</span>
+            <span>Scale: 10</span>
           </div>
-          <p class="cs-story">Once the largest coal-producing county in WV. Nearly 28% poverty rate today. Capital extracted the wealth — and left. High chokepoint potential, low community infrastructure.</p>
-          <div class="cs-source">Source: WV Policy Center</div>
+          <p class="cs-story">Once the largest coal-producing county in WV. Nearly 28% poverty rate today. Capital extracted the wealth and left. High chokepoint potential, low community infrastructure.</p>
         </div>
         <!-- Clark NV -->
         <div class="cs-card">
@@ -836,10 +847,9 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
             <span>Union Culture: 80</span>
-            <span>Sectoral: 100</span>
+            <span>Scale: 100</span>
           </div>
-          <p class="cs-story">Culinary Union Local 226 represents 60,000 hospitality workers. Knocked on 900,000+ doors in 2024. Pivotal in flipping Nevada Democratic every cycle since 2008.</p>
-          <div class="cs-source">Source: Culinary Union, U.S. News</div>
+          <p class="cs-story">Culinary Union Local 226. 60,000 hospitality workers. 900,000+ doors knocked in 2024. Pivotal in flipping Nevada Democratic every cycle since 2008.</p>
         </div>
         <!-- Cook IL -->
         <div class="cs-card">
@@ -848,11 +858,9 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos">86.5</div>
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
-            <span>Organized Scale: 100</span>
-            <span>Sectoral: 100</span>
+            <span>Scale: 100</span>
           </div>
-          <p class="cs-story">CTU's 2012 strike directly inspired the WV wildcat — organizers were studying McAlevey's book about CTU when they started planning. Bargaining for the common good: nurses and social workers in every school.</p>
-          <div class="cs-source">Source: Jacobin, 2022</div>
+          <p class="cs-story">CTU's 2012 strike launched a national movement and directly inspired the WV wildcat. Organizers were studying McAlevey's book about CTU when they started planning. Bargaining for the common good.</p>
         </div>
         <!-- Allegheny PA -->
         <div class="cs-card">
@@ -862,10 +870,8 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
             <span>Union Culture: 100</span>
-            <span>Sectoral: 100</span>
           </div>
-          <p class="cs-story">Deep union history, strong infrastructure. But labor leaders told state lawmakers in 2023 they're concerned about declining membership despite widespread public support. Classic Type B: power exists, needs activation.</p>
-          <div class="cs-source">Source: PA Capital-Star, 2023</div>
+          <p class="cs-story">Deep union history. Strong infrastructure. But labor leaders told state lawmakers in 2023 they're worried about declining membership despite widespread public support. Classic Type B: power exists, not yet activated.</p>
         </div>
         <!-- Maricopa AZ -->
         <div class="cs-card">
@@ -875,9 +881,9 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
             <span>Union Culture: 20</span>
-            <span>Sectoral: 100</span>
+            <span>Scale: 100</span>
           </div>
-          <p class="cs-story">Arizona teachers struck in 2018, inspired by WV. Today Maricopa is swing Senate terrain. Under a long-term lens, the story is different — build infrastructure before the next cycle.</p>
+          <p class="cs-story">Arizona teachers struck in 2018 inspired by WV. Today it's swing Senate terrain. High organized scale, low union culture score — built for deployment, not organic solidarity. Goal matters here.</p>
         </div>
         <!-- Philadelphia PA -->
         <div class="cs-card">
@@ -887,9 +893,8 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
             <span>Union Culture: 100</span>
-            <span>Sectoral: 100</span>
           </div>
-          <p class="cs-story">High OOS, concentrated healthcare and education sectors, dense community embeddedness. Classic Type A: the potential is here. The organizing infrastructure is not yet at scale.</p>
+          <p class="cs-story">High OOS, concentrated healthcare and education sectors, dense community embeddedness. The potential is here. The organizing infrastructure is not yet at scale.</p>
         </div>
         <!-- Multnomah OR -->
         <div class="cs-card">
@@ -898,10 +903,9 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="cs-oos">70.31</div>
           <div class="cs-oos-label">OPP SCORE</div>
           <div class="cs-data">
-            <span>Organized Scale: 80</span>
-            <span>Sectoral: 70.56</span>
+            <span>Scale: 80</span>
           </div>
-          <p class="cs-story">Portland. Strong progressive infrastructure, community-facing sectors well represented. Type B/C depending on your goal — organized power looking for the right campaign.</p>
+          <p class="cs-story">Portland. Strong progressive infrastructure, community-facing sectors well represented. Type B — organized power looking for the right campaign.</p>
         </div>
       </div>
     </div>
@@ -2940,8 +2944,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   let activeRingEl  = null;
   let activeRingDiv = null;
 
-  // Show skip button after 3 s
-  setTimeout(() => { skipBtn.style.opacity = '1'; }, 3000);
   skipBtn.addEventListener('click', dismissIntro);
 
   function dismissIntro() {
@@ -2951,21 +2953,33 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     overlay.style.background = '';
   }
 
+  function renderDots(activeIdx) {
+    const isFinal = activeIdx === slides.length - 1;
+    progressEl.style.display = isFinal ? 'none' : '';
+    progressEl.innerHTML = slides.map((_, i) =>
+      `<span class="intro-dot${i === activeIdx ? ' active' : ''}"></span>`
+    ).join('');
+  }
+  renderDots(0);
+
+  const mapGradient = 'linear-gradient(to right, #f7f4f0 55%, rgba(247,244,240,0.3) 80%, transparent 100%)';
+
   // Track visible slide via IntersectionObserver
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const idx = slides.indexOf(e.target);
-      progressEl.textContent = `${idx + 1} / ${slides.length}`;
-      // Restore any previous ring before triggering new one
+      renderDots(idx);
       restoreRing();
-      overlay.style.background = '';
-      if (idx === 4) {   // slide 5 — pulse #lens-badge
-        overlay.style.background = 'rgba(247,244,240,0.72)';
-        schedulePulse('#lens-badge', 400);
-      } else if (idx === 5) {  // slide 6 — pulse lens toggle row
-        overlay.style.background = 'rgba(247,244,240,0.72)';
-        schedulePulse('#lens-btns', 400);
+      if (idx === 0) {                   // slide 1 — stakes: map peeks right
+        overlay.style.background = mapGradient;
+      } else if (idx === 4) {            // slide 5 — goals-types: dim + pulse goal toggle
+        overlay.style.background = 'rgba(247,244,240,0.7)';
+        schedulePulse('.seg-buttons', 400);
+      } else if (idx === 6) {            // slide 7 — explore (final): map strip
+        overlay.style.background = mapGradient;
+      } else {
+        overlay.style.background = '#f7f4f0';
       }
     });
   }, { root: slidesEl, threshold: 0.65 });
@@ -2976,8 +2990,8 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       const el = document.querySelector(selector);
       if (!el) return;
       restoreRing();
-      const prevPos   = el.style.position;
-      const prevZ     = el.style.zIndex;
+      const prevPos = el.style.position;
+      const prevZ   = el.style.zIndex;
       el.style.position = 'relative';
       el.style.zIndex   = '2100';
       const ring = document.createElement('div');
@@ -3000,7 +3014,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     }
   }
 
-  // CTA buttons on slide 9
+  // CTA buttons on slide 7
   document.getElementById('intro-explore-btn').addEventListener('click', dismissIntro);
   document.getElementById('intro-cases-btn').addEventListener('click', () => {
     document.getElementById('intro-case-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
