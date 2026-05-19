@@ -328,13 +328,16 @@
   }
   #terrain-intro {
     position: fixed; top: var(--nav-height); left: 0; right: auto; bottom: 0;
-    width: 50%; z-index: 2000; background: #f7f4f0;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+    width: 75%; z-index: 90; background: #f7f4f0;
+    box-shadow: 4px 0 16px rgba(0,0,0,0.06);
+    overflow: hidden;
+    transition: width 0.35s ease;
   }
+  #terrain-intro.collapsed { width: 0; }
   @media (max-width: 768px) {
     #terrain-intro { top: var(--nav-height-mobile); width: 100%; right: 0; }
+    #terrain-intro.collapsed { width: 0; }
   }
-  #terrain-intro.hidden { display: none; }
   #intro-slides {
     height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory;
     scrollbar-width: none; position: relative; z-index: 2;
@@ -370,15 +373,18 @@
     display: inline-block;
   }
   .intro-link:hover { text-decoration: underline; }
-  #intro-skip {
-    position: fixed; top: 20px; right: 28px; z-index: 2020;
-    background: none; border: 1.5px solid #bd0026;
-    font-family: 'IBM Plex Mono', monospace; font-size: 14px;
-    color: #bd0026; padding: 8px 20px; border-radius: 2px;
-    cursor: pointer; opacity: 1;
-    letter-spacing: 0.06em;
+  #intro-close-btn {
+    position: absolute; top: 16px; right: 16px;
+    font-size: 20px; color: #7a6f64;
+    background: none; border: none; cursor: pointer;
   }
-  #intro-skip:hover { color: #a00020; border-color: #a00020; }
+  #intro-reopen-btn {
+    position: fixed; top: calc(var(--nav-height) + 16px); left: 16px;
+    z-index: 95; display: none;
+    background: #bd0026; color: white;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    padding: 8px 14px; border: none; cursor: pointer;
+  }
   #intro-progress {
     position: fixed; bottom: 24px; left: clamp(48px, 10vw, 140px); z-index: 2010;
     display: flex; align-items: center; gap: 0;
@@ -701,8 +707,9 @@ document.querySelector('.terrain-nav__hamburger')
   </div>
 </div>
 
+<button id="intro-reopen-btn">Learn more →</button>
 <div id="terrain-intro">
-  <button id="intro-skip">Skip intro →</button>
+  <button id="intro-close-btn">✕</button>
   <div id="intro-progress"></div>
   <div id="intro-slides">
 
@@ -820,7 +827,7 @@ document.querySelector('.terrain-nav__hamburger')
       </div>
       <div id="intro-case-panel">
         <!-- Kanawha WV -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="54039">
           <div class="cs-county">Kanawha County</div>
           <div class="cs-badge">WV · Type B: Political Activation</div>
           <div class="cs-oos">40.6</div>
@@ -832,7 +839,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">2018 wildcat strike shut down all 55 counties. Rank-and-file refused back-to-work orders from their own union leaders. Launched the national Red for Ed movement.</p>
         </div>
         <!-- Logan WV -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="54045">
           <div class="cs-county">Logan County</div>
           <div class="cs-badge">WV · Type B: Political Activation</div>
           <div class="cs-oos">19.21</div>
@@ -844,7 +851,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">Once the largest coal-producing county in WV. Nearly 28% poverty rate today. Capital extracted the wealth and left. High chokepoint potential, low community infrastructure.</p>
         </div>
         <!-- Clark NV -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="32003">
           <div class="cs-county">Clark County</div>
           <div class="cs-badge">NV · Type C: Partnership</div>
           <div class="cs-oos">86.5</div>
@@ -856,7 +863,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">Culinary Union Local 226. 60,000 hospitality workers. 900,000+ doors knocked in 2024. Pivotal in flipping Nevada Democratic every cycle since 2008.</p>
         </div>
         <!-- Cook IL -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="17031">
           <div class="cs-county">Cook County</div>
           <div class="cs-badge">IL · Type B: Political Activation</div>
           <div class="cs-oos">86.5</div>
@@ -867,7 +874,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">CTU's 2012 strike launched a national movement and directly inspired the WV wildcat. Organizers were studying McAlevey's book about CTU when they started planning. Bargaining for the common good.</p>
         </div>
         <!-- Allegheny PA -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="42003">
           <div class="cs-county">Allegheny County</div>
           <div class="cs-badge">PA · Type C: Partnership</div>
           <div class="cs-oos">86.5</div>
@@ -878,7 +885,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">Deep union history. Strong infrastructure. But labor leaders told state lawmakers in 2023 they're worried about declining membership despite widespread public support. Classic Type B: power exists, not yet activated.</p>
         </div>
         <!-- Maricopa AZ -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="04013">
           <div class="cs-county">Maricopa County</div>
           <div class="cs-badge">AZ · Type C: Partnership</div>
           <div class="cs-oos">75.25</div>
@@ -890,7 +897,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">Arizona teachers struck in 2018 inspired by WV. Today it's swing Senate terrain. High organized scale, low union culture score — built for deployment, not organic solidarity. Goal matters here.</p>
         </div>
         <!-- Philadelphia PA -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="42101">
           <div class="cs-county">Philadelphia County</div>
           <div class="cs-badge">PA · Type C: Partnership</div>
           <div class="cs-oos">86.5</div>
@@ -901,7 +908,7 @@ document.querySelector('.terrain-nav__hamburger')
           <p class="cs-story">High OOS, concentrated healthcare and education sectors, dense community embeddedness. The potential is here. The organizing infrastructure is not yet at scale.</p>
         </div>
         <!-- Multnomah OR -->
-        <div class="cs-card">
+        <div class="cs-card" data-fips="41051">
           <div class="cs-county">Multnomah County</div>
           <div class="cs-badge">OR · Type B: Political Activation</div>
           <div class="cs-oos">70.31</div>
@@ -2938,22 +2945,27 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
 // Terrain Intro Overlay
 // ──────────────────────────────────────────────────────────────
 (function terrainIntro() {
-  if (localStorage.getItem('terrain_intro_seen')) return;
-
   const overlay     = document.getElementById('terrain-intro');
   const slidesEl    = document.getElementById('intro-slides');
   const slides      = Array.from(overlay.querySelectorAll('.intro-slide'));
-  const skipBtn     = document.getElementById('intro-skip');
+  const closeBtn    = document.getElementById('intro-close-btn');
+  const reopenBtn   = document.getElementById('intro-reopen-btn');
   const progressEl  = document.getElementById('intro-progress');
   let activeRingEl  = null;
   let activeRingDiv = null;
 
-  skipBtn.addEventListener('click', dismissIntro);
+  closeBtn.addEventListener('click', collapseIntro);
+  reopenBtn.addEventListener('click', expandIntro);
 
-  function dismissIntro() {
-    localStorage.setItem('terrain_intro_seen', '1');
-    overlay.classList.add('hidden');
+  function collapseIntro() {
+    overlay.classList.add('collapsed');
+    reopenBtn.style.display = '';
     restoreRing();
+  }
+
+  function expandIntro() {
+    overlay.classList.remove('collapsed');
+    reopenBtn.style.display = 'none';
   }
 
   function renderDots(activeIdx) {
@@ -3009,7 +3021,17 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   }
 
   // CTA buttons on slide 7
-  document.getElementById('intro-explore-btn').addEventListener('click', dismissIntro);
+  document.getElementById('intro-explore-btn').addEventListener('click', collapseIntro);
+
+  document.querySelectorAll('#intro-case-panel .cs-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      const c = allCounties.find(c => c.fips === card.dataset.fips);
+      if (c) showDetail(c);
+      collapseIntro();
+    });
+  });
+
   document.getElementById('intro-cases-btn').addEventListener('click', () => {
     document.getElementById('intro-case-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
