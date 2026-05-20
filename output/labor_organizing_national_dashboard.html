@@ -375,16 +375,19 @@
   }
   .intro-link:hover { text-decoration: underline; }
   #intro-toggle-btn {
-    position: absolute; right: -16px; top: 50%; transform: translateY(-50%);
-    width: 32px; height: 48px;
-    background: #f7f4f0; border: 1px solid #d4cfc9; border-left: none;
-    cursor: col-resize; font-size: 18px; color: #1a1a1a;
+    position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 28px; height: 28px; padding: 0;
+    background: none; border: none;
+    cursor: pointer; font-size: 22px; line-height: 1; color: #9A8F84;
     display: flex; align-items: center; justify-content: center;
     z-index: 91; user-select: none;
+    transition: color 0.2s, transform 0.35s ease;
   }
+  #intro-toggle-btn:hover { color: #1a1a1a; }
   #terrain-intro.collapsed #intro-toggle-btn {
-    position: fixed; left: 0; top: 50%; transform: translateY(-50%);
-    border-left: 1px solid #d4cfc9; border-right: none;
+    position: fixed; left: 6px; top: 50%;
+    transform: translateY(-50%) rotate(180deg);
   }
   #intro-progress {
     position: absolute; bottom: 24px; left: clamp(48px, 10vw, 140px); z-index: 2010;
@@ -2929,7 +2932,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     overlay.style.transition = 'width 0.35s ease';
     overlay.style.width = '0';
     overlay.classList.add('collapsed');
-    toggleBtn.textContent = '›';
     restoreRing();
     setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
   }
@@ -2940,7 +2942,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     overlay.style.transition = 'width 0.35s ease';
     overlay.style.width = `${targetPct}%`;
     overlay.classList.remove('collapsed');
-    toggleBtn.textContent = '‹';
     setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
   }
 
@@ -2961,7 +2962,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       dragged = true;
       const pct = Math.min(90, Math.max(0, (startW + ev.clientX - startX) / window.innerWidth * 100));
       overlay.style.width = `${pct}%`;
-      toggleBtn.textContent = pct < 5 ? '›' : '‹';
     };
 
     const onUp = () => {
