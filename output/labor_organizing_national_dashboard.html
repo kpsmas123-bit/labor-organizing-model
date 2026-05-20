@@ -327,7 +327,7 @@
     100% { transform: scale(2.4); opacity: 0;    }
   }
   #terrain-intro {
-    position: fixed; top: var(--nav-height); left: 0; right: auto; bottom: 0;
+    position: fixed; top: calc(var(--nav-height) + 48px); left: 0; right: auto; bottom: 66px;
     width: 75%; z-index: 90; background: #f7f4f0;
     box-shadow: 4px 0 16px rgba(0,0,0,0.06);
     overflow: hidden;
@@ -335,7 +335,7 @@
   }
   #terrain-intro.collapsed { width: 0; }
   @media (max-width: 768px) {
-    #terrain-intro { top: var(--nav-height-mobile); width: 100%; right: 0; }
+    #terrain-intro { top: calc(var(--nav-height-mobile) + 48px); width: 100%; right: 0; bottom: 66px; }
     #terrain-intro.collapsed { width: 0; }
   }
   #intro-slides {
@@ -379,7 +379,7 @@
     background: none; border: none; cursor: pointer;
   }
   #intro-reopen-btn {
-    position: fixed; top: calc(var(--nav-height) + 16px); left: 16px;
+    position: fixed; top: calc(var(--nav-height) + 48px + 16px); left: 16px;
     z-index: 95; display: none;
     background: #bd0026; color: white;
     font-family: 'IBM Plex Mono', monospace; font-size: 12px;
