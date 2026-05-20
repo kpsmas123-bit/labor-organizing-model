@@ -2947,7 +2947,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   // Drag-to-resize
   toggleBtn.addEventListener('mousedown', (e) => {
     if (overlay.classList.contains('collapsed')) {
-      expandIntro(10);
+      expandIntro(lastExpandedPct);
       return;
     }
     let dragged = false;
