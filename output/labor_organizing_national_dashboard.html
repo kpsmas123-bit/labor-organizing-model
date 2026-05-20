@@ -378,9 +378,9 @@
     position: absolute; right: -16px; top: 50%; transform: translateY(-50%);
     width: 32px; height: 48px;
     background: #f7f4f0; border: 1px solid #d4cfc9; border-left: none;
-    cursor: pointer; font-size: 18px; color: #1a1a1a;
+    cursor: col-resize; font-size: 18px; color: #1a1a1a;
     display: flex; align-items: center; justify-content: center;
-    z-index: 91;
+    z-index: 91; user-select: none;
   }
   #terrain-intro.collapsed #intro-toggle-btn {
     position: fixed; left: 0; top: 50%; transform: translateY(-50%);
@@ -2894,33 +2894,70 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   let activeRingDiv = null;
   let pulseScheduled = false;
 
-  toggleBtn.addEventListener('click', () => {
-    if (overlay.classList.contains('collapsed')) expandIntro();
-    else collapseIntro();
-  });
+  let lastExpandedPct = 75; // remember last open width
 
   function collapseIntro() {
-    toggleBtn.style.pointerEvents = 'none';
     slidesEl.style.scrollSnapType = 'none';
+    overlay.style.transition = 'width 0.35s ease';
+    overlay.style.width = '0';
     overlay.classList.add('collapsed');
     toggleBtn.textContent = '›';
     restoreRing();
-    setTimeout(() => {
-      toggleBtn.style.pointerEvents = '';
-      slidesEl.style.scrollSnapType = '';
-    }, 350);
+    setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
   }
 
-  function expandIntro() {
-    toggleBtn.style.pointerEvents = 'none';
+  function expandIntro(pct) {
+    const targetPct = pct ?? lastExpandedPct;
     slidesEl.style.scrollSnapType = 'none';
+    overlay.style.transition = 'width 0.35s ease';
+    overlay.style.width = `${targetPct}%`;
     overlay.classList.remove('collapsed');
     toggleBtn.textContent = '‹';
-    setTimeout(() => {
-      toggleBtn.style.pointerEvents = '';
-      slidesEl.style.scrollSnapType = '';
-    }, 350);
+    setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
   }
+
+  // Drag-to-resize
+  toggleBtn.addEventListener('mousedown', (e) => {
+    if (overlay.classList.contains('collapsed')) {
+      expandIntro(10);
+      return;
+    }
+    let dragged = false;
+    const startX = e.clientX;
+    const startW = overlay.offsetWidth;
+    overlay.style.transition = 'none';
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    const onMove = (ev) => {
+      dragged = true;
+      const pct = Math.min(90, Math.max(0, (startW + ev.clientX - startX) / window.innerWidth * 100));
+      overlay.style.width = `${pct}%`;
+      toggleBtn.textContent = pct < 5 ? '›' : '‹';
+    };
+
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      overlay.style.transition = 'width 0.35s ease';
+      const pct = overlay.offsetWidth / window.innerWidth * 100;
+      if (!dragged) {
+        collapseIntro();
+      } else if (pct < 10) {
+        collapseIntro();
+      } else {
+        lastExpandedPct = pct;
+        overlay.classList.remove('collapsed');
+        setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
+      }
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    e.preventDefault();
+  });
 
   function renderDots(activeIdx) {
     const isFinal = activeIdx === slides.length - 1;
