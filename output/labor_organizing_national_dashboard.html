@@ -701,11 +701,12 @@ document.querySelector('.terrain-nav__hamburger')
   });
 </script>
 
+<div id="beta-banner" style="position:fixed;top:var(--nav-height);left:0;right:0;z-index:200;padding:6px 24px;display:flex;align-items:center;gap:10px;background:#FEF3C7;border-bottom:1px solid #F6D860;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;">
+  <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
+  <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
+</div>
+
 <div id="terrain-intro">
-  <div id="beta-banner" style="padding:6px 24px;display:flex;align-items:center;gap:10px;background:#FEF3C7;border-bottom:1px solid #F6D860;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;flex-shrink:0;">
-    <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
-    <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
-  </div>
   <button id="intro-toggle-btn">&#8249;</button>
   <div id="intro-progress"></div>
   <div id="intro-slides">
