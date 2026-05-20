@@ -1645,6 +1645,16 @@ async function loadData() {
       console.log(`[Data] ${Object.keys(gl_msaSummaries).length} MSA summaries loaded`);
     }
   } catch (_) { /* msa_summaries.json not yet generated — gallery falls back to live API */ }
+
+  // Merge MSA names from static Census CBSA lookup (fixes missing msa_name in county_scores.json)
+  try {
+    const mr = await fetch("../data/msa_lookup.json");
+    if (mr.ok) {
+      const msaLookup = await mr.json();
+      allCounties.forEach(c => { c.msa_name = msaLookup[c.fips] ?? "Non-Metro"; });
+      console.log(`[Data] MSA lookup merged onto ${allCounties.length} counties`);
+    }
+  } catch (_) { /* msa_lookup.json missing — MSA grouping will be inactive */ }
 }
 
 // ──────────────────────────────────────────────────────────────
