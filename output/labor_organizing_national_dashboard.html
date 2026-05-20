@@ -327,7 +327,7 @@
     100% { transform: scale(2.4); opacity: 0;    }
   }
   #terrain-intro {
-    position: fixed; top: calc(var(--nav-height) + 56px); left: 0; right: auto; bottom: 66px;
+    position: fixed; top: calc(var(--nav-height) + 56px); left: 0; right: auto; bottom: 0;
     width: 75%; z-index: 90; background: #f7f4f0;
     box-shadow: 4px 0 16px rgba(0,0,0,0.06);
     overflow: hidden;
@@ -335,7 +335,7 @@
   }
   #terrain-intro.collapsed { width: 0; }
   @media (max-width: 768px) {
-    #terrain-intro { top: calc(var(--nav-height-mobile) + 56px); width: 100%; right: 0; bottom: 66px; }
+    #terrain-intro { top: calc(var(--nav-height-mobile) + 56px); width: 100%; right: 0; bottom: 0; }
     #terrain-intro.collapsed { width: 0; }
   }
   #intro-slides {
@@ -373,17 +373,17 @@
     display: inline-block;
   }
   .intro-link:hover { text-decoration: underline; }
-  #intro-close-btn {
-    position: absolute; top: 16px; right: 16px;
-    font-size: 20px; color: #7a6f64;
-    background: none; border: none; cursor: pointer;
+  #intro-toggle-btn {
+    position: absolute; right: -16px; top: 50%; transform: translateY(-50%);
+    width: 32px; height: 48px;
+    background: #f7f4f0; border: 1px solid #d4cfc9; border-left: none;
+    cursor: pointer; font-size: 18px; color: #1a1a1a;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 91;
   }
-  #intro-reopen-btn {
-    position: fixed; top: calc(var(--nav-height) + 48px + 16px); left: 16px;
-    z-index: 95; display: none;
-    background: #bd0026; color: white;
-    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
-    padding: 8px 14px; border: none; cursor: pointer;
+  #terrain-intro.collapsed #intro-toggle-btn {
+    position: fixed; left: 0; top: 50%; transform: translateY(-50%);
+    border-left: 1px solid #d4cfc9; border-right: none;
   }
   #intro-progress {
     position: fixed; bottom: 24px; left: clamp(48px, 10vw, 140px); z-index: 2010;
@@ -707,9 +707,8 @@ document.querySelector('.terrain-nav__hamburger')
   </div>
 </div>
 
-<button id="intro-reopen-btn">Learn more →</button>
 <div id="terrain-intro">
-  <button id="intro-close-btn">✕</button>
+  <button id="intro-toggle-btn">&#8249;</button>
   <div id="intro-progress"></div>
   <div id="intro-slides">
 
@@ -931,8 +930,8 @@ document.querySelector('.terrain-nav__hamburger')
     <div class="filter-group">
       <label>Color map by electoral goal</label>
       <div class="seg-buttons">
-        <div class="seg-btn goal-pres active" data-goal="presidential">Presidential Swing</div>
-        <div class="seg-btn goal-power" data-goal="power">Long-Term Power Building</div>
+        <div class="seg-btn goal-pres" data-goal="presidential">Presidential Swing</div>
+        <div class="seg-btn goal-power active" data-goal="power">Long-Term Power Building</div>
         <div class="seg-btn goal-senate" data-goal="senate">Senate Battlegrounds</div>
         <div class="seg-btn goal-cong" data-goal="congressional" title="Paused — mid-decade redistricting makes district data unreliable. Returning after 2026 elections.">Congressional Districts <span style="font-size:9px;font-weight:700;letter-spacing:.06em;opacity:0.75">[PAUSED]</span></div>
       </div>
@@ -946,58 +945,6 @@ document.querySelector('.terrain-nav__hamburger')
       <select id="filter-state">
         <option value="">All States</option>
       </select>
-    </div>
-
-    <div class="filter-group">
-      <label>Region</label>
-      <select id="filter-region">
-        <option value="">All Regions</option>
-        <option>Northeast</option>
-        <option>Midwest</option>
-        <option>South</option>
-        <option>West</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label>Intervention Type</label>
-      <div class="seg-buttons" style="margin-bottom:8px;">
-        <div class="seg-btn active" data-inttype="all">All</div>
-        <div class="seg-btn" data-inttype="Type A">A</div>
-        <div class="seg-btn" data-inttype="Type B">B</div>
-        <div class="seg-btn" data-inttype="Type C">C</div>
-      </div>
-      <div class="int-type-cards">
-        <div class="int-type-card card-a">
-          <div class="card-header">
-            <div class="card-dot"></div>
-            <div class="card-name">A — Build New Power</div>
-          </div>
-          <div class="card-desc">Few or no unions here. High potential for new organizing. Start from scratch, find the leaders, build the structure.</div>
-          <div class="card-tag">Low infrastructure, high opportunity</div>
-        </div>
-        <div class="int-type-card card-b">
-          <div class="card-header">
-            <div class="card-dot"></div>
-            <div class="card-name">B — Wake the Giant</div>
-          </div>
-          <div class="card-desc">Unions exist but aren't punching their weight politically. The organized power is there — it needs activation.</div>
-          <div class="card-tag">Moderate–high infrastructure, low political alignment</div>
-        </div>
-        <div class="int-type-card card-c">
-          <div class="card-header">
-            <div class="card-dot"></div>
-            <div class="card-name">C — Move Together</div>
-          </div>
-          <div class="card-desc">Strong unions, politically engaged. Best terrain for coordinated campaigns and electoral leverage.</div>
-          <div class="card-tag">High infrastructure, high alignment</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="filter-group">
-      <label>Min OPP Score: <span id="min-score-val">0</span></label>
-      <input type="range" id="filter-score" min="0" max="100" value="0" step="1">
     </div>
 
     <div class="filter-group">
@@ -1658,8 +1605,8 @@ let gl_countyExplanations = {}; // fips → explanation string
 let currentView = "methodology";
 let sortCol = "organizing_opportunity_score";
 let sortAsc = false;
-let goalFilter = "presidential";
-let filters = { state: "", region: "", interventionType: "all", minScore: 0, swingOnly: false };
+let goalFilter = "power";
+let filters = { state: "", swingOnly: false };
 
 // ──────────────────────────────────────────────────────────────
 // Data loading
@@ -2338,9 +2285,6 @@ document.getElementById("close-detail").addEventListener("click", () => {
 function applyFilters() {
   filteredCounties = allCounties.filter(c => {
     if (filters.state && c.state !== filters.state) return false;
-    if (filters.region && c.region !== filters.region) return false;
-    if (filters.interventionType !== "all" && !(c.intervention_type || "").startsWith(filters.interventionType)) return false;
-    if ((c.organizing_opportunity_score ?? 0) < filters.minScore) return false;
     if (filters.swingOnly && !c.swing_state) return false;
     return true;
   });
@@ -2385,22 +2329,7 @@ function populateStateFilter() {
 }
 
 document.getElementById("filter-state").addEventListener("change", e => { filters.state = e.target.value; applyFilters(); });
-document.getElementById("filter-region").addEventListener("change", e => { filters.region = e.target.value; applyFilters(); });
-document.getElementById("filter-score").addEventListener("input", e => {
-  filters.minScore = +e.target.value;
-  document.getElementById("min-score-val").textContent = e.target.value;
-  applyFilters();
-});
 document.getElementById("filter-swing").addEventListener("change", e => { filters.swingOnly = e.target.checked; applyFilters(); });
-
-document.querySelectorAll("[data-inttype]").forEach(btn => {
-  btn.addEventListener("click", function() {
-    document.querySelectorAll("[data-inttype]").forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-    filters.interventionType = this.dataset.inttype;
-    applyFilters();
-  });
-});
 
 document.querySelectorAll("[data-goal]").forEach(btn => {
   btn.addEventListener("click", function() {
@@ -2948,24 +2877,25 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   const overlay     = document.getElementById('terrain-intro');
   const slidesEl    = document.getElementById('intro-slides');
   const slides      = Array.from(overlay.querySelectorAll('.intro-slide'));
-  const closeBtn    = document.getElementById('intro-close-btn');
-  const reopenBtn   = document.getElementById('intro-reopen-btn');
+  const toggleBtn   = document.getElementById('intro-toggle-btn');
   const progressEl  = document.getElementById('intro-progress');
   let activeRingEl  = null;
   let activeRingDiv = null;
 
-  closeBtn.addEventListener('click', collapseIntro);
-  reopenBtn.addEventListener('click', expandIntro);
+  toggleBtn.addEventListener('click', () => {
+    if (overlay.classList.contains('collapsed')) expandIntro();
+    else collapseIntro();
+  });
 
   function collapseIntro() {
     overlay.classList.add('collapsed');
-    reopenBtn.style.display = '';
+    toggleBtn.textContent = '›';
     restoreRing();
   }
 
   function expandIntro() {
     overlay.classList.remove('collapsed');
-    reopenBtn.style.display = 'none';
+    toggleBtn.textContent = '‹';
   }
 
   function renderDots(activeIdx) {
@@ -2985,7 +2915,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       renderDots(idx);
       restoreRing();
       if (idx === 4) {            // slide 5 — goals-types: pulse goal toggle
-        schedulePulse('.seg-buttons', 400);
+        schedulePulse('.seg-buttons', 600);
       }
     });
   }, { root: slidesEl, threshold: 0.65 });
@@ -3028,7 +2958,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     card.addEventListener('click', () => {
       const c = allCounties.find(c => c.fips === card.dataset.fips);
       if (c) showDetail(c);
-      collapseIntro();
     });
   });
 
