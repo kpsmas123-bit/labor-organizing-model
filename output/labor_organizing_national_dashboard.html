@@ -375,19 +375,26 @@
   }
   .intro-link:hover { text-decoration: underline; }
   #intro-toggle-btn {
-    position: absolute; right: 10px; top: 50%;
+    position: absolute; right: -14px; top: 50%;
     transform: translateY(-50%) rotate(0deg);
-    width: 28px; height: 28px; padding: 0;
-    background: none; border: none;
-    cursor: pointer; font-size: 22px; line-height: 1; color: #9A8F84;
+    width: 28px; height: 48px; padding: 0;
+    background: #f7f4f0; border: 1px solid #e0dbd4;
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+    cursor: pointer; font-size: 20px; line-height: 1; color: #6b6560;
     display: flex; align-items: center; justify-content: center;
     z-index: 91; user-select: none;
-    transition: color 0.2s, transform 0.35s ease;
+    transition: color 0.2s, background 0.2s, transform 0.35s ease;
   }
-  #intro-toggle-btn:hover { color: #1a1a1a; }
+  #intro-toggle-btn:hover { color: #1a1a1a; background: #eeebe6; }
   #terrain-intro.collapsed #intro-toggle-btn {
-    position: fixed; left: 6px; top: 50%;
+    position: fixed; left: 0; top: 50%;
     transform: translateY(-50%) rotate(180deg);
+    border-left: 1px solid #e0dbd4;
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.08);
   }
   #intro-progress {
     position: absolute; bottom: 24px; left: clamp(48px, 10vw, 140px); z-index: 2010;
