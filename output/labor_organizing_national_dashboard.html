@@ -1856,6 +1856,7 @@ document.querySelectorAll(".lens-btn").forEach(btn => {
 // ──────────────────────────────────────────────────────────────
 const svg = d3.select("#map-svg");
 let g;
+let zoomToCounty = () => {};
 
 // MSA aggregate score lookup: fips → msaScore obj, name → msaScore obj
 // Built once at map init; used by both fill and updateMapColors.
@@ -1996,6 +1997,18 @@ async function initMap() {
     });
 
     const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], allCountyFeatures));
+
+    zoomToCounty = (fips) => {
+      const f = allCountyFeatures.features.find(f => String(f.id) === String(fips));
+      if (!f) return;
+      const [[x0, y0], [x1, y1]] = path.bounds(f);
+      const scale = Math.min(8, 0.85 / Math.max((x1 - x0) / W, (y1 - y0) / H));
+      svg.transition().duration(750).call(
+        zoom.transform,
+        d3.zoomIdentity.translate(W / 2 - scale * (x0 + x1) / 2, H / 2 - scale * (y0 + y1) / 2).scale(scale)
+      );
+    };
+
     const tt = document.getElementById("tooltip");
 
     // ── Draw merged MSA regions ──────────────────────────────────
@@ -2989,6 +3002,8 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     card.addEventListener('click', () => {
       const c = allCounties.find(c => c.fips === card.dataset.fips);
       if (c) showDetail(c);
+      collapseIntro();
+      setTimeout(() => zoomToCounty(card.dataset.fips), 400);
     });
   });
 
