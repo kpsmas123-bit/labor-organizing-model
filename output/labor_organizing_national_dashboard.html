@@ -439,15 +439,16 @@
     color: #bd0026; text-decoration: none; display: block; margin-top: 8px;
   }
   .slide-cs-link:hover { text-decoration: underline; }
-  /* Methodology tables (slide 3) */
-  .intro-table-pair { display: flex; gap: 32px; margin-top: 20px; flex-wrap: wrap; }
-  .intro-table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
-  .intro-table th {
-    color: #bd0026; text-align: left; padding: 4px 20px 4px 0;
-    letter-spacing: 0.06em; border-bottom: 1px solid #d4cfc9; white-space: nowrap;
-  }
-  .intro-table td { padding: 5px 20px 5px 0; color: #4a4a4a; border-bottom: 1px solid #eee; }
-  .intro-table tr:last-child td { border-bottom: none; }
+  /* Slide 3 gallery panels */
+  .slide-panels-section { margin-top: 20px; }
+  .slide-panels-section + .slide-panels-section { margin-top: 24px; }
+  .slide-panels-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A8F84; margin-bottom: 10px; }
+  .slide-panels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .slide-panels-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+  .slide-panel { background: #fff; border: 1px solid #e0dbd4; border-radius: 6px; padding: 10px 12px; }
+  .slide-panel__name { font-family: 'Playfair Display', Georgia, serif; font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; line-height: 1.2; }
+  .slide-panel__desc { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #6b6560; line-height: 1.4; }
+  .slide-panel__score { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; color: #bd0026; margin-top: 6px; }
   /* CTA buttons (slide 7) */
   .intro-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
   .intro-btn-primary {
@@ -747,32 +748,59 @@ document.querySelector('.terrain-nav__hamburger')
       <div class="intro-slide-inner" style="max-width: min(760px, 60vw)">
         <h1 class="intro-h">We score every U.S. county on five variables. We score every sector on its strategic value.</h1>
         <p class="intro-body">The result is a map of where power can be built — and what kind.</p>
-        <div class="intro-table-pair">
-          <table class="intro-table">
-            <thead>
-              <tr><th>Variable</th><th>What it measures</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Strike Capacity</td><td>Can workers cause a crisis?</td></tr>
-              <tr><td>Political Alignment</td><td>Is terrain winnable electorally?</td></tr>
-              <tr><td>Community Embeddedness</td><td>Are workers embedded in community relationships?</td></tr>
-              <tr><td>Existing Infrastructure</td><td>Are unions already organized here?</td></tr>
-              <tr><td>Electoral Alignment</td><td>Is the county competitive?</td></tr>
-            </tbody>
-          </table>
-          <table class="intro-table">
-            <thead>
-              <tr><th>Sector</th><th>SVS Score</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Hospitals</td><td>100</td></tr>
-              <tr><td>K-12 Education</td><td>100</td></tr>
-              <tr><td>Ports</td><td>95</td></tr>
-              <tr><td>Utilities</td><td>85</td></tr>
-              <tr><td>Retail</td><td>10</td></tr>
-              <tr><td>Tech</td><td>0</td></tr>
-            </tbody>
-          </table>
+        <div class="slide-panels-section">
+          <div class="slide-panels-label">County variables</div>
+          <div class="slide-panels-grid">
+            <div class="slide-panel">
+              <div class="slide-panel__name">Strike Capacity</div>
+              <div class="slide-panel__desc">Can workers cause a crisis?</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Political Alignment</div>
+              <div class="slide-panel__desc">Is terrain winnable electorally?</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Community Embeddedness</div>
+              <div class="slide-panel__desc">Are workers embedded in community relationships?</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Existing Infrastructure</div>
+              <div class="slide-panel__desc">Are unions already organized here?</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Electoral Alignment</div>
+              <div class="slide-panel__desc">Is the county competitive?</div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-panels-section">
+          <div class="slide-panels-label">Sector strategic value (SVS)</div>
+          <div class="slide-panels-grid slide-panels-grid--3">
+            <div class="slide-panel">
+              <div class="slide-panel__name">Hospitals</div>
+              <div class="slide-panel__score">100</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">K-12 Education</div>
+              <div class="slide-panel__score">100</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Ports</div>
+              <div class="slide-panel__score">95</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Utilities</div>
+              <div class="slide-panel__score">85</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Retail</div>
+              <div class="slide-panel__score">10</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Tech</div>
+              <div class="slide-panel__score">0</div>
+            </div>
+          </div>
         </div>
         <a href="/output/methodology.html" class="intro-link" style="margin-top: 20px; display: inline-block;">→ Full methodology</a>
       </div>
