@@ -2350,7 +2350,7 @@ function updateTop10() {
   container.innerHTML = top.map((c, i) => {
     const scoreColor = (c.intervention_type || "").startsWith("Type A") ? "#7A5A00"
                      : (c.intervention_type || "").startsWith("Type B") ? "#8B3A00" : "#7A2000";
-    return `<div class="top10-row" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')})">
+    return `<div class="top10-row" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')}); zoomToCounty('${c.fips}')">
       <span class="top10-name">${i+1}. ${c.county_name}, ${c.state}</span>
       <span class="top10-score" style="color:${scoreColor}">${c.organizing_opportunity_score}</span>
     </div>`;
