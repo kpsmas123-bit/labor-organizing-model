@@ -503,15 +503,15 @@
     color: #a09385; margin-top: auto; padding-top: 8px;
   }
 
-  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.97); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; min-width: 200px; max-width: 230px; }
-  .legend { position: relative; }
-  .legend-toggle { display: block; position: absolute; top: 8px; right: 10px; width: 22px; height: 22px; background: none; border: none; cursor: pointer; font-size: 18px; color: #9A8F84; padding: 0; line-height: 1; transform: rotate(-90deg); transition: color 0.2s, transform 0.3s ease; }
+  .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.97); border: 1px solid #DDD5C8; border-radius: 7px; padding: 8px 12px 10px; min-width: 200px; max-width: 230px; }
+  .legend-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .legend-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); }
+  .legend-toggle { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; color: #9A8F84; transform: rotate(-90deg); transition: color 0.2s, transform 0.3s ease; flex-shrink: 0; }
   .legend-toggle:hover { color: #1a1a1a; }
   .legend.collapsed .legend-toggle { transform: rotate(90deg); }
   .legend.collapsed .legend-body { display: none; }
-  .legend.collapsed { padding-bottom: 10px; }
+  .legend.collapsed .legend-header { margin-bottom: 0; }
   @media (max-width: 640px) {
-    .legend-toggle { display: block; }
     .legend { min-width: 0; max-width: 160px; }
   }
   .legend-title { font-size: 10px; font-weight: 600; color: #2C2C2C; margin-bottom: 6px; }
@@ -1068,7 +1068,10 @@ document.querySelector('.terrain-nav__hamburger')
         </div>
 
         <div class="legend" id="map-legend">
-          <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
+          <div class="legend-header">
+            <span class="legend-label">Legend</span>
+            <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
+          </div>
           <div class="legend-body">
             <div class="seg-buttons" id="lens-btns" style="margin-bottom:8px;">
               <div class="seg-btn lens-btn active" data-lens="default">Default</div>
