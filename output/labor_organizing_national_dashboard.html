@@ -330,7 +330,7 @@
     position: fixed; top: var(--nav-height); left: 0; right: auto; bottom: 0;
     width: 75%; z-index: 90; background: #f7f4f0;
     box-shadow: 4px 0 16px rgba(0,0,0,0.06);
-    overflow: hidden;
+    overflow: visible;
     transition: width 0.35s ease;
     display: flex; flex-direction: column;
   }
@@ -340,7 +340,7 @@
     #terrain-intro.collapsed { width: 0; }
   }
   #intro-slides {
-    flex: 1; min-height: 0; overflow-y: scroll; scroll-snap-type: y mandatory;
+    flex: 1; min-height: 0; overflow-y: scroll; overflow-x: hidden; scroll-snap-type: y mandatory;
     scrollbar-width: none; position: relative; z-index: 2;
   }
   #intro-slides::-webkit-scrollbar { display: none; }
