@@ -497,9 +497,12 @@
   }
 
   .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.97); border: 1px solid #DDD5C8; border-radius: 7px; padding: 10px 12px; min-width: 200px; max-width: 230px; }
-  .legend-toggle { display: none; width: 100%; background: none; border: none; cursor: pointer; font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: #7A6F64; text-align: right; padding: 0 0 6px; letter-spacing: 0.5px; }
+  .legend { position: relative; }
+  .legend-toggle { display: block; position: absolute; top: 8px; right: 10px; width: 22px; height: 22px; background: none; border: none; cursor: pointer; font-size: 18px; color: #9A8F84; padding: 0; line-height: 1; transform: rotate(-90deg); transition: color 0.2s, transform 0.3s ease; }
+  .legend-toggle:hover { color: #1a1a1a; }
+  .legend.collapsed .legend-toggle { transform: rotate(90deg); }
   .legend.collapsed .legend-body { display: none; }
-  .legend.collapsed { padding-bottom: 4px; }
+  .legend.collapsed { padding-bottom: 10px; }
   @media (max-width: 640px) {
     .legend-toggle { display: block; }
     .legend { min-width: 0; max-width: 160px; }
@@ -1058,7 +1061,7 @@ document.querySelector('.terrain-nav__hamburger')
         </div>
 
         <div class="legend" id="map-legend">
-          <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">▼ Legend</button>
+          <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
           <div class="legend-body">
             <div class="seg-buttons" id="lens-btns" style="margin-bottom:8px;">
               <div class="seg-btn lens-btn active" data-lens="default">Default</div>
@@ -2472,8 +2475,7 @@ function toggleLegend() {
   const legend = document.getElementById("map-legend");
   const btn = document.getElementById("legend-toggle-btn");
   if (!legend || !btn) return;
-  const collapsed = legend.classList.toggle("collapsed");
-  btn.textContent = collapsed ? "▲ Legend" : "▼ Legend";
+  legend.classList.toggle("collapsed");
 }
 
 function mobileToggleFilters() {
