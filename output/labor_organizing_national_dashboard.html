@@ -522,6 +522,7 @@
   .msa-path { cursor: pointer; transition: opacity 0.08s; }
   .msa-path:hover { opacity: 0.78; }
   .nonmetro-path { cursor: pointer; transition: opacity 0.08s; }
+  .map-selected { stroke: #1a1a1a !important; stroke-width: 2.5 !important; stroke-opacity: 1 !important; }
   .nonmetro-path:hover { opacity: 0.75; }
   .state-boundary { fill: none; stroke: #5A4A3A; stroke-width: 1.2; pointer-events: none; }
 
@@ -1868,6 +1869,15 @@ const svg = d3.select("#map-svg");
 let g;
 let zoomToCounty = () => {};
 
+function highlightSelection(fips, msaName) {
+  svg.selectAll(".map-selected").classed("map-selected", false);
+  if (msaName) {
+    svg.selectAll(`.msa-path[data-msa="${CSS.escape(msaName)}"]`).classed("map-selected", true);
+  } else if (fips) {
+    svg.selectAll(`.nonmetro-path[data-fips="${fips}"]`).classed("map-selected", true);
+  }
+}
+
 // MSA aggregate score lookup: fips → msaScore obj, name → msaScore obj
 // Built once at map init; used by both fill and updateMapColors.
 let msaScoreByFips = {};
@@ -2033,6 +2043,7 @@ async function initMap() {
       .join("path")
       .attr("class", "msa-path")
       .attr("d", path)
+      .attr("data-msa", d => d.properties.msaName)
       .attr("stroke", "#8B7355")
       .attr("stroke-width", "0.5")
       .attr("stroke-opacity", "0.55")
@@ -2217,7 +2228,7 @@ function _setIntBadge(intType) {
 function showMsaDetail(msaName) {
   const msa = msaScoreByName[msaName];
   if (!msa) return;
-
+  highlightSelection(null, msaName);
   const panel = document.getElementById("detail-panel");
   panel.style.display = "block";
   panel.scrollTop = 0;
@@ -2268,6 +2279,7 @@ function showMsaDetail(msaName) {
 
 // Non-metro county panel (fallback for non-MSA county clicks)
 function showDetail(c) {
+  highlightSelection(c.fips, null);
   const panel = document.getElementById("detail-panel");
   panel.style.display = "block";
   panel.scrollTop = 0;
