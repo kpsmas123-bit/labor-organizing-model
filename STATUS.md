@@ -107,3 +107,12 @@ Root cause: single source (unionjobs.com), missing enrichment fields, orphan com
 
 - **~May 24–31:** NLx Research Hub response → [nlxresearchhub@naswa.org](mailto:nlxresearchhub@naswa.org)
   If no reply by May 31: follow up directly.
+
+## 2026-05-19 — Custom domain configured
+
+- Cloudflare DNS set up for laborterrain.org
+  - 4 A records (@ → 185.199.108-111.153), all DNS only / no proxy
+  - CNAME (www → kpsmas123-bit.github.io), DNS only
+- GitHub Pages custom domain saved, DNS check passed
+- CNAME file confirmed on remote (laborterrain.org)
+- HTTPS cert provisioning in progress — enforce HTTPS pending
