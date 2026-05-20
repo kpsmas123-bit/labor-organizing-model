@@ -760,6 +760,16 @@ document.querySelector('.terrain-nav__hamburger')
               <tr><td>Tech</td><td>0</td></tr>
             </tbody>
           </table>
+          <table class="intro-table">
+            <thead>
+              <tr><th colspan="2">Intervention Types</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Type A</td><td>Build new power from scratch</td></tr>
+              <tr><td>Type B</td><td>Activate existing organized power</td></tr>
+              <tr><td>Type C</td><td>Coordinate aligned organizations</td></tr>
+            </tbody>
+          </table>
         </div>
         <a href="/output/methodology.html" class="intro-link" style="margin-top: 20px; display: inline-block;">→ Full methodology</a>
       </div>
@@ -2881,6 +2891,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   const progressEl  = document.getElementById('intro-progress');
   let activeRingEl  = null;
   let activeRingDiv = null;
+  let pulseScheduled = false;
 
   toggleBtn.addEventListener('click', () => {
     if (overlay.classList.contains('collapsed')) expandIntro();
@@ -2888,14 +2899,26 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   });
 
   function collapseIntro() {
+    toggleBtn.style.pointerEvents = 'none';
+    slidesEl.style.scrollSnapType = 'none';
     overlay.classList.add('collapsed');
     toggleBtn.textContent = '›';
     restoreRing();
+    setTimeout(() => {
+      toggleBtn.style.pointerEvents = '';
+      slidesEl.style.scrollSnapType = '';
+    }, 350);
   }
 
   function expandIntro() {
+    toggleBtn.style.pointerEvents = 'none';
+    slidesEl.style.scrollSnapType = 'none';
     overlay.classList.remove('collapsed');
     toggleBtn.textContent = '‹';
+    setTimeout(() => {
+      toggleBtn.style.pointerEvents = '';
+      slidesEl.style.scrollSnapType = '';
+    }, 350);
   }
 
   function renderDots(activeIdx) {
@@ -2914,7 +2937,8 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       const idx = slides.indexOf(e.target);
       renderDots(idx);
       restoreRing();
-      if (idx === 4) {            // slide 5 — goals-types: pulse goal toggle
+      if (idx === 4 && !pulseScheduled) {   // slide 5 — goals-types: pulse goal toggle
+        pulseScheduled = true;
         schedulePulse('.seg-buttons', 600);
       }
     });
@@ -2948,6 +2972,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       activeRingEl.el.style.zIndex   = activeRingEl.prevZ;
       activeRingEl = null;
     }
+    pulseScheduled = false;
   }
 
   // CTA buttons on slide 7
