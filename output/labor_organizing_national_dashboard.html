@@ -2937,10 +2937,6 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
       const idx = slides.indexOf(e.target);
       renderDots(idx);
       restoreRing();
-      if (idx === 4 && !pulseScheduled) {   // slide 5 — goals-types: pulse goal toggle
-        pulseScheduled = true;
-        schedulePulse('.seg-buttons', 600);
-      }
     });
   }, { root: slidesEl, threshold: 0.65 });
   slides.forEach(s => io.observe(s));
