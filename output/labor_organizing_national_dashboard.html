@@ -2279,7 +2279,8 @@ function showMsaDetail(msaName) {
 
 // Non-metro county panel (fallback for non-MSA county clicks)
 function showDetail(c) {
-  highlightSelection(c.fips, null);
+  const msaForCounty = msaScoreByFips[c.fips];
+  highlightSelection(msaForCounty ? null : c.fips, msaForCounty ? msaForCounty.msaName : null);
   const panel = document.getElementById("detail-panel");
   panel.style.display = "block";
   panel.scrollTop = 0;
