@@ -344,13 +344,13 @@
   }
   #intro-slides::-webkit-scrollbar { display: none; }
   .intro-slide {
-    height: 100vh; scroll-snap-align: start;
+    height: 100%; scroll-snap-align: start;
     display: flex; flex-direction: column; justify-content: flex-start;
     align-items: flex-start;
     padding: clamp(80px, 12vh, 140px) 0 0 clamp(48px, 10vw, 140px);
-    box-sizing: border-box;
+    box-sizing: border-box; flex-shrink: 0;
   }
-  .intro-slide-last { min-height: 100vh; height: auto; padding-bottom: 56px; }
+  .intro-slide-last { min-height: 100%; height: auto; padding-bottom: 56px; }
   .intro-slide-inner { max-width: min(640px, 55vw); }
   .intro-eyebrow {
     font-family: 'IBM Plex Mono', monospace; font-size: 11px;
@@ -2971,6 +2971,29 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   }
 
   // CTA buttons on slide 7
+  // Re-snap to active slide on resize so content never bleeds between slides
+  let activeSlideIdx = 0;
+  const origIo = io;
+  const snapToActive = () => {
+    const target = slides[activeSlideIdx];
+    if (target) target.scrollIntoView({ block: 'start' });
+  };
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(snapToActive, 100);
+  });
+
+  // Keep activeSlideIdx in sync — patch renderDots
+  const _renderDots = renderDots;
+  // track via the observer callback already running above; intercept via a wrapper
+  const io2 = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) activeSlideIdx = slides.indexOf(e.target);
+    });
+  }, { root: slidesEl, threshold: 0.65 });
+  slides.forEach(s => io2.observe(s));
+
   document.getElementById('intro-explore-btn').addEventListener('click', collapseIntro);
 
   document.querySelectorAll('#intro-case-panel .cs-card').forEach(card => {
