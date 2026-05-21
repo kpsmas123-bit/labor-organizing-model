@@ -654,8 +654,7 @@ a.model-flow__tile.model-flow__tile--org:hover {
 }
 
 .overview-beat--accent {
-  border-left: 2px solid #bd0026;
-  border-radius: 0 12px 12px 0;
+  border-top: 2px solid #bd0026;
 }
 
 .overview-beat__num {

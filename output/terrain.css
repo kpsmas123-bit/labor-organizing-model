@@ -9,6 +9,10 @@
    CSS CUSTOM PROPERTIES
    ============================================================ */
 
+html {
+  scroll-padding-top: 88px;
+}
+
 :root {
   /* --- Color System --- */
   --color-bg: #f7f4f0;
