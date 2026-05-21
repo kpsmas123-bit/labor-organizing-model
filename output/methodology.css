@@ -21,6 +21,11 @@
   padding-top: var(--space-10);
 }
 
+.method-section .section-label,
+.method-section .section-title {
+  text-align: center;
+}
+
 .method-section__intro {
   font-family: var(--font-body);
   font-size: var(--text-base);
