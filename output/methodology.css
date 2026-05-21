@@ -604,6 +604,24 @@
   padding-top: var(--space-2);
 }
 
+a.model-flow__tile {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+a.model-flow__tile:hover {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-bg-subtle);
+}
+
+a.model-flow__tile.model-flow__tile--org:hover {
+  border-top-color: var(--color-accent);
+  border-color: var(--color-border-strong);
+  background-color: var(--color-accent-light);
+}
+
 /* ── CARD META BADGE ── */
 
 .card-meta {
