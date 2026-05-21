@@ -22,8 +22,12 @@
 }
 
 .method-section .section-label,
-.method-section .section-title {
+.method-section .section-title,
+.method-section .method-section__intro {
   text-align: center;
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .method-section__intro {
