@@ -622,6 +622,72 @@ a.model-flow__tile.model-flow__tile--org:hover {
   background-color: var(--color-accent-light);
 }
 
+/* ── OVERVIEW BEATS ── */
+
+.overview-beats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 2rem 0;
+}
+
+.overview-beat {
+  background: var(--color-bg, #fff);
+  border: 0.5px solid var(--color-border, #e0ddd8);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.overview-beat:hover {
+  border-color: #1a1a1a;
+}
+
+.overview-beat:hover .overview-beat__arrow {
+  color: #bd0026;
+}
+
+.overview-beat--accent {
+  border-left: 2px solid #bd0026;
+  border-radius: 0 12px 12px 0;
+}
+
+.overview-beat__num {
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #999;
+  letter-spacing: 0.08em;
+}
+
+.overview-beat__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.overview-beat__body {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.overview-beat__arrow {
+  font-size: 12px;
+  color: #999;
+  margin-top: auto;
+  padding-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: color 0.15s;
+}
+
 /* ── CARD META BADGE ── */
 
 .card-meta {

@@ -33,14 +33,6 @@
   </div>
 </nav>
 
-<!-- ── HERO ── -->
-<header class="method-hero">
-  <span class="method-hero__eyebrow">Labor Organizing Strategic Terrain Model</span>
-  <h1 class="method-hero__title">Methodology</h1>
-  <p class="method-hero__body">
-    Terrain is a two-layer model covering 3,144 U.S. counties. The first layer scores organizing terrain — which sectors have structural leverage, and where the unorganized workforce is largest. The second layer scores electoral terrain — where that power matters most for presidential, statewide, and congressional races. This page documents the full model: the County Sectoral Value Score (SVS) v6 formula, the Organizing Opportunity Score (OOS), electoral sub-scores, Intervention Type classification, all 42 sectors, data sources, and known limitations. Every number is derivable from public data and reproducible from the open-source pipeline.
-  </p>
-</header>
 
 <main class="method-main">
 
@@ -50,67 +42,38 @@
     <h2 class="section-title" id="glance-heading">The Model at a Glance</h2>
     <p class="method-section__intro">Two independent layers — organizing terrain and electoral terrain — scored separately, combined by user goal.</p>
 
-    <div class="model-flow" aria-label="Model architecture">
-      <a href="#lenses-heading" class="model-flow__tile">
-        <span class="model-flow__step-label">01</span>
-        <div class="model-flow__tile-title">User Goal</div>
-        <div class="model-flow__tile-formula">Electoral objective — set by the user</div>
+    <div class="overview-beats">
+
+      <a class="overview-beat overview-beat--accent" href="#data-sources">
+        <span class="overview-beat__num">01</span>
+        <p class="overview-beat__title">Data-driven targeting</p>
+        <p class="overview-beat__body">Novel synthesis of BLS, DOL, MIT Election Lab, and Cornell ILR. No black box — every score is reproducible and documented.</p>
+        <span class="overview-beat__arrow">→ Data sources</span>
       </a>
-      <a href="#oos-heading" class="model-flow__tile model-flow__tile--org">
-        <span class="model-flow__step-label">02</span>
-        <div class="model-flow__tile-title">Organizing Opportunity Score</div>
-        <div class="model-flow__tile-formula">SVS × 55% + OPS × 45%</div>
-        <div class="model-flow__pills">
-          <span class="card-meta">County SVS</span>
-          <span class="card-meta">Org. Potential</span>
-        </div>
+
+      <a class="overview-beat overview-beat--accent" href="#oos-heading">
+        <span class="overview-beat__num">02</span>
+        <p class="overview-beat__title">Not all sectors are equally strategic</p>
+        <p class="overview-beat__body">Every worker deserves a union — but some unions are more powerful as political mobilizing forces. We score 42 sectors on crisis reach, community embeddedness, and organizing potential.</p>
+        <span class="overview-beat__arrow">→ The Organizing Opportunity Score</span>
       </a>
-      <a href="#electoral-heading" class="model-flow__tile">
-        <span class="model-flow__step-label">03</span>
-        <div class="model-flow__tile-title">Intervention Type</div>
-        <div class="model-flow__tile-formula">A / B / C</div>
-        <div class="model-flow__pills">
-          <span class="card-meta">Infrastructure</span>
-          <span class="card-meta">Alignment</span>
-        </div>
+
+      <a class="overview-beat overview-beat--accent" href="#electoral-heading">
+        <span class="overview-beat__num">03</span>
+        <p class="overview-beat__title">Terrain is local</p>
+        <p class="overview-beat__body">Strategic sectors mean nothing without knowing where those workers are concentrated. We map scores to all 3,144 U.S. counties, layering in union density and electoral competitiveness.</p>
+        <span class="overview-beat__arrow">→ Electoral Terrain &amp; Intervention Types</span>
       </a>
-      <a href="#electoral-heading" class="model-flow__tile">
-        <span class="model-flow__step-label">04</span>
-        <div class="model-flow__tile-title">Electoral Sub-Scores</div>
-        <div class="model-flow__tile-formula">3 independent dimensions</div>
-        <div class="model-flow__pills">
-          <span class="card-meta">Presidential</span>
-          <span class="card-meta">Statewide</span>
-          <span class="card-meta">Congressional</span>
-        </div>
+
+      <a class="overview-beat overview-beat--accent" href="#data-sources">
+        <span class="overview-beat__num">04</span>
+        <p class="overview-beat__title">Open and evolving</p>
+        <p class="overview-beat__body">The methodology is public, the data is documented, and the scoring logic changes as the political landscape does. Version history is tracked.</p>
+        <span class="overview-beat__arrow">→ Known Limitations</span>
       </a>
-      <a href="#oos-heading" class="model-flow__tile">
-        <span class="model-flow__step-label">05</span>
-        <div class="model-flow__tile-title">Composite Ranking</div>
-        <div class="model-flow__tile-formula">OOS × Electoral weight</div>
-      </a>
+
     </div>
 
-    <div class="does-grid">
-      <div class="does-block does-block--does">
-        <div class="does-block__heading">What it does</div>
-        <ul>
-          <li>Ranks 3,144 counties by organizing terrain</li>
-          <li>Scores electoral value across 3 race types</li>
-          <li>Classifies counties by Intervention Type (A/B/C)</li>
-          <li>Surfaces sector leverage at county level</li>
-        </ul>
-      </div>
-      <div class="does-block does-block--doesnt">
-        <div class="does-block__heading">What it doesn't do</div>
-        <ul>
-          <li>Measure associational or organic leader networks</li>
-          <li>Assess employer-specific vulnerability</li>
-          <li>Replace on-the-ground organizer judgment</li>
-          <li>Predict campaign outcomes</li>
-        </ul>
-      </div>
-    </div>
   </section>
 
   <!-- ── 1. TWO THEORIES OF CHANGE ── -->
@@ -1831,7 +1794,7 @@
   </section>
 
   <!-- ── DATA SOURCES ── -->
-  <section class="method-section" aria-labelledby="sources-heading">
+  <section class="method-section" id="data-sources" aria-labelledby="sources-heading">
     <span class="section-label">Data</span>
     <h2 class="section-title" id="sources-heading">Data Sources</h2>
     <p class="method-section__intro">All data used in this model is publicly available from government agencies and academic institutions. No proprietary data sources were used.</p>
