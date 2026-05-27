@@ -63,5 +63,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "chore: automated job scrape $(date -u +%Y-%m-%d)"
+            git pull --rebase origin main
             git push
           fi
