@@ -26,10 +26,14 @@ jobs:
         run: pip install -r requirements.txt
 
       # ── Board 1: unionjobs.com ──────────────────────────────────────────────
-      # Writes to output/unionjobs_raw.json (standalone scraper, not yet wired
-      # into the normalize/classify pipeline — raw output only).
+      # Step 1: scrape → output/unionjobs_raw.json
+      # Step 2: merge into raw_jobs.json, normalize, reclassify → classified_jobs.json
       - name: Scrape unionjobs.com
         run: python scripts/scrape_unionjobs.py
+        continue-on-error: true
+
+      - name: Ingest unionjobs.com into pipeline
+        run: python -m pipeline.ingest_unionjobs
         continue-on-error: true
 
       # ── Board 2: Arena Progressive Jobs ────────────────────────────────────
