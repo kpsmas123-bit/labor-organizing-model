@@ -82,10 +82,14 @@ def main():
         print(f"No records in {args.scraper_output}. Nothing to do.")
         sys.exit(0)
 
-    # Build source_url on each record and drop any that can't be identified
+    # Build source_url and fill required fields so normalize never rejects a record
     for rec in scraped:
         if not rec.get("source_url"):
             rec["source_url"] = _source_url(rec)
+        if not rec.get("title"):
+            rec["title"] = ""
+        if not rec.get("location_raw"):
+            rec["location_raw"] = ""
     valid = [r for r in scraped if r.get("source_url")]
     dropped = len(scraped) - len(valid)
     if dropped:

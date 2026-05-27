@@ -61,13 +61,9 @@ def normalize_job(raw: dict) -> tuple:
     Returns (normalized_job, None) on success or (None, rejection_reason) on failure.
     """
     # --- Required field checks ---
-    title = _norm_ws(raw.get('title') or '')
-    if not title:
-        return None, "missing title"
+    title = _norm_ws(raw.get('title') or '') or ''
 
-    location_raw = _norm_ws(raw.get('location_raw') or raw.get('location') or '')
-    if not location_raw:
-        return None, "missing location_raw"
+    location_raw = _norm_ws(raw.get('location_raw') or raw.get('location') or '') or ''
 
     source_board = _norm_ws(
         raw.get('source_board') or raw.get('source') or ''
