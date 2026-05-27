@@ -1,0 +1,63 @@
+name: Scrape Jobs
+
+on:
+  schedule:
+    # Every Monday at 07:00 UTC (midnight Pacific)
+    - cron: "0 7 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── Board 1: unionjobs.com ──────────────────────────────────────────────
+      # Writes to output/unionjobs_raw.json (standalone scraper, not yet wired
+      # into the normalize/classify pipeline — raw output only).
+      - name: Scrape unionjobs.com
+        run: python scripts/scrape_unionjobs.py
+        continue-on-error: true
+
+      # ── Board 2: Arena Progressive Jobs ────────────────────────────────────
+      # ingest_url.py runs the full chain: ingest → normalize → classify,
+      # deduping against data/raw_jobs.json and writing data/classified_jobs.json.
+      - name: Ingest Arena (careers.arena.run)
+        run: python -m pipeline.ingest_url --url https://careers.arena.run/jobs
+        continue-on-error: true
+
+      # ── Board 3: NY State AFL-CIO ───────────────────────────────────────────
+      - name: Ingest NYSAFLCIO
+        run: python -m pipeline.ingest_url --url https://nysaflcio.org/jobs
+        continue-on-error: true
+
+      # ── Commit changes ──────────────────────────────────────────────────────
+      - name: Commit scraped data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add \
+            data/classified_jobs.json \
+            data/normalized_jobs.json \
+            data/raw_jobs.json \
+            output/unionjobs_raw.json \
+            2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: automated job scrape $(date -u +%Y-%m-%d)"
+            git push
+          fi
