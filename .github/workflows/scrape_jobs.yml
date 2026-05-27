@@ -48,6 +48,11 @@ jobs:
         run: python -m pipeline.ingest_url --url https://nysaflcio.org/jobs
         continue-on-error: true
 
+      # ── Rebuild jobs_data.json (powers the "last updated" label in jobs.html) ──
+      - name: Rebuild jobs_data.json
+        run: python scripts/classify_jobs.py
+        continue-on-error: true
+
       # ── Commit changes ──────────────────────────────────────────────────────
       - name: Commit scraped data
         run: |
@@ -58,6 +63,7 @@ jobs:
             data/normalized_jobs.json \
             data/raw_jobs.json \
             output/unionjobs_raw.json \
+            output/jobs_data.json \
             2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No changes to commit."
