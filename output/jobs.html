@@ -1959,7 +1959,8 @@ const SORT_WEIGHTS = {
 function seniorityMatch(job, st) {
   const lvl = job.experience_level;
   const conf = job.experience_confidence || 0.5;
-  if (st.exp === 'new')      return lvl === 'early-career' ? 1.0 : (conf <= 0.5 ? 0.4 : 0.0);
+  // new-to-labor counts as early-career for seniority sort purposes
+  if (st.exp === 'new')      return (lvl === 'early-career' || lvl === 'new-to-labor') ? 1.0 : (conf <= 0.5 ? 0.4 : 0.0);
   if (st.exp === 'some')     return lvl === 'experienced'  ? 1.0 : 0.6;
   if (st.exp === 'seasoned') return lvl === 'leadership'   ? 1.0 : 0.7;
   return 0.5;
@@ -2555,7 +2556,7 @@ function quizStateInput(val) {
 
 function quizUpdateSummary() {
   const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
-  const expLabels = { 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
+  const expLabels = { 'new-to-labor': 'Early Career', 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
   const rfLabels = { strategic: 'Strategic hire', apprenticeship: 'Apprenticeship', salt: 'Salt a shop' };
   const chip = (id, val, step) => {
     const el = document.getElementById(id);
@@ -3076,23 +3077,34 @@ function applyFiltersAndRender() {
 
   // Experience level filter — uses experience_level + experience_confidence fields.
   // Confidence-blurred boundaries per spec (never exposes confidence to users):
-  //   early-career: high-conf early-career + low-conf experienced
-  //   experienced:  all experienced + low-conf early-career and leadership
+  //   early-career: all new-to-labor + high-conf early-career + low-conf experienced
+  //   experienced:  all experienced + low-conf early-career/new-to-labor and leadership
   //   leadership:   high-conf leadership + low-conf experienced
+  // "early-career" filter pill surfaces BOTH new-to-labor and early-career jobs.
   if (state.exp) {
     const expFilter = job => {
       const lvl  = job.experience_level;
       const conf = job.experience_confidence || 0.5;
       if (state.exp === 'early-career')
-        return (lvl === 'early-career' && conf >= 0.7) || (lvl === 'experienced' && conf <= 0.5);
+        return lvl === 'new-to-labor'
+            || (lvl === 'early-career' && conf >= 0.7)
+            || (lvl === 'experienced' && conf <= 0.5);
       if (state.exp === 'experienced')
-        return lvl === 'experienced' || (conf <= 0.5 && (lvl === 'early-career' || lvl === 'leadership'));
+        return lvl === 'experienced' || (conf <= 0.5 && (lvl === 'early-career' || lvl === 'new-to-labor' || lvl === 'leadership'));
       if (state.exp === 'leadership')
         return (lvl === 'leadership' && conf >= 0.7) || (lvl === 'experienced' && conf <= 0.5);
       return true; // unknown value — show everything
     };
     filtered = filtered.filter(expFilter);
     radiusFallback = radiusFallback.filter(expFilter);
+
+    // Pin new-to-labor jobs to the top within the Early Career results.
+    // Within each tier, preserve the existing impact_score order.
+    if (state.exp === 'early-career') {
+      const ntlTier = j => j.experience_level === 'new-to-labor' ? 0 : 1;
+      filtered.sort((a, b) => ntlTier(a) - ntlTier(b) || (b.impact_score || 0) - (a.impact_score || 0));
+      radiusFallback.sort((a, b) => ntlTier(a) - ntlTier(b) || (b.impact_score || 0) - (a.impact_score || 0));
+    }
   }
 
   state._filtered = filtered;
@@ -3830,9 +3842,10 @@ function renderGradeTable(grades) {
 // EXPERIENCE LEVEL CLASSIFICATION (1–4)
 // ============================================================
 const EXP_LEVELS = {
-  'early-career': { label: 'Early Career', cls: 'badge-exp-1', desc: 'Fellowships, internships, organizer roles, and first jobs in labor — little or no prior experience required.' },
-  'experienced':  { label: 'Experienced',  cls: 'badge-exp-2', desc: 'Mid-level organizer, specialist, representative, and coordinator roles — typically 2–5 years of relevant experience.' },
-  'leadership':   { label: 'Leadership',   cls: 'badge-exp-4', desc: 'Director, senior, and executive roles — leading teams, managing departments, and setting strategic direction.' },
+  'new-to-labor': { label: 'New to Labor',  cls: 'badge-exp-0', desc: 'Fellowships, internships, apprenticeships, and training programs — no prior labor experience required.' },
+  'early-career': { label: 'Early Career',  cls: 'badge-exp-1', desc: 'First jobs in the labor movement — organizer roles, clerks, assistants, and Grade-I positions.' },
+  'experienced':  { label: 'Experienced',   cls: 'badge-exp-2', desc: 'Mid-level organizer, specialist, representative, and coordinator roles — typically 2–5 years of relevant experience.' },
+  'leadership':   { label: 'Leadership',    cls: 'badge-exp-4', desc: 'Director, senior, and executive roles — leading teams, managing departments, and setting strategic direction.' },
 };
 
 // Keywords that mark a role as union staff (non-organizing)
@@ -4122,7 +4135,7 @@ function updateTileRow() {
   // Experience tile
   const expLabel = document.getElementById('qtile-exp-label');
   if (expLabel) {
-    const expNames = { 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
+    const expNames = { 'new-to-labor': 'Early Career', 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
     expLabel.textContent = (state.exp !== null && state.exp !== undefined) ? expNames[state.exp] || 'Any level' : 'Any level';
   }
   document.querySelectorAll('#qtile-exp-dd .qtile-opt').forEach(o => {

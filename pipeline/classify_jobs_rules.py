@@ -37,21 +37,48 @@ _LEAD_STRONG_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Leadership (0.7): senior/sr. prefix, director titles, supervisors, lead-X patterns
+# Leadership (0.7): director titles (without "of"), supervisors, lead-X patterns.
+# NOTE: "senior"/"sr." removed — Senior X is "experienced" not "leadership" in labor context.
+# Director/VP/Chief/President are leadership; "Senior Manager" is experienced.
 _LEAD_MOD_RE = re.compile(
-    r'\b(senior|\bsr\.?\b'
-    r'|lead\s+(?:counsel|researcher|analyst|representative|attorney|coordinator)'
+    r'\b('
+    r'lead\s+(?:counsel|researcher|analyst|representative|attorney|coordinator)'
     r'|(?:deputy\s+)?director(?!\s+of\b)'
     r'|supervisor|business\s+agent'
     r')\b',
     re.IGNORECASE,
 )
 
-# Early-career (0.9): interns, fellows, clerks, explicit entry markers
-_EARLY_STRONG_RE = re.compile(
-    r'\b(intern(?:ship)?s?|fellow(?:ship)?s?|apprentice(?:ship)?s?'
-    r'|entry[\s-]level|junior'
+# New-to-labor (0.9 title / 0.7 description): fellowships, internships, apprenticeships,
+# and training programs — people entering the labor movement for the first time.
+# Fires BEFORE all early-career checks so these titles aren't caught downstream.
+_NEW_TO_LABOR_TITLE_RE = re.compile(
+    r'\b(intern(?:ship)?s?'
+    r'|fellow(?:ship)?s?'
+    r'|apprentice(?:ship)?s?'
+    r'|entry[\s-]level'
     r'|organizers?[\s-]in[\s-]training'
+    r'|training\s+program'
+    r'|new\s+grad(?:uate)?s?'
+    r'|recent\s+grad(?:uate)?s?'
+    r')\b',
+    re.IGNORECASE,
+)
+
+# Description-level new-to-labor signals (checked against title + first 500 chars of description)
+_NEW_TO_LABOR_DESC_RE = re.compile(
+    r'\b(no\s+(?:prior\s+)?experience\s+(?:is\s+)?required'
+    r'|0\s+years?\s+(?:of\s+)?experience'
+    r'|new\s+grad(?:uate)?s?'
+    r'|recent\s+grad(?:uate)?s?'
+    r')\b',
+    re.IGNORECASE,
+)
+
+# Early-career (0.9): clerks, explicit junior/entry markers NOT already in new-to-labor.
+# (intern/fellow/apprentice/entry-level/organizer-in-training moved to _NEW_TO_LABOR_TITLE_RE)
+_EARLY_STRONG_RE = re.compile(
+    r'\b(junior'
     r'|(?:specialist|representative|analyst|coordinator|organizer)\s+i\b'
     r'|\b(?:law|record|data|file)\s+clerk\b|\bclerk\s+i\b'
     r'|receptionist|(?:administrative|office|program)\s+assistant'
@@ -104,7 +131,17 @@ def classify_experience(job: dict) -> Tuple[str, float]:
     exp_int = job.get("exp_level")
     role_type = job.get("role_type") or ""
 
-    # Temporary roles are entry-level regardless of title seniority signals
+    # New-to-labor (0.9): fellowships, internships, apprenticeships, training programs.
+    # Fires before all other checks — a fellowship is new-to-labor regardless of other signals.
+    if _NEW_TO_LABOR_TITLE_RE.search(title):
+        return "new-to-labor", 0.9
+
+    # Description-level new-to-labor signals (lower confidence — description is noisier)
+    desc_snippet = (job.get("description") or "")[:500]
+    if _NEW_TO_LABOR_DESC_RE.search(title + " " + desc_snippet):
+        return "new-to-labor", 0.7
+
+    # Temporary roles are early-career regardless of title seniority signals
     if _TEMP_RE.search(title):
         return "early-career", 0.7
 
@@ -116,7 +153,7 @@ def classify_experience(job: dict) -> Tuple[str, float]:
     if _LEAD_STRONG_RE.search(title):
         return "leadership", 0.9
 
-    # Strong early-career (0.9): interns, fellows, clerks, explicit entry markers
+    # Strong early-career (0.9): junior, clerks, explicit entry markers
     if _EARLY_STRONG_RE.search(title):
         return "early-career", 0.9
 
@@ -248,14 +285,16 @@ _LEGAL_KW_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Communications: press, media, messaging, creative
+# Communications: press, media, messaging, creative, writing roles
 _COMM_KW_RE = re.compile(
     r'\b(communications\s+(?:director|specialist|coordinator|manager|staff)'
     r'|press\s+(?:secretary|director)|media\s+(?:director|relations|strategist)'
     r'|messaging|digital\s+(?:director|strategist|organizer)'
-    r'|creative\s+director|public\s+relations|graphic\s+designer'
+    r'|creative\s+(?:director|lead|manager)|public\s+relations|graphic\s+designer'
     r'|content\s+(?:director|manager|strategist)|social\s+media'
-    r'|marketing\s+(?:director|manager)|communications\b)\b',
+    r'|marketing\s+(?:director|manager)|communications\b'
+    r'|speechwriter|copywriter'
+    r')\b',
     re.IGNORECASE,
 )
 
@@ -479,10 +518,74 @@ CITY_AIRPORT_MAP: dict[str, list[str]] = {
 }
 
 
+# Detects location_raw strings that describe a multi-state region rather than a specific city.
+# When matched (and no specific city was parsed), state_abbr is discarded — it was likely
+# scraped from a state abbreviation inside the regional list (e.g. "CT, DE, MA…" → "DE").
+_REGION_SPAN_RE = re.compile(
+    r'\b(?:the\s+)?(northeast|midwest|southeast|southwest|northwest|west\s+coast|east\s+coast)\b',
+    re.IGNORECASE,
+)
+_REGION_INFERRED: dict[str, str] = {
+    'northeast':  'Northeast',
+    'midwest':    'Midwest',
+    'southeast':  'Southeast',
+    'southwest':  'Southwest',
+    'northwest':  'Pacific Northwest',
+    'west coast': 'Pacific Northwest',
+    'east coast': 'Northeast',
+}
+
+
+def _sanitize_city(city: Optional[str]) -> Optional[str]:
+    """
+    Fix garbled city values produced by the location parser.
+
+    Cases handled:
+    - "Remote to start but must be in Oakland" → None  (remote job; city is noise)
+    - "Campaign Washington"                   → "Washington"  (leading label stripped)
+    - "New York" / "Oakland"                  → unchanged (already known)
+    """
+    if not city:
+        return None
+    # Starts with "Remote" → city is meaningless (remote + eventual target city)
+    if re.match(r'^remote\b', city, re.IGNORECASE):
+        return None
+    # Known city → pass through immediately
+    if city in CITY_REGION_MAP:
+        return city
+    # Multi-word city: leading word may be a noise token (badge, category label).
+    # Try last 2 words, then last 1 word, against the known-city map.
+    words = city.split()
+    if len(words) > 1:
+        for n in (2, 1):
+            candidate = " ".join(words[-n:])
+            if candidate in CITY_REGION_MAP:
+                return candidate
+    return city  # unknown city — keep as-is rather than drop
+
+
 def classify_location_parsed(job: dict) -> dict:
     city = job.get("city") or None
     state = job.get("state_abbr") or None
     raw = job.get("location_raw") or ""
+
+    # Sanitize garbled city values before any lookup
+    city = _sanitize_city(city)
+
+    # When location_raw is a multi-state regional description and no specific city
+    # was parsed, discard the scraped state (which was likely a false positive from
+    # a state abbreviation embedded inside the region list) and infer region only.
+    if city is None:
+        m = _REGION_SPAN_RE.search(raw)
+        if m:
+            region_key = m.group(1).lower()
+            return {
+                "city":          None,
+                "state":         None,
+                "region":        _REGION_INFERRED.get(region_key),
+                "near_airports": [],
+                "raw":           raw,
+            }
 
     region: Optional[str] = None
     if city:
@@ -495,11 +598,11 @@ def classify_location_parsed(job: dict) -> dict:
         near_airports = CITY_AIRPORT_MAP.get(city, [])
 
     return {
-        "city": city,
-        "state": state,
-        "region": region,
+        "city":          city,
+        "state":         state,
+        "region":        region,
         "near_airports": near_airports,
-        "raw": raw,
+        "raw":           raw,
     }
 
 
@@ -508,8 +611,20 @@ def classify_location_parsed(job: dict) -> dict:
 # ---------------------------------------------------------------------------
 def enrich_job(job: dict) -> dict:
     level, confidence = classify_experience(job)
+
+    # Arena HTML cards embed employer in title as "EMPLOYER: Job Title".
+    # Extract it here so existing records get populated without re-ingesting.
+    employer = job.get("employer") or None
+    if not employer and job.get("source_board") == "Arena":
+        title = job.get("title") or ""
+        if ":" in title:
+            extracted = title.split(":", 1)[0].strip()
+            if extracted:
+                employer = extracted
+
     return {
         **job,
+        "employer":              employer,
         "experience_level":      level,
         "experience_confidence": confidence,
         "job_function":          classify_job_function(job),
@@ -525,11 +640,18 @@ def enrich_job(job: dict) -> dict:
 # ---------------------------------------------------------------------------
 COMPARE_FIELDS = ["experience_level", "job_function", "location_type"]
 
+# Maps old 4-bucket GT values (entry/mid/senior/executive) to current 3+1 bucket schema.
 _EXP_REMAP = {
     "entry":     "early-career",
     "mid":       "experienced",
     "senior":    "leadership",
     "executive": "leadership",
+}
+
+# Normalizes rules output when comparing against GT that predates the new-to-labor bucket.
+# new-to-labor is a sub-type of early-career, so it counts as a match when GT says "early-career".
+_RULES_EXP_NORMALIZE = {
+    "new-to-labor": "early-career",
 }
 
 
@@ -549,9 +671,11 @@ def compare_accuracy(rules_results: List[dict], ground_truth: List[dict]) -> dic
             if gt_val is None:
                 continue
             totals[field] += 1
-            # Remap old experience_level values to new 3-bucket schema
             if field == "experience_level":
+                # Remap GT old 4-bucket values → current schema
                 gt_val = _EXP_REMAP.get(gt_val, gt_val)
+                # Normalize rules new-to-labor → early-career (GT predates the new bucket)
+                rules_val = _RULES_EXP_NORMALIZE.get(rules_val, rules_val)
             if gt_val == rules_val:
                 matches[field] += 1
 

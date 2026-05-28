@@ -182,6 +182,17 @@ def _parse_html_cards(html_text, base_url):
         if not title:
             continue
 
+        # Arena HTML cards often encode employer as "EMPLOYER: Job Title" in the title element.
+        # Split on the first colon to separate employer from the actual job title.
+        employer = None
+        if ":" in title:
+            parts = title.split(":", 1)
+            candidate_employer = parts[0].strip()
+            candidate_title = parts[1].strip()
+            if candidate_employer and candidate_title:
+                employer = candidate_employer
+                title = candidate_title
+
         location_el = card.find(["[class*='location']", "[class*='city']"])
         location_raw = location_el.get_text(strip=True) if location_el else None
         if not location_raw:
@@ -203,7 +214,7 @@ def _parse_html_cards(html_text, base_url):
             "location_raw": location_raw or "Unknown",
             "source_url": job_url,
             "source_board": SOURCE_BOARD,
-            "employer": None,
+            "employer": employer,
             "scraped_at": now,
             "confidence": 0.60,
         })

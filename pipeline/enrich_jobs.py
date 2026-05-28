@@ -53,7 +53,7 @@ Description: {description}
 
 Required JSON fields (use exact string values shown):
 {{
-  "experience_level": "early-career" | "experienced" | "leadership",
+  "experience_level": "new-to-labor" | "early-career" | "experienced" | "leadership",
   "experience_confidence": 0.9 | 0.7 | 0.5,
   "job_function": "organizing" | "communications" | "political" | "research" | "operations" | "legal" | "finance" | "technology" | "other",
   "location_type": "remote" | "hybrid" | "in-person",
@@ -67,12 +67,18 @@ Required JSON fields (use exact string values shown):
   "seniority_signals": [<keywords/phrases from title+description that informed experience_level>]
 }}
 
+experience_level guide:
+  new-to-labor  = fellowships, internships, apprenticeships, training programs, "no experience required", "recent graduate" — people entering the labor movement for the first time
+  early-career  = junior/entry roles with some prior work experience, clerks, administrative/program assistants, Grade-I titles
+  experienced   = mid-level: organizers, specialists, representatives, coordinators, researchers — typically 2–5 years
+  leadership    = directors, VPs, executives, chief officers, general counsel — managing teams or setting strategy
+
 experience_confidence guide:
-  0.9 = strong signal (clear title keywords: "intern", "senior", "director", "executive", or explicit years required)
+  0.9 = strong signal (clear title keywords: "intern", "fellowship", "director", "executive", or explicit years required)
   0.7 = moderate signal (role type match but ambiguous level, or inferred from description)
   0.5 = weak signal (no clear indicators, best guess)"""
 
-VALID_EXP = {"early-career", "experienced", "leadership"}
+VALID_EXP = {"new-to-labor", "early-career", "experienced", "leadership"}
 VALID_CONF = {0.9, 0.7, 0.5}
 VALID_FUNC = {"organizing", "communications", "political", "research", "operations", "legal", "finance", "technology", "other"}
 VALID_LOC_TYPE = {"remote", "hybrid", "in-person"}

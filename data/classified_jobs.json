@@ -4,7 +4,7 @@
     "location_raw": "New York, NY",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80582216-slingshot-strategies-vice-president-polling-research",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Slingshot Strategies",
     "salary_raw": null,
     "sector": null,
     "role_type": "Admin/operations",
@@ -65,7 +65,7 @@
     "location_raw": "Unknown",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/79159291-alaska-wilderness-league-regional-organizing-manager-maine-new-hampshire",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "ALASKA WILDERNESS LEAGUE",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -122,7 +122,7 @@
     "location_raw": "Unknown",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/78842035-carolina-federation-hr-and-operations-director",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Carolina Federation",
     "salary_raw": null,
     "sector": null,
     "role_type": "Admin/operations",
@@ -178,7 +178,7 @@
     "location_raw": "Remote",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/78041995-climate-cabinet-michigan-state-lead-lobbyist-and-strategist",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Climate Cabinet",
     "salary_raw": null,
     "sector": null,
     "role_type": "Admin/operations",
@@ -234,7 +234,7 @@
     "location_raw": "Remote",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/77580920-sage-media-planning-political-client-finance-associate-2026-position",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Sage Media Planning",
     "salary_raw": null,
     "sector": null,
     "role_type": "Admin/operations",
@@ -288,7 +288,7 @@
     "location_raw": "Unknown",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/75519964-alaska-wilderness-league-regional-organizing-manager-maine-new-hampshire",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "ALASKA WILDERNESS LEAGUE",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -401,7 +401,7 @@
     "location_raw": "Remote",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/74655805-three-point-media-vice-president-of-production",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Three Point Media",
     "salary_raw": null,
     "sector": "Manufacturing",
     "role_type": "Admin/operations",
@@ -458,7 +458,7 @@
     "location_raw": "Post Anchorage, AK",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/74591939-bill-hill-for-alaskans-deputy-finance-director",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Bill Hill for Alaskans",
     "salary_raw": null,
     "sector": null,
     "role_type": "Admin/operations",
@@ -498,7 +498,7 @@
     "job_function": "finance",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Post Anchorage",
+      "city": "Anchorage",
       "state": "AK",
       "region": "Alaska",
       "near_airports": [],
@@ -514,7 +514,7 @@
     "location_raw": "Post Anchorage, AK",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/74590125-bill-hill-for-alaskans-deputy-campaign-manager",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Bill Hill for Alaskans",
     "salary_raw": null,
     "sector": null,
     "role_type": "Political/electoral",
@@ -554,7 +554,7 @@
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Post Anchorage",
+      "city": "Anchorage",
       "state": "AK",
       "region": "Alaska",
       "near_airports": [],
@@ -570,7 +570,7 @@
     "location_raw": "Remote",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/65323577-trilogy-interactive-seasonal-creative-director-freelance-contract",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Trilogy Interactive",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -720,7 +720,7 @@
     "low_confidence": [
       "sector"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
@@ -740,7 +740,7 @@
     "location_raw": "Madison, WI",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524203-the-wisco-project-voter-access-associate",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "The Wisco Project",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -795,7 +795,7 @@
     "location_raw": "Unknown",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524202-ronnie-murchinson-for-office-campaign-manager",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Ronnie Murchinson for Office",
     "salary_raw": null,
     "sector": null,
     "role_type": "Political/electoral",
@@ -851,7 +851,7 @@
     "location_raw": "Unknown",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524201-pa-sdcc-organizing-director",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "PA SDCC",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -908,7 +908,7 @@
     "location_raw": "Cambridge, MA",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524198-tarik-for-congress-finance-director",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Tarik for Congress",
     "salary_raw": null,
     "sector": null,
     "role_type": "Admin/operations",
@@ -964,7 +964,7 @@
     "location_raw": "Remote",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524197-dream-defenders-national-member-organizer",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "Dream Defenders",
     "salary_raw": null,
     "sector": null,
     "role_type": "Internal organizer",
@@ -1018,7 +1018,7 @@
     "location_raw": "Madison, WI",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524194-the-wisco-project-special-programming-director-the-wisco-project",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "The Wisco Project",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -1075,7 +1075,7 @@
     "location_raw": "Madison, WI",
     "source_url": "https://careers.arena.run/companies/job-post-2/jobs/80524196-the-wisco-project-messaging-coordinator-the-wisco-project",
     "source_board": "Arena",
-    "employer": null,
+    "employer": "The Wisco Project",
     "salary_raw": null,
     "sector": null,
     "role_type": "Union job",
@@ -1404,7 +1404,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
@@ -1640,13 +1640,13 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": "DE",
-      "region": "Mid-Atlantic",
+      "state": null,
+      "region": "Northeast",
       "near_airports": [],
       "raw": "the Northeast Region (CT, DE, MA, MD/DC, ME, NH, NJ, NY, PA, RI, and VT) *must live within 100 miles of major airport*"
     },
@@ -2387,7 +2387,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "technology",
     "location_type": "in-person",
     "location_parsed": {
@@ -2620,7 +2620,7 @@
     "low_confidence": [
       "sector"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
@@ -3739,10 +3739,14 @@
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Berkeley and San Francisco",
+      "city": "San Francisco",
       "state": "CA",
-      "region": "California",
-      "near_airports": [],
+      "region": "Bay Area",
+      "near_airports": [
+        "SFO",
+        "OAK",
+        "SJC"
+      ],
       "raw": "Berkeley and San Francisco, CA"
     },
     "seniority_signals": [],
@@ -4479,7 +4483,7 @@
       "Manufacturing": 0.7
     },
     "low_confidence": [],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -4535,7 +4539,7 @@
       "Manufacturing": 0.7
     },
     "low_confidence": [],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -4591,7 +4595,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -5162,7 +5166,7 @@
     "location_parsed": {
       "city": null,
       "state": null,
-      "region": null,
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Location: West Coast"
     },
@@ -7841,7 +7845,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -7952,7 +7956,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -8010,7 +8014,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -8071,7 +8075,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -9108,7 +9112,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -10318,9 +10322,9 @@
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Emeryville and Sacramento",
+      "city": "Sacramento",
       "state": "CA",
-      "region": "California",
+      "region": "Northern California",
       "near_airports": [],
       "raw": "Emeryville and Sacramento, CA"
     },
@@ -10540,7 +10544,7 @@
     "location_parsed": {
       "city": null,
       "state": null,
-      "region": null,
+      "region": "Southwest",
       "near_airports": [],
       "raw": "Southwest Washington"
     },
@@ -10594,7 +10598,7 @@
     "location_parsed": {
       "city": null,
       "state": null,
-      "region": null,
+      "region": "Southeast",
       "near_airports": [],
       "raw": "Southeast Ohio"
     },
@@ -11162,10 +11166,14 @@
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Santa Clara County, San Jose",
+      "city": "San Jose",
       "state": "CA",
-      "region": "California",
-      "near_airports": [],
+      "region": "Bay Area",
+      "near_airports": [
+        "SJC",
+        "SFO",
+        "OAK"
+      ],
       "raw": "Santa Clara County, San Jose, CA"
     },
     "seniority_signals": [
@@ -11330,7 +11338,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -11385,7 +11393,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -11733,10 +11741,14 @@
     "job_function": "research",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Newark, NJ / New York",
+      "city": "New York",
       "state": "NY",
-      "region": "Northeast",
-      "near_airports": [],
+      "region": "New York Metro",
+      "near_airports": [
+        "JFK",
+        "LGA",
+        "EWR"
+      ],
       "raw": "Newark, NJ / New York, NY"
     },
     "seniority_signals": [],
@@ -13478,7 +13490,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "legal",
     "location_type": "in-person",
     "location_parsed": {
@@ -13778,10 +13790,13 @@
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "San Francisco and Oakland",
+      "city": "Oakland",
       "state": "CA",
-      "region": "California",
-      "near_airports": [],
+      "region": "Bay Area",
+      "near_airports": [
+        "OAK",
+        "SFO"
+      ],
       "raw": "San Francisco and Oakland, CA"
     },
     "seniority_signals": [],
@@ -14303,10 +14318,14 @@
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Oakland and San Francisco",
+      "city": "San Francisco",
       "state": "CA",
-      "region": "California",
-      "near_airports": [],
+      "region": "Bay Area",
+      "near_airports": [
+        "SFO",
+        "OAK",
+        "SJC"
+      ],
       "raw": "Oakland and San Francisco, CA"
     },
     "seniority_signals": [],
@@ -15628,7 +15647,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "research",
     "location_type": "in-person",
     "location_parsed": {
@@ -16307,7 +16326,7 @@
     "job_function": "communications",
     "location_type": "remote",
     "location_parsed": {
-      "city": "Remote to start but must be in Oakland",
+      "city": null,
       "state": "CA",
       "region": "California",
       "near_airports": [],
@@ -16361,7 +16380,7 @@
     "job_function": "communications",
     "location_type": "remote",
     "location_parsed": {
-      "city": "Remote to start but must be in Los Angeles",
+      "city": null,
       "state": "CA",
       "region": "California",
       "near_airports": [],
@@ -16415,7 +16434,7 @@
     "job_function": "communications",
     "location_type": "remote",
     "location_parsed": {
-      "city": "Remote to start but must be in San Diego",
+      "city": null,
       "state": "CA",
       "region": "California",
       "near_airports": [],
@@ -17695,7 +17714,7 @@
     "low_confidence": [
       "sector"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -18508,7 +18527,7 @@
     "low_confidence": [
       "sector"
     ],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "research",
     "location_type": "in-person",
     "location_parsed": {
@@ -18625,7 +18644,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -19086,7 +19105,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -19105,7 +19124,7 @@
       "senior",
       "manager"
     ],
-    "experience_confidence": 0.7
+    "experience_confidence": 0.5
   },
   {
     "title": "Policy Researcher / Senior Policy Researcher Green Economy Program (Associate/Full Specialist)",
@@ -19148,7 +19167,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "leadership",
+    "experience_level": "early-career",
     "job_function": "research",
     "location_type": "in-person",
     "location_parsed": {
@@ -21856,7 +21875,7 @@
       "Manufacturing": 0.7
     },
     "low_confidence": [],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "operations",
     "location_type": "in-person",
     "location_parsed": {
@@ -21912,11 +21931,11 @@
       "Manufacturing": 0.7
     },
     "low_confidence": [],
-    "experience_level": "leadership",
+    "experience_level": "experienced",
     "job_function": "political",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Cleveland, Cincinnati Metro area, Columbus",
+      "city": "Columbus",
       "state": "OH",
       "region": "Midwest",
       "near_airports": [],
@@ -22028,7 +22047,7 @@
       "role_type"
     ],
     "experience_level": "experienced",
-    "job_function": "organizing",
+    "job_function": "communications",
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
@@ -22084,7 +22103,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -22204,7 +22223,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -22491,9 +22510,9 @@
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Headquarters (City of Industry, CA) / San Diego",
+      "city": "San Diego",
       "state": "CA",
-      "region": "California",
+      "region": "Southern California",
       "near_airports": [],
       "raw": "Headquarters (City of Industry, CA) / San Diego, CA"
     },
@@ -22659,7 +22678,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -22837,7 +22856,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -22895,7 +22914,7 @@
       "Manufacturing": 0.0
     },
     "low_confidence": [],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -23470,7 +23489,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -23530,7 +23549,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -24144,7 +24163,7 @@
     "low_confidence": [
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -24320,7 +24339,7 @@
       "sector",
       "role_type"
     ],
-    "experience_level": "early-career",
+    "experience_level": "new-to-labor",
     "job_function": "organizing",
     "location_type": "in-person",
     "location_parsed": {
@@ -24713,13 +24732,17 @@
       "role_type"
     ],
     "experience_level": "experienced",
-    "job_function": "organizing",
+    "job_function": "communications",
     "location_type": "in-person",
     "location_parsed": {
-      "city": "Campaign Washington",
+      "city": "Washington",
       "state": "DC",
       "region": "Mid-Atlantic",
-      "near_airports": [],
+      "near_airports": [
+        "DCA",
+        "IAD",
+        "BWI"
+      ],
       "raw": "Campaign Washington, DC"
     },
     "seniority_signals": [
