@@ -1,5 +1,5 @@
 # STATUS.md
-_Last updated: 2026-05-28 — classification system session (stoic-agnesi-6d1e4a)_
+_Last updated: 2026-05-28 — jobs board bug fixes (magical-burnell-ade7ae)_
 _Update this file at the end of every session. Commit with the session's git commit._
 
 ---
@@ -33,7 +33,31 @@ Do not run Task 9 without explicit approval. Every formula change requires a ful
 
 ---
 
-## 🟢 RECENTLY SHIPPED — 2026-05-28
+## 🟢 RECENTLY SHIPPED — 2026-05-28 (jobs board bug fixes)
+
+### ⚠ review badge removed from user-facing UI
+`output/jobs.html` `getStatusBadges()` — removed the low-confidence classifier badge render block. The `low_confidence` data field is preserved in `classified_jobs.json`; it just no longer shows to users. Was appearing on any job where the rules classifier had low confidence, which is meaningless to job seekers.
+
+### Location filter fixed — bare state names no longer slip through
+59 jobs had specific location info ("New Jersey", "Statewide in California", "Washington DC, near Metro", etc.) but no `state_abbr`, so they got `distance_miles = null` and bypassed all state filters — showing up in any location's results including "Berkeley, CA 15 mi."
+
+Three-part fix:
+1. **`pipeline/classify_jobs_rules.py`** — `classify_location_parsed()` now infers `state` from full state names in `location_raw` via `_FULL_STATE_NAME_MAP` (all 50 states + DC). "New Jersey" → `location_parsed.state = "NJ"`.
+2. **`output/jobs.html` `lookupJobCentroid()`** — added full-state-name fallback: if `state_abbr` is null, scans `location_raw.toLowerCase()` against state names and returns STATE_CENTERS coords. "New Jersey" → NJ center, 2,535 miles from Berkeley → correctly filtered.
+3. **`output/jobs.html` mystate filter** — both filter sites now use `job.state_abbr || job.location_parsed?.state` so `location_parsed.state` is respected when `state_abbr` is missing.
+
+### `jobs_data.json` legacy fallback removed from `loadJobs()`
+`loadJobs()` previously tried `../data/classified_jobs.json` then fell back to `./jobs_data.json`. When the server was rooted at `output/`, the `../data/` path failed silently and the legacy file loaded instead — jobs had `seniority_level`/`is_entry_level` fields (old integer schema), not `experience_level`, so the Early Career filter and new-to-labor classification silently did nothing. Now loads only `../data/classified_jobs.json`. Verified: 434 jobs, `experience_level` present, 22 `new-to-labor` jobs surfaced.
+
+### Classifier re-run; 86 tests passing
+`python3 -m pipeline.classify_jobs_rules` — refreshed `data/classified_jobs.json` with location_parsed.state populated for bare state names. 86 regression tests still passing.
+
+### Bug 3 investigation (no change needed)
+Audited all fellowship/apprenticeship/training jobs — classifier was already correct. 8/8 apprentice, 4/4 fellowship, 6/6 fellow, 5/5 organizer-in-training → `new-to-labor`. UPTE "Organizer-in-Training" and "Government Affairs Fellow" both classified correctly.
+
+---
+
+## 🟢 RECENTLY SHIPPED — 2026-05-28 (classification system)
 
 ### GitHub Actions weekly scraper live
 `.github/workflows/scrape_jobs.yml` — runs every Monday at 07:00 UTC. Scrapes unionjobs.com, Arena, and NY AFL-CIO. Runs rules classifier after each ingest. Commits and pushes automatically. Previously listed as "not built" in audit — now live and pushed.
@@ -109,7 +133,7 @@ CI: `.github/workflows/tests.yml` — runs `pytest tests/test_classifier.py -v` 
 | Weekly cron | Not built | ✅ Live — `.github/workflows/scrape_jobs.yml` |
 | Experience filter in jobs.html | Broken (used legacy fields) | ✅ Fixed — uses `experience_level` string + `experience_confidence` |
 | Multi-board ingestion | Orphan commit not merged | ✅ Live — Arena + AFL-CIO NY in pipeline |
-| Two active classifiers / no migration plan | Open | ✅ Resolved — `classify_jobs_rules.py` is canonical; legacy `classify_jobs.py` kept for `jobs_data.json` only |
+| Two active classifiers / no migration plan | Open | ✅ Resolved — `classify_jobs_rules.py` is canonical; `jobs_data.json` legacy fallback removed from `loadJobs()` |
 | `impact_score` / `oos_score` missing | Active bug | 🔴 Still missing — next priority |
 | `scrape_apprenticeships.py` | Paused | 🔴 Still paused — NLx no response |
 | `config.json` tracked in git | Open | Not addressed this session |
