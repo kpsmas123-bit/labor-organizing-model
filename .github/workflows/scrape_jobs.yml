@@ -66,6 +66,17 @@ jobs:
         run: python -m pipeline.enrich_jobs
         continue-on-error: true
 
+      # ── Verify classifier accuracy via API spot-check (manual trigger only) ──
+      # Re-classifies 30 random jobs (50% low-confidence) via Claude API and
+      # compares against rules output. Writes data/verification_report.json if
+      # any field drops below 80% agreement. Cost: ~$0.01–$0.05 per run.
+      - name: Verify classifier accuracy via API spot-check (manual only)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m pipeline.verify_classifications
+        continue-on-error: true
+
       # ── Commit changes ──────────────────────────────────────────────────────
       - name: Commit scraped data
         run: |
@@ -76,6 +87,7 @@ jobs:
             data/normalized_jobs.json \
             data/raw_jobs.json \
             data/enriched_jobs.json \
+            data/verification_report.json \
             output/unionjobs_raw.json \
             output/jobs_data.json \
             2>/dev/null || true
