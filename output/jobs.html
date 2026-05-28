@@ -2218,17 +2218,12 @@ async function loadData() {
 }
 
 async function loadJobs(bustCache = false) {
-  let raw = null;
   const cb = bustCache ? ('?_cb=' + Date.now()) : '';
-  // Load pre-classified jobs; fall back to jobs_data.json for legacy compatibility
-  for (const url of ['../data/classified_jobs.json' + cb, './jobs_data.json']) {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) continue;
-      raw = await res.json();
-      if (raw && (Array.isArray(raw) ? raw.length : raw.listings?.length)) break;
-    } catch(e) { /* try next */ }
-  }
+  let raw = null;
+  try {
+    const res = await fetch('../data/classified_jobs.json' + cb);
+    if (res.ok) raw = await res.json();
+  } catch(e) { /* network error */ }
   if (!raw) return;
   const listings = Array.isArray(raw) ? raw : (raw.listings || []);
   const lastScraped = raw.last_scraped || raw.last_updated || null;
