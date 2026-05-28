@@ -535,6 +535,24 @@ _REGION_INFERRED: dict[str, str] = {
     'east coast': 'Northeast',
 }
 
+# Full state name → abbreviation. Used to infer state when location_raw is a bare state name
+# ("New Jersey", "California", "Statewide in California") but state_abbr wasn't set by the scraper.
+_FULL_STATE_NAME_MAP: dict[str, str] = {
+    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR',
+    'california': 'CA', 'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE',
+    'district of columbia': 'DC', 'florida': 'FL', 'georgia': 'GA', 'hawaii': 'HI',
+    'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA', 'kansas': 'KS',
+    'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS',
+    'missouri': 'MO', 'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV',
+    'new hampshire': 'NH', 'new jersey': 'NJ', 'new mexico': 'NM', 'new york': 'NY',
+    'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH', 'oklahoma': 'OK',
+    'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT',
+    'vermont': 'VT', 'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV',
+    'wisconsin': 'WI', 'wyoming': 'WY',
+}
+
 
 def _sanitize_city(city: Optional[str]) -> Optional[str]:
     """
@@ -571,6 +589,15 @@ def classify_location_parsed(job: dict) -> dict:
 
     # Sanitize garbled city values before any lookup
     city = _sanitize_city(city)
+
+    # Infer state from a bare full state name in location_raw when neither city nor
+    # state_abbr was populated by the scraper (e.g. "New Jersey", "Statewide in California").
+    if city is None and state is None and raw:
+        raw_lower = raw.strip().lower()
+        for sname, sabb in _FULL_STATE_NAME_MAP.items():
+            if sname in raw_lower:
+                state = sabb
+                break
 
     # When location_raw is a multi-state regional description and no specific city
     # was parsed, discard the scraped state (which was likely a false positive from

@@ -2069,6 +2069,31 @@ function lookupJobCentroid(job) {
 
   // State center fallback
   if (STATE_CENTERS[st]) return STATE_CENTERS[st];
+
+  // Full state name in raw (e.g. "New Jersey", "Northern California", "Statewide in California")
+  const FULL_STATE_NAMES = {
+    'alabama':'AL','alaska':'AK','arizona':'AZ','arkansas':'AR','california':'CA',
+    'colorado':'CO','connecticut':'CT','delaware':'DE','district of columbia':'DC',
+    'florida':'FL','georgia':'GA','hawaii':'HI','idaho':'ID','illinois':'IL',
+    'indiana':'IN','iowa':'IA','kansas':'KS','kentucky':'KY','louisiana':'LA',
+    'maine':'ME','maryland':'MD','massachusetts':'MA','michigan':'MI',
+    'minnesota':'MN','mississippi':'MS','missouri':'MO','montana':'MT',
+    'nebraska':'NE','nevada':'NV','new hampshire':'NH','new jersey':'NJ',
+    'new mexico':'NM','new york':'NY','north carolina':'NC','north dakota':'ND',
+    'ohio':'OH','oklahoma':'OK','oregon':'OR','pennsylvania':'PA',
+    'rhode island':'RI','south carolina':'SC','south dakota':'SD','tennessee':'TN',
+    'texas':'TX','utah':'UT','vermont':'VT','virginia':'VA','washington':'WA',
+    'west virginia':'WV','wisconsin':'WI','wyoming':'WY',
+  };
+  if (!st) {
+    const rawLow = raw.toLowerCase();
+    for (const [sname, sabb] of Object.entries(FULL_STATE_NAMES)) {
+      if (rawLow === sname || rawLow.includes(sname)) {
+        const sc = STATE_CENTERS[sabb];
+        if (sc) return sc;
+      }
+    }
+  }
   return null;
 }
 
@@ -3015,7 +3040,10 @@ function applyFiltersAndRender() {
 
   // Location filter — state-level when no city radius active
   if (state.location === 'mystate' && state.myState && !(state.radius > 0 && state.radius < 999 && state.userLat !== null)) {
-    filtered = filtered.filter(job => !job.state_abbr || job.state_abbr === state.myState);
+    filtered = filtered.filter(job => {
+      const js = job.state_abbr || (job.location_parsed && job.location_parsed.state) || null;
+      return !js || js === state.myState;
+    });
   }
 
   // Radius hard filter + soft fallback (skipped when radius=999 = "50+ mi")
@@ -3046,7 +3074,10 @@ function applyFiltersAndRender() {
       }
     } else if (state.myState) {
       // No city selected — fall back to state filter
-      filtered = filtered.filter(job => !job.state_abbr || job.state_abbr === state.myState);
+      filtered = filtered.filter(job => {
+        const js = job.state_abbr || (job.location_parsed && job.location_parsed.state) || null;
+        return !js || js === state.myState;
+      });
       if (cityFallbackBanner) {
         cityFallbackBanner.classList.remove('hidden');
         cityFallbackBanner.textContent = `No city selected — showing all jobs in ${state.myState}. Select your city for distance filtering.`;
@@ -3963,10 +3994,6 @@ function buildBadges(job, grades) {
   // SEIU research note
   if (job.needs_research_note) {
     parts.push(`<span class="badge badge-research-note" title="SEIU International — research your local before applying">ℹ️ Research local</span>`);
-  }
-  // Low-confidence classifier flag (dev signal — non-intrusive)
-  if (job.low_confidence && job.low_confidence.length > 0) {
-    parts.push(`<span class="badge badge-low-conf" title="Low-confidence classification: ${escHtml(job.low_confidence.join(', '))}">⚠ review</span>`);
   }
   // Location unknown — city couldn't be geocoded
   if (job._locUnknown) {

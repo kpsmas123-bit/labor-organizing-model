@@ -2223,8 +2223,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "AZ",
+      "region": "Southwest",
       "near_airports": [],
       "raw": "Must be based in Arizona"
     },
@@ -2683,8 +2683,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "California"
     },
@@ -2911,8 +2911,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "TX",
+      "region": "Texas",
       "near_airports": [],
       "raw": "Position will cover all areas in Texas"
     },
@@ -3185,8 +3185,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "MA",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "Massachusetts"
     },
@@ -3241,8 +3241,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "NH",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "New Hampshire"
     },
@@ -4488,8 +4488,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "NY",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "New York City Metro Area"
     },
@@ -4544,8 +4544,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "NJ",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "New Jersey"
     },
@@ -4658,8 +4658,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "California"
     },
@@ -4997,8 +4997,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "For covering Northern California"
     },
@@ -5741,8 +5741,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "the Northern California region"
     },
@@ -7224,8 +7224,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "VA",
+      "region": "Mid-Atlantic",
       "near_airports": [],
       "raw": "Northern Virginia"
     },
@@ -7284,8 +7284,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "FL",
+      "region": "Southeast",
       "near_airports": [],
       "raw": "Florida"
     },
@@ -8135,8 +8135,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "IL",
+      "region": "Midwest",
       "near_airports": [],
       "raw": "Illinois"
     },
@@ -8421,8 +8421,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "FL",
+      "region": "Southeast",
       "near_airports": [],
       "raw": "Florida"
     },
@@ -8708,8 +8708,8 @@
     "location_type": "remote",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Remote position with strong preference given to candidates in the Washington, D.C., metro area"
     },
@@ -9001,8 +9001,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "KY",
+      "region": "Southeast",
       "near_airports": [],
       "raw": "Northern Kentucky"
     },
@@ -9811,8 +9811,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "MD",
+      "region": "Mid-Atlantic",
       "near_airports": [],
       "raw": "Maryland"
     },
@@ -11914,8 +11914,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "NY",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "the Hudson Valley District of New York"
     },
@@ -12319,8 +12319,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "primarily in Southern California"
     },
@@ -13906,8 +13906,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Northern California"
     },
@@ -13962,8 +13962,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Northern California"
     },
@@ -14852,8 +14852,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Statewide in California"
     },
@@ -14970,8 +14970,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Southern California"
     },
@@ -15080,8 +15080,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Statewide in California"
     },
@@ -15196,8 +15196,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Southern California"
     },
@@ -15367,8 +15367,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Statewide in California"
     },
@@ -15424,8 +15424,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Statewide in California"
     },
@@ -15540,8 +15540,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CT",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "For covering Connecticut"
     },
@@ -15652,8 +15652,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "MT",
+      "region": "Mountain West",
       "near_airports": [],
       "raw": "throughout Washington or Montana"
     },
@@ -15710,8 +15710,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "For covering Washington state"
     },
@@ -16215,8 +16215,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "PA",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "Covering Pennsylvania"
     },
@@ -18761,8 +18761,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Washington, Oregon, or California"
     },
@@ -21259,8 +21259,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Statewide in California"
     },
@@ -21658,8 +21658,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -21712,8 +21712,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -21770,8 +21770,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -21824,8 +21824,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -21880,8 +21880,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -21995,8 +21995,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -22051,8 +22051,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "WA",
+      "region": "Pacific Northwest",
       "near_airports": [],
       "raw": "Washington DC, near Metro (on-site ) ufcw.org"
     },
@@ -22977,8 +22977,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "MA",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "Covering Massachusetts"
     },
@@ -23033,8 +23033,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "MA",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "Massachusetts"
     },
@@ -23089,8 +23089,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "IA",
+      "region": "Midwest",
       "near_airports": [],
       "raw": "Iowa City, Iowa"
     },
@@ -23944,8 +23944,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Los Angeles or Southern California preferred"
     },
@@ -24056,8 +24056,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "California"
     },
@@ -24112,8 +24112,8 @@
     "location_type": "remote",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "CA",
+      "region": "California",
       "near_airports": [],
       "raw": "Remote in California"
     },
@@ -24344,8 +24344,8 @@
     "location_type": "in-person",
     "location_parsed": {
       "city": null,
-      "state": null,
-      "region": null,
+      "state": "NY",
+      "region": "Northeast",
       "near_airports": [],
       "raw": "Focused in Upstate New York and Vermont"
     },
