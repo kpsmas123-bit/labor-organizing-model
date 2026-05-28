@@ -1204,11 +1204,9 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       <span class="qtile-caret">▾</span>
       <div class="qtile-dropdown" id="qtile-exp-dd">
         <div class="qtile-opt" data-exp="" onclick="tileSetExp(null, event)"><span class="chk"></span>Any level</div>
-        <div class="qtile-opt" data-exp="staff" onclick="tileSetExp('staff', event)"><span class="chk"></span>Union Staff</div>
-        <div class="qtile-opt" data-exp="1" onclick="tileSetExp(1, event)"><span class="chk"></span>Level 1 — Entry Level</div>
-        <div class="qtile-opt" data-exp="2" onclick="tileSetExp(2, event)"><span class="chk"></span>Level 2 — Organizer</div>
-        <div class="qtile-opt" data-exp="3" onclick="tileSetExp(3, event)"><span class="chk"></span>Level 3 — Lead / Coordinator</div>
-        <div class="qtile-opt" data-exp="4" onclick="tileSetExp(4, event)"><span class="chk"></span>Level 4 — Director / Manager</div>
+        <div class="qtile-opt" data-exp="early-career" onclick="tileSetExp('early-career', event)"><span class="chk"></span>Early Career</div>
+        <div class="qtile-opt" data-exp="experienced" onclick="tileSetExp('experienced', event)"><span class="chk"></span>Experienced</div>
+        <div class="qtile-opt" data-exp="leadership" onclick="tileSetExp('leadership', event)"><span class="chk"></span>Leadership</div>
       </div>
     </div>
     <button class="qtile-retake" onclick="quizResetAll()">Reset all</button>
@@ -1290,21 +1288,15 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <div class="quiz-step" id="qstep-experience">
       <div class="quiz-q">What's your experience level?</div>
       <div class="exp-pill-row">
-        <button class="exp-pill" data-exp="staff"
-          data-desc="Admin, ops, comms, research, IT — the roles that keep the labor movement on time and organized"
-          onclick="quizPickExp('staff')">Union Staff</button>
-        <button class="exp-pill" data-exp="1"
-          data-desc="Fellowships, internships, and first roles in labor — no prior organizing experience required"
-          onclick="quizPickExp(1)">Entry Level</button>
-        <button class="exp-pill" data-exp="2"
-          data-desc="Organizer roles — internal (existing union members) or external (new workplace campaigns). Some experience preferred"
-          onclick="quizPickExp(2)">Organizer</button>
-        <button class="exp-pill" data-exp="3"
-          data-desc="Senior organizer, lead, or coordinator roles — typically 3–5 years of experience and demonstrated campaign wins"
-          onclick="quizPickExp(3)">Lead / Coordinator</button>
-        <button class="exp-pill" data-exp="4"
-          data-desc="Director and manager roles — leading teams, managing budgets, and running multi-site campaigns"
-          onclick="quizPickExp(4)">Director / Manager</button>
+        <button class="exp-pill" data-exp="early-career"
+          data-desc="Fellowships, internships, organizer roles, and first jobs in labor — little or no prior experience required"
+          onclick="quizPickExp('early-career')">Early Career</button>
+        <button class="exp-pill" data-exp="experienced"
+          data-desc="Mid-level organizer, specialist, representative, and coordinator roles — typically 2–5 years of relevant experience"
+          onclick="quizPickExp('experienced')">Experienced</button>
+        <button class="exp-pill" data-exp="leadership"
+          data-desc="Director, senior, and executive roles — leading teams, managing departments, and setting strategic direction"
+          onclick="quizPickExp('leadership')">Leadership</button>
       </div>
       <div class="exp-pill-desc" id="exp-pill-desc">We'll show your level first, but you'll see all jobs — feel free to apply to roles above or below.</div>
     </div><!-- /step-experience -->
@@ -1965,9 +1957,11 @@ const SORT_WEIGHTS = {
 };
 
 function seniorityMatch(job, st) {
-  if (st.exp === 'new')      return job.is_entry_level ? 1.0 : (job.seniority_level === 'mid' ? 0.4 : 0.0);
-  if (st.exp === 'some')     return job.seniority_level === 'mid' ? 1.0 : 0.6;
-  if (st.exp === 'seasoned') return job.seniority_level === 'senior' ? 1.0 : 0.7;
+  const lvl = job.experience_level;
+  const conf = job.experience_confidence || 0.5;
+  if (st.exp === 'new')      return lvl === 'early-career' ? 1.0 : (conf <= 0.5 ? 0.4 : 0.0);
+  if (st.exp === 'some')     return lvl === 'experienced'  ? 1.0 : 0.6;
+  if (st.exp === 'seasoned') return lvl === 'leadership'   ? 1.0 : 0.7;
   return 0.5;
 }
 
@@ -2159,7 +2153,7 @@ function readUrlParams() {
   if (p.get('sort')) state.sort = p.get('sort');
   if (p.get('exp') !== null && p.has('exp')) {
     const v = p.get('exp');
-    state.exp = v === 'staff' ? 'staff' : (parseInt(v) || null);
+    state.exp = v || null;
   }
   if (p.get('radius')) state.radius = parseInt(p.get('radius')) || 0;
   if (p.get('city')) state.city = p.get('city');
@@ -2561,7 +2555,7 @@ function quizStateInput(val) {
 
 function quizUpdateSummary() {
   const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
-  const expLabels = { staff: 'Union Staff', 1: 'Entry Level', 2: 'Organizer', 3: 'Lead / Coordinator', 4: 'Director / Manager' };
+  const expLabels = { 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
   const rfLabels = { strategic: 'Strategic hire', apprenticeship: 'Apprenticeship', salt: 'Salt a shop' };
   const chip = (id, val, step) => {
     const el = document.getElementById(id);
@@ -2797,7 +2791,7 @@ function quizFinish() {
     state.myState = null;
   }
   // RF role type → toggle
-  if (quiz.rfType === 'apprenticeship' || (!quiz.rfType && quiz.exp === 1)) {
+  if (quiz.rfType === 'apprenticeship' || (!quiz.rfType && quiz.exp === 'early-career')) {
     state.rfToggle = 'apprenticeships';
   } else if (quiz.rfType === 'salt') {
     state.rfToggle = 'all';
@@ -3008,7 +3002,10 @@ function applyFiltersAndRender() {
   }
 
   // Split remote jobs out before geographic filtering if remote toggle is on
-  const isRemote = j => /remote/i.test(j.location_raw || '');
+  const isRemote = j => {
+    if (j.location_type) return j.location_type === 'remote' || j.location_type === 'hybrid';
+    return /remote/i.test(j.location_raw || '');
+  };
   let remotePool = [];
   if (state.remote) {
     remotePool = filtered.filter(isRemote);
@@ -3077,22 +3074,25 @@ function applyFiltersAndRender() {
     radiusFallback.sort((a, b) => (b.impact_score || 0) - (a.impact_score || 0));
   }
 
-  // Exp proximity sort — applied after score sort so score is tiebreaker within each exp group.
-  // Only activates when user selected a numeric level (not null/'staff').
-  if (state.exp !== null && state.exp !== undefined && typeof state.exp === 'number') {
-    const n = state.exp;
-    const expOrder = [n];
-    for (let d = 1; d <= 3; d++) {
-      if (n + d <= 4) expOrder.push(n + d);
-      if (n - d >= 1) expOrder.push(n - d);
-    }
-    const expRank = job => {
-      const idx = expOrder.indexOf(job.exp_level ?? null);
-      return idx === -1 ? 999 : idx;
+  // Experience level filter — uses experience_level + experience_confidence fields.
+  // Confidence-blurred boundaries per spec (never exposes confidence to users):
+  //   early-career: high-conf early-career + low-conf experienced
+  //   experienced:  all experienced + low-conf early-career and leadership
+  //   leadership:   high-conf leadership + low-conf experienced
+  if (state.exp) {
+    const expFilter = job => {
+      const lvl  = job.experience_level;
+      const conf = job.experience_confidence || 0.5;
+      if (state.exp === 'early-career')
+        return (lvl === 'early-career' && conf >= 0.7) || (lvl === 'experienced' && conf <= 0.5);
+      if (state.exp === 'experienced')
+        return lvl === 'experienced' || (conf <= 0.5 && (lvl === 'early-career' || lvl === 'leadership'));
+      if (state.exp === 'leadership')
+        return (lvl === 'leadership' && conf >= 0.7) || (lvl === 'experienced' && conf <= 0.5);
+      return true; // unknown value — show everything
     };
-    const expCmp = (a, b) => expRank(a) - expRank(b);
-    filtered.sort(expCmp);
-    radiusFallback.sort(expCmp);
+    filtered = filtered.filter(expFilter);
+    radiusFallback = radiusFallback.filter(expFilter);
   }
 
   state._filtered = filtered;
@@ -3163,7 +3163,7 @@ function updateBanners() {
   }
   salting.classList.toggle('hidden', !(isRf && state.rfToggle === 'mcalevey'));
   if (entryBanner) {
-    entryBanner.classList.toggle('hidden', state.exp !== 1);
+    entryBanner.classList.toggle('hidden', state.exp !== 'early-career');
   }
   // Only show terrain data banner when user is open to relocating (anywhere)
   const terrainDataBanner = document.getElementById('terrain-data-banner');
@@ -3563,11 +3563,10 @@ function showJobDetail(job) {
     <div class="jdp-section">
       <div class="jdp-eyebrow">Experience Level</div>
       ${(() => {
-        const lvl = job.exp_level ?? 2;
-        const info = EXP_LEVELS[lvl];
-        const lbl = typeof lvl === 'number' ? `Level ${lvl} — ${info.label}` : info.label;
+        const lvl  = job.experience_level || (job.exp_level === 1 ? 'early-career' : job.exp_level >= 4 ? 'leadership' : 'experienced');
+        const info = EXP_LEVELS[lvl] || EXP_LEVELS['experienced'];
         return `<div class="jdp-badge-block">
-          <span class="badge ${info.cls}" style="flex-shrink:0;font-size:11px;padding:3px 10px">${escHtml(lbl)}</span>
+          <span class="badge ${info.cls}" style="flex-shrink:0;font-size:11px;padding:3px 10px">${escHtml(info.label)}</span>
           <div class="jdp-badge-desc">${escHtml(info.desc)}</div>
         </div>`;
       })()}
@@ -3831,11 +3830,9 @@ function renderGradeTable(grades) {
 // EXPERIENCE LEVEL CLASSIFICATION (1–4)
 // ============================================================
 const EXP_LEVELS = {
-  'staff': { label: 'Union Staff',        cls: 'badge-exp-staff', desc: 'Admin, operations, communications, political, research, IT, and other roles that keep the labor movement on time and organized. Not a direct organizing role — but essential union infrastructure.' },
-  1:       { label: 'Entry Level',        cls: 'badge-exp-1',     desc: 'Fellowships, internships, and first roles in labor — no prior organizing experience required.' },
-  2:       { label: 'Organizer',          cls: 'badge-exp-2',     desc: 'Organizer roles — internal (working with existing union members) or external (running new workplace campaigns). Some experience preferred.' },
-  3:       { label: 'Lead / Coordinator', cls: 'badge-exp-3',     desc: 'Senior organizer, lead, or coordinator roles — typically requires 3–5 years of organizing experience and demonstrated campaign wins.' },
-  4:       { label: 'Director / Manager', cls: 'badge-exp-4',     desc: 'Director and manager roles — substantial experience leading teams, managing budgets, and running multi-site campaigns.' },
+  'early-career': { label: 'Early Career', cls: 'badge-exp-1', desc: 'Fellowships, internships, organizer roles, and first jobs in labor — little or no prior experience required.' },
+  'experienced':  { label: 'Experienced',  cls: 'badge-exp-2', desc: 'Mid-level organizer, specialist, representative, and coordinator roles — typically 2–5 years of relevant experience.' },
+  'leadership':   { label: 'Leadership',   cls: 'badge-exp-4', desc: 'Director, senior, and executive roles — leading teams, managing departments, and setting strategic direction.' },
 };
 
 // Keywords that mark a role as union staff (non-organizing)
@@ -4125,7 +4122,7 @@ function updateTileRow() {
   // Experience tile
   const expLabel = document.getElementById('qtile-exp-label');
   if (expLabel) {
-    const expNames = { staff: 'Union Staff', 1: 'Entry Level', 2: 'Organizer', 3: 'Lead / Coordinator', 4: 'Director / Manager' };
+    const expNames = { 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
     expLabel.textContent = (state.exp !== null && state.exp !== undefined) ? expNames[state.exp] || 'Any level' : 'Any level';
   }
   document.querySelectorAll('#qtile-exp-dd .qtile-opt').forEach(o => {

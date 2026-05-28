@@ -48,9 +48,22 @@ jobs:
         run: python -m pipeline.ingest_url --url https://nysaflcio.org/jobs
         continue-on-error: true
 
-      # ── Rebuild jobs_data.json (powers the "last updated" label in jobs.html) ──
+      # ── Enrich jobs with deterministic rules classifier (weekly) ──────────────
+      - name: Enrich jobs with rules classifier
+        run: python -m pipeline.classify_jobs_rules
+        continue-on-error: true
+
+      # ── Rebuild jobs_data.json (legacy fallback for jobs.html) ───────────────
       - name: Rebuild jobs_data.json
         run: python scripts/classify_jobs.py
+        continue-on-error: true
+
+      # ── Enrich jobs via Claude API (monthly, manual trigger only) ────────────
+      - name: Enrich jobs via Claude API (monthly, manual only)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m pipeline.enrich_jobs
         continue-on-error: true
 
       # ── Commit changes ──────────────────────────────────────────────────────
@@ -62,6 +75,7 @@ jobs:
             data/classified_jobs.json \
             data/normalized_jobs.json \
             data/raw_jobs.json \
+            data/enriched_jobs.json \
             output/unionjobs_raw.json \
             output/jobs_data.json \
             2>/dev/null || true
