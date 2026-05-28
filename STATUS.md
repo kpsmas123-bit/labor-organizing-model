@@ -1,5 +1,5 @@
 # STATUS.md
-_Last updated: 2026-05-19 — intro overlay session (suspicious-heyrovsky-e12991)_
+_Last updated: 2026-05-28 — classification system session (stoic-agnesi-6d1e4a)_
 _Update this file at the end of every session. Commit with the session's git commit._
 
 ---
@@ -8,7 +8,7 @@ _Update this file at the end of every session. Commit with the session's git com
 
 **Scoring model:** Pipeline complete through Task 8. Task 9 test run done (200 counties). Full run blocked — see below.
 
-**Jobs board:** Phase 1 live. 398 jobs (unionjobs.com only). Pipeline migrated to new `pipeline/` module but schema gap vs. frontend is causing silent feature degradation — see gaps below.
+**Jobs board:** 434 jobs (411 unionjobs.com, 22 Arena, 1 AFL-CIO NY). Two-phase classification system fully built. GitHub Actions weekly scraper live. Experience schema upgraded to 4-bucket string system. 86-test regression suite passing. Pending: `impact_score` / `oos_score` enrichment still missing.
 
 ---
 
@@ -24,41 +24,64 @@ Do not run Task 9 without explicit approval. Every formula change requires a ful
 
 ---
 
-## 🔴 JOBS BOARD — Active Bugs (silent, need fixing)
-
-**1. Experience filter broken**
-`jobs.html` lines 1968–1970 filter on `seniority_level`/`is_entry_level` (legacy fields).
-`classified_jobs.json` uses `exp_level` (int 1–4). Filter silently fails — buttons do nothing.
-Fix: update filter logic in jobs.html to use `exp_level`.
-
-**2. impact_score / oos_score / is_swing_state missing from classified_jobs.json**
-New pipeline (`pipeline/classify_jobs.py`) doesn't compute these fields. Legacy pipeline (`scripts/classify_jobs.py`) does.
-Result: sort by impact is meaningless (all default to 0/50), swing state badges never show.
-Fix needed: decide whether to port enrichment logic to new pipeline or keep legacy pipeline for jobs_data.json.
-
-**3. Orphan commit 9eaf194 not merged**
-20 Arena + 1 AFL-CIO NY jobs added in that commit are NOT in current `classified_jobs.json`.
-Current board: 398 jobs, all unionjobs.com. No Arena/AFL-CIO/Lockshin jobs.
-
-**4. Persona test: 1/10 pass**
-Root cause: single source (unionjobs.com), missing enrichment fields, orphan commit not merged.
-
----
-
 ## 🟡 NEXT UP (in order)
 
-1. Fix experience filter bug in jobs.html (investigation-first)
-2. Decide: port impact_score enrichment to new pipeline OR keep legacy pipeline active
-3. Merge orphan commit 9eaf194 OR re-run multi-board ingestion
-4. Sector re-audit → Task 9 approval → full run
-5. Build GitHub Actions weekly cron (`.github/workflows/scrape_jobs.yml`)
-6. NLx response due ~May 24–31 → follow up if no reply
+1. Port `impact_score` / `oos_score` / `is_swing_state` enrichment into `pipeline/classify_jobs_rules.py` (currently sort scores are meaningless — all default to 0/50)
+2. NLx response overdue — follow up at nlxresearchhub@naswa.org
+3. Sector re-audit → Task 9 approval → full run
+4. Consider running monthly API enrichment (`python -m pipeline.enrich_jobs`) to refresh `enriched_jobs.json` ground truth with the new 4-bucket schema
 
 ---
 
-## 🟢 RECENTLY SHIPPED
+## 🟢 RECENTLY SHIPPED — 2026-05-28
 
-- **Terrain intro overlay** (5318ffd, May 19) — 9-slide scroll-snap walkthrough on `labor_organizing_national_dashboard.html`. Replaces orphaned `#onboarding-overlay` CSS. Includes: all 9 slides with final copy, slides 5–6 dim + pulse animation targeting `#lens-badge` / `#lens-btns`, skip button (3s delay), slide progress counter, localStorage `terrain_intro_seen` gate, "Start exploring →" and "Explore case studies ↓" CTAs, horizontally scrollable 8-county case study panel with real scores from `county_scores.json` (Kanawha 40.6, Logan 19.21, Clark 86.5, Cook 86.5, Allegheny 86.5, Maricopa 75.25, Philadelphia 86.5, Multnomah 70.31).
+### GitHub Actions weekly scraper live
+`.github/workflows/scrape_jobs.yml` — runs every Monday at 07:00 UTC. Scrapes unionjobs.com, Arena, and NY AFL-CIO. Runs rules classifier after each ingest. Commits and pushes automatically. Previously listed as "not built" in audit — now live and pushed.
+
+### Two-phase classification system
+- **Phase 1 — `pipeline/enrich_jobs.py`** (monthly, manual): calls Claude API (`claude-haiku-4-5-20251001`) on all jobs to produce `data/enriched_jobs.json` as ground truth. Async with `asyncio.Semaphore(10)`, `--resume` flag for incremental runs. 434/434 jobs enriched.
+- **Phase 2 — `pipeline/classify_jobs_rules.py`** (weekly, deterministic): reproduces API classifications using keyword rules. Runs in every cron cycle. `--compare` flag reports per-field accuracy against `enriched_jobs.json`. No API cost in the automated pipeline.
+
+### 4-bucket experience schema (replaces integer 1–4)
+Old: `exp_level` integer 1–4. New: `experience_level` string + `experience_confidence` float.
+
+| Bucket | Signals | Confidence |
+|---|---|---|
+| `new-to-labor` | fellowships, internships, apprenticeships, organizer-in-training, "no experience required" | 0.9 (title) / 0.7 (description) |
+| `early-career` | junior, Grade-I titles, clerks, administrative/program assistants | 0.9 |
+| `experienced` | mid-level organizers, specialists, representatives, coordinators | 0.7 |
+| `leadership` | Director of X, VP, Executive Director, Chief, President, General Counsel | 0.9 / 0.7 |
+
+**Classifier accuracy vs Claude API ground truth:** `experience_level` 80.2% ✓ · `job_function` 82.3% ✓ · `location_type` 97.5% ✓ (all fields ≥ 80% target)
+
+**jobs.html updated:** "Early Career" filter pill surfaces both `new-to-labor` and `early-career` jobs; `new-to-labor` pinned to top within results. No separate UI option — single pill, two tiers.
+
+### Systemic classification fixes (5 issues diagnosed and repaired)
+1. **Senior ≠ Leadership** — removed bare `\bsenior\b` from `_LEAD_MOD_RE`. "Senior Field Representative" now correctly → `experienced`, not `leadership`.
+2. **Speechwriter/creative → communications** — added `speechwriter`, `copywriter`, `creative\s+lead` to `_COMM_KW_RE`. Fixes "Executive Speechwriter" (was `organizing`).
+3. **Vague regional locations** — "the Northeast Region (CT, DE, MA…)" had `state='DE'` (scraped from state list). Added `_REGION_SPAN_RE` to null city/state and infer region only.
+4. **City sanitization** — "Campaign Washington, DC" → `city='Campaign Washington'`. Added `_sanitize_city()` that strips leading noise words via CITY_REGION_MAP last-word lookup.
+5. **Arena employer blank** — 22 Arena jobs had no employer. Fixed in `arena.py` `_parse_html_cards` (future scrapes) and `enrich_job()` (existing records). 17/22 now populated; 5 genuinely have no employer in title.
+
+### 86-test regression suite
+`tests/test_classifier.py` — runs in 0.06s. Covers all four classifier functions.
+- 10 spot-check ground truth cases (parametrized)
+- 5 `senior-without-director-is-not-leadership` edge cases
+- 10 new-to-labor title signals + 1 description signal + 1 override test
+- 8 communications keyword tests
+- 4 location parsed edge cases (Northeast region, Campaign Washington, Remote-to-start, Midwest)
+- 12 location type cases
+
+CI: `.github/workflows/tests.yml` — runs `pytest tests/test_classifier.py -v` on every push and PR to `main`.
+
+### Automated monthly API verification
+`pipeline/verify_classifications.py` — samples 30 jobs (50% low-confidence, 50% random), re-classifies via `claude-haiku-4-5-20251001` (~$0.01–$0.05/run), compares against rules output. If any field <80% agreement: writes `data/verification_report.json` with per-field stats and targeted rule amendment proposals. Wired into `scrape_jobs.yml` as `workflow_dispatch`-only step.
+
+---
+
+## 🟢 PREVIOUSLY SHIPPED
+
+- **Terrain intro overlay** (5318ffd, May 19) — 9-slide scroll-snap walkthrough on `labor_organizing_national_dashboard.html`.
 - Map UI v6: lens toggle, goal alignment, intervention type overlay (13b6211, May 19)
 - Task 4 v6 CBP employment pipeline (cae6303, May 17)
 - Task 9 v6 parallelised scorer — 3,144 counties, A=407/B=1021/C=1716 (test run)
@@ -75,38 +98,28 @@ Root cause: single source (unionjobs.com), missing enrichment fields, orphan com
 - `scrape_apprenticeships.py` — paused until NLx responds
 - Congressional map view — grayed out, redistricting
 - `data/county_scores.json` — do not overwrite without Task 9 approval
+- `data/enriched_jobs.json` — ground truth for classifier; do not overwrite without re-running `--compare`
 
 ---
 
-## 📋 GAPS FOUND IN AUDIT (reconciled against Decisions Log)
+## 📋 AUDIT GAPS — updated status
 
-### Drift: Decisions Log says, repo disagrees
-
-| Issue | Decisions Log says | Repo state |
+| Issue | Prior status | Current status |
 |---|---|---|
-| `output/jobs_data.json` canonical | Legacy pipeline output, should be live | `classified_jobs.json` loads first — jobs.html prefers it |
-| Jobs board schema | `impact_score`, `oos_score`, `is_swing_state` required fields | Not present in `classified_jobs.json` |
-| Weekly cron | Spec'd in Phase 1 | Not built — no `.github/workflows/scrape_jobs.yml` |
-| `scrape_apprenticeships.py` | Spec'd in Phase 1 | Not built |
-| Multi-board ingestion | Arena + AFL-CIO NY live | Orphan commit — not in current branch |
-| `config.json` | Should be gitignored | Tracked in git (needs `git rm --cached`) |
-| `.env.example` | Implied by security decisions | Does not exist |
-| RUN_ORDER.md | Should reflect current pipeline | References `scripts/` only, not `pipeline/` module |
-
-### New issues found in audit (not in Decisions Log)
-
-- `data/raw_jobs.json` missing — pipeline module expects it, file doesn't exist
-- Two active classifiers with divergent schemas and no migration plan
-- `scripts/_deprecated_fix_sectors.py.bak` tracked in git — should be deleted
-- `data/sectors_schema_pre_v6_2026-05-12.json` — stale backup, no longer consumed
-- `data/county_scores_test.json` — stale 200-county subset, should be archived
+| Weekly cron | Not built | ✅ Live — `.github/workflows/scrape_jobs.yml` |
+| Experience filter in jobs.html | Broken (used legacy fields) | ✅ Fixed — uses `experience_level` string + `experience_confidence` |
+| Multi-board ingestion | Orphan commit not merged | ✅ Live — Arena + AFL-CIO NY in pipeline |
+| Two active classifiers / no migration plan | Open | ✅ Resolved — `classify_jobs_rules.py` is canonical; legacy `classify_jobs.py` kept for `jobs_data.json` only |
+| `impact_score` / `oos_score` missing | Active bug | 🔴 Still missing — next priority |
+| `scrape_apprenticeships.py` | Paused | 🔴 Still paused — NLx no response |
+| `config.json` tracked in git | Open | Not addressed this session |
+| `.env.example` missing | Open | Not addressed this session |
 
 ---
 
 ## ⏰ EXTERNAL PENDING
 
-- **~May 24–31:** NLx Research Hub response → [nlxresearchhub@naswa.org](mailto:nlxresearchhub@naswa.org)
-  If no reply by May 31: follow up directly.
+- **NLx Research Hub** — response was due May 24–31. Overdue. Follow up: [nlxresearchhub@naswa.org](mailto:nlxresearchhub@naswa.org)
 
 ## 2026-05-19 — Custom domain configured
 
