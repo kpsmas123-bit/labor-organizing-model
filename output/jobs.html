@@ -2025,7 +2025,10 @@ const METRO_ALIASES = {
   'greater chicago':           [41.8781, -87.6298],
 };
 
-function lookupJobCentroid(job) {
+// Returns an array of all resolvable [lat, lon] candidates for a job.
+// Multi-city locations ("City1 or City2, ST") produce multiple candidates;
+// distance_miles is then the minimum across all of them.
+function lookupJobCentroids(job) {
   const raw = (job.location_raw || '').trim();
   const st  = job.state_abbr || (job.location_parsed && job.location_parsed.state) || '';
 
@@ -2033,44 +2036,43 @@ function lookupJobCentroid(job) {
     const k = name.trim().toLowerCase() + '|' + (stCode || st).toUpperCase();
     return CITY_CENTROIDS[k] || null;
   }
-
   function tryAlias(name) {
     return METRO_ALIASES[name.trim().toLowerCase()] || null;
   }
 
-  // Strip trailing state/preferred text: "Berkeley and SF, CA preferred" → "Berkeley and SF"
+  const found = [];
+  function add(c) { if (c) found.push(c); }
+
+  // Strip trailing "ST", "ST preferred", "ST area":
+  // "Sacramento or San Francisco Bay Area, CA preferred" → "Sacramento or San Francisco Bay Area"
   const stripped = raw.replace(/,?\s*[A-Z]{2}(?:\s+preferred|\s+area)?\s*$/i, '').trim();
 
-  // Try the first city in a complex location ("Berkeley and SF" → "Berkeley")
-  const firstCity = stripped.split(/\s+(?:and|or)\s+|[\/;,]/)[0].trim();
-  if (firstCity) {
-    const c = tryCity(firstCity, st); if (c) return c;
+  // Split on "or", "and", "/", ";", "," → all city tokens; try each independently
+  const tokens = stripped.split(/\s+(?:and|or)\s+|[\/;,]/).map(t => t.trim()).filter(Boolean);
+  for (const tok of tokens) {
+    add(tryCity(tok, st) || tryAlias(tok));
   }
 
-  // Try standard "City, ST" exact parse on raw
+  // Standard "City, ST" exact parse on raw (catches "Oakland, CA" patterns)
   const m = raw.match(/^(.+?),?\s*([A-Z]{2})(?:\s|$|,)/);
-  if (m) {
-    const c = tryCity(m[1], m[2]); if (c) return c;
-  }
+  if (m) add(tryCity(m[1], m[2]));
 
-  // Try full stripped string as city name
-  const c2 = tryCity(stripped, st); if (c2) return c2;
+  // Full stripped string as a metro alias (handles "San Francisco Bay Area" when not split)
+  add(tryCity(stripped, st) || tryAlias(stripped) || tryAlias(raw));
 
-  // Try first city from msa_name: "San Francisco-Oakland-Fremont, CA" → "San Francisco"
+  // MSA name first token: "San Francisco-Oakland-Fremont, CA" → "San Francisco"
   if (job.msa_name) {
     const msaFirst = job.msa_name.split(/[-,]/)[0].trim();
-    const c = tryCity(msaFirst, st); if (c) return c;
+    add(tryCity(msaFirst, st));
   }
 
-  // Metro-alias lookup (lowercased raw + stripped + firstCity)
-  const a1 = tryAlias(raw);      if (a1) return a1;
-  const a2 = tryAlias(stripped); if (a2) return a2;
-  if (firstCity) { const a3 = tryAlias(firstCity); if (a3) return a3; }
+  // State center fallback — only when no specific city resolved
+  if (found.length === 0 && STATE_CENTERS[st]) {
+    found.push(STATE_CENTERS[st]);
+  }
 
-  // State center fallback
-  if (STATE_CENTERS[st]) return STATE_CENTERS[st];
-
-  // Full state name in raw (e.g. "New Jersey", "Northern California", "Statewide in California")
+  // Full state name in raw — last resort when state_abbr is also absent
+  // (e.g. "New Jersey", "Statewide in California")
   const FULL_STATE_NAMES = {
     'alabama':'AL','alaska':'AK','arizona':'AZ','arkansas':'AR','california':'CA',
     'colorado':'CO','connecticut':'CT','delaware':'DE','district of columbia':'DC',
@@ -2085,16 +2087,23 @@ function lookupJobCentroid(job) {
     'texas':'TX','utah':'UT','vermont':'VT','west virginia':'WV','virginia':'VA',
     'washington':'WA','wisconsin':'WI','wyoming':'WY',
   };
-  if (!st) {
+  if (found.length === 0 && !st) {
     const rawLow = raw.toLowerCase();
     for (const [sname, sabb] of Object.entries(FULL_STATE_NAMES)) {
       if (rawLow === sname || rawLow.includes(sname)) {
         const sc = STATE_CENTERS[sabb];
-        if (sc) return sc;
+        if (sc) { found.push(sc); break; }
       }
     }
   }
-  return null;
+
+  return found.length > 0 ? found : null;
+}
+
+// Single-centroid wrapper for display/sorting contexts.
+function lookupJobCentroid(job) {
+  const all = lookupJobCentroids(job);
+  return all ? all[0] : null;
 }
 
 function computeAllDistances() {
@@ -2103,11 +2112,15 @@ function computeAllDistances() {
     return;
   }
   allJobs.forEach(job => {
-    const coords = lookupJobCentroid(job);
-    job.distance_miles = coords
-      ? Math.round(haversine(state.userLat, state.userLng, coords[0], coords[1]))
-      : null;
-    job._locUnknown = coords === null;
+    const candidates = lookupJobCentroids(job);
+    if (candidates) {
+      const dists = candidates.map(c => haversine(state.userLat, state.userLng, c[0], c[1]));
+      job.distance_miles = Math.round(Math.min(...dists));
+      job._locUnknown = false;
+    } else {
+      job.distance_miles = null;
+      job._locUnknown = true;
+    }
   });
 }
 
