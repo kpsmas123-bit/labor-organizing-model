@@ -727,11 +727,81 @@ def print_accuracy_report(rates: dict) -> None:
         print("  One or more fields below 80% — iterate rules before wiring into cron.")
 
 
+# ---------------------------------------------------------------------------
+# CLASSIFICATION_LOGIC.md — living-document updater
+# ---------------------------------------------------------------------------
+_DOC_PATH = Path(__file__).parent.parent / "CLASSIFICATION_LOGIC.md"
+
+
+def update_classification_logic_doc(changelog_msg: Optional[str] = None) -> None:
+    """
+    Update CLASSIFICATION_LOGIC.md:
+      - Refresh the '_Last updated: YYYY-MM-DD' timestamp to today.
+      - If changelog_msg is provided, append a row to the Changelog table.
+
+    Safe to call even if the doc doesn't exist yet (no-op with a warning).
+    """
+    from datetime import date
+
+    if not _DOC_PATH.exists():
+        print(f"Warning: {_DOC_PATH} not found — skipping doc update.")
+        return
+
+    today = date.today().isoformat()
+    text = _DOC_PATH.read_text(encoding="utf-8")
+
+    # Update the timestamp line (first occurrence of the pattern)
+    text = re.sub(
+        r"_Last updated:\s*\d{4}-\d{2}-\d{2}_",
+        f"_Last updated: {today}_",
+        text,
+        count=1,
+    )
+
+    # Append changelog entry if a message was provided
+    if changelog_msg:
+        # Find the Changelog section and locate the last table row (line starting with |).
+        # Insert the new row immediately after it.
+        new_row = f"| {today} | {changelog_msg} |"
+        # Match the Changelog section header through its last | row, then capture
+        # whatever follows (blank line / next section).
+        text = re.sub(
+            r"(## Changelog\b.*?)(\n\n|\n(?![\|]))",
+            lambda m: m.group(0),  # will be replaced properly below
+            text,
+            count=1,
+            flags=re.DOTALL,
+        )
+        # Simpler: find the last | row before the next ## heading or ---
+        changelog_section = re.search(
+            r"(## Changelog\b.*?)(\n---|\n## )",
+            text,
+            re.DOTALL,
+        )
+        if changelog_section:
+            section_text = changelog_section.group(1)
+            # Find position of last | row within the section
+            last_pipe = section_text.rfind("\n|")
+            if last_pipe != -1:
+                insert_at = changelog_section.start(1) + last_pipe + 1  # after the \n
+                # Find end of that row
+                row_end = text.index("\n", insert_at) + 1
+                text = text[:row_end] + new_row + "\n" + text[row_end:]
+
+    _DOC_PATH.write_text(text, encoding="utf-8")
+    msg = f"Updated {_DOC_PATH.name}: timestamp → {today}"
+    if changelog_msg:
+        msg += f"; changelog: {changelog_msg!r}"
+    print(msg)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Enrich jobs with deterministic rules")
-    parser.add_argument("--input",   default="data/classified_jobs.json")
-    parser.add_argument("--output",  default="data/classified_jobs.json")
-    parser.add_argument("--compare", default=None, help="Path to enriched_jobs.json for accuracy check")
+    parser.add_argument("--input",     default="data/classified_jobs.json")
+    parser.add_argument("--output",    default="data/classified_jobs.json")
+    parser.add_argument("--compare",   default=None, help="Path to enriched_jobs.json for accuracy check")
+    parser.add_argument("--changelog", default=None,
+                        help="One-line description of rule changes made; appended to CLASSIFICATION_LOGIC.md")
     args = parser.parse_args()
 
     with open(args.input, encoding="utf-8") as f:
@@ -759,6 +829,9 @@ def main():
             ground_truth = json.load(f)
         rates = compare_accuracy(enriched, ground_truth)
         print_accuracy_report(rates)
+
+    # Always refresh the doc timestamp; optionally append a changelog entry
+    update_classification_logic_doc(changelog_msg=args.changelog)
 
 
 if __name__ == "__main__":
