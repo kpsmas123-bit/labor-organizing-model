@@ -549,7 +549,7 @@ _FULL_STATE_NAME_MAP: dict[str, str] = {
     'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH', 'oklahoma': 'OK',
     'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
     'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT',
-    'vermont': 'VT', 'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV',
+    'vermont': 'VT', 'west virginia': 'WV', 'virginia': 'VA', 'washington': 'WA',
     'wisconsin': 'WI', 'wyoming': 'WY',
 }
 

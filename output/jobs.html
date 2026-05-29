@@ -2027,7 +2027,7 @@ const METRO_ALIASES = {
 
 function lookupJobCentroid(job) {
   const raw = (job.location_raw || '').trim();
-  const st  = job.state_abbr || '';
+  const st  = job.state_abbr || (job.location_parsed && job.location_parsed.state) || '';
 
   function tryCity(name, stCode) {
     const k = name.trim().toLowerCase() + '|' + (stCode || st).toUpperCase();
@@ -2082,8 +2082,8 @@ function lookupJobCentroid(job) {
     'new mexico':'NM','new york':'NY','north carolina':'NC','north dakota':'ND',
     'ohio':'OH','oklahoma':'OK','oregon':'OR','pennsylvania':'PA',
     'rhode island':'RI','south carolina':'SC','south dakota':'SD','tennessee':'TN',
-    'texas':'TX','utah':'UT','vermont':'VT','virginia':'VA','washington':'WA',
-    'west virginia':'WV','wisconsin':'WI','wyoming':'WY',
+    'texas':'TX','utah':'UT','vermont':'VT','west virginia':'WV','virginia':'VA',
+    'washington':'WA','wisconsin':'WI','wyoming':'WY',
   };
   if (!st) {
     const rawLow = raw.toLowerCase();
@@ -3051,17 +3051,15 @@ function applyFiltersAndRender() {
   if (state.radius > 0 && state.radius < 999) {
     if (state.userLat !== null) {
       const inRadius = filtered.filter(j => j.distance_miles !== null && j.distance_miles <= state.radius);
-      const unknownDist = filtered.filter(j => j.distance_miles === null);
       if (inRadius.length >= 10) {
-        // Known-distance jobs fill the list; append unknown-location jobs at the bottom
-        filtered = [...inRadius, ...unknownDist];
+        filtered = [...inRadius];
       } else {
         const outRadius = filtered
           .filter(j => j.distance_miles !== null && j.distance_miles > state.radius)
           .sort((a, b) => a.distance_miles - b.distance_miles);
         const needed = Math.max(0, 10 - inRadius.length);
         radiusFallback = outRadius.slice(0, needed);
-        filtered = [...inRadius, ...unknownDist];
+        filtered = [...inRadius];
         if (rfBanner && (radiusFallback.length > 0 || inRadius.length < 10)) {
           rfBanner.classList.remove('hidden');
           rfBanner.textContent = `Only ${inRadius.length} job${inRadius.length !== 1 ? 's' : ''} within ${state.radius} miles — showing ${radiusFallback.length} nearest results beyond your radius below.`;
