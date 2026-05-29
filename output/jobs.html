@@ -2106,12 +2106,91 @@ function lookupJobCentroid(job) {
   return all ? all[0] : null;
 }
 
+// Returns true when a job covers a region/state that includes the user's location,
+// meaning it should appear at distance=0 in any radius search.
+// Called only when state.userLat !== null (city selected).
+function isZeroDistanceForUser(job) {
+  if (!state.myState) return false;
+  const raw = (job.location_raw || '').trim();
+  const rawL = raw.toLowerCase();
+  const jobSt = job.state_abbr || (job.location_parsed && job.location_parsed.state) || null;
+
+  // --- National ---
+  if (/\b(throughout\s+the\s+united\s+states|nationwide)\b/.test(rawL)) return true;
+
+  // --- Statewide: "Statewide in X", "Statewide", "Anywhere in X" ---
+  if (/\b(statewide|anywhere\s+in)\b/.test(rawL)) {
+    return !jobSt || jobSt === state.myState;
+  }
+
+  // --- Throughout [state list]: "throughout Washington or Montana" ---
+  // Check job's recorded state; also scan for bare 2-letter codes in the raw text.
+  if (/\bthroughout\b/.test(rawL)) {
+    if (!jobSt || jobSt === state.myState) return true;
+    const codes = raw.match(/\b[A-Z]{2}\b/g) || [];
+    if (codes.includes(state.myState)) return true;
+  }
+
+  // --- Airport regions: "must live within 100 miles of major airport (CT, DE, ... VT)" ---
+  // State codes are embedded in the raw string as bare 2-letter uppercase tokens.
+  if (/\bairport\b/.test(rawL)) {
+    const codes = raw.match(/\b[A-Z]{2}\b/g) || [];
+    if (codes.includes(state.myState)) return true;
+  }
+
+  // --- Sub-state regional patterns (user must be in matching state + have coordinates) ---
+  // Short-circuit: explicit job state that differs from user's state → not a regional match.
+  if (jobSt && jobSt !== state.myState) return false;
+  if (state.userLat === null) return false;
+
+  // Northern California: any city north of the Tehachapi/Bakersfield line (~35.8°N)
+  if (/\bnorthern\s+ca(lifornia)?\b/.test(rawL)) {
+    return state.myState === 'CA' && state.userLat > 35.8;
+  }
+  // Southern California: LA basin, San Diego area (below ~35.8°N)
+  if (/\bsouthern\s+ca(lifornia)?\b/.test(rawL)) {
+    return state.myState === 'CA' && state.userLat <= 35.8;
+  }
+  // Central Valley: mid-state longitude band (-122.0° to -119.0°W, 35°–40.5°N)
+  if (/\bcentral\s+valley\b/.test(rawL)) {
+    return state.myState === 'CA'
+      && state.userLat  >= 35.0  && state.userLat  <= 40.5
+      && state.userLng >= -122.0 && state.userLng <= -119.0;
+  }
+  // Bay Area: within 60 miles of the SF centroid, in CA
+  if (/\bbay\s+area\b/.test(rawL)) {
+    return state.myState === 'CA'
+      && haversine(state.userLat, state.userLng, 37.7749, -122.4194) <= 60;
+  }
+
+  // County: extract each "[Name] County" token, look up the county name as a city centroid.
+  // If that centroid is within 30 miles the user is likely in or adjacent to that county.
+  const countyRe = /\b([\w ]{2,25}?)\s+county\b/gi;
+  let cm;
+  while ((cm = countyRe.exec(raw)) !== null) {
+    const cname = cm[1].trim().replace(/^(and|or)\s+/i, '').trim().toLowerCase();
+    if (!cname) continue;
+    const k = cname + '|' + state.myState;
+    const coords = CITY_CENTROIDS[k];
+    if (coords && haversine(state.userLat, state.userLng, coords[0], coords[1]) <= 30)
+      return true;
+  }
+
+  return false;
+}
+
 function computeAllDistances() {
   if (state.userLat === null) {
     allJobs.forEach(j => { j.distance_miles = null; j._locUnknown = false; });
     return;
   }
   allJobs.forEach(job => {
+    // Statewide / regional jobs: show at distance 0 when user is in the covered region.
+    if (isZeroDistanceForUser(job)) {
+      job.distance_miles = 0;
+      job._locUnknown = false;
+      return;
+    }
     const candidates = lookupJobCentroids(job);
     if (candidates) {
       const dists = candidates.map(c => haversine(state.userLat, state.userLng, c[0], c[1]));
