@@ -311,6 +311,7 @@ The UI badge for both `new-to-labor` and `early-career` reads "Early Career" —
 |---|---|
 | 2026-05-29 | Initial document — reverse-engineered from classify_jobs_rules.py, jobs.html, enriched_jobs.json |
 | 2026-05-29 | Added statewide containment logic for regional job matching |
+| 2026-05-29 | Early Career filter: 4-tier sort (new-to-labor → organizing early-career → other early-career → career-changer bleed) |
 
 ---
 

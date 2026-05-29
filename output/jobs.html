@@ -3214,12 +3214,23 @@ function applyFiltersAndRender() {
     filtered = filtered.filter(expFilter);
     radiusFallback = radiusFallback.filter(expFilter);
 
-    // Pin new-to-labor jobs to the top within the Early Career results.
-    // Within each tier, preserve the existing impact_score order.
+    // 4-tier sort within Early Career results. Within each tier: impact_score descending.
+    // Tier 0 — new-to-labor (any confidence)
+    // Tier 1 — early-career, conf >= 0.7, organizing-related role_type
+    // Tier 2 — early-career, conf >= 0.7, other role types  OR  early-career, conf < 0.7
+    // Tier 3 — experienced, conf <= 0.5 (career-changer bleed)
     if (state.exp === 'early-career') {
-      const ntlTier = j => j.experience_level === 'new-to-labor' ? 0 : 1;
-      filtered.sort((a, b) => ntlTier(a) - ntlTier(b) || (b.impact_score || 0) - (a.impact_score || 0));
-      radiusFallback.sort((a, b) => ntlTier(a) - ntlTier(b) || (b.impact_score || 0) - (a.impact_score || 0));
+      const _EC_ORGANIZING_ROLES = new Set(['External organizer', 'Internal organizer', 'Union job', 'Apprenticeship']);
+      const ecTier = j => {
+        const lvl  = j.experience_level;
+        const conf = j.experience_confidence || 0.5;
+        if (lvl === 'new-to-labor') return 0;
+        if (lvl === 'early-career' && conf >= 0.7 && _EC_ORGANIZING_ROLES.has(j.role_type)) return 1;
+        if (lvl === 'early-career') return 2;
+        return 3; // experienced, conf <= 0.5
+      };
+      filtered.sort((a, b) => ecTier(a) - ecTier(b) || (b.impact_score || 0) - (a.impact_score || 0));
+      radiusFallback.sort((a, b) => ecTier(a) - ecTier(b) || (b.impact_score || 0) - (a.impact_score || 0));
     }
   }
 
