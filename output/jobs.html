@@ -977,6 +977,35 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 }
 .jdp-apply:hover { background: #bd0026; }
 
+/* ── JDP: 3-tier hierarchy redesign ── */
+.jdp-title-playfair { font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: #1a1a1a; line-height: 1.28; margin-bottom: 5px; }
+.jdp-glance-strip { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px 0 4px; }
+.jdp-pill { font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: 0.03em; padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
+.jdp-pill-green  { background: rgba(38,140,72,0.11); color: #1a5c2e; border: 1px solid rgba(38,140,72,0.25); }
+.jdp-pill-blue   { background: rgba(74,127,193,0.12); color: #2e5e9a; border: 1px solid rgba(74,127,193,0.28); }
+.jdp-pill-neutral { background: #F0EBE3; color: #5A5050; border: 1px solid #DDD5C8; }
+.jdp-pill-amber  { background: rgba(200,120,0,0.11); color: #7a4800; border: 1px solid rgba(200,120,0,0.25); }
+.jdp-salary-block { padding: 8px 0 0; }
+.jdp-salary-display { font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: #1a1a1a; }
+.jdp-salary-null-display { font-family: var(--font-mono); font-size: 11px; color: #9A8E85; font-style: italic; }
+.jdp-quote-label { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A8E85; margin-bottom: 9px; }
+.jdp-quote-block { border-left: 3px solid #bd0026; margin: 0 0 8px; padding: 6px 11px; background: #faf8f5; }
+.jdp-quote-text { font-size: 12px; color: #4A4540; line-height: 1.62; font-style: italic; }
+.jdp-svs-score { font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: #bd0026; line-height: 1; }
+.jdp-req-item { font-size: 12px; color: #4A4540; padding: 2px 0; line-height: 1.5; }
+.jdp-req-pills { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+.jdp-req-tag { font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; background: #F0EBE3; color: #5A5050; border: 1px solid #DDD5C8; border-radius: 2px; }
+.jdp-collapse-trigger { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; padding: 11px 16px; border-bottom: 1px solid #EDE7DF; }
+.jdp-collapse-trigger:hover { background: #faf8f5; }
+.jdp-collapse-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #666; }
+.jdp-chevron { font-size: 12px; color: #9A8E85; transition: transform 0.2s; display: inline-block; }
+.jdp-chevron.open { transform: rotate(180deg); }
+.jdp-collapse-body { display: none; padding: 12px 16px; border-bottom: 1px solid #EDE7DF; }
+.jdp-collapse-body.open { display: block; }
+.jdp-benefits-list { margin: 0; padding-left: 18px; font-size: 12px; color: #4A4540; line-height: 1.8; }
+.jdp-apply-fixed { display: block; padding: 13px 16px; background: #1a1a1a; color: #fff; text-decoration: none; text-align: center; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; font-weight: 600; transition: background 0.15s; }
+.jdp-apply-fixed:hover { background: #bd0026; color: #fff; text-decoration: none; }
+
 /* === ENTRY CARDS (match landing page) === */
 .entry-card { display: flex; flex-direction: column; padding: var(--space-8); text-decoration: none; color: inherit; }
 .entry-card:hover { text-decoration: none; color: inherit; }
@@ -3663,6 +3692,27 @@ function getContextualTips(job) {
   return tips;
 }
 
+function extractDescQuotes(desc) {
+  if (!desc) return [];
+  const KEY_RE = /salary|compens|pay\b|wage|experience required|years of experience|responsibilit|you will|you'll|candidate will|must have|required to|qualif|ideal candidate|looking for/i;
+  const sentences = desc.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]?/g) || [];
+  const out = [];
+  for (const s of sentences) {
+    const t = s.trim().replace(/^[•·\-–—*\s]+/, '');
+    if (t.length < 25 || t.length > 240) continue;
+    if (KEY_RE.test(t)) { out.push(t); if (out.length >= 3) break; }
+  }
+  return out;
+}
+
+function toggleJdpCollapse(trigger) {
+  const body = trigger.nextElementSibling;
+  const chevron = trigger.querySelector('.jdp-chevron');
+  if (!body) return;
+  const isOpen = body.classList.toggle('open');
+  if (chevron) chevron.classList.toggle('open', isOpen);
+}
+
 function showJobDetail(job) {
   // Auto-expand terrain panel when a job is clicked (important on mobile)
   const panel = document.getElementById('terrain-panel');
@@ -3676,105 +3726,131 @@ function showJobDetail(job) {
   const { title, embeddedSalary } = cleanJobTitle(job.title);
   const org = job.employer || job.organization || '';
   const loc = jobLocString(job);
-  const impact = Math.round(job.impact_score || 50);
   const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw, job.salary_period) || embeddedSalary;
   const applyUrl = job.source_url || (job.apply_url || '');
-  const grades = computeGrades(job);
-
-  const intType = (job.intervention_type || '').toUpperCase().replace('TYPE ', '');
-  const intTypeKey = ['A','B','C'].includes(intType) ? intType : null;
-  const intDesc = intTypeKey ? INT_DESCS[intTypeKey] : '';
-  const roleDesc = ROLE_DESCS[job.role_type] || '';
-  const scoreContext = impact >= 90 ? 'Top-tier organizing terrain' : impact >= 70 ? 'High-opportunity terrain' : impact >= 50 ? 'Moderate organizing opportunity' : 'Developing terrain';
-  const _STAFF_ROLE_TYPES = new Set(['Communications', 'Legal', 'Research', 'Political/electoral', 'Admin/operations']);
-  const isStaff = !job.role_type || _STAFF_ROLE_TYPES.has(job.role_type);
-
-  const sectorIcon = getSectorIcon(job.sector ? [job.sector] : [], job.role_type);
-
-  // Section 2: description snippet
+  const sourceBoard = job.source_board || 'job board';
   const desc = (job.description || '').trim();
-  const descSnippet = desc.length > 300 ? desc.slice(0, 300).replace(/\s+\S*$/, '') + '…' : desc;
 
-  // Section 3: path-aware terrain copy
-  const terrainCopy = isStaff
-    ? 'The geographic terrain shapes the strategic value of organizing work in this area — reflecting union infrastructure, sector coverage, and electoral impact.'
-    : (intTypeKey === 'A'
-        ? 'Low union density here creates ground-floor organizing potential. Workers haven\'t been fully reached — this is terrain for building from scratch.'
-        : intTypeKey === 'B'
-          ? 'Unions exist here but aren\'t fully activated politically. Rank & file work in this terrain means building power from existing structures.'
-          : intTypeKey === 'C'
-            ? 'Highly organized, politically active terrain. Rank & file presence here means coordinating with strong existing structures.'
-            : 'This score reflects union infrastructure, sector density, and electoral opportunity in the surrounding area.');
+  // ── TIER 1: AT-A-GLANCE PILLS ──
+  const ORGANIZER_TYPES = new Set(['Internal organizer', 'External organizer', 'Union job', 'Apprenticeship']);
+  const pills = [];
+  if (job.role_type) {
+    const isOrgRole = ORGANIZER_TYPES.has(job.role_type);
+    const roleLabel = job.rf_subtype_label || job.role_type;
+    pills.push(`<span class="jdp-pill ${isOrgRole ? 'jdp-pill-green' : 'jdp-pill-blue'}">${escHtml(roleLabel)}</span>`);
+  }
+  const EXP_LABELS = { 'new-to-labor': 'New to Labor', 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
+  const expLvl = job.experience_level || (job.exp_level === 1 ? 'early-career' : job.exp_level >= 4 ? 'leadership' : null);
+  if (expLvl && EXP_LABELS[expLvl]) pills.push(`<span class="jdp-pill jdp-pill-neutral">${EXP_LABELS[expLvl]}</span>`);
+  const empType = (job.employment_type || '').trim();
+  if (empType && !/^full[\s-]?time$/i.test(empType)) pills.push(`<span class="jdp-pill jdp-pill-amber">${escHtml(empType)}</span>`);
+  if (job.union_affiliation) pills.push(`<span class="jdp-pill jdp-pill-neutral">${escHtml(job.union_affiliation)}</span>`);
+  if (job.sector) pills.push(`<span class="jdp-pill jdp-pill-neutral">${escHtml(job.sector)}</span>`);
+  if (job.supervisory) pills.push(`<span class="jdp-pill jdp-pill-amber">Manages Staff</span>`);
+  if (job.professional_staff === 'professional') pills.push(`<span class="jdp-pill jdp-pill-blue">Professional Role</span>`);
+  const glanceStrip = pills.length ? `<div class="jdp-glance-strip">${pills.join('')}</div>` : '';
 
-  // Section 4: sector note for staff
-  const sectorNote = isStaff && job.sector
-    ? `<div class="jdp-badge-desc" style="margin-top:6px"><strong>Employer's sector:</strong> ${escHtml(job.sector)}<br><span style="color:#9A8E85;font-size:11px">The employer's industry — relevant when assessing organizing terrain around this workplace.</span></div>`
-    : job.sector
-      ? `<div class="jdp-badge-desc" style="margin-top:4px"><strong>Sector:</strong> ${escHtml(job.sector)}</div>`
-      : '';
+  // ── TIER 2: REQUIREMENTS ──
+  const reqItems = [];
+  if (job.years_experience != null && job.years_experience !== '') {
+    reqItems.push(`<div class="jdp-req-item">${escHtml(String(job.years_experience))}+ years experience required</div>`);
+  }
+  const creds = Array.isArray(job.credentials_required) ? job.credentials_required : (job.credentials_required ? [String(job.credentials_required)] : []);
+  if (creds.length) reqItems.push(`<div class="jdp-req-pills">${creds.map(c => `<span class="jdp-req-tag">${escHtml(c)}</span>`).join('')}</div>`);
+  const bgReqs = Array.isArray(job.background_required) ? job.background_required : (job.background_required ? [String(job.background_required)] : []);
+  if (bgReqs.length) reqItems.push(`<div class="jdp-req-pills">${bgReqs.map(b => `<span class="jdp-req-tag">${escHtml(b)}</span>`).join('')}</div>`);
+  const specReqs = Array.isArray(job.special_requirements) ? job.special_requirements : (job.special_requirements ? [String(job.special_requirements)] : []);
+  specReqs.forEach(req => {
+    const r = (req || '').toLowerCase();
+    const icon = r.includes('travel') ? '✈' : r.includes('weekend') ? '📅' : r.includes('driver') ? '🚗' : (r.includes('bilingual') || r.includes('language')) ? '💬' : r.includes('physical') ? '💪' : '•';
+    reqItems.push(`<div class="jdp-req-item">${icon} ${escHtml(req)}</div>`);
+  });
+  const reqSection = reqItems.length ? `<div class="jdp-section"><div class="jdp-eyebrow">Requirements</div>${reqItems.join('')}</div>` : '';
+
+  // ── TIER 2: FROM THE POSTING ──
+  const quotes = extractDescQuotes(desc);
+  const postingSection = (() => {
+    if (!desc) return '';
+    const content = quotes.length
+      ? quotes.map(q => `<div class="jdp-quote-block"><div class="jdp-quote-text">"${escHtml(q)}"</div></div>`).join('')
+      : `<div class="jdp-quote-block"><div class="jdp-quote-text">${escHtml(desc.slice(0, 300).replace(/\s+\S*$/, '') + (desc.length > 300 ? '…' : ''))}</div></div>`;
+    return `<div class="jdp-section"><div class="jdp-quote-label">From the job posting</div>${content}</div>`;
+  })();
+
+  // ── TIER 2: SVS SCORE ──
+  const svsSection = job.svs_score != null
+    ? `<div class="jdp-section"><div class="jdp-eyebrow">Strategic Value Score</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+          <span class="jdp-svs-score">${Math.round(job.svs_score)}</span>
+          <span style="font-size:12px;color:#8A7E75">/ 100</span>
+        </div>
+        <div style="margin-top:5px"><a href="../output/methodology.html" style="font-family:var(--font-mono);font-size:10px;color:#9A8E85;letter-spacing:0.05em">Methodology ↗</a></div>
+      </div>`
+    : '';
+
+  // ── TIER 3: STRATEGIC CONTEXT (collapsed) ──
+  const tips = getContextualTips(job);
+  const strategicSection = (job.is_mcalevey_priority && tips.length)
+    ? `<div class="jdp-collapse-trigger" onclick="toggleJdpCollapse(this)">
+        <span class="jdp-collapse-label">Why this role matters strategically</span>
+        <span class="jdp-chevron">▾</span>
+      </div>
+      <div class="jdp-collapse-body">
+        ${tips.map(t => `<div class="jdp-tips-callout">
+          <div class="jdp-tips-eyebrow">${t.eyebrow}</div>
+          <p>${t.text}</p>
+          ${t.source ? `<div class="jdp-tips-source">${t.source}</div>` : ''}
+        </div>`).join('')}
+      </div>`
+    : '';
+
+  // ── TIER 3: BENEFITS (collapsed) ──
+  const benefits = Array.isArray(job.benefits_signals) ? job.benefits_signals : (job.benefits_signals ? [String(job.benefits_signals)] : []);
+  const benefitsSection = benefits.length
+    ? `<div class="jdp-collapse-trigger" onclick="toggleJdpCollapse(this)">
+        <span class="jdp-collapse-label">Benefits</span>
+        <span class="jdp-chevron">▾</span>
+      </div>
+      <div class="jdp-collapse-body">
+        <ul class="jdp-benefits-list">${benefits.map(b => `<li>${escHtml(b)}</li>`).join('')}</ul>
+      </div>`
+    : '';
+
+  // ── TIER 3: FULL DESCRIPTION (collapsed) ──
+  const fullDescSection = desc
+    ? `<div class="jdp-collapse-trigger" onclick="toggleJdpCollapse(this)">
+        <span class="jdp-collapse-label">Full description</span>
+        <span class="jdp-chevron">▾</span>
+      </div>
+      <div class="jdp-collapse-body">
+        <div class="jdp-desc">${escHtml(desc)}</div>
+      </div>`
+    : '';
 
   pane.innerHTML = `
     <button class="jdp-back" onclick="hideJobDetail()">← Back to terrain guide</button>
+
     <div class="jdp-hero">
-      <div class="jdp-hero-icon">${sectorIcon}</div>
-      <div class="jdp-title">${escHtml(title)}</div>
+      <div class="jdp-title-playfair">${escHtml(title)}</div>
       ${org ? `<div class="jdp-org">${escHtml(org)}</div>` : ''}
       ${loc ? `<div class="jdp-loc">📍 ${escHtml(loc)}</div>` : ''}
-    </div>
-    <div class="jdp-section">
-      <div class="jdp-eyebrow">Experience Level</div>
-      ${(() => {
-        const lvl  = job.experience_level || (job.exp_level === 1 ? 'early-career' : job.exp_level >= 4 ? 'leadership' : 'experienced');
-        const info = EXP_LEVELS[lvl] || EXP_LEVELS['experienced'];
-        return `<div class="jdp-badge-block">
-          <span class="badge ${info.cls}" style="flex-shrink:0;font-size:11px;padding:3px 10px">${escHtml(info.label)}</span>
-          <div class="jdp-badge-desc">${escHtml(info.desc)}</div>
-        </div>`;
-      })()}
-    </div>
-    <div class="jdp-section">
-      <div class="jdp-eyebrow">Impact Grades</div>
-      <div style="display:flex;align-items:center;gap:8px;padding:10px 0 4px">
-        <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);background:#F5F0E8;border:1px dashed #C8BFB5;border-radius:4px;padding:4px 10px">Rescoring in progress</span>
-        <span style="font-size:11px;color:var(--color-text-muted)">County terrain scores are being updated — check back soon.</span>
+      ${glanceStrip}
+      <div class="jdp-salary-block">
+        ${salary
+          ? `<span class="jdp-salary-display">${escHtml(salary)}</span>`
+          : `<span class="jdp-salary-null-display">Salary not listed in posting</span>`}
       </div>
     </div>
-    ${descSnippet ? `<div class="jdp-section"><div class="jdp-eyebrow">About this role</div><div class="jdp-desc">${escHtml(descSnippet)}</div></div>` : ''}
-    <div class="jdp-section">
-      <div class="jdp-eyebrow">Terrain Impact</div>
-      <div style="display:flex;align-items:center;gap:8px;padding:8px 0 4px">
-        <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);background:#F5F0E8;border:1px dashed #C8BFB5;border-radius:4px;padding:4px 10px">Coming soon</span>
-        <span style="font-size:11px;color:var(--color-text-muted)">Scores will reflect updated county-level terrain data.</span>
-      </div>
-    </div>
-    <div class="jdp-section">
-      <div class="jdp-eyebrow">Role &amp; Context</div>
-      ${roleDesc ? `<div class="jdp-badge-block"><span class="badge badge-role-staff" style="flex-shrink:0">${escHtml(job.rf_subtype_label || 'Staff & Organizer')}</span><div class="jdp-badge-desc">${escHtml(roleDesc)}</div></div>` : ''}
-      ${intTypeKey ? `<div class="jdp-badge-block"><span class="badge badge-int-${intTypeKey.toLowerCase()}" style="flex-shrink:0">Type ${intTypeKey}</span><div class="jdp-badge-desc">${escHtml(intDesc)}</div></div>` : ''}
-      ${job.is_mcalevey_priority ? `<div class="jdp-badge-block"><span class="badge badge-mcalevey" style="flex-shrink:0">⭐ McAlevey</span><div class="jdp-badge-desc">In Jane McAlevey's highest-priority sectors: healthcare, education, logistics, or public sector.</div></div>` : ''}
-      ${job.is_swing_state ? `<div class="jdp-badge-block"><span class="badge badge-swing" style="flex-shrink:0">🚩 Swing state</span><div class="jdp-badge-desc">Located in a competitive state where labor organizing has direct electoral impact.</div></div>` : ''}
-      ${sectorNote}
-    </div>
-    <div class="jdp-section">
-      <div class="jdp-eyebrow">Compensation</div>
-      ${salary
-        ? `<div class="jdp-salary">💰 ${escHtml(salary)}</div>`
-        : `<div class="jdp-salary-null">Salary not listed in posting — check the full listing for compensation details.</div>`}
-    </div>
-    ${(() => {
-      const tips = getContextualTips(job);
-      if (!tips.length) return '';
-      return `<div class="jdp-section">
-        <div class="jdp-eyebrow">From Tips &amp; Tricks</div>
-        ${tips.map(t => `
-          <div class="jdp-tips-callout">
-            <div class="jdp-tips-eyebrow">${t.eyebrow}</div>
-            <p>${t.text}</p>
-            ${t.source ? `<div class="jdp-tips-source">${t.source}</div>` : ''}
-          </div>`).join('')}
-      </div>`;
-    })()}
-    ${applyUrl ? `<a class="jdp-apply" href="${escHtml(applyUrl)}" target="_blank" rel="noopener">Apply on UnionJobs.com →</a>` : ''}
+
+    ${reqSection}
+    ${postingSection}
+    ${svsSection}
+
+    ${strategicSection}
+    ${benefitsSection}
+    ${fullDescSection}
+
+    ${applyUrl ? `<a class="jdp-apply-fixed" href="${escHtml(applyUrl)}" target="_blank" rel="noopener">Apply on ${escHtml(sourceBoard)} →</a>` : ''}
   `;
 
   guide.style.opacity = '0';
