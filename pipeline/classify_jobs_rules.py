@@ -634,6 +634,274 @@ def classify_location_parsed(job: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# union_affiliation — infer parent union from employer name
+# ---------------------------------------------------------------------------
+_UNION_AFFILIATION_PATTERNS = [
+    (re.compile(r'SEIU', re.IGNORECASE), "SEIU"),
+    (re.compile(r'\bAFSCME\b', re.IGNORECASE), "AFSCME"),
+    (re.compile(r'\bCWA\b', re.IGNORECASE), "CWA"),
+    (re.compile(r'\bUAW\b', re.IGNORECASE), "UAW"),
+    (re.compile(r'\bTeamsters?\b', re.IGNORECASE), "Teamsters"),
+    (re.compile(r'\bUFCW\b', re.IGNORECASE), "UFCW"),
+    (re.compile(r'\bAFT\b', re.IGNORECASE), "AFT"),
+    (re.compile(r'\bNEA\b', re.IGNORECASE), "NEA"),
+    (re.compile(r'\bIBEW\b', re.IGNORECASE), "IBEW"),
+    (re.compile(r'\bUSW\b', re.IGNORECASE), "USW"),
+    (re.compile(r'\bUNITE\s+HERE\b', re.IGNORECASE), "UNITE HERE"),
+    (re.compile(r'\bLIUNA\b', re.IGNORECASE), "LIUNA"),
+    (re.compile(r'\bIBT\b', re.IGNORECASE), "IBT"),
+    (re.compile(r'\bAFL[\s-]CIO\b', re.IGNORECASE), "AFL-CIO"),
+    (re.compile(r'\bIAFF\b', re.IGNORECASE), "IAFF"),
+    (re.compile(r'\bNNU\b|National\s+Nurses\s+United', re.IGNORECASE), "NNU"),
+]
+
+
+def classify_union_affiliation(job: dict) -> Optional[str]:
+    employer = (job.get("employer") or "").strip()
+    title = (job.get("title") or "").strip()
+    text = employer + " " + title
+    for pattern, affiliation in _UNION_AFFILIATION_PATTERNS:
+        if pattern.search(text):
+            return affiliation
+    return None
+
+
+# ---------------------------------------------------------------------------
+# employment_type — infer from title + description
+# ---------------------------------------------------------------------------
+_TEMP_TYPE_RE = re.compile(
+    r'\b(temporary|temp\b|limited[\s-]term|short[\s-]term|seasonal)\b',
+    re.IGNORECASE,
+)
+_PART_TIME_RE = re.compile(r'\bpart[\s-]time\b', re.IGNORECASE)
+_CONTRACT_RE = re.compile(r'\b(contract(?:or)?|freelance|consultant)\b', re.IGNORECASE)
+
+
+def classify_employment_type(job: dict) -> str:
+    title = (job.get("title") or "")
+    desc = (job.get("description") or "")[:1000]
+    text = title + " " + desc
+    if _TEMP_TYPE_RE.search(text):
+        return "temporary"
+    if _PART_TIME_RE.search(text):
+        return "part-time"
+    if _CONTRACT_RE.search(text):
+        return "contract"
+    return "full-time"
+
+
+# ---------------------------------------------------------------------------
+# supervisory — boolean: does this role manage people?
+# ---------------------------------------------------------------------------
+_SUPERVISORY_DESC_RE = re.compile(
+    r'\b(supervise[sd]?|supervision|direct\s+reports?|staff\s+of\s+\d+|leads?\s+a\s+team'
+    r'|manages?\s+\d+|managing\s+staff|manage\s+a\s+team|oversee\s+(?:a\s+)?(?:team|staff)'
+    r'|manage\s+(?:a\s+)?(?:team|staff)|lead\s+(?:a\s+)?team|personnel\s+management'
+    r'|supervising\s+staff|management\s+of\s+staff)\b',
+    re.IGNORECASE,
+)
+
+
+def classify_supervisory(job: dict) -> bool:
+    desc = (job.get("description") or "")
+    if _SUPERVISORY_DESC_RE.search(desc):
+        return True
+    # Leadership titles with director/manager/supervisor in title are supervisory
+    title = (job.get("title") or "")
+    exp_level = job.get("experience_level") or classify_experience(job)[0]
+    if exp_level == "leadership" and re.search(
+        r'\b(director|manager|supervisor|chief|president|VP|vice[\s-]?president)\b',
+        title, re.IGNORECASE
+    ):
+        return True
+    return False
+
+
+# ---------------------------------------------------------------------------
+# professional_staff — "professional" | "staff"
+# ---------------------------------------------------------------------------
+_PROFESSIONAL_TITLE_RE = re.compile(
+    r'\b(attorney|lawyer|counsel|accountant|\bcpa\b|engineer|analyst|doctor|nurse|physician'
+    r'|architect|scientist|researcher|economist|epidemiologist|actuary|statistician'
+    r'|psychologist|social\s+worker|therapist|pharmacist|dentist)\b',
+    re.IGNORECASE,
+)
+_STAFF_TITLE_RE = re.compile(
+    r'\b(organizer|field\s+rep(?:resentative)?|coordinator|representative|specialist'
+    r'|administrator|assistant|clerk|receptionist|technician|liaison|outreach'
+    r'|advocate|canvasser|steward|delegate)\b',
+    re.IGNORECASE,
+)
+
+
+def classify_professional_staff(job: dict) -> str:
+    title = (job.get("title") or "")
+    if _PROFESSIONAL_TITLE_RE.search(title):
+        return "professional"
+    return "staff"
+
+
+# ---------------------------------------------------------------------------
+# special_requirements — expand existing list from description
+# ---------------------------------------------------------------------------
+_SPECIAL_REQ_PATTERNS: List[Tuple[re.Pattern, str]] = [
+    (re.compile(r'\bbilingual\b', re.IGNORECASE), "bilingual"),
+    (re.compile(r'\b(CDL|commercial\s+driver(?:\'s)?\s+license)\b', re.IGNORECASE), "CDL"),
+    (re.compile(
+        r'\b(physical\s+(?:demands?|requirements?)|physically\s+(?:demanding|active))\b',
+        re.IGNORECASE
+    ), "physical demands"),
+    (re.compile(r'\birregular\s+hours?\b', re.IGNORECASE), "irregular hours"),
+    (re.compile(r'\bon[\s-]call\b', re.IGNORECASE), "on-call"),
+    (re.compile(
+        r'\b(valid\s+driver[\'s]*\s+license|driver[\'s]*\s+license\s+required|must\s+have\s+(?:a\s+)?(?:valid\s+)?driver)\b',
+        re.IGNORECASE
+    ), "driver's license"),
+    (re.compile(
+        r'\b(must\s+have\s+(?:a\s+)?(?:reliable\s+)?(?:car|vehicle)|reliable\s+transportation|own\s+(?:vehicle|car))\b',
+        re.IGNORECASE
+    ), "reliable transportation"),
+    (re.compile(r'\btravel\s+(?:required|extensive|frequently|up\s+to)\b', re.IGNORECASE), "travel required"),
+    (re.compile(r'\bevening[s]?\s+and\s+weekend[s]?\b|\bweekends?\s+(?:and|&)\s+evening[s]?\b', re.IGNORECASE), "evenings and weekends"),
+]
+
+
+def expand_special_requirements(job: dict) -> List[str]:
+    existing = list(job.get("special_requirements") or [])
+    existing_lower = {s.lower() for s in existing}
+    desc = (job.get("description") or "") + " " + (job.get("title") or "")
+    for pattern, label in _SPECIAL_REQ_PATTERNS:
+        if label.lower() not in existing_lower and pattern.search(desc):
+            existing.append(label)
+            existing_lower.add(label.lower())
+    return existing
+
+
+# ---------------------------------------------------------------------------
+# credentials_required — professional certifications/degrees in description
+# ---------------------------------------------------------------------------
+_CREDENTIALS_PATTERNS: List[Tuple[re.Pattern, str]] = [
+    (re.compile(r'\b(J\.?D\.?|Juris\s+Doctor)\b', re.IGNORECASE), "JD"),
+    (re.compile(r'\b(C\.?P\.?A\.?|Certified\s+Public\s+Accountant)\b', re.IGNORECASE), "CPA"),
+    (re.compile(r'\b(L\.?C\.?S\.?W\.?|Licensed\s+Clinical\s+Social\s+Worker)\b', re.IGNORECASE), "LCSW"),
+    (re.compile(r'\b(L\.?M\.?S\.?W\.?|Licensed\s+Master\s+Social\s+Worker)\b', re.IGNORECASE), "LMSW"),
+    (re.compile(r'\b(M\.?S\.?W\.?|Master\s+of\s+Social\s+Work)\b', re.IGNORECASE), "MSW"),
+    (re.compile(r'\b(R\.?N\.?|Registered\s+Nurse)\b', re.IGNORECASE), "RN"),
+    (re.compile(r'\b(L\.?P\.?N\.?|Licensed\s+Practical\s+Nurse)\b', re.IGNORECASE), "LPN"),
+    (re.compile(r'\b(Ph\.?D\.?|Doctor\s+of\s+Philosophy)\b', re.IGNORECASE), "PhD"),
+    (re.compile(r'\b(M\.?P\.?H\.?|Master\s+of\s+Public\s+Health)\b', re.IGNORECASE), "MPH"),
+    (re.compile(r'\b(M\.?B\.?A\.?|Master\s+of\s+Business\s+Administration)\b', re.IGNORECASE), "MBA"),
+    (re.compile(r'\bbar\s+admission\b|\badmitted\s+to\s+(?:the\s+)?bar\b', re.IGNORECASE), "bar admission"),
+]
+
+
+def extract_credentials_required(job: dict) -> List[str]:
+    desc = (job.get("description") or "") + " " + (job.get("title") or "")
+    found: List[str] = []
+    seen: Set[str] = set()
+    for pattern, label in _CREDENTIALS_PATTERNS:
+        if label not in seen and pattern.search(desc):
+            found.append(label)
+            seen.add(label)
+    return found
+
+
+# ---------------------------------------------------------------------------
+# benefits_signals — benefits mentioned in description
+# ---------------------------------------------------------------------------
+_BENEFITS_PATTERNS: List[Tuple[re.Pattern, str]] = [
+    (re.compile(r'\bhealth\s+insurance\b', re.IGNORECASE), "health insurance"),
+    (re.compile(r'\bmedical\s+(?:insurance|coverage|benefits?)\b', re.IGNORECASE), "medical"),
+    (re.compile(r'\bdental\b', re.IGNORECASE), "dental"),
+    (re.compile(r'\bvision\b', re.IGNORECASE), "vision"),
+    (re.compile(r'\bpension\b', re.IGNORECASE), "pension"),
+    (re.compile(r'\b403[\s-]?b\b', re.IGNORECASE), "403b"),
+    (re.compile(r'\b401[\s-]?k\b', re.IGNORECASE), "401k"),
+    (re.compile(r'\bretirement\b', re.IGNORECASE), "retirement"),
+    (re.compile(r'\bpaid\s+time\s+off\b|\bPTO\b', re.IGNORECASE), "PTO"),
+    (re.compile(r'\bvacation\b', re.IGNORECASE), "vacation"),
+    (re.compile(r'\bsick\s+(?:leave|time|days?)\b', re.IGNORECASE), "sick leave"),
+    (re.compile(r'\bcar\s+allowance\b', re.IGNORECASE), "car allowance"),
+    (re.compile(r'\bcell\s+phone\b|\bphone\s+stipend\b', re.IGNORECASE), "cell phone"),
+    (re.compile(r'\bremote\s+work\s+stipend\b|\bwork[\s-]from[\s-]home\s+stipend\b', re.IGNORECASE), "remote work stipend"),
+    (re.compile(r'\blife\s+insurance\b', re.IGNORECASE), "life insurance"),
+    (re.compile(r'\bparental\s+leave\b|\bmaternity\b|\bpaternity\b', re.IGNORECASE), "parental leave"),
+    (re.compile(r'\btuition\s+(?:reimbursement|assistance|benefit)\b', re.IGNORECASE), "tuition reimbursement"),
+]
+
+
+def extract_benefits_signals(job: dict) -> List[str]:
+    desc = (job.get("description") or "")
+    found: List[str] = []
+    seen: Set[str] = set()
+    for pattern, label in _BENEFITS_PATTERNS:
+        if label not in seen and pattern.search(desc):
+            found.append(label)
+            seen.add(label)
+    return found
+
+
+# ---------------------------------------------------------------------------
+# years_experience — minimum years mentioned in description
+# ---------------------------------------------------------------------------
+_YEARS_EXP_RE = re.compile(
+    r'(\d+)\+?\s+years?\s+(?:of\s+)?(?:experience|relevant\s+experience|professional\s+experience|related\s+experience|work\s+experience)'
+    r'|minimum\s+(?:of\s+)?(\d+)\s+years?'
+    r'|at\s+least\s+(\d+)\s+years?'
+    r'|(\d+)[\s-]+to[\s-]+\d+\s+years?\s+(?:of\s+)?(?:experience|work)',
+    re.IGNORECASE,
+)
+
+
+def extract_years_experience(job: dict) -> Optional[int]:
+    desc = (job.get("description") or "")
+    matches = _YEARS_EXP_RE.findall(desc)
+    if not matches:
+        return None
+    nums = []
+    for m in matches:
+        for g in m:
+            if g:
+                try:
+                    v = int(g)
+                    if 0 < v <= 20:  # cap at 20 to exclude founding-year false positives
+                        nums.append(v)
+                except ValueError:
+                    pass
+    return min(nums) if nums else None
+
+
+# ---------------------------------------------------------------------------
+# background_required — domain experience signals in description
+# ---------------------------------------------------------------------------
+_BACKGROUND_PATTERNS: List[Tuple[re.Pattern, str]] = [
+    (re.compile(r'\blabor\s+movement\b', re.IGNORECASE), "labor movement"),
+    (re.compile(r'\bunion\s+(?:experience|background|staff|member)\b', re.IGNORECASE), "union experience"),
+    (re.compile(r'\bcampaign\s+experience\b', re.IGNORECASE), "campaign experience"),
+    (re.compile(r'\borganizing\s+experience\b', re.IGNORECASE), "organizing experience"),
+    (re.compile(r'\blegislative\s+experience\b', re.IGNORECASE), "legislative experience"),
+    (re.compile(r'\blegal\s+background\b|\blegal\s+experience\b', re.IGNORECASE), "legal background"),
+    (re.compile(r'\bpolitical\s+(?:experience|background|campaigns?)\b', re.IGNORECASE), "political experience"),
+    (re.compile(r'\bnonprofit\s+(?:experience|background|sector)\b', re.IGNORECASE), "nonprofit experience"),
+    (re.compile(r'\bcommunity\s+organizing\b', re.IGNORECASE), "community organizing"),
+    (re.compile(r'\blocal\s+government\b|\bpublic\s+sector\s+(?:experience|background)\b', re.IGNORECASE), "public sector experience"),
+    (re.compile(r'\bdata\s+(?:analysis|analytics)\s+experience\b', re.IGNORECASE), "data analysis experience"),
+    (re.compile(r'\bcollective\s+bargaining\b', re.IGNORECASE), "collective bargaining"),
+]
+
+
+def extract_background_required(job: dict) -> List[str]:
+    desc = (job.get("description") or "")
+    found: List[str] = []
+    seen: Set[str] = set()
+    for pattern, label in _BACKGROUND_PATTERNS:
+        if label not in seen and pattern.search(desc):
+            found.append(label)
+            seen.add(label)
+    return found
+
+
+# ---------------------------------------------------------------------------
 # Main enrichment function
 # ---------------------------------------------------------------------------
 def enrich_job(job: dict) -> dict:
@@ -649,6 +917,9 @@ def enrich_job(job: dict) -> dict:
             if extracted:
                 employer = extracted
 
+    # Build a partial job dict with experience_level so supervisory can use it
+    partial = {**job, "employer": employer, "experience_level": level}
+
     return {
         **job,
         "employer":              employer,
@@ -658,6 +929,16 @@ def enrich_job(job: dict) -> dict:
         "location_type":         classify_location_type(job),
         "location_parsed":       classify_location_parsed(job),
         "seniority_signals":     extract_seniority_signals(job),
+        # Intelligence card fields (Phase 2)
+        "union_affiliation":     classify_union_affiliation(partial),
+        "employment_type":       classify_employment_type(job),
+        "supervisory":           classify_supervisory(partial),
+        "professional_staff":    classify_professional_staff(job),
+        "special_requirements":  expand_special_requirements(job),
+        "credentials_required":  extract_credentials_required(job),
+        "benefits_signals":      extract_benefits_signals(job),
+        "years_experience":      extract_years_experience(job),
+        "background_required":   extract_background_required(job),
     }
 
 
