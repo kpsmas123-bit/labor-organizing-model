@@ -2372,7 +2372,29 @@ function parseSalaryMin(s) {
   return nums.length ? Math.min(...nums) : null;
 }
 
-function formatSalary(salary_min, salaryRaw) {
+// Build the location string for a job card/detail pane.
+// Avoids "Los Angeles, CA · CA" when location_raw already contains state_abbr.
+function jobLocString(job) {
+  const raw = (job.location_raw || job.location || '').trim();
+  const st  = (job.state_abbr || '').trim();
+  if (!raw) return st;
+  if (!st)  return raw;
+  // Suppress appending state if raw already ends with it (e.g. "Los Angeles, CA")
+  const rawUpper = raw.toUpperCase();
+  const stUpper  = st.toUpperCase();
+  if (rawUpper === stUpper) return raw;                         // raw IS just the state code
+  if (rawUpper.endsWith(', ' + stUpper)) return raw;           // "City, ST"
+  if (rawUpper.endsWith(' ' + stUpper))  return raw;           // "City ST"
+  if (rawUpper.endsWith('·' + stUpper) || rawUpper.endsWith('· ' + stUpper)) return raw;
+  return raw + ' · ' + st;
+}
+
+function formatSalary(salary_min, salaryRaw, salary_period) {
+  // Hourly jobs: show "$XX.XX/hr" instead of the nonsensical "$0k+"
+  if (salary_period === 'hourly' && salary_min) {
+    const hr = salary_min % 1 === 0 ? salary_min.toFixed(0) : salary_min.toFixed(2);
+    return '$' + hr + '/hr';
+  }
   if (salaryRaw && typeof salaryRaw === 'string' && /\$/.test(salaryRaw)) {
     // Extract salary range from longer text (e.g. "...Salary: $82k – $125k (Annual)")
     const m = salaryRaw.match(/(?:salary|pay range|compensation|wage)[:\s]+(\$[\d,]+(?:\.\d+)?(?:\s*[–\-—]\s*\$[\d,]+(?:\.\d+)?)?(?:\s*\([^)]{0,30}\))?)/i);
@@ -2383,7 +2405,7 @@ function formatSalary(salary_min, salaryRaw) {
     const cleaned = salaryRaw.replace(/^Salary:\s*/i,'').replace(/\s*based on.*$/i,'').trim();
     if (cleaned.length < 40) return cleaned;
   }
-  if (salary_min) return '$' + Math.round(salary_min/1000) + 'k+';
+  if (salary_min && salary_period !== 'hourly') return '$' + Math.round(salary_min/1000) + 'k+';
   return null;
 }
 
@@ -3642,9 +3664,9 @@ function showJobDetail(job) {
   const pane = document.getElementById('job-detail-pane');
   const { title, embeddedSalary } = cleanJobTitle(job.title);
   const org = job.employer || job.organization || '';
-  const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
+  const loc = jobLocString(job);
   const impact = Math.round(job.impact_score || 50);
-  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw) || embeddedSalary;
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw, job.salary_period) || embeddedSalary;
   const applyUrl = job.source_url || (job.apply_url || '');
   const grades = computeGrades(job);
 
@@ -4016,8 +4038,8 @@ function makeJobCard(job) {
 
   const { title, embeddedSalary } = cleanJobTitle(job.title);
   const org = job.employer || job.organization || '';
-  const loc = [job.location_raw || job.location || '', job.state_abbr || ''].filter(Boolean).join(' · ');
-  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw) || embeddedSalary;
+  const loc = jobLocString(job);
+  const salary = formatSalary(job.salary_min, job.salary || job.salary_range || job.salary_raw, job.salary_period) || embeddedSalary;
   const applyUrl = job.source_url || (job.apply_url || '');
 
   const grades = computeGrades(job);
