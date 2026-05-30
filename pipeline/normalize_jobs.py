@@ -83,6 +83,21 @@ def normalize_job(raw: dict) -> tuple:
     state_abbr = loc['state_abbr'] or _norm_ws(raw.get('state_abbr') or '')
 
     salary_raw = _norm_ws(raw.get('salary') or raw.get('salary_raw') or '')
+
+    # Some listings (e.g. CTA on unionjobs.com) embed "Salary is $X" in the title heading.
+    # Extract it and strip from the title so it doesn't pollute display/search.
+    if not salary_raw and title:
+        _TITLE_SAL_RE = re.compile(
+            r'\s+((?:Salary|Pay|Compensation)\s+is\s+'
+            r'\$[\d,]+(?:\.\d+)?(?:\s*[–\-–—]\s*\$[\d,]+(?:\.\d+)?)?'
+            r'(?:\s+per\s+\w+)?)',
+            re.I,
+        )
+        _m = _TITLE_SAL_RE.search(title)
+        if _m:
+            salary_raw = _m.group(1)
+            title = title[:_m.start()].strip() or title
+
     sal = parse_salary(salary_raw) if salary_raw else {"salary_min": None, "salary_max": None, "salary_period": None}
 
     description = _strip_html(raw.get('description') or '')

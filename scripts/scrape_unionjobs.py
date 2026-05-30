@@ -421,6 +421,40 @@ def scrape_listing(job_id, log_fh):
                     salary_raw = txt[:300]
                     break
 
+    # Salary fallback: scan <li> bullet text under any header whose text contains
+    # "salary" or "compensation" (e.g. "SALARY AND BENEFITS" section headers).
+    if not salary_raw:
+        for hdr in soup.find_all(['h2', 'h3', 'h4', 'h5', 'strong']):
+            if not re.search(r'\b(salary|compensation)\b', hdr.get_text(strip=True), re.I):
+                continue
+            nxt = hdr.find_next_sibling()
+            while nxt:
+                if getattr(nxt, 'name', None) in ('ul', 'ol'):
+                    for li in nxt.find_all('li'):
+                        li_txt = re.sub(r'\s+', ' ', li.get_text(' ', strip=True)).strip()
+                        if re.search(r'\$\s*[\d,]+', li_txt):
+                            salary_raw = li_txt[:300]
+                            break
+                    break
+                elif getattr(nxt, 'name', None) in ('h2', 'h3', 'h4', 'h5'):
+                    break
+                nxt = nxt.find_next_sibling()
+            if salary_raw:
+                break
+
+    # Salary fallback: some listings (e.g. CTA) embed "Salary is $X" in the title heading.
+    # Extract it and strip it from the title so the title field stays clean.
+    if not salary_raw and title:
+        m = re.search(
+            r'\s+((?:Salary|Pay|Compensation)\s+is\s+'
+            r'\$[\d,]+(?:\.\d+)?(?:\s*[–\-–—]\s*\$[\d,]+(?:\.\d+)?)?'
+            r'(?:\s+per\s+\w+)?)',
+            title, re.I,
+        )
+        if m:
+            salary_raw = m.group(1)
+            title = title[:m.start()].strip() or title
+
     # Apply URL: look for external link in "Apply here:" paragraph OR any non-site external link
     apply_url = url  # fallback
     for p in paragraphs:
@@ -587,6 +621,31 @@ def reparse_existing(output_json=OUTPUT_JSON):
         with open(output_json, "w", encoding="utf-8") as f:
             json.dump(records, f, indent=2, ensure_ascii=False)
         print(f"Pass 3 cleaned {pass3_cleaned} additional records.")
+
+    # --- Pass 4: Extract salary embedded in title (e.g. CTA format "Salary is $X") ---
+    _TITLE_SAL_RE = re.compile(
+        r'\s+((?:Salary|Pay|Compensation)\s+is\s+'
+        r'\$[\d,]+(?:\.\d+)?(?:\s*[–\-–—]\s*\$[\d,]+(?:\.\d+)?)?'
+        r'(?:\s+per\s+\w+)?)',
+        re.I,
+    )
+    pass4_found = 0
+    for rec in records:
+        if rec.get('salary_raw'):
+            continue
+        title = rec.get('title') or ''
+        m = _TITLE_SAL_RE.search(title)
+        if m:
+            rec['salary_raw'] = m.group(1)
+            rec['title'] = title[:m.start()].strip() or title
+            pass4_found += 1
+
+    if pass4_found:
+        with open(output_json, "w", encoding="utf-8") as f:
+            json.dump(records, f, indent=2, ensure_ascii=False)
+        print(f"Pass 4: extracted salary from title for {pass4_found} records.")
+    else:
+        print("Pass 4: no salary-in-title records found.")
 
     struct_patterns = ['Location:', 'Department:']
     still_contaminated = [
