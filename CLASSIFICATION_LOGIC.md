@@ -1,6 +1,6 @@
 # Classification Logic — Living Document
 
-_Last updated: 2026-05-29_
+_Last updated: 2026-05-30_
 
 > **This document is auto-updated.** Running `python -m pipeline.classify_jobs_rules` refreshes
 > the timestamp. Passing `--changelog "message"` appends a changelog entry.
