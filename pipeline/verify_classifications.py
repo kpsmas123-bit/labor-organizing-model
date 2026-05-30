@@ -33,7 +33,12 @@ from pipeline.enrich_jobs import build_prompt, parse_response, validate_enrichme
 MODEL = "claude-haiku-4-5-20251001"
 CONCURRENCY = 5
 AGREEMENT_THRESHOLD = 0.80   # flag field if agreement rate drops below this
-VERIFY_FIELDS = ["experience_level", "job_function", "location_type"]
+VERIFY_FIELDS = [
+    "experience_level", "job_function", "location_type",
+    "employment_type", "professional_staff", "supervisory",
+]
+# Fields where we compare list membership rather than equality
+LIST_COMPARE_FIELDS = ["credentials_required", "benefits_signals", "background_required"]
 
 INPUT_PATH  = Path("data/classified_jobs.json")
 REPORT_PATH = Path("data/verification_report.json")
@@ -124,9 +129,10 @@ def compare(rules_jobs: list, api_results: list) -> dict:
     Compare rules-classifier output vs API output per field.
     Returns per-field stats dict.
     """
+    all_fields = VERIFY_FIELDS + LIST_COMPARE_FIELDS
     stats = {
         f: {"agree": 0, "disagree": 0, "examples": []}
-        for f in VERIFY_FIELDS
+        for f in all_fields
     }
     for rules_job, api_out in zip(rules_jobs, api_results):
         if api_out is None:
@@ -138,19 +144,38 @@ def compare(rules_jobs: list, api_results: list) -> dict:
                 stats[field]["agree"] += 1
             else:
                 stats[field]["disagree"] += 1
-                if len(stats[field]["examples"]) < 20:   # cap stored examples
+                if len(stats[field]["examples"]) < 20:
                     stats[field]["examples"].append({
                         "job_id": rules_job.get("job_id"),
                         "title":  rules_job.get("title"),
                         "rules":  r_val,
                         "api":    a_val,
                     })
+        # For list fields: compare as sets — agree if sets are equal
+        for field in LIST_COMPARE_FIELDS:
+            r_set = set(rules_job.get(field) or [])
+            a_set = set(api_out.get(field) or [])
+            if r_set == a_set:
+                stats[field]["agree"] += 1
+            else:
+                stats[field]["disagree"] += 1
+                if len(stats[field]["examples"]) < 20:
+                    stats[field]["examples"].append({
+                        "job_id":        rules_job.get("job_id"),
+                        "title":         rules_job.get("title"),
+                        "rules":         sorted(r_set),
+                        "api":           sorted(a_set),
+                        "api_only":      sorted(a_set - r_set),
+                        "rules_only":    sorted(r_set - a_set),
+                    })
     return stats
 
 
 def agreement_rates(stats: dict) -> dict[str, float]:
+    all_fields = VERIFY_FIELDS + LIST_COMPARE_FIELDS
     rates = {}
-    for field, s in stats.items():
+    for field in all_fields:
+        s = stats.get(field, {"agree": 0, "disagree": 0})
         total = s["agree"] + s["disagree"]
         rates[field] = s["agree"] / total if total else 1.0
     return rates
@@ -168,6 +193,29 @@ def propose_amendments(stats: dict, failing_fields: list) -> list:
 
     for field in failing_fields:
         examples = stats[field]["examples"]
+
+        # ── List fields: generate patterns from api_only items ─────────────
+        if field in LIST_COMPARE_FIELDS:
+            api_only_counts: dict[str, list[str]] = defaultdict(list)
+            for ex in examples:
+                for item in (ex.get("api_only") or []):
+                    api_only_counts[item].append(ex.get("title") or "")
+            for item, titles in sorted(api_only_counts.items(), key=lambda x: -len(x[1])):
+                pattern_name = f"_BG_RE" if field == "background_required" else f"_CRED_RE" if field == "credentials_required" else f"_BEN_RE"
+                code_snippet = (
+                    f'# Add to {field} patterns in classify_jobs_rules.py:\n'
+                    f'(re.compile(r\'\\b{re.escape(item)}\\b\', re.IGNORECASE), "{item}"),'
+                )
+                proposals.append({
+                    "field":            field,
+                    "transition":       f"rules missing → api found '{item}'",
+                    "count":            len(titles),
+                    "example_titles":   titles[:5],
+                    "suggested_action": f"Add pattern for '{item}' to extract_{field}() in classify_jobs_rules.py",
+                    "proposed_code":    code_snippet,
+                })
+            continue
+
         # Group by (rules_value → api_value) transition
         transitions: dict[str, list[str]] = defaultdict(list)
         for ex in examples:
@@ -184,26 +232,56 @@ def propose_amendments(stats: dict, failing_fields: list) -> list:
                         f"Consider adding title keywords for these roles to "
                         f"_LEAD_STRONG_RE or _LEAD_MOD_RE in classify_jobs_rules.py"
                     )
+                    code_snippet = (
+                        f"# Candidate additions to _LEAD_MOD_RE:\n"
+                        f"# " + " | ".join(f'"{t.split()[0].lower()}"' for t in titles[:3])
+                    )
                 elif r_val == "leadership" and a_val in ("experienced", "early-career"):
                     action = (
                         f"Consider tightening the leadership pattern that is "
                         f"over-promoting these titles (check _LEAD_STRONG_RE / _LEAD_MOD_RE)"
                     )
+                    code_snippet = "# Review patterns: " + ", ".join(f'"{t[:40]}"' for t in titles[:3])
                 elif r_val in ("experienced", "leadership") and a_val in ("new-to-labor", "early-career"):
                     action = (
                         f"Consider checking whether these titles contain fellowship/intern/"
                         f"training signals not yet in _NEW_TO_LABOR_TITLE_RE"
                     )
+                    code_snippet = "# Candidate additions to _NEW_TO_LABOR_TITLE_RE:\n# " + str(titles[:3])
                 else:
                     action = f"Review classify_experience() for '{transition}' transitions"
+                    code_snippet = "# Examples: " + ", ".join(f'"{t[:40]}"' for t in titles[:3])
 
             # ── job_function advice ────────────────────────────────────────
             elif field == "job_function":
                 action = (
                     f"Consider adding title keywords for '{a_val}' function to catch: "
                     + ", ".join(f"'{t[:40]}'" for t in titles[:3])
-                    + f" (see _{'_'.join(a_val.upper().split())}_RE or _COMM_KW_RE etc.)"
+                    + f" (see relevant _RE pattern in classify_jobs_rules.py)"
                 )
+                code_snippet = (
+                    f"# Add to appropriate _RE pattern for '{a_val}' function:\n"
+                    f"# r'\\b({'|'.join(w.lower() for t in titles[:3] for w in t.split()[:2])})\\b'"
+                )
+
+            # ── employment_type advice ─────────────────────────────────────
+            elif field == "employment_type":
+                action = (
+                    f"Review classify_employment_type() for '{transition}' cases; "
+                    f"example titles: " + ", ".join(f"'{t[:40]}'" for t in titles[:3])
+                )
+                code_snippet = (
+                    f"# Add to _{'TEMP' if a_val == 'temporary' else 'PART_TIME' if a_val == 'part-time' else 'CONTRACT'}_TYPE_RE:\n"
+                    f"# r'\\b({'|'.join(w.lower() for t in titles[:3] for w in t.split()[:1])})\\b'"
+                )
+
+            # ── professional_staff / supervisory advice ────────────────────
+            elif field in ("professional_staff", "supervisory"):
+                action = (
+                    f"Review classify_{field.replace('-', '_')}() for '{transition}' cases; "
+                    f"examples: " + ", ".join(f"'{t[:40]}'" for t in titles[:3])
+                )
+                code_snippet = f"# Review examples: {titles[:3]}"
 
             # ── location_type advice ───────────────────────────────────────
             else:
@@ -212,6 +290,7 @@ def propose_amendments(stats: dict, failing_fields: list) -> list:
                     f"check location_raw patterns: "
                     + ", ".join(f"'{t[:40]}'" for t in titles[:3])
                 )
+                code_snippet = f"# Review location patterns: {titles[:3]}"
 
             proposals.append({
                 "field":            field,
@@ -219,6 +298,7 @@ def propose_amendments(stats: dict, failing_fields: list) -> list:
                 "count":            len(titles),
                 "example_titles":   titles[:5],
                 "suggested_action": action,
+                "proposed_code":    code_snippet,
             })
 
     return proposals
@@ -252,7 +332,18 @@ def build_report(
             }
             for field, s in stats.items()
         },
-        "proposed_amendments": proposals,
+        "proposed_amendments":   proposals,
+        # Structured for easy copy-paste into classify_jobs_rules.py
+        "proposed_rule_changes": [
+            {
+                "field":   p["field"],
+                "summary": p["suggested_action"],
+                "code":    p.get("proposed_code", ""),
+                "count":   p["count"],
+            }
+            for p in proposals
+            if p.get("proposed_code")
+        ],
     }
 
 

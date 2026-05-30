@@ -977,6 +977,19 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 }
 .jdp-apply:hover { background: #bd0026; }
 
+/* === INTELLIGENCE CARD === */
+.ic-grid { display: flex; flex-direction: column; gap: 6px; }
+.ic-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; line-height: 1.5; }
+.ic-label { flex-shrink: 0; width: 90px; color: #9A8E85; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding-top: 2px; }
+.ic-value { flex: 1; color: #3A3530; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.ic-tag {
+  display: inline-block; background: #F0EAE2; border: 1px solid #DDD5C8;
+  border-radius: 4px; padding: 2px 7px; font-size: 11px; color: #5A5050;
+  white-space: nowrap;
+}
+.ic-tag-yes { background: #E8F0E8; border-color: #B8CDB8; color: #3A5A3A; }
+.ic-tag-req { background: #F5EDE0; border-color: #D8C5A8; color: #5A4A30; }
+
 /* === ENTRY CARDS (match landing page) === */
 .entry-card { display: flex; flex-direction: column; padding: var(--space-8); text-decoration: none; color: inherit; }
 .entry-card:hover { text-decoration: none; color: inherit; }
@@ -3740,6 +3753,56 @@ function showJobDetail(job) {
       </div>
     </div>
     ${descSnippet ? `<div class="jdp-section"><div class="jdp-eyebrow">About this role</div><div class="jdp-desc">${escHtml(descSnippet)}</div></div>` : ''}
+    ${(() => {
+      const rows = [];
+      // Employment type
+      const empType = job.employment_type || 'full-time';
+      const empLabel = {'full-time':'Full-time','part-time':'Part-time','temporary':'Temporary','contract':'Contract'}[empType] || empType;
+      const empColor = empType === 'temporary' ? '#7A6F64' : empType === 'contract' ? '#7A6F64' : 'inherit';
+      rows.push(`<div class="ic-row"><span class="ic-label">Type</span><span class="ic-value" style="color:${empColor}">${escHtml(empLabel)}</span></div>`);
+      // Union affiliation
+      if (job.union_affiliation) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Union</span><span class="ic-value ic-tag">${escHtml(job.union_affiliation)}</span></div>`);
+      }
+      // Professional vs staff
+      if (job.professional_staff) {
+        const psLabel = job.professional_staff === 'professional' ? 'Professional role' : 'Staff role';
+        rows.push(`<div class="ic-row"><span class="ic-label">Classification</span><span class="ic-value">${escHtml(psLabel)}</span></div>`);
+      }
+      // Supervisory
+      if (job.supervisory) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Supervisory</span><span class="ic-value ic-tag ic-tag-yes">Manages people</span></div>`);
+      }
+      // Years experience
+      if (job.years_experience != null) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Exp. required</span><span class="ic-value">${escHtml(String(job.years_experience))}+ years</span></div>`);
+      }
+      // Credentials
+      const creds = job.credentials_required || [];
+      if (creds.length) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Credentials</span><span class="ic-value">${creds.map(c => `<span class="ic-tag">${escHtml(c)}</span>`).join(' ')}</span></div>`);
+      }
+      // Benefits signals
+      const bens = job.benefits_signals || [];
+      if (bens.length) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Benefits</span><span class="ic-value">${bens.slice(0,5).map(b => `<span class="ic-tag">${escHtml(b)}</span>`).join(' ')}${bens.length > 5 ? `<span style="color:var(--color-text-muted);font-size:11px"> +${bens.length-5} more</span>` : ''}</span></div>`);
+      }
+      // Background required
+      const bg = job.background_required || [];
+      if (bg.length) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Background</span><span class="ic-value">${bg.slice(0,4).map(b => `<span class="ic-tag">${escHtml(b)}</span>`).join(' ')}</span></div>`);
+      }
+      // Special requirements
+      const reqs = job.special_requirements || [];
+      if (reqs.length) {
+        rows.push(`<div class="ic-row"><span class="ic-label">Requirements</span><span class="ic-value">${reqs.map(r => `<span class="ic-tag ic-tag-req">${escHtml(r)}</span>`).join(' ')}</span></div>`);
+      }
+      if (!rows.length) return '';
+      return `<div class="jdp-section">
+        <div class="jdp-eyebrow">Job Details</div>
+        <div class="ic-grid">${rows.join('')}</div>
+      </div>`;
+    })()}
     <div class="jdp-section">
       <div class="jdp-eyebrow">Terrain Impact</div>
       <div style="display:flex;align-items:center;gap:8px;padding:8px 0 4px">

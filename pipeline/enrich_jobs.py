@@ -48,6 +48,7 @@ USER_TEMPLATE = """\
 Classify this union/labor job posting. Return JSON only, no preamble.
 
 Title: {title}
+Employer: {employer}
 Location: {location_raw}
 Description: {description}
 
@@ -64,7 +65,16 @@ Required JSON fields (use exact string values shown):
     "near_airports": [<IATA codes>],
     "raw": "{location_raw}"
   }},
-  "seniority_signals": [<keywords/phrases from title+description that informed experience_level>]
+  "seniority_signals": [<keywords/phrases from title+description that informed experience_level>],
+  "union_affiliation": <parent union acronym e.g. "SEIU", "AFSCME", "CWA", "UAW", "Teamsters", "UFCW", "AFT", "NEA", "IBEW", "USW", "UNITE HERE", "LIUNA", "IBT", "AFL-CIO" or null>,
+  "employment_type": "full-time" | "part-time" | "temporary" | "contract",
+  "supervisory": true | false,
+  "professional_staff": "professional" | "staff",
+  "credentials_required": [<list of required credentials e.g. "JD", "CPA", "RN", "LCSW", "PhD", "MBA", "MPH" — empty list if none>],
+  "benefits_signals": [<benefits mentioned e.g. "health insurance", "dental", "pension", "401k", "PTO", "vacation" — empty list if none>],
+  "years_experience": <minimum years of experience required as integer, or null if not stated>,
+  "background_required": [<domain experience signals e.g. "labor movement", "union experience", "campaign experience", "community organizing", "collective bargaining" — empty list if none>],
+  "org_size_signal": "small" | "medium" | "large"
 }}
 
 experience_level guide:
@@ -76,21 +86,31 @@ experience_level guide:
 experience_confidence guide:
   0.9 = strong signal (clear title keywords: "intern", "fellowship", "director", "executive", or explicit years required)
   0.7 = moderate signal (role type match but ambiguous level, or inferred from description)
-  0.5 = weak signal (no clear indicators, best guess)"""
+  0.5 = weak signal (no clear indicators, best guess)
+
+org_size_signal guide:
+  small  = local union, small nonprofit, <50 staff (local chapters, single-city orgs)
+  medium = regional union/org, 50–500 staff (state councils, regional affiliates)
+  large  = national union, federation, large nonprofit, 500+ staff (AFL-CIO, SEIU national, AFSCME national)"""
 
 VALID_EXP = {"new-to-labor", "early-career", "experienced", "leadership"}
 VALID_CONF = {0.9, 0.7, 0.5}
 VALID_FUNC = {"organizing", "communications", "political", "research", "operations", "legal", "finance", "technology", "other"}
 VALID_LOC_TYPE = {"remote", "hybrid", "in-person"}
+VALID_EMP_TYPE = {"full-time", "part-time", "temporary", "contract"}
+VALID_PROF_STAFF = {"professional", "staff"}
+VALID_ORG_SIZE = {"small", "medium", "large"}
 
 
 def build_prompt(job: dict) -> str:
     title = (job.get("title") or "").strip()
+    employer = (job.get("employer") or "").strip()
     location_raw = (job.get("location_raw") or "").strip()
     desc = (job.get("description") or "").strip()
-    desc_truncated = desc[:500] if desc else "(no description provided)"
+    desc_truncated = desc[:1500] if desc else "(no description provided)"
     return USER_TEMPLATE.format(
         title=title,
+        employer=employer or "(unknown)",
         location_raw=location_raw,
         description=desc_truncated,
     )
@@ -139,6 +159,41 @@ def validate_enrichment(data: dict) -> dict:
     if not isinstance(data.get("seniority_signals"), list):
         data["seniority_signals"] = []
 
+    # Intelligence card fields — coerce/default
+    if data.get("employment_type") not in VALID_EMP_TYPE:
+        data["employment_type"] = "full-time"
+
+    if data.get("professional_staff") not in VALID_PROF_STAFF:
+        data["professional_staff"] = "staff"
+
+    if not isinstance(data.get("supervisory"), bool):
+        data["supervisory"] = False
+
+    if not isinstance(data.get("credentials_required"), list):
+        data["credentials_required"] = []
+
+    if not isinstance(data.get("benefits_signals"), list):
+        data["benefits_signals"] = []
+
+    if not isinstance(data.get("background_required"), list):
+        data["background_required"] = []
+
+    # union_affiliation: string or null
+    ua = data.get("union_affiliation")
+    if ua is not None and not isinstance(ua, str):
+        data["union_affiliation"] = None
+
+    # years_experience: integer or null
+    ye = data.get("years_experience")
+    if ye is not None:
+        try:
+            data["years_experience"] = int(ye)
+        except (ValueError, TypeError):
+            data["years_experience"] = None
+
+    if data.get("org_size_signal") not in VALID_ORG_SIZE:
+        data["org_size_signal"] = None
+
     return data
 
 
@@ -155,7 +210,7 @@ async def enrich_one(
             async with sem:
                 response = await client.messages.create(
                     model=MODEL,
-                    max_tokens=512,
+                    max_tokens=1024,
                     system=SYSTEM_PROMPT,
                     messages=[{"role": "user", "content": prompt}],
                 )
