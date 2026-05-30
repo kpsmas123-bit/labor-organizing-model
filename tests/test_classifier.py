@@ -16,6 +16,15 @@ from pipeline.classify_jobs_rules import (
     classify_job_function,
     classify_location_parsed,
     classify_location_type,
+    classify_union_affiliation,
+    classify_employment_type,
+    classify_supervisory,
+    classify_professional_staff,
+    expand_special_requirements,
+    extract_credentials_required,
+    extract_benefits_signals,
+    extract_years_experience,
+    extract_background_required,
 )
 
 
@@ -470,3 +479,232 @@ def test_midwest_region_inferred():
     assert lp["city"] is None
     assert lp["state"] is None
     assert lp["region"] == "Midwest"
+
+
+# ===========================================================================
+# INTELLIGENCE CARD FIELDS — Phase 2
+# ===========================================================================
+
+# ── union_affiliation ────────────────────────────────────────────────────────
+
+def _aff_job(employer="", title=""):
+    return {"employer": employer, "title": title, "description": ""}
+
+
+@pytest.mark.parametrize("employer,expected", [
+    ("SEIU Local 1199",         "SEIU"),
+    ("AFSCME Council 57",       "AFSCME"),
+    ("CWA District 9",          "CWA"),
+    ("UAW Region 9A",           "UAW"),
+    ("Teamsters Local 206",     "Teamsters"),
+    ("UFCW Local 770",          "UFCW"),
+    ("AFT Connecticut",         "AFT"),
+    ("NEA Member Benefits",     "NEA"),
+    ("IBEW Local 3",            "IBEW"),
+    ("USW District 10",         "USW"),
+    ("UNITE HERE Local 11",     "UNITE HERE"),
+    ("LIUNA Great Lakes",       "LIUNA"),
+    ("IBT Joint Council",       "IBT"),
+    ("AFL-CIO",                 "AFL-CIO"),
+    ("City Library",            None),   # no union match
+], ids=[
+    "seiu", "afscme", "cwa", "uaw", "teamsters", "ufcw", "aft", "nea",
+    "ibew", "usw", "unite-here", "liuna", "ibt", "afl-cio", "no-match"
+])
+def test_union_affiliation(employer, expected):
+    result = classify_union_affiliation(_aff_job(employer=employer))
+    assert result == expected
+
+
+# ── employment_type ──────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("title,desc,expected", [
+    ("Temporary Organizer", "", "temporary"),
+    ("Temp Field Rep", "", "temporary"),
+    ("Limited-Term Researcher", "", "temporary"),
+    ("Part-Time Coordinator", "", "part-time"),
+    ("Contract Attorney", "", "contract"),
+    ("Field Organizer", "", "full-time"),
+    ("Senior Representative", "This is a full-time permanent position.", "full-time"),
+    ("Research Analyst", "This is a temporary, grant-funded role.", "temporary"),
+], ids=[
+    "temp-title", "temp-abbrev", "limited-term", "part-time", "contract",
+    "default-fulltime", "fulltime-desc", "temp-desc"
+])
+def test_employment_type(title, desc, expected):
+    j = {"title": title, "description": desc}
+    assert classify_employment_type(j) == expected
+
+
+# ── supervisory ──────────────────────────────────────────────────────────────
+
+def test_supervisory_direct_reports_in_desc():
+    j = {"title": "Regional Director", "description": "This role has 3 direct reports.", "experience_level": "leadership"}
+    assert classify_supervisory(j) is True
+
+
+def test_supervisory_supervise_in_desc():
+    j = {"title": "Field Manager", "description": "You will supervise a team of organizers.", "experience_level": "experienced"}
+    assert classify_supervisory(j) is True
+
+
+def test_supervisory_no_signal():
+    j = {"title": "Field Organizer", "description": "You will organize workers in hospitals.", "experience_level": "early-career"}
+    assert classify_supervisory(j) is False
+
+
+def test_supervisory_leadership_director_title():
+    j = {"title": "Director of Organizing", "description": "Strategic leadership role.", "experience_level": "leadership"}
+    assert classify_supervisory(j) is True
+
+
+# ── professional_staff ────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("title,expected", [
+    ("Staff Attorney",              "professional"),
+    ("Labor Counsel",               "professional"),
+    ("Accountant",                  "professional"),
+    ("Research Analyst",            "professional"),
+    ("Field Organizer",             "staff"),
+    ("Communications Coordinator",  "staff"),
+    ("Administrative Assistant",    "staff"),
+    ("Senior Representative",       "staff"),
+], ids=[
+    "attorney", "counsel", "accountant", "analyst",
+    "organizer", "coordinator", "assistant", "representative"
+])
+def test_professional_staff(title, expected):
+    j = {"title": title, "description": ""}
+    assert classify_professional_staff(j) == expected
+
+
+# ── credentials_required ──────────────────────────────────────────────────────
+
+def test_credentials_jd_in_desc():
+    j = {"title": "Staff Attorney", "description": "Applicants must have a J.D. from an accredited law school."}
+    assert "JD" in extract_credentials_required(j)
+
+
+def test_credentials_juris_doctor():
+    j = {"title": "Labor Counsel", "description": "Juris Doctor required."}
+    assert "JD" in extract_credentials_required(j)
+
+
+def test_credentials_cpa():
+    j = {"title": "Accountant", "description": "CPA or working toward CPA preferred."}
+    assert "CPA" in extract_credentials_required(j)
+
+
+def test_credentials_rn():
+    j = {"title": "Nurse Organizer", "description": "Must hold an active RN license."}
+    assert "RN" in extract_credentials_required(j)
+
+
+def test_credentials_none():
+    j = {"title": "Field Organizer", "description": "Come organize workers in key industries."}
+    assert extract_credentials_required(j) == []
+
+
+# ── benefits_signals ──────────────────────────────────────────────────────────
+
+def test_benefits_health_insurance():
+    j = {"title": "Organizer", "description": "We offer health insurance and dental coverage."}
+    benefits = extract_benefits_signals(j)
+    assert "health insurance" in benefits
+    assert "dental" in benefits
+
+
+def test_benefits_pension():
+    j = {"title": "Rep", "description": "Generous pension plan and retirement benefits."}
+    benefits = extract_benefits_signals(j)
+    assert "pension" in benefits
+    assert "retirement" in benefits
+
+
+def test_benefits_none():
+    j = {"title": "Organizer", "description": "Join our team to fight for workers."}
+    assert extract_benefits_signals(j) == []
+
+
+# ── years_experience ──────────────────────────────────────────────────────────
+
+def test_years_experience_basic():
+    j = {"description": "We require 3+ years of experience in labor organizing."}
+    assert extract_years_experience(j) == 3
+
+
+def test_years_experience_minimum():
+    j = {"description": "Minimum of 5 years of experience preferred."}
+    assert extract_years_experience(j) == 5
+
+
+def test_years_experience_at_least():
+    j = {"description": "Candidates must have at least 2 years of work experience."}
+    assert extract_years_experience(j) == 2
+
+
+def test_years_experience_takes_minimum():
+    j = {"description": "5 years of experience preferred; minimum 2 years required."}
+    assert extract_years_experience(j) == 2
+
+
+def test_years_experience_excludes_history():
+    j = {"description": "Our union has been fighting for workers for over 80 years."}
+    assert extract_years_experience(j) is None
+
+
+def test_years_experience_none():
+    j = {"description": "Looking for a passionate organizer to join our team."}
+    assert extract_years_experience(j) is None
+
+
+# ── background_required ───────────────────────────────────────────────────────
+
+def test_background_labor_movement():
+    j = {"description": "Experience in the labor movement is strongly preferred."}
+    assert "labor movement" in extract_background_required(j)
+
+
+def test_background_union_experience():
+    j = {"description": "Applicants must have union experience or background."}
+    assert "union experience" in extract_background_required(j)
+
+
+def test_background_community_organizing():
+    j = {"description": "Background in community organizing and political campaigns."}
+    bg = extract_background_required(j)
+    assert "community organizing" in bg
+
+
+def test_background_collective_bargaining():
+    j = {"description": "Must understand collective bargaining and contract enforcement."}
+    assert "collective bargaining" in extract_background_required(j)
+
+
+def test_background_none():
+    j = {"description": "We are looking for a motivated self-starter."}
+    assert extract_background_required(j) == []
+
+
+# ── special_requirements expanded ─────────────────────────────────────────────
+
+def test_special_req_bilingual():
+    j = {"title": "", "description": "Must be bilingual in Spanish and English.", "special_requirements": []}
+    assert "bilingual" in expand_special_requirements(j)
+
+
+def test_special_req_drivers_license():
+    j = {"title": "", "description": "Valid driver's license required.", "special_requirements": []}
+    assert "driver's license" in expand_special_requirements(j)
+
+
+def test_special_req_reliable_transportation():
+    j = {"title": "", "description": "Must have reliable transportation to travel to worksites.", "special_requirements": []}
+    assert "reliable transportation" in expand_special_requirements(j)
+
+
+def test_special_req_preserves_existing():
+    j = {"title": "", "description": "Bilingual Spanish required.", "special_requirements": ["some-existing"]}
+    result = expand_special_requirements(j)
+    assert "some-existing" in result
+    assert "bilingual" in result

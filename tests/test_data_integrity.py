@@ -146,3 +146,73 @@ def test_no_legacy_salary_key():
     assert legacy == [], (
         f"{len(legacy)} records still use the legacy 'salary' key: {legacy[:5]}"
     )
+
+
+# ---------------------------------------------------------------------------
+# Intelligence card field rules — tested against classified_jobs.json
+# ---------------------------------------------------------------------------
+
+CLASSIFIED_PATH = Path("data/classified_jobs.json")
+
+
+def _load_classified():
+    if not CLASSIFIED_PATH.exists():
+        pytest.skip(f"{CLASSIFIED_PATH} not found — run pipeline.classify_jobs_rules first")
+    with open(CLASSIFIED_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def test_seiu_employer_union_affiliation():
+    """Jobs with 'SEIU' in employer should have union_affiliation = 'SEIU'."""
+    jobs = _load_classified()
+    seiu_jobs = [j for j in jobs if "SEIU" in (j.get("employer") or "")]
+    assert seiu_jobs, "No SEIU jobs found — check data"
+    wrong = [j["job_id"] for j in seiu_jobs if j.get("union_affiliation") != "SEIU"]
+    assert wrong == [], f"SEIU jobs with wrong union_affiliation: {wrong[:5]}"
+
+
+def test_attorney_title_professional_staff():
+    """Jobs with 'attorney' in title should have professional_staff = 'professional'."""
+    jobs = _load_classified()
+    import re
+    attorney_jobs = [j for j in jobs if re.search(r'\battorney\b', j.get("title") or "", re.IGNORECASE)]
+    assert attorney_jobs, "No attorney jobs found — check data"
+    wrong = [j["job_id"] for j in attorney_jobs if j.get("professional_staff") != "professional"]
+    assert wrong == [], f"Attorney jobs with wrong professional_staff: {wrong[:5]}"
+
+
+def test_jd_credential_in_description():
+    """Jobs with JD/J.D. in description should have 'JD' in credentials_required."""
+    jobs = _load_classified()
+    import re
+    jd_jobs = [j for j in jobs if re.search(r'\bJ\.?D\.?\b', j.get("description") or "")]
+    if not jd_jobs:
+        pytest.skip("No JD-mentioning jobs in current dataset")
+    wrong = [j["job_id"] for j in jd_jobs if "JD" not in (j.get("credentials_required") or [])]
+    assert wrong == [], f"Jobs with JD in desc but missing from credentials_required: {wrong[:5]}"
+
+
+def test_temporary_title_employment_type():
+    """Jobs with 'temporary' in title should have employment_type = 'temporary'."""
+    jobs = _load_classified()
+    import re
+    temp_jobs = [j for j in jobs if re.search(r'\btemporary\b', j.get("title") or "", re.IGNORECASE)]
+    assert temp_jobs, "No temporary jobs found — check data"
+    wrong = [j["job_id"] for j in temp_jobs if j.get("employment_type") != "temporary"]
+    assert wrong == [], f"Temporary jobs with wrong employment_type: {wrong[:5]}"
+
+
+def test_intelligence_card_fields_populated():
+    """All jobs in classified_jobs.json should have all intelligence card fields present."""
+    jobs = _load_classified()
+    required_fields = [
+        "union_affiliation", "employment_type", "supervisory",
+        "professional_staff", "credentials_required", "benefits_signals",
+        "years_experience", "background_required",
+    ]
+    missing = []
+    for j in jobs:
+        for field in required_fields:
+            if field not in j:
+                missing.append((j.get("job_id"), field))
+    assert missing == [], f"Jobs missing intelligence card fields: {missing[:10]}"
