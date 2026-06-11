@@ -4,10 +4,10 @@
 
 ---
 
-## Current Gate: 3 — Extract scoring functions to scoring/
+## Current Gate: 4 — Remove local fallback definitions from task9_fast.py
 
-Config layer is in place. Regression tests are passing. Safe to begin extracting scoring
-functions to `scoring/` in the next session.
+scoring/ layer is in place. All 133 tests passing (79 regression + 54 v2).
+Safe to begin removing local fallback definitions from task9_fast.py in the next session.
 
 ---
 
@@ -48,13 +48,27 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
+## Phase 3 — Scoring Layer
+- [x] scoring/__init__.py created
+- [x] scoring/svs.py — SVS formula as pure function
+- [x] scoring/sls.py — SLS-Capital and SLS-Community
+- [x] scoring/electoral.py — legacy + new P1 functions
+- [x] scoring/infrastructure.py — organized scale, culture, infra, intervention
+- [x] task9_fast.py imports from scoring/ (local definitions kept as fallback)
+- [x] tests/test_scoring_v2.py — 54 tests, all passing
+- [x] 11 files archived to docs/archive/
+- [ ] Remove local fallback definitions from task9_fast.py — Gate 4
+- [ ] scoring/p2_alignment.py — Phase 2C data required
+
+---
+
 ## Gate Status
 
 | Gate | Description | Status |
 |---|---|---|
 | 1 | Config layer foundation + freeze scripts | ✅ Complete (2026-06-11) |
 | 2 | Regression tests + archival analysis | ✅ Complete (worktree, 2026-06-11) |
-| 3 | Extract scoring functions to `scoring/` | ⬜ Ready to begin |
+| 3 | Extract scoring functions to `scoring/` | ✅ Complete (2026-06-11) |
 | 4 | Rewrite ingestion scripts to `ingestion/` | ⬜ Blocked on Gate 3 |
 | 5 | Build `pipeline/build_county_scores.py` | ⬜ Blocked on Gate 4 |
 | 6 | Full 3,144-county validation run | ⬜ Requires Sam approval |
