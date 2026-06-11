@@ -21,6 +21,20 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
+import json as _json
+from pathlib import Path as _Path
+
+def _load_config():
+    """Load scoring weights and thresholds from config/."""
+    config_dir = _Path(__file__).parent.parent / "config"
+    with open(config_dir / "weights.json") as f:
+        weights = _json.load(f)
+    with open(config_dir / "thresholds.json") as f:
+        thresholds = _json.load(f)
+    return weights, thresholds
+
+_WEIGHTS, _THRESHOLDS = _load_config()
+
 import sys
 sys.path.insert(0, str(Path(__file__).parent))
 from notion_client import NotionClient, number_prop, select_prop
@@ -86,7 +100,8 @@ def score_organizing_potential(unorganized_workers: int, sector_mix: dict, rtw: 
         (logistics / total * 10)
     ))
 
-    c = 5 if rtw else 30
+    w = _WEIGHTS["organizing_potential"]
+    c = w["part_c_rtw"] if rtw else w["part_c_non_rtw"]
     return min(100, a + b + c)
 
 
@@ -168,22 +183,25 @@ def strategic_terrain_score(electoral: float, org: int, sect: float, infra: floa
 
 
 def priority_tier(score: float) -> str:
-    if score >= 37.0:
+    t = _THRESHOLDS["priority_tier"]
+    if score >= t["tier_a_floor"]:
         return "A: High Priority"
-    elif score >= 19.0:
+    elif score >= t["tier_b_floor"]:
         return "B: Medium Priority"
     return "C: Lower Priority"
 
 
 def score_organizing_opportunity(sectoral: float, org: int) -> float:
-    return round((sectoral * 0.55) + (org * 0.45), 2)
+    w = _WEIGHTS["organizing_opportunity"]
+    return min(100, round((sectoral * w["sectoral"]) + (org * w["organizing"]), 2))
 
 
 def classify_intervention(infra: float, electoral: float, statewide: int) -> str:
-    if infra < 30:
+    t = _THRESHOLDS["intervention_type"]
+    if infra < t["infra_type_a_ceiling"]:
         return "Type A: Organize Unorganized"
-    elif infra >= 30 and electoral >= 50:
-        if statewide < 50:
+    elif infra >= t["infra_type_a_ceiling"] and electoral >= t["electoral_type_c_floor"]:
+        if statewide < t["statewide_type_b_ceiling"]:
             return "Type B: Political Activation"
         else:
             return "Type C: Partnership"

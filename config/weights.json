@@ -1,0 +1,99 @@
+{
+  "_note": "All formula weights for the Terrain scoring model. Edit here, not in scripts.",
+  "_version": "2.0",
+  "_last_updated": "2026-06-11",
+
+  "organizing_opportunity": {
+    "sectoral": 0.55,
+    "organizing": 0.45,
+    "_source": "task9_fast.py score_organizing_opportunity()",
+    "_rationale": "55/45 split between sectoral value and organizing potential. Pending regression validation."
+  },
+
+  "organizing_potential": {
+    "part_a_max": 40,
+    "part_b_max": 30,
+    "part_c_non_rtw": 30,
+    "part_c_rtw": 5,
+    "part_b_healthcare_weight": 15,
+    "part_b_education_weight": 10,
+    "part_b_logistics_weight": 10,
+    "_source": "task9_fast.py score_organizing_potential()",
+    "_rationale": "Part A: workforce size. Part B: sector mix. Part C: legal environment (RTW)."
+  },
+
+  "organizing_potential_thresholds": {
+    "tier_1_min": 100000,
+    "tier_1_score": 40,
+    "tier_2_min": 50000,
+    "tier_2_score": 30,
+    "tier_3_min": 25000,
+    "tier_3_score": 20,
+    "tier_4_min": 10000,
+    "tier_4_score": 10,
+    "tier_floor_score": 5,
+    "_source": "task9_fast.py score_organizing_potential() Part A",
+    "_rationale": "Unorganized workforce size tiers. Pending regression validation."
+  },
+
+  "svs_normalization": {
+    "denominator": 100000,
+    "_source": "task9_fast.py score_sectoral_value()",
+    "_rationale": "Scales SVS-weighted employment to 0-100 range. Pending recalibration for SLS-Capital formula."
+  },
+
+  "electoral_composite": {
+    "presidential": 0.4,
+    "statewide": 0.3,
+    "congressional": 0.3,
+    "_source": "task9_fast.py electoral_composite calculation",
+    "_rationale": "Weights for legacy electoral composite. Will be superseded by P1 formula in v2.0."
+  },
+
+  "infrastructure_composite": {
+    "organized_scale": 0.6,
+    "union_culture": 0.4,
+    "_source": "task9_fast.py infrastructure_composite calculation",
+    "_rationale": "Weights for infrastructure score used in intervention type classification."
+  },
+
+  "strategic_terrain": {
+    "electoral": 0.35,
+    "organizing": 0.30,
+    "sectoral": 0.25,
+    "infra": 0.10,
+    "_source": "task9_fast.py strategic_terrain_score()",
+    "_rationale": "Legacy terrain score weights. Stored but not displayed. Pending deprecation review."
+  },
+
+  "strike_activity": {
+    "with_worker_data": {
+      "frequency": 0.40,
+      "scale": 0.35,
+      "recency": 0.25
+    },
+    "without_worker_data": {
+      "frequency": 0.55,
+      "recency": 0.45
+    },
+    "_source": "scripts/score_strike_activity.py compute_strike_score()",
+    "_rationale": "Strike composite weights. Field is Phase 3 — not yet in county_scores.json."
+  },
+
+  "svs_formula": {
+    "reach_points": {"none": 0, "local": 10, "state": 15, "national": 25},
+    "facing_points": {"none": 0, "local": 5, "state": 10, "national": 15},
+    "non_off_points": {"none": 0, "partial": 3, "full": 5},
+    "dual_crisis_bonus": 5,
+    "whole_worker_bonus": 5,
+    "_source": "scripts/task3_sectors.py calc_score_v6()",
+    "_rationale": "SVS v6 formula. Locked. Changes require sector re-audit and full re-run approval."
+  },
+
+  "p2_alignment": {
+    "key_vote_score": 0.60,
+    "inverse_business_funding": 0.40,
+    "_source": "MASTER_PLAN.md",
+    "_rationale": "v2.0 target formula. Not yet implemented. Pending Phase 2 data sources."
+  }
+}

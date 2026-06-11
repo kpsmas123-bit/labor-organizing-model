@@ -1,3 +1,4 @@
+# FROZEN: Do not edit. v2.0 parallel build in progress. See MASTER_PLAN.md
 """
 P2-1b: Strike Activity Score
 

@@ -1,3 +1,4 @@
+# FROZEN: Do not edit. v2.0 parallel build in progress. See MASTER_PLAN.md
 """
 Task 9: Calculate Strategic Terrain Scores for all 3,143 counties.
 Reads from COUNTIES, EMPLOYMENT, UNIONS, SECTORS, and STATES tables,

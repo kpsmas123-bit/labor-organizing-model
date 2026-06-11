@@ -1,3 +1,4 @@
+# FROZEN: Do not edit. v2.0 parallel build in progress. See MASTER_PLAN.md
 """
 Export all scored county data from Notion to data/county_scores.json
 so the dashboard can load it without hitting the Notion API on every open.

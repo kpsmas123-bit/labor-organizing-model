@@ -1,3 +1,4 @@
+# FROZEN: Do not edit. v2.0 parallel build in progress. See MASTER_PLAN.md
 """
 Task 3 (pre-BLS): Seed the SECTORS database from naics_sectors.json.
 Run this before employment data collection so relations can be established.
