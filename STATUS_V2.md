@@ -48,6 +48,20 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
+## Agent B — Census Crosswalk (2026-06-11)
+- [x] Agent B: `data/processed/district_county_crosswalk.csv` — 3,838 district-county pairs, 441 districts, all weight sums within 5% of 1.0
+- [x] Agent B: `data/processed/chamber_seat_counts.json` — 97 chambers across 50 states, tipping weights calculated
+- [x] Agent B: `scripts/ingest_census_crosswalk.py` — ingestion + validation script
+
+**Crosswalk notes:**
+- Source: Census tab20_cd11820_county20_natl.txt (118th Congress, 2020 geographies), found at `rel2020/cd-sld/` not `rel2020/cd118/`
+- overlap_weight = AREALAND_PART / AREALAND_CD118_20 (fraction of district in each county)
+- 9 CT FIPS (09110–09190) are Connecticut Planning Regions (new 2022 geography), not in 2020 Census crosswalk — those counties will have null P1 Congressional/State Leg scores until CT crosswalk is resolved
+- 7 rows skipped: at-large/non-voting districts with zero land area
+- Unblocks Phase 3: `scoring/p1_congressional.py` and `scoring/p1_state_leg.py`
+
+---
+
 ## Gate Status
 
 | Gate | Description | Status |
