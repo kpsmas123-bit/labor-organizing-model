@@ -48,6 +48,7 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
+<<<<<<< HEAD
 ## Phase 4 — First v2.0 Scoring Run (Gate 5)
 - [x] `data/state_tipping_weights.json` created (2024 cycle, 538-derived)
 - [x] `pipeline/build_v2_scores.py` written — v2.0 scoring orchestrator
@@ -63,6 +64,24 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 - SLS scores are proxies (v1 `sectoral_score` as stand-in). True formula requires per-sector Notion data (Phase 4 full pipeline).
 - P1 Presidential uses v2.0 continuous formula: `tipping_weight × (1/margin) × 357.14`
 - P1 threshold set to 5 = top 3.1% nationally (96 counties), all genuine swing counties in decisive states.
+=======
+## Phase 4 — Full Scoring Pipeline
+- [x] Agent A: `data/processed/sector_reach_scores.json` (42 sectors, cap/comm reach exported)
+- [x] Agent A: `data/processed/county_sector_employment.json` (3,143 counties, 101,917 records)
+- [ ] Agent B: `district_county_crosswalk.csv` — pending
+- [ ] Agent C: `federal_key_votes.csv` — pending
+- [ ] Agent D: full scoring run with true SLS formula — pending
+  - **Note:** Before producing final scores, Agent D must calculate the actual maximum
+    raw SLS-Capital sum across all 3,143 counties using the exported employment data,
+    then update `config/weights.json` `svs_normalization.denominator` (currently 100,000)
+    to that maximum value. This ensures the 0–100 scale reflects real data range.
+
+### Agent A Notes (2026-06-12)
+- 38,272 employment records skipped (no sector relation) — these are QCEW government-sector
+  records (NAICS prefix 9) not yet linked to the sector taxonomy in Notion. CBP-sourced records
+  are fully linked.
+- LA County (06037) raw SLS-Capital: 1,889,256; normalized /1M = 1.89; SLS-Community = 0.83
+>>>>>>> claude/lucid-maxwell-f985e5
 
 ---
 
