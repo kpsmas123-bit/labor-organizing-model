@@ -20,7 +20,7 @@
 
   "quadrant": {
     "sls_high_low_boundary": 50,
-    "pts_high_low_boundary": 50,
+    "pts_high_low_boundary": 5,
     "_source": "MASTER_PLAN.md",
     "_rationale": "Default midpoint thresholds for v2.0 quadrant map. Will be recalibrated after regression validation."
   },
