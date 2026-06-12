@@ -4,10 +4,33 @@
 
 ---
 
-## Current Gate: 3 — Extract scoring functions to scoring/
+## Current Gate: Agent D complete — SLS threshold calibration pending
 
-Config layer is in place. Regression tests are passing. Safe to begin extracting scoring
-functions to `scoring/` in the next session.
+True scoring run complete. All 3,143 counties scored with real SLS-Capital,
+SLS-Community, P1 Congressional, and P2 Alignment. SLS threshold needs
+Sam's approval before config/thresholds.json update.
+
+---
+
+## Phase 4 — Full Scoring Pipeline
+- [x] Agent A: sector reach scores + county employment exported
+- [x] Agent B: district-county crosswalk + chamber seat counts
+- [x] Agent C: federal key votes (4 votes, 533 members scored)
+- [x] Agent D: true SLS formula running on real data
+- [x] config/weights.json denominator recalibrated to 210,000
+- [x] county_scores_v2_test.json: real scores, no proxies (3,143 counties, 0 errors)
+- [ ] Gate 6: SLS threshold calibration — pending Sam approval
+- [ ] Gate 7: display layer update — pending
+
+### Agent D Notes (2026-06-12)
+- SLS-Capital: min=0.00, median=0.23, p75=0.72, p90=2.38, p95=5.21, max=84.16
+- SLS-Community: min=0.00, median=21.24, p75=27.68, p90=34.64, p95=39.89, max=82.67
+- P1 Presidential: min=0.02, median=0.06, p75=0.28, p90=1.60, p95=2.87, max=100.00
+- P1 Congressional: min=0.00, median=0.00, p75=0.13, p90=1.48, p95=2.78, max=100.00
+- P2 Alignment: min=0.00, median=0.33, p75=0.59, p90=0.80, p95=0.83, max=1.00
+- Quadrant (placeholder threshold=50): Q2=4, Q3=95, Q4=3,044
+- Known limitations: P1 Congressional uses county margin as district proxy;
+  P2 uses state-level averaging (district field empty in Agent C source)
 
 ---
 
