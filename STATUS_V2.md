@@ -50,7 +50,7 @@ Sam's approval before config/thresholds.json update.
 - [x] `task9_fast.py` reads from config (smoke test passed)
 - [x] Four deprecated scripts frozen
 - [x] 79 regression tests passing
-- [ ] `config/key_votes.json` — Gate 3
+- [x] `config/key_votes.json` — 4 confirmed votes, all verified against senate.gov XML and clerk.house.gov
 - [ ] `config/normalization.json` — Gate 3
 
 ---
@@ -74,6 +74,27 @@ Sam's approval before config/thresholds.json update.
 ### Regression Tests
 - [x] `tests/test_scoring_regression.py` copied from Gate 2 worktree
 - [x] 79/79 tests passing in main repo against config-wired functions
+
+### Agent C Session (2026-06-11) — COMPLETE
+Data source change: ProPublica Congress API deprecated; replaced with:
+- House Clerk XML `clerk.house.gov/evs/{year}/roll{NNN}.xml` (117th Congress votes)
+- Senate.gov XML `senate.gov/legislative/LIS/roll_call_votes/...` (Senate votes)
+- Congress.gov API v3 `/v3/house-vote/...` (118th Congress+ when needed)
+
+Files created/updated:
+- `config/key_votes.json` — 4 confirmed votes, all roll call numbers verified against official XML
+- `scripts/ingest_congress_votes.py` — replaces ingest_propublica.py (handles House Clerk XML + Senate XML + Congress.gov API)
+- `data/processed/federal_key_votes.csv` — 1,063 member-vote records across 4 votes
+- `data/processed/federal_key_vote_scores.csv` — 533 unique members scored
+
+Key vote score results:
+- House: 220 Democrats 1.0, 183 Republicans 0.0, 5 Republicans 1.0 (crossover), 23 Republicans partial
+- Senate: 42 Democrats/Independents 1.0, 50 Republicans 0.0, 7 Democrats partial (0.5)
+- 7 partial Senate Dems all voted YES on Abruzzo + NO on Sanders MW: Manchin, Sinema, Coons, Carper, Tester, Shaheen, Hassan
+- Median score: 1.0 (driven by Democratic majority on House votes)
+
+Known limitation: House member district field is empty (House Clerk XML district parsing to investigate).
+Campaign finance (Capitol Trace): key not in .env — Phase 4C per Sam.
 
 ### Next Session
 Gate 3: Extract scoring functions to `scoring/` modules.
