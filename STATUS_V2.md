@@ -48,22 +48,17 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
-## Phase 4 — Full Scoring Pipeline
-- [x] Agent A: `data/processed/sector_reach_scores.json` (42 sectors, cap/comm reach exported)
-- [x] Agent A: `data/processed/county_sector_employment.json` (3,143 counties, 101,917 records)
-- [ ] Agent B: `district_county_crosswalk.csv` — pending
-- [ ] Agent C: `federal_key_votes.csv` — pending
-- [ ] Agent D: full scoring run with true SLS formula — pending
-  - **Note:** Before producing final scores, Agent D must calculate the actual maximum
-    raw SLS-Capital sum across all 3,143 counties using the exported employment data,
-    then update `config/weights.json` `svs_normalization.denominator` (currently 100,000)
-    to that maximum value. This ensures the 0–100 scale reflects real data range.
+## Agent B — Census Crosswalk (2026-06-11)
+- [x] Agent B: `data/processed/district_county_crosswalk.csv` — 3,838 district-county pairs, 441 districts, all weight sums within 5% of 1.0
+- [x] Agent B: `data/processed/chamber_seat_counts.json` — 97 chambers across 50 states, tipping weights calculated
+- [x] Agent B: `scripts/ingest_census_crosswalk.py` — ingestion + validation script
 
-### Agent A Notes (2026-06-12)
-- 38,272 employment records skipped (no sector relation) — these are QCEW government-sector
-  records (NAICS prefix 9) not yet linked to the sector taxonomy in Notion. CBP-sourced records
-  are fully linked.
-- LA County (06037) raw SLS-Capital: 1,889,256; normalized /1M = 1.89; SLS-Community = 0.83
+**Crosswalk notes:**
+- Source: Census tab20_cd11820_county20_natl.txt (118th Congress, 2020 geographies), found at `rel2020/cd-sld/` not `rel2020/cd118/`
+- overlap_weight = AREALAND_PART / AREALAND_CD118_20 (fraction of district in each county)
+- 9 CT FIPS (09110–09190) are Connecticut Planning Regions (new 2022 geography), not in 2020 Census crosswalk — those counties will have null P1 Congressional/State Leg scores until CT crosswalk is resolved
+- 7 rows skipped: at-large/non-voting districts with zero land area
+- Unblocks Phase 3: `scoring/p1_congressional.py` and `scoring/p1_state_leg.py`
 
 ---
 

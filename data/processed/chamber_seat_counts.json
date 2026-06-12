@@ -1,0 +1,689 @@
+{
+  "_source": "NCSL State Legislatures, 2024 election results",
+  "_vintage": "2025",
+  "_note": "seats_from_flip = abs(dem_seats - rep_seats) / 2. chamber_tipping_weight = 1 - (seats_from_flip / total_seats). A chamber with a 1-seat majority scores near 1.0. Update after each election.",
+  "_ct_note": "Connecticut uses planning regions (09110-09190) not counties \u2014 CT counties cannot be crosswalked to state leg districts using 2020 Census geographies. CT chamber scores will be null until this is resolved.",
+  "chambers": {
+    "AL_senate": {
+      "total_seats": 35,
+      "dem_seats": 7,
+      "rep_seats": 28,
+      "majority": "R"
+    },
+    "AL_house": {
+      "total_seats": 105,
+      "dem_seats": 27,
+      "rep_seats": 78,
+      "majority": "R"
+    },
+    "AK_senate": {
+      "total_seats": 20,
+      "dem_seats": 8,
+      "rep_seats": 12,
+      "majority": "R"
+    },
+    "AK_house": {
+      "total_seats": 40,
+      "dem_seats": 17,
+      "rep_seats": 23,
+      "majority": "R"
+    },
+    "AZ_senate": {
+      "total_seats": 30,
+      "dem_seats": 14,
+      "rep_seats": 16,
+      "majority": "R"
+    },
+    "AZ_house": {
+      "total_seats": 60,
+      "dem_seats": 29,
+      "rep_seats": 31,
+      "majority": "R"
+    },
+    "AR_senate": {
+      "total_seats": 35,
+      "dem_seats": 7,
+      "rep_seats": 28,
+      "majority": "R"
+    },
+    "AR_house": {
+      "total_seats": 100,
+      "dem_seats": 21,
+      "rep_seats": 79,
+      "majority": "R"
+    },
+    "CA_senate": {
+      "total_seats": 40,
+      "dem_seats": 32,
+      "rep_seats": 8,
+      "majority": "D"
+    },
+    "CA_assembly": {
+      "total_seats": 80,
+      "dem_seats": 62,
+      "rep_seats": 18,
+      "majority": "D"
+    },
+    "CO_senate": {
+      "total_seats": 35,
+      "dem_seats": 23,
+      "rep_seats": 12,
+      "majority": "D"
+    },
+    "CO_house": {
+      "total_seats": 65,
+      "dem_seats": 46,
+      "rep_seats": 19,
+      "majority": "D"
+    },
+    "CT_senate": {
+      "total_seats": 36,
+      "dem_seats": 24,
+      "rep_seats": 12,
+      "majority": "D"
+    },
+    "CT_house": {
+      "total_seats": 151,
+      "dem_seats": 99,
+      "rep_seats": 52,
+      "majority": "D"
+    },
+    "FL_senate": {
+      "total_seats": 40,
+      "dem_seats": 14,
+      "rep_seats": 26,
+      "majority": "R"
+    },
+    "FL_house": {
+      "total_seats": 120,
+      "dem_seats": 36,
+      "rep_seats": 84,
+      "majority": "R"
+    },
+    "GA_senate": {
+      "total_seats": 56,
+      "dem_seats": 22,
+      "rep_seats": 34,
+      "majority": "R"
+    },
+    "GA_house": {
+      "total_seats": 180,
+      "dem_seats": 68,
+      "rep_seats": 112,
+      "majority": "R"
+    },
+    "HI_senate": {
+      "total_seats": 25,
+      "dem_seats": 24,
+      "rep_seats": 1,
+      "majority": "D"
+    },
+    "HI_house": {
+      "total_seats": 51,
+      "dem_seats": 46,
+      "rep_seats": 5,
+      "majority": "D"
+    },
+    "ID_senate": {
+      "total_seats": 35,
+      "dem_seats": 7,
+      "rep_seats": 28,
+      "majority": "R"
+    },
+    "ID_house": {
+      "total_seats": 70,
+      "dem_seats": 11,
+      "rep_seats": 59,
+      "majority": "R"
+    },
+    "IL_senate": {
+      "total_seats": 59,
+      "dem_seats": 40,
+      "rep_seats": 19,
+      "majority": "D"
+    },
+    "IL_house": {
+      "total_seats": 118,
+      "dem_seats": 78,
+      "rep_seats": 40,
+      "majority": "D"
+    },
+    "IN_senate": {
+      "total_seats": 50,
+      "dem_seats": 11,
+      "rep_seats": 39,
+      "majority": "R"
+    },
+    "IN_house": {
+      "total_seats": 100,
+      "dem_seats": 25,
+      "rep_seats": 75,
+      "majority": "R"
+    },
+    "IA_senate": {
+      "total_seats": 50,
+      "dem_seats": 18,
+      "rep_seats": 32,
+      "majority": "R"
+    },
+    "IA_house": {
+      "total_seats": 100,
+      "dem_seats": 36,
+      "rep_seats": 64,
+      "majority": "R"
+    },
+    "KS_senate": {
+      "total_seats": 40,
+      "dem_seats": 11,
+      "rep_seats": 29,
+      "majority": "R"
+    },
+    "KS_house": {
+      "total_seats": 125,
+      "dem_seats": 36,
+      "rep_seats": 89,
+      "majority": "R"
+    },
+    "KY_senate": {
+      "total_seats": 38,
+      "dem_seats": 8,
+      "rep_seats": 30,
+      "majority": "R"
+    },
+    "KY_house": {
+      "total_seats": 100,
+      "dem_seats": 15,
+      "rep_seats": 85,
+      "majority": "R"
+    },
+    "LA_senate": {
+      "total_seats": 39,
+      "dem_seats": 13,
+      "rep_seats": 26,
+      "majority": "R"
+    },
+    "LA_house": {
+      "total_seats": 105,
+      "dem_seats": 31,
+      "rep_seats": 74,
+      "majority": "R"
+    },
+    "ME_senate": {
+      "total_seats": 35,
+      "dem_seats": 21,
+      "rep_seats": 14,
+      "majority": "D"
+    },
+    "ME_house": {
+      "total_seats": 151,
+      "dem_seats": 82,
+      "rep_seats": 67,
+      "majority": "D"
+    },
+    "MD_senate": {
+      "total_seats": 47,
+      "dem_seats": 34,
+      "rep_seats": 13,
+      "majority": "D"
+    },
+    "MD_house": {
+      "total_seats": 141,
+      "dem_seats": 99,
+      "rep_seats": 42,
+      "majority": "D"
+    },
+    "MA_senate": {
+      "total_seats": 40,
+      "dem_seats": 37,
+      "rep_seats": 3,
+      "majority": "D"
+    },
+    "MA_house": {
+      "total_seats": 160,
+      "dem_seats": 134,
+      "rep_seats": 26,
+      "majority": "D"
+    },
+    "MI_senate": {
+      "total_seats": 38,
+      "dem_seats": 19,
+      "rep_seats": 19,
+      "majority": "D"
+    },
+    "MI_house": {
+      "total_seats": 110,
+      "dem_seats": 52,
+      "rep_seats": 58,
+      "majority": "R"
+    },
+    "MN_senate": {
+      "total_seats": 67,
+      "dem_seats": 34,
+      "rep_seats": 33,
+      "majority": "D"
+    },
+    "MN_house": {
+      "total_seats": 134,
+      "dem_seats": 67,
+      "rep_seats": 67,
+      "majority": "split"
+    },
+    "MS_senate": {
+      "total_seats": 52,
+      "dem_seats": 17,
+      "rep_seats": 35,
+      "majority": "R"
+    },
+    "MS_house": {
+      "total_seats": 122,
+      "dem_seats": 38,
+      "rep_seats": 84,
+      "majority": "R"
+    },
+    "MO_senate": {
+      "total_seats": 34,
+      "dem_seats": 10,
+      "rep_seats": 24,
+      "majority": "R"
+    },
+    "MO_house": {
+      "total_seats": 163,
+      "dem_seats": 44,
+      "rep_seats": 119,
+      "majority": "R"
+    },
+    "MT_senate": {
+      "total_seats": 50,
+      "dem_seats": 19,
+      "rep_seats": 31,
+      "majority": "R"
+    },
+    "MT_house": {
+      "total_seats": 100,
+      "dem_seats": 32,
+      "rep_seats": 68,
+      "majority": "R"
+    },
+    "NE_senate": {
+      "total_seats": 49,
+      "dem_seats": 17,
+      "rep_seats": 32,
+      "majority": "R"
+    },
+    "NV_senate": {
+      "total_seats": 42,
+      "dem_seats": 26,
+      "rep_seats": 16,
+      "majority": "D"
+    },
+    "NV_assembly": {
+      "total_seats": 42,
+      "dem_seats": 28,
+      "rep_seats": 14,
+      "majority": "D"
+    },
+    "NH_senate": {
+      "total_seats": 24,
+      "dem_seats": 13,
+      "rep_seats": 11,
+      "majority": "D"
+    },
+    "NH_house": {
+      "total_seats": 400,
+      "dem_seats": 177,
+      "rep_seats": 215,
+      "majority": "R"
+    },
+    "NJ_senate": {
+      "total_seats": 40,
+      "dem_seats": 25,
+      "rep_seats": 15,
+      "majority": "D"
+    },
+    "NJ_assembly": {
+      "total_seats": 80,
+      "dem_seats": 50,
+      "rep_seats": 30,
+      "majority": "D"
+    },
+    "NM_senate": {
+      "total_seats": 42,
+      "dem_seats": 27,
+      "rep_seats": 15,
+      "majority": "D"
+    },
+    "NM_house": {
+      "total_seats": 70,
+      "dem_seats": 45,
+      "rep_seats": 25,
+      "majority": "D"
+    },
+    "NY_senate": {
+      "total_seats": 63,
+      "dem_seats": 42,
+      "rep_seats": 21,
+      "majority": "D"
+    },
+    "NY_assembly": {
+      "total_seats": 150,
+      "dem_seats": 103,
+      "rep_seats": 47,
+      "majority": "D"
+    },
+    "NC_senate": {
+      "total_seats": 50,
+      "dem_seats": 20,
+      "rep_seats": 30,
+      "majority": "R"
+    },
+    "NC_house": {
+      "total_seats": 120,
+      "dem_seats": 50,
+      "rep_seats": 70,
+      "majority": "R"
+    },
+    "ND_senate": {
+      "total_seats": 47,
+      "dem_seats": 6,
+      "rep_seats": 41,
+      "majority": "R"
+    },
+    "ND_house": {
+      "total_seats": 94,
+      "dem_seats": 14,
+      "rep_seats": 80,
+      "majority": "R"
+    },
+    "OH_senate": {
+      "total_seats": 33,
+      "dem_seats": 10,
+      "rep_seats": 23,
+      "majority": "R"
+    },
+    "OH_house": {
+      "total_seats": 99,
+      "dem_seats": 33,
+      "rep_seats": 66,
+      "majority": "R"
+    },
+    "OK_senate": {
+      "total_seats": 48,
+      "dem_seats": 11,
+      "rep_seats": 37,
+      "majority": "R"
+    },
+    "OK_house": {
+      "total_seats": 101,
+      "dem_seats": 20,
+      "rep_seats": 81,
+      "majority": "R"
+    },
+    "OR_senate": {
+      "total_seats": 30,
+      "dem_seats": 17,
+      "rep_seats": 13,
+      "majority": "D"
+    },
+    "OR_house": {
+      "total_seats": 60,
+      "dem_seats": 35,
+      "rep_seats": 25,
+      "majority": "D"
+    },
+    "PA_senate": {
+      "total_seats": 50,
+      "dem_seats": 22,
+      "rep_seats": 28,
+      "majority": "R"
+    },
+    "PA_house": {
+      "total_seats": 203,
+      "dem_seats": 102,
+      "rep_seats": 101,
+      "majority": "D"
+    },
+    "RI_senate": {
+      "total_seats": 38,
+      "dem_seats": 33,
+      "rep_seats": 5,
+      "majority": "D"
+    },
+    "RI_house": {
+      "total_seats": 75,
+      "dem_seats": 65,
+      "rep_seats": 10,
+      "majority": "D"
+    },
+    "SC_senate": {
+      "total_seats": 46,
+      "dem_seats": 18,
+      "rep_seats": 28,
+      "majority": "R"
+    },
+    "SC_house": {
+      "total_seats": 124,
+      "dem_seats": 40,
+      "rep_seats": 84,
+      "majority": "R"
+    },
+    "SD_senate": {
+      "total_seats": 35,
+      "dem_seats": 10,
+      "rep_seats": 25,
+      "majority": "R"
+    },
+    "SD_house": {
+      "total_seats": 70,
+      "dem_seats": 14,
+      "rep_seats": 56,
+      "majority": "R"
+    },
+    "TN_senate": {
+      "total_seats": 33,
+      "dem_seats": 6,
+      "rep_seats": 27,
+      "majority": "R"
+    },
+    "TN_house": {
+      "total_seats": 99,
+      "dem_seats": 23,
+      "rep_seats": 76,
+      "majority": "R"
+    },
+    "TX_senate": {
+      "total_seats": 31,
+      "dem_seats": 11,
+      "rep_seats": 20,
+      "majority": "R"
+    },
+    "TX_house": {
+      "total_seats": 150,
+      "dem_seats": 65,
+      "rep_seats": 85,
+      "majority": "R"
+    },
+    "UT_senate": {
+      "total_seats": 29,
+      "dem_seats": 9,
+      "rep_seats": 20,
+      "majority": "R"
+    },
+    "UT_house": {
+      "total_seats": 75,
+      "dem_seats": 18,
+      "rep_seats": 57,
+      "majority": "R"
+    },
+    "VT_senate": {
+      "total_seats": 30,
+      "dem_seats": 22,
+      "rep_seats": 8,
+      "majority": "D"
+    },
+    "VT_house": {
+      "total_seats": 150,
+      "dem_seats": 110,
+      "rep_seats": 40,
+      "majority": "D"
+    },
+    "VA_senate": {
+      "total_seats": 40,
+      "dem_seats": 21,
+      "rep_seats": 19,
+      "majority": "D"
+    },
+    "VA_house": {
+      "total_seats": 100,
+      "dem_seats": 51,
+      "rep_seats": 49,
+      "majority": "D"
+    },
+    "WA_senate": {
+      "total_seats": 49,
+      "dem_seats": 29,
+      "rep_seats": 20,
+      "majority": "D"
+    },
+    "WA_house": {
+      "total_seats": 98,
+      "dem_seats": 58,
+      "rep_seats": 40,
+      "majority": "D"
+    },
+    "WV_senate": {
+      "total_seats": 34,
+      "dem_seats": 6,
+      "rep_seats": 28,
+      "majority": "R"
+    },
+    "WV_house": {
+      "total_seats": 100,
+      "dem_seats": 14,
+      "rep_seats": 86,
+      "majority": "R"
+    },
+    "WI_senate": {
+      "total_seats": 33,
+      "dem_seats": 14,
+      "rep_seats": 19,
+      "majority": "R"
+    },
+    "WI_assembly": {
+      "total_seats": 99,
+      "dem_seats": 45,
+      "rep_seats": 54,
+      "majority": "R"
+    },
+    "WY_senate": {
+      "total_seats": 30,
+      "dem_seats": 3,
+      "rep_seats": 27,
+      "majority": "R"
+    },
+    "WY_house": {
+      "total_seats": 60,
+      "dem_seats": 5,
+      "rep_seats": 55,
+      "majority": "R"
+    }
+  },
+  "tipping_weights": {
+    "AL_senate": 0.7,
+    "AL_house": 0.7571,
+    "AK_senate": 0.9,
+    "AK_house": 0.925,
+    "AZ_senate": 0.9667,
+    "AZ_house": 0.9833,
+    "AR_senate": 0.7,
+    "AR_house": 0.71,
+    "CA_senate": 0.7,
+    "CA_assembly": 0.725,
+    "CO_senate": 0.8429,
+    "CO_house": 0.7923,
+    "CT_senate": 0.8333,
+    "CT_house": 0.8444,
+    "FL_senate": 0.85,
+    "FL_house": 0.8,
+    "GA_senate": 0.8929,
+    "GA_house": 0.8778,
+    "HI_senate": 0.54,
+    "HI_house": 0.598,
+    "ID_senate": 0.7,
+    "ID_house": 0.6571,
+    "IL_senate": 0.822,
+    "IL_house": 0.839,
+    "IN_senate": 0.72,
+    "IN_house": 0.75,
+    "IA_senate": 0.86,
+    "IA_house": 0.86,
+    "KS_senate": 0.775,
+    "KS_house": 0.788,
+    "KY_senate": 0.7105,
+    "KY_house": 0.65,
+    "LA_senate": 0.8333,
+    "LA_house": 0.7952,
+    "ME_senate": 0.9,
+    "ME_house": 0.9503,
+    "MD_senate": 0.7766,
+    "MD_house": 0.7979,
+    "MA_senate": 0.575,
+    "MA_house": 0.6625,
+    "MI_senate": 1.0,
+    "MI_house": 0.9727,
+    "MN_senate": 0.9925,
+    "MN_house": 1.0,
+    "MS_senate": 0.8269,
+    "MS_house": 0.8115,
+    "MO_senate": 0.7941,
+    "MO_house": 0.7699,
+    "MT_senate": 0.88,
+    "MT_house": 0.82,
+    "NE_senate": 0.8469,
+    "NV_senate": 0.881,
+    "NV_assembly": 0.8333,
+    "NH_senate": 0.9583,
+    "NH_house": 0.9525,
+    "NJ_senate": 0.875,
+    "NJ_assembly": 0.875,
+    "NM_senate": 0.8571,
+    "NM_house": 0.8571,
+    "NY_senate": 0.8333,
+    "NY_assembly": 0.8133,
+    "NC_senate": 0.9,
+    "NC_house": 0.9167,
+    "ND_senate": 0.6277,
+    "ND_house": 0.6489,
+    "OH_senate": 0.803,
+    "OH_house": 0.8333,
+    "OK_senate": 0.7292,
+    "OK_house": 0.698,
+    "OR_senate": 0.9333,
+    "OR_house": 0.9167,
+    "PA_senate": 0.94,
+    "PA_house": 0.9975,
+    "RI_senate": 0.6316,
+    "RI_house": 0.6333,
+    "SC_senate": 0.8913,
+    "SC_house": 0.8226,
+    "SD_senate": 0.7857,
+    "SD_house": 0.7,
+    "TN_senate": 0.6818,
+    "TN_house": 0.7323,
+    "TX_senate": 0.8548,
+    "TX_house": 0.9333,
+    "UT_senate": 0.8103,
+    "UT_house": 0.74,
+    "VT_senate": 0.7667,
+    "VT_house": 0.7667,
+    "VA_senate": 0.975,
+    "VA_house": 0.99,
+    "WA_senate": 0.9082,
+    "WA_house": 0.9082,
+    "WV_senate": 0.6765,
+    "WV_house": 0.64,
+    "WI_senate": 0.9242,
+    "WI_assembly": 0.9545,
+    "WY_senate": 0.6,
+    "WY_house": 0.5833
+  }
+}
