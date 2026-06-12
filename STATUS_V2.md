@@ -4,9 +4,26 @@
 
 ---
 
-## Current Gate: Gate 6 — Display layer update
+## Current Gate: Gate 7 — Regression validation before rename
 
-All agent branches merged to main. Phase 4 complete.
+Gate 6 display layer migration complete (2026-06-12).
+Next: validate map renders correctly, then rename county_scores_v2_test.json → county_scores.json.
+
+---
+
+## Phase 5 — Display Layer
+- [x] Data source switched to county_scores_v2_test.json
+- [x] Lens system reads sls_capital and sls_community directly
+- [x] JENKS thresholds recalibrated for v2.0 score distribution [0.5,1.5,3,8,20]
+- [x] Goal toggle: Power Building uses 7-category quadrant colors
+- [x] Goal toggle: Presidential Swing uses p1_presidential score
+- [x] NC swing state display bug fixed (added NC to SWING_STATES_PRES)
+- [x] Detail panel updated to v2.0 field names and labels
+- [x] Quadrant badge with human-readable QUADRANT_LABELS
+- [x] Deprecated v1 fields commented out (terrain_score, priority_tier, OOS)
+- [x] _setBar null-safe for removed bar elements
+- [ ] Intro overlay update — separate future session
+- [ ] county_scores_v2_test.json → county_scores.json rename — after regression validation
 
 ---
 
@@ -18,7 +35,7 @@ All agent branches merged to main. Phase 4 complete.
 - [x] config/weights.json denominator recalibrated to 210,000
 - [x] county_scores_v2_test.json: real scores, 7-quadrant system
 - [x] All agent branches merged to main
-- [ ] Gate 6: display layer update — NEXT
+- [x] Gate 6: display layer update — COMPLETE
 
 ### Agent D Notes (2026-06-12)
 - SLS-Capital: min=0.00, median=0.23, p75=0.72, p90=2.38, p95=5.21, max=84.16
