@@ -1049,7 +1049,7 @@ document.querySelector('.terrain-nav__hamburger')
               <div class="score-bar-val" id="val-org">–</div>
             </div>
             <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-sect">Capital Leverage</div>
+              <div class="score-bar-label" id="lbl-bar-sect">Strategic Leverage</div>
               <div class="score-bar-track"><div class="score-bar-fill" id="bar-sect" style="background:#F5C842"></div></div>
               <div class="score-bar-val" id="val-sect">–</div>
             </div>
@@ -1944,11 +1944,21 @@ function highlightSelection(fips, msaName) {
 let msaScoreByFips = {};
 let msaScoreByName = {};
 
-// NOTE: MSA grouping is currently inactive.
-// msa_name field is absent from county_scores.json.
-// Fix requires re-running export_county_scores.py
-// with msa_name included from the Notion COUNTIES DB.
-// Tracked: May 19 2026 session.
+// Classify an MSA into the 7-quadrant system using MSA-level aggregated scores.
+// Mirrors county quadrant logic but applied to population-weighted MSA averages.
+function classifyMsaQuadrant(msa) {
+  const capHigh  = msa.sls_capital      >= 2.5;
+  const comHigh  = msa.sls_community    >= 35;
+  const presHigh = msa.p1_presidential  >= 5;
+  if (capHigh && comHigh && presHigh) return "deploy_now_both";
+  if (capHigh && presHigh)            return "deploy_now_capital";
+  if (comHigh && presHigh)            return "deploy_now_community";
+  if (capHigh)                        return "primary_target_capital";
+  if (comHigh)                        return "primary_target_community";
+  if (presHigh)                       return "power_building";
+  return "lower_priority";
+}
+
 function buildMsaScoreLookup() {
   // Group counties by MSA
   const msaGroups = {};
@@ -1981,15 +1991,19 @@ function buildMsaScoreLookup() {
     // v2.0: read sls_community and sls_capital directly
     const communityScore = counties.reduce((s, c) => s + (c.sls_community || 0) * (c.population || 1), 0) / totalPop;
     const capitalScore   = counties.reduce((s, c) => s + (c.sls_capital   || 0) * (c.population || 1), 0) / totalPop;
-    // Dominant quadrant by population weight
-    const qw = {};
-    for (const c of counties) { const q = c.quadrant || "lower_priority"; qw[q] = (qw[q] || 0) + (c.population || 1); }
-    const dominantQuadrant = Object.entries(qw).sort((a,b) => b[1]-a[1])[0][0];
+    // Classify MSA into 7-quadrant system using threshold comparison on aggregated scores
+    const presScore = wavg("p1_presidential");
+    const dominantQuadrant = classifyMsaQuadrant({
+      sls_capital: capitalScore, sls_community: communityScore, p1_presidential: presScore,
+    });
     const msaScore = {
       opp:              communityScore, // MSA "opp" = community avg for legacy tooltip
       communityScore,
       capitalScore,
-      presidential:     wavg("p1_presidential"),
+      sls_capital:      capitalScore,
+      sls_community:    communityScore,
+      p1_presidential:  presScore,
+      presidential:     presScore,
       statewide:        null, // DEPRECATED v1 — no v2 equivalent
       congressional:    wavg("p1_congressional"),
       organizing:       null, // DEPRECATED v1
@@ -2268,14 +2282,15 @@ function updateMapColors() {
 // ──────────────────────────────────────────────────────────────
 // Detail panel
 // ──────────────────────────────────────────────────────────────
-function _setBar(barId, valId, lblId, score, highlighted) {
+function _setBar(barId, valId, lblId, score, highlighted, nullLabel) {
   const bar = document.getElementById(barId);
   const val = document.getElementById(valId);
   const lbl = document.getElementById(lblId);
   if (!bar || !val || !lbl) return; // element removed in v2.0 — skip silently
-  const pct = score !== null && score !== undefined ? Math.min(100, Math.max(0, score)) : 0;
+  const hasScore = score !== null && score !== undefined && !isNaN(score);
+  const pct = hasScore ? Math.min(100, Math.max(0, score)) : 0;
   bar.style.width = pct + "%";
-  val.textContent = score !== null && score !== undefined ? (Number.isInteger(score) ? score : score.toFixed(2)) : "–";
+  val.textContent = hasScore ? (Number.isInteger(score) ? score : score.toFixed(2)) : (nullLabel || "–");
   val.className = "score-bar-val" + (highlighted ? " highlighted" : "");
   lbl.className = "score-bar-label" + (highlighted ? " highlighted" : "");
 }
@@ -2327,7 +2342,7 @@ function showMsaDetail(msaName) {
   _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", msa.capitalScore,     false);
   _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", msa.presidential,     goalFilter === "presidential");
   _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", msa.congressional,    false);
-  _setBar("bar-infra", "val-infra", "lbl-bar-infra", msa.p2Alignment != null ? msa.p2Alignment * 100 : null, false);
+  _setBar("bar-infra", "val-infra", "lbl-bar-infra", msa.p2Alignment != null ? msa.p2Alignment * 100 : null, false, "Data pending");
 
   document.getElementById("dp-pop").textContent = msa.countyCount + (msa.countyCount === 1 ? " county" : " counties");
   document.getElementById("dp-rurban").textContent = msa.totalPop ? msa.totalPop.toLocaleString() : "–";
@@ -2364,7 +2379,7 @@ function showDetail(c) {
   _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sls_capital,      false);
   _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.p1_presidential,  goalFilter === "presidential");
   _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.p1_congressional, false);
-  _setBar("bar-infra", "val-infra", "lbl-bar-infra", c.p2_alignment != null ? c.p2_alignment * 100 : null, false);
+  _setBar("bar-infra", "val-infra", "lbl-bar-infra", c.p2_alignment != null ? c.p2_alignment * 100 : null, false, "Data pending");
 
   document.getElementById("dp-pop").textContent = "1 county";
   document.getElementById("dp-rurban").textContent = c.population ? c.population.toLocaleString() : "–";
