@@ -39,6 +39,21 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent))
 from notion_client import NotionClient, number_prop, select_prop
 
+# v2.0 scoring modules — pure functions, no Notion I/O
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from scoring.electoral import (
+    score_presidential,
+    score_statewide,
+    score_congressional,
+    electoral_composite
+)
+from scoring.infrastructure import (
+    score_organized_scale,
+    score_union_culture,
+    infrastructure_composite,
+    classify_intervention
+)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(message)s",
@@ -106,6 +121,9 @@ def score_organizing_potential(unorganized_workers: int, sector_mix: dict, rtw: 
 
 
 def score_presidential(margin: Optional[float], state_abbr: str) -> int:
+    # MIGRATED: This function is now imported from scoring/electoral.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     if margin is None:
         return 20
     abs_margin = abs(margin)
@@ -122,6 +140,9 @@ def score_presidential(margin: Optional[float], state_abbr: str) -> int:
 
 
 def score_statewide(state_margin: Optional[float], county_margin: Optional[float]) -> int:
+    # MIGRATED: This function is now imported from scoring/electoral.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     margin = state_margin if state_margin is not None else county_margin
     if margin is None:
         return 20
@@ -137,6 +158,9 @@ def score_statewide(state_margin: Optional[float], county_margin: Optional[float
 
 
 def score_congressional(margin: Optional[float], trifecta: Optional[str]) -> int:
+    # MIGRATED: This function is now imported from scoring/electoral.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     if margin is None:
         return 20
     abs_margin = abs(margin)
@@ -151,10 +175,16 @@ def score_congressional(margin: Optional[float], trifecta: Optional[str]) -> int
 
 
 def electoral_composite(presidential: int, statewide: int, congressional: int) -> float:
+    # MIGRATED: This function is now imported from scoring/electoral.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     return round((presidential * 0.4) + (statewide * 0.3) + (congressional * 0.3), 2)
 
 
 def score_organized_scale(total_members: int, union_count: int) -> int:
+    # MIGRATED: This function is now imported from scoring/infrastructure.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     if total_members >= 100_000: return 100
     elif total_members >= 50_000: return 80
     elif total_members >= 25_000: return 60
@@ -165,6 +195,9 @@ def score_organized_scale(total_members: int, union_count: int) -> int:
 
 
 def score_union_culture(total_members: int, total_workforce: int) -> int:
+    # MIGRATED: This function is now imported from scoring/infrastructure.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     density = total_members / total_workforce if total_workforce > 0 else 0.0
     if density >= 0.30: return 100
     elif density >= 0.20: return 80
@@ -175,6 +208,9 @@ def score_union_culture(total_members: int, total_workforce: int) -> int:
 
 
 def infrastructure_composite(organized_scale: int, union_culture: int) -> float:
+    # MIGRATED: This function is now imported from scoring/infrastructure.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     return round((organized_scale * 0.6) + (union_culture * 0.4), 2)
 
 
@@ -197,6 +233,9 @@ def score_organizing_opportunity(sectoral: float, org: int) -> float:
 
 
 def classify_intervention(infra: float, electoral: float, statewide: int) -> str:
+    # MIGRATED: This function is now imported from scoring/infrastructure.py
+    # This local definition is kept as fallback during migration.
+    # Remove after all tests confirm scoring/ imports work correctly.
     t = _THRESHOLDS["intervention_type"]
     if infra < t["infra_type_a_ceiling"]:
         return "Type A: Organize Unorganized"
