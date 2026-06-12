@@ -1,3 +1,15 @@
+## GIT WORKFLOW — ALL AGENTS MUST FOLLOW
+
+At the end of every session, before stopping:
+1. git push origin HEAD
+2. Report your branch name to Sam
+3. Sam merges via GitHub browser — do not attempt to merge to main yourself
+
+Never work assuming files from other branches exist locally.
+Always push your branch. Never merge other branches yourself.
+
+---
+
 ## PERMISSION PROMPT RULES
 
 Before requesting ANY permission, you must first explain in plain language:

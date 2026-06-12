@@ -37,9 +37,10 @@
   },
 
   "svs_normalization": {
-    "denominator": 100000,
-    "_source": "task9_fast.py score_sectoral_value()",
-    "_rationale": "Scales SVS-weighted employment to 0-100 range. Pending recalibration for SLS-Capital formula."
+    "denominator": 210000,
+    "_calibrated": "2026-06-12",
+    "_rationale": "Set to place top county (LA, 06037) at ~84 on 0-100 scale. Based on true per-sector employment × cap_reach formula across all 3,143 counties. Max raw SLS-Capital = 17,673,345. Approved by Sam 2026-06-12.",
+    "_source": "Agent D true scoring run"
   },
 
   "electoral_composite": {

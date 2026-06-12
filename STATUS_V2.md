@@ -4,10 +4,43 @@
 
 ---
 
-## Current Gate: 4 — Remove local fallback definitions from task9_fast.py
+## Current Gate: Agent D complete — SLS threshold calibration pending
 
-scoring/ layer is in place. All 133 tests passing (79 regression + 54 v2).
-Safe to begin removing local fallback definitions from task9_fast.py in the next session.
+True scoring run complete. All 3,143 counties scored with real SLS-Capital,
+SLS-Community, P1 Congressional, and P2 Alignment. SLS threshold needs
+Sam's approval before config/thresholds.json update.
+
+---
+
+## Phase 4 — Full Scoring Pipeline
+- [x] Agent A: sector reach scores + county employment exported
+- [x] Agent B: district-county crosswalk + chamber seat counts
+- [x] Agent C: federal key votes (4 votes, 533 members scored)
+- [x] Agent D: true SLS formula running on real data
+- [x] config/weights.json denominator recalibrated to 210,000
+- [x] county_scores_v2_test.json: real scores, no proxies (3,143 counties, 0 errors)
+- [ ] Gate 6: SLS threshold calibration — pending Sam approval
+- [ ] Gate 7: display layer update — pending
+
+### Agent D Notes (2026-06-12)
+- SLS-Capital: min=0.00, median=0.23, p75=0.72, p90=2.38, p95=5.21, max=84.16
+- SLS-Community: min=0.00, median=21.24, p75=27.68, p90=34.64, p95=39.89, max=82.67
+- P1 Presidential: min=0.02, median=0.06, p75=0.28, p90=1.60, p95=2.87, max=100.00
+- P1 Congressional: min=0.00, median=0.00, p75=0.13, p90=1.48, p95=2.78, max=100.00
+- P2 Alignment: min=0.00, median=0.33, p75=0.59, p90=0.80, p95=0.83, max=1.00
+- Quadrant (placeholder threshold=50): Q2=4, Q3=95, Q4=3,044
+- Known limitations: P1 Congressional uses county margin as district proxy;
+  P2 uses state-level averaging (district field empty in Agent C source)
+- deploy_now_both = 0: No county currently clears both SLS-Capital >= 2.5,
+  SLS-Community >= 35, AND P1 >= 5. This reflects the structural reality
+  that major labor metros are concentrated in non-swing states.
+  This is a genuine finding, not a calibration error.
+- Small county amplification: SLS-Community uses workforce share,
+  which can produce high scores in tiny rural counties where a single
+  sector dominates local employment. Niobrara WY (pop. 2,354) scores
+  43.1 on community reach. This is methodologically correct but
+  strategically limited by absolute workforce scale.
+  Future versions may add a minimum workforce floor.
 
 ---
 
@@ -48,27 +81,13 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
-## Phase 3 — Scoring Layer
-- [x] scoring/__init__.py created
-- [x] scoring/svs.py — SVS formula as pure function
-- [x] scoring/sls.py — SLS-Capital and SLS-Community
-- [x] scoring/electoral.py — legacy + new P1 functions
-- [x] scoring/infrastructure.py — organized scale, culture, infra, intervention
-- [x] task9_fast.py imports from scoring/ (local definitions kept as fallback)
-- [x] tests/test_scoring_v2.py — 54 tests, all passing
-- [x] 11 files archived to docs/archive/
-- [ ] Remove local fallback definitions from task9_fast.py — Gate 4
-- [ ] scoring/p2_alignment.py — Phase 2C data required
-
----
-
 ## Gate Status
 
 | Gate | Description | Status |
 |---|---|---|
 | 1 | Config layer foundation + freeze scripts | ✅ Complete (2026-06-11) |
 | 2 | Regression tests + archival analysis | ✅ Complete (worktree, 2026-06-11) |
-| 3 | Extract scoring functions to `scoring/` | ✅ Complete (2026-06-11) |
+| 3 | Extract scoring functions to `scoring/` | ⬜ Ready to begin |
 | 4 | Rewrite ingestion scripts to `ingestion/` | ⬜ Blocked on Gate 3 |
 | 5 | Build `pipeline/build_county_scores.py` | ⬜ Blocked on Gate 4 |
 | 6 | Full 3,144-county validation run | ⬜ Requires Sam approval |

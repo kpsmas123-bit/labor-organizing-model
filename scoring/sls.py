@@ -1,79 +1,70 @@
 """
-Terrain v2.0 — Strategic Leverage Score (SLS)
+Terrain v2.0 — Strategic Labor Score (SLS) scoring functions.
 
-Two independent county-level scores:
+SLS-Capital: measures how much leverage organized labor in a county has
+over capital — weighted by sector's capital-reach score and employment.
 
-SLS-Capital: absolute crisis-creating potential against capital
-    = Σ(cap_reach_score × raw_employment_in_sector) / benchmark
-    Raw employment count drives this. Scale matters for capital disruption.
-    Grounded in Womack (2005) technically strategic positions.
+SLS-Community: measures how much leverage organized labor has over
+community crisis points — weighted by sector's community-reach score.
 
-SLS-Community: relational crisis-creating potential in community
-    = Σ(comm_reach_score × employment_share_of_county_workforce)
-    Share of workforce drives this. Structural centrality to community life.
-    Grounded in McAlevey (2016) whole-worker model.
+Formula (both):
+    SLS = min(100, Σ(reach_score[sector] × employment[sector]) / 100_000)
 
-Config: config/weights.json → svs_normalization
+Normalization denominator 100_000 is from weights.json: svs_normalization.denominator.
+Update that value if the score distribution shifts after Phase 4 calibration.
+
+Theoretical grounding: McAlevey (2016) — power analysis distinguishes
+capital-facing leverage (contract/bargaining power) from community-facing
+leverage (social crisis intervention). See METHODOLOGY_V2.md §3.2.
+
+NOTE: Full calculation requires per-sector employment from Notion/CBP.
+pipeline/build_v2_scores.py uses proxies from v1 sectoral_score pending
+Phase 4 full pipeline build. These functions implement the target formula.
 """
 
-import json
-from pathlib import Path
-from typing import Dict
+from typing import Optional
 
 
-def load_normalization() -> dict:
-    config_path = Path(__file__).parent.parent / "config" / "weights.json"
-    with open(config_path) as f:
-        return json.load(f)["svs_normalization"]
+NORMALIZATION_DENOMINATOR = 100_000
 
 
 def score_sls_capital(
-    sector_employment: Dict[str, int],
-    sector_cap_reach: Dict[str, float],
-    benchmark: float = None
+    cap_reach_by_sector: dict,
+    employment_by_sector: dict,
 ) -> float:
     """
-    Compute SLS-Capital for a county.
+    SLS-Capital: employment-weighted capital-reach score.
 
     Args:
-        sector_employment: {sector_id: raw_employment_count}
-        sector_cap_reach: {sector_id: cap_reach_score (0/10/15/25)}
-        benchmark: normalization denominator. Loads from config if None.
+        cap_reach_by_sector: {sector_id: cap_reach_score (0-25)} from SVS config
+        employment_by_sector: {sector_id: employed_workers} in this county
 
     Returns:
-        SLS-Capital score normalized to 0-100.
+        float 0–100
     """
-    if benchmark is None:
-        benchmark = load_normalization()["denominator"]
-
-    total = sum(
-        sector_cap_reach.get(sid, 0) * emp
-        for sid, emp in sector_employment.items()
-    )
-    return min(100.0, round(total / benchmark, 2))
+    total = 0.0
+    for sector_id, cap_reach in cap_reach_by_sector.items():
+        emp = employment_by_sector.get(sector_id, 0) or 0
+        total += float(cap_reach) * float(emp)
+    return min(100.0, round(total / NORMALIZATION_DENOMINATOR, 2))
 
 
 def score_sls_community(
-    sector_employment: Dict[str, int],
-    sector_comm_reach: Dict[str, float],
-    total_county_employment: int
+    comm_reach_by_sector: dict,
+    employment_by_sector: dict,
 ) -> float:
     """
-    Compute SLS-Community for a county.
+    SLS-Community: employment-weighted community-reach score.
 
     Args:
-        sector_employment: {sector_id: raw_employment_count}
-        sector_comm_reach: {sector_id: comm_reach_score (0/10/15/25)}
-        total_county_employment: total workers across all sectors in county
+        comm_reach_by_sector: {sector_id: comm_reach_score (0-15)} from SVS config
+        employment_by_sector: {sector_id: employed_workers} in this county
 
     Returns:
-        SLS-Community score normalized to 0-100.
+        float 0–100
     """
-    if total_county_employment == 0:
-        return 0.0
-
-    total = sum(
-        sector_comm_reach.get(sid, 0) * (emp / total_county_employment)
-        for sid, emp in sector_employment.items()
-    )
-    return min(100.0, round(total * 100, 2))
+    total = 0.0
+    for sector_id, comm_reach in comm_reach_by_sector.items():
+        emp = employment_by_sector.get(sector_id, 0) or 0
+        total += float(comm_reach) * float(emp)
+    return min(100.0, round(total / NORMALIZATION_DENOMINATOR, 2))

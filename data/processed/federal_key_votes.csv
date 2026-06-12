@@ -1,0 +1,1064 @@
+member_id,member_name,state,party,chamber,district,vote_id,vote_name,congress,vote_position,is_pro_labor,is_not_voting
+A000370,Adams,NC,D,house,,pro_act_117,PRO Act,117,yes,True,False
+A000055,Aderholt,AL,R,house,,pro_act_117,PRO Act,117,no,False,False
+A000371,Aguilar,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+A000372,Allen,GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+A000376,Allred,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+A000369,Amodei,NV,R,house,,pro_act_117,PRO Act,117,no,False,False
+A000377,Armstrong,ND,R,house,,pro_act_117,PRO Act,117,no,False,False
+A000375,Arrington,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+A000148,Auchincloss,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+A000378,Axne,IA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001291,Babin,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001298,Bacon,NE,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001307,Baird,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001306,Balderson,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001299,Banks,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001282,Barr,KY,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001300,BarragÃ¡n,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001270,Bass,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001281,Beatty,OH,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B000668,Bentz,OR,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001287,Bera,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001301,Bergman,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001292,Beyer,VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B000740,Bice (OK),OK,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001302,Biggs,AZ,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001257,Bilirakis,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+B000490,Bishop (GA),GA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001311,Bishop (NC),NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+B000574,Blumenauer,OR,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001303,Blunt Rochester,DE,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B000825,Boebert,CO,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001278,Bonamici,OR,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001295,Bost,IL,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001312,Bourdeaux,GA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001223,Bowman,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001296,"Boyle, Brendan F.",PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B000755,Brady,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001274,Brooks,AL,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001304,Brown,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001285,Brownley,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001260,Buchanan,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001297,Buck,CO,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001275,Bucshon,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001305,Budd,NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001309,Burchett,TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001248,Burgess,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+B001224,Bush,MO,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001286,Bustos,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+B001251,Butterfield,NC,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C000059,Calvert,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001039,Cammack,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001112,Carbajal,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001097,CÃ¡rdenas,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001054,Carl,AL,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001072,Carson,IN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001103,Carter (GA),GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001051,Carter (TX),TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001090,Cartwright,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001055,Case,HI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001117,Casten,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001066,Castor (FL),FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001091,Castro (TX),TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001104,Cawthorn,NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+C000266,Chabot,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001109,Cheney,WY,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001080,Chu,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001084,Cicilline,RI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001101,Clark (MA),MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001067,Clarke (NY),NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001061,Cleaver,MO,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001118,Cline,VA,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001115,Cloud,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+C000537,Clyburn,SC,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001116,Clyde,GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001068,Cohen,TN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001053,Cole,OK,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001108,Comer,KY,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001078,Connolly,VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C000754,Cooper,TN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001110,Correa,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001059,Costa,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001069,Courtney,CT,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001119,Craig,MN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001087,Crawford,AR,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001120,Crenshaw,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+C001111,Crist,FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001121,Crow,CO,D,house,,pro_act_117,PRO Act,117,yes,True,False
+C001063,Cuellar,TX,D,house,,pro_act_117,PRO Act,117,no,False,False
+C001114,Curtis,UT,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000629,Davids (KS),KS,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000626,Davidson,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000096,"Davis, Danny K.",IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000619,"Davis, Rodney",IL,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000631,Dean,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000191,DeFazio,OR,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000197,DeGette,CO,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000216,DeLauro,CT,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000617,DelBene,WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000630,Delgado,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000627,Demings,FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000623,DeSaulnier,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000616,DesJarlais,TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000610,Deutch,FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000600,Diaz-Balart,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000624,Dingell,MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000399,Doggett,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000032,Donalds,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000482,"Doyle, Michael F.",PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+D000615,Duncan,SC,R,house,,pro_act_117,PRO Act,117,no,False,False
+D000628,Dunn,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+E000294,Emmer,MN,R,house,,pro_act_117,PRO Act,117,no,False,False
+E000299,Escobar,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+E000215,Eshoo,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+E000297,Espaillat,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+E000298,Estes,KS,R,house,,pro_act_117,PRO Act,117,no,False,False
+E000296,Evans,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+F000246,Fallon,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000446,Feenstra,IA,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000465,Ferguson,GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000470,Fischbach,MN,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000471,Fitzgerald,WI,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000466,Fitzpatrick,PA,R,house,,pro_act_117,PRO Act,117,yes,True,False
+F000459,Fleischmann,TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000468,Fletcher,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+F000449,Fortenberry,NE,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000454,Foster,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+F000450,Foxx,NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000462,"Frankel, Lois",FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+F000472,"Franklin, C. Scott",FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+F000455,Fudge,OH,D,house,,pro_act_117,PRO Act,117,yes,True,False
+F000469,Fulcher,ID,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000578,Gaetz,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000579,Gallagher,WI,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000574,Gallego,AZ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000559,Garamendi,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000597,Garbarino,NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000061,Garcia (CA),CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000586,GarcÃ­a (IL),IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000587,Garcia (TX),TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000563,Gibbs,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000593,Gimenez,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000552,Gohmert,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000592,Golden,ME,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000585,Gomez,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000594,"Gonzales, Tony",TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000588,Gonzalez (OH),OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000581,"Gonzalez, Vicente",TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000595,Good (VA),VA,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000589,Gooden (TX),TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000565,Gosar,AZ,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000583,Gottheimer,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000377,Granger,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000577,Graves (LA),LA,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000546,Graves (MO),MO,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000590,Green (TN),TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000553,"Green, Al (TX)",TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000596,Greene (GA),GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000568,Griffith,VA,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000551,Grijalva,AZ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+G000576,Grothman,WI,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000591,Guest,MS,R,house,,pro_act_117,PRO Act,117,no,False,False
+G000558,Guthrie,KY,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001080,Haaland,NM,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001088,Hagedorn,MN,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001090,Harder (CA),CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001052,Harris,MD,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001086,Harshbarger,TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001053,Hartzler,MO,R,house,,pro_act_117,PRO Act,117,no,False,False
+H000324,Hastings,FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001081,Hayes,CT,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001082,Hern,OK,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001084,Herrell,NM,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001056,Herrera Beutler,WA,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001071,Hice (GA),GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001077,Higgins (LA),LA,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001038,Higgins (NY),NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001072,Hill,AR,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001047,Himes,CT,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001091,Hinson,IA,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001074,Hollingsworth,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001066,Horsford,NV,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001085,Houlahan,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H000874,Hoyer,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001067,Hudson,NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+H001068,Huffman,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+H001058,Huizenga,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+I000056,Issa,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000304,Jackson,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000032,Jackson Lee,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000305,Jacobs (CA),CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000020,Jacobs (NY),NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000298,Jayapal,WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000294,Jeffries,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000288,Johnson (GA),GA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000299,Johnson (LA),LA,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000292,Johnson (OH),OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000301,Johnson (SD),SD,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000126,Johnson (TX),TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000306,Jones,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+J000289,Jordan,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000295,Joyce (OH),OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+J000302,Joyce (PA),PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+K000396,Kahele,HI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000009,Kaptur,OH,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000386,Katko,NY,R,house,,pro_act_117,PRO Act,117,yes,True,False
+K000375,Keating,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000395,Keller,PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+K000385,Kelly (IL),IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000388,Kelly (MS),MS,R,house,,pro_act_117,PRO Act,117,no,False,False
+K000376,Kelly (PA),PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+K000389,Khanna,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000380,Kildee,MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000381,Kilmer,WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000397,Kim (CA),CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+K000394,Kim (NJ),NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000188,Kind,WI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000378,Kinzinger,IL,R,house,,pro_act_117,PRO Act,117,no,False,False
+K000368,Kirkpatrick,AZ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000391,Krishnamoorthi,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000382,Kuster,NH,D,house,,pro_act_117,PRO Act,117,yes,True,False
+K000392,Kustoff,TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000585,LaHood,IL,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000578,LaMalfa,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000588,Lamb,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000564,Lamborn,CO,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000559,Langevin,RI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000560,Larsen (WA),WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000557,Larson (CT),CT,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000566,Latta,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000266,LaTurner,KS,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000581,Lawrence,MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000586,Lawson (FL),FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000551,Lee (CA),CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000590,Lee (NV),NV,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000273,Leger Fernandez,NM,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000589,Lesko,AZ,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000593,Levin (CA),CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000592,Levin (MI),MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000582,Lieu,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000397,Lofgren,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000576,Long,MO,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000583,Loudermilk,GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000579,Lowenthal,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000491,Lucas,OK,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000569,Luetkemeyer,MO,R,house,,pro_act_117,PRO Act,117,no,False,False
+L000591,Luria,VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+L000562,Lynch,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M000194,Mace,SC,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001203,Malinowski,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M000317,Malliotakis,NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+M000087,"Maloney, Carolyn B.",NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001185,"Maloney, Sean",NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M000871,Mann,KS,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001135,Manning,NC,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001184,Massie,KY,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001199,Mast,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001163,Matsui,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001208,McBath,GA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001165,McCarthy,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001157,McCaul,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001136,McClain,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001177,McClintock,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001143,McCollum,MN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001200,McEachin,VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M000312,McGovern,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001156,McHenry,NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001180,McKinley,WV,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001166,McNerney,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001137,Meeks,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001186,Meijer,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001188,Meng,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001204,Meuser,PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+M000687,Mfume,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001211,Miller (IL),IL,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001205,Miller (WV),WV,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001215,Miller-Meeks,IA,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001194,Moolenaar,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001195,Mooney,WV,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001212,Moore (AL),AL,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001213,Moore (UT),UT,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001160,Moore (WI),WI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001206,Morelle,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001196,Moulton,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001214,Mrvan,IN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001190,Mullin,OK,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001202,Murphy (FL),FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+M001210,Murphy (NC),NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+N000002,Nadler,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+N000179,Napolitano,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+N000015,Neal,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+N000191,Neguse,CO,D,house,,pro_act_117,PRO Act,117,yes,True,False
+N000026,Nehls,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+N000189,Newhouse,WA,R,house,,pro_act_117,PRO Act,117,no,False,False
+N000192,Newman,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+N000188,Norcross,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+N000190,Norman,SC,R,house,,pro_act_117,PRO Act,117,no,False,False
+N000181,Nunes,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+O000171,O'Halleran,AZ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+O000019,Obernolte,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+O000172,Ocasio-Cortez,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+O000173,Omar,MN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+O000086,Owens,UT,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000601,Palazzo,MS,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000034,Pallone,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000609,Palmer,AL,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000613,Panetta,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000614,Pappas,NH,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000096,Pascrell,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000604,Payne,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000197,Pelosi,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000615,Pence,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000593,Perlmutter,CO,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000605,Perry,PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000608,Peters,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000048,Pfluger,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000616,Phillips,MN,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000597,Pingree,ME,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000607,Pocan,WI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000618,Porter,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000599,Posey,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+P000617,Pressley,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+P000523,Price (NC),NC,D,house,,pro_act_117,PRO Act,117,yes,True,False
+Q000023,Quigley,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000606,Raskin,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000585,Reed,NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000610,Reschenthaler,PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000602,Rice (NY),NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000597,Rice (SC),SC,R,house,,pro_act_117,PRO Act,117,no,False,False
+M001159,Rodgers (WA),WA,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000575,Rogers (AL),AL,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000395,Rogers (KY),KY,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000612,Rose,TN,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000103,Rosendale,MT,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000305,Ross,NC,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000603,Rouzer,NC,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000614,Roy,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000486,Roybal-Allard,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000599,Ruiz,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000576,Ruppersberger,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000515,Rush,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+R000609,Rutherford,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+R000577,Ryan,OH,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S000168,Salazar,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001156,SÃ¡nchez,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001168,Sarbanes,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001176,Scalise,LA,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001205,Scanlon,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001145,Schakowsky,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001150,Schiff,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001190,Schneider,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001180,Schrader,OR,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001216,Schrier,WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001183,Schweikert,AZ,R,house,,pro_act_117,PRO Act,117,no,False,False
+S000185,Scott (VA),VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001189,"Scott, Austin",GA,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001157,"Scott, David",GA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S000250,Sessions,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001185,Sewell,AL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S000344,Sherman,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001207,Sherrill,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001148,Simpson,ID,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001165,Sires,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001208,Slotkin,MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001195,Smith (MO),MO,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001172,Smith (NE),NE,R,house,,pro_act_117,PRO Act,117,no,False,False
+S000522,Smith (NJ),NJ,R,house,,pro_act_117,PRO Act,117,yes,True,False
+S000510,Smith (WA),WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001199,Smucker,PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001200,Soto,FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001209,Spanberger,VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S000929,Spartz,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001175,Speier,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001211,Stanton,AZ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001212,Stauber,MN,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001135,Steel,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001196,Stefanik,NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001213,Steil,WI,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001214,Steube,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001215,Stevens,MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001192,Stewart,UT,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001187,Stivers,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+S001159,Strickland,WA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001201,Suozzi,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+S001193,Swalwell,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000472,Takano,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000479,Taylor,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+T000478,Tenney,NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+T000460,Thompson (CA),CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000193,Thompson (MS),MS,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000467,Thompson (PA),PA,R,house,,pro_act_117,PRO Act,117,no,False,False
+T000165,Tiffany,WI,R,house,,pro_act_117,PRO Act,117,not voting,False,True
+T000480,Timmons,SC,R,house,,pro_act_117,PRO Act,117,no,False,False
+T000468,Titus,NV,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000481,Tlaib,MI,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000469,Tonko,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000474,Torres (CA),CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000486,Torres (NY),NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000482,Trahan,MA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000483,Trone,MD,D,house,,pro_act_117,PRO Act,117,yes,True,False
+T000463,Turner,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+U000040,Underwood,IL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+U000031,Upton,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+V000129,Valadao,CA,R,house,,pro_act_117,PRO Act,117,no,False,False
+V000133,Van Drew,NJ,R,house,,pro_act_117,PRO Act,117,yes,True,False
+V000134,Van Duyne,TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+V000130,Vargas,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+V000131,Veasey,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+V000132,Vela,TX,D,house,,pro_act_117,PRO Act,117,yes,True,False
+V000081,VelÃ¡zquez,NY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000812,Wagner,MO,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000798,Walberg,MI,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000813,Walorski,IN,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000823,Waltz,FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000797,Wasserman Schultz,FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000187,Waters,CA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000822,Watson Coleman,NJ,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000814,Weber (TX),TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000806,Webster (FL),FL,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000800,Welch,VT,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000815,Wenstrup,OH,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000821,Westerman,AR,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000825,Wexton,VA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000826,Wild,PA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000788,Williams (GA),GA,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000816,Williams (TX),TX,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000808,Wilson (FL),FL,D,house,,pro_act_117,PRO Act,117,yes,True,False
+W000795,Wilson (SC),SC,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000804,Wittman,VA,R,house,,pro_act_117,PRO Act,117,no,False,False
+W000809,Womack,AR,R,house,,pro_act_117,PRO Act,117,no,False,False
+Y000062,Yarmuth,KY,D,house,,pro_act_117,PRO Act,117,yes,True,False
+Y000033,Young,AK,R,house,,pro_act_117,PRO Act,117,yes,True,False
+Z000017,Zeldin,NY,R,house,,pro_act_117,PRO Act,117,no,False,False
+S354,Tammy Baldwin,WI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S317,John Barrasso,WY,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S330,Michael Bennet,CO,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S396,Marsha Blackburn,TN,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S341,Richard Blumenthal,CT,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S342,Roy Blunt,MO,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S370,Cory Booker,NJ,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S343,John Boozman,AR,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S397,Mike Braun,IN,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S307,Sherrod Brown,OH,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S300,Richard Burr,NC,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S275,Maria Cantwell,WA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S372,Shelley Capito,WV,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S308,Ben Cardin,MD,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S277,Thomas Carper,DE,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S309,Bob Casey,PA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S373,Bill Cassidy,LA,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S252,Susan Collins,ME,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S337,Christopher Coons,DE,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S287,John Cornyn,TX,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S385,Catherine Cortez Masto,NV,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S374,Tom Cotton,AR,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S398,Kevin Cramer,ND,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S266,Mike Crapo,ID,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S355,Ted Cruz,TX,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S375,Steve Daines,MT,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S386,Tammy Duckworth,IL,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S253,Richard Durbin,IL,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S376,Joni Ernst,IA,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S221,Dianne Feinstein,CA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S357,Deb Fischer,NE,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S331,Kirsten Gillibrand,NY,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S293,Lindsey Graham,SC,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S153,Charles Grassley,IA,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S407,Bill Hagerty,TN,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S388,Maggie Hassan,NH,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S399,Josh Hawley,MO,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S359,Martin Heinrich,NM,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S408,John Hickenlooper,CO,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S361,Mazie Hirono,HI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S344,John Hoeven,ND,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S395,Cindy Hyde-Smith,MS,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S236,Jim Inhofe,OK,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S345,Ron Johnson,WI,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S362,Timothy Kaine,VA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S406,Mark Kelly,AZ,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S389,John Kennedy,LA,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S363,Angus King,ME,I,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S311,Amy Klobuchar,MN,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S378,James Lankford,OK,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S057,Patrick Leahy,VT,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S346,Mike Lee,UT,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S409,Ben Lujan,NM,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S410,Cynthia Lummis,WY,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S338,Joseph Manchin,WV,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S369,Edward Markey,MA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S411,Roger Marshall,KS,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S174,Mitch McConnell,KY,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S306,Robert Menendez,NJ,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S322,Jeff Merkley,OR,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S347,Jerry Moran,KS,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S288,Lisa Murkowski,AK,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S364,Christopher Murphy,CT,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S229,Patty Murray,WA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S414,Jon Ossoff,GA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S413,Alex Padilla,CA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S348,Rand Paul,KY,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S380,Gary Peters,MI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S349,Rob Portman,OH,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S259,John Reed,RI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S323,James Risch,ID,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S401,Mitt Romney,UT,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S402,Jacklyn Rosen,NV,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S381,Mike Rounds,SD,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S350,Marco Rubio,FL,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S313,Bernard Sanders,VT,I,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S382,Ben Sasse,NE,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S353,Brian Schatz,HI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S270,Charles Schumer,NY,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S404,Rick Scott,FL,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S365,Tim Scott,SC,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S324,Jeanne Shaheen,NH,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S184,Richard Shelby,AL,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S403,Kyrsten Sinema,AZ,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S394,Tina Smith,MN,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S284,Debbie Stabenow,MI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S383,Dan Sullivan,AK,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S314,Jon Tester,MT,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S303,John Thune,SD,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S384,Thomas Tillis,NC,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S351,Patrick Toomey,PA,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S412,Tommy Tuberville,AL,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S390,Chris Van Hollen,MD,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S327,Mark Warner,VA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S415,Raphael Warnock,GA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S366,Elizabeth Warren,MA,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S316,Sheldon Whitehouse,RI,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S318,Roger Wicker,MS,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S247,Ron Wyden,OR,D,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,yes,True,False
+S391,Todd Young,IN,R,senate,,sanders_min_wage_117,Sanders Minimum Wage Amendment,117,no,False,False
+S354,Tammy Baldwin,WI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S317,John Barrasso,WY,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S330,Michael Bennet,CO,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S396,Marsha Blackburn,TN,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S341,Richard Blumenthal,CT,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S342,Roy Blunt,MO,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S370,Cory Booker,NJ,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S343,John Boozman,AR,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S397,Mike Braun,IN,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S307,Sherrod Brown,OH,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S300,Richard Burr,NC,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S275,Maria Cantwell,WA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S372,Shelley Capito,WV,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S308,Ben Cardin,MD,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S277,Thomas Carper,DE,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S309,Bob Casey,PA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S373,Bill Cassidy,LA,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S252,Susan Collins,ME,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S337,Christopher Coons,DE,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S287,John Cornyn,TX,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S385,Catherine Cortez Masto,NV,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S374,Tom Cotton,AR,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S398,Kevin Cramer,ND,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S266,Mike Crapo,ID,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S355,Ted Cruz,TX,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S375,Steve Daines,MT,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S386,Tammy Duckworth,IL,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S253,Richard Durbin,IL,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S376,Joni Ernst,IA,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S221,Dianne Feinstein,CA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S357,Deb Fischer,NE,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S331,Kirsten Gillibrand,NY,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S293,Lindsey Graham,SC,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S153,Charles Grassley,IA,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S407,Bill Hagerty,TN,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S388,Maggie Hassan,NH,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S399,Josh Hawley,MO,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S359,Martin Heinrich,NM,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S408,John Hickenlooper,CO,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S361,Mazie Hirono,HI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S344,John Hoeven,ND,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S395,Cindy Hyde-Smith,MS,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S236,Jim Inhofe,OK,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S345,Ron Johnson,WI,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S362,Timothy Kaine,VA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S406,Mark Kelly,AZ,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S389,John Kennedy,LA,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S363,Angus King,ME,I,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S311,Amy Klobuchar,MN,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S378,James Lankford,OK,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S057,Patrick Leahy,VT,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S346,Mike Lee,UT,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S409,Ben Lujan,NM,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S410,Cynthia Lummis,WY,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S338,Joseph Manchin,WV,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S369,Edward Markey,MA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S411,Roger Marshall,KS,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S174,Mitch McConnell,KY,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S306,Robert Menendez,NJ,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S322,Jeff Merkley,OR,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S347,Jerry Moran,KS,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S288,Lisa Murkowski,AK,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S364,Christopher Murphy,CT,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S229,Patty Murray,WA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S414,Jon Ossoff,GA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S413,Alex Padilla,CA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S348,Rand Paul,KY,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S380,Gary Peters,MI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S349,Rob Portman,OH,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S259,John Reed,RI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S323,James Risch,ID,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S401,Mitt Romney,UT,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S402,Jacklyn Rosen,NV,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S381,Mike Rounds,SD,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S350,Marco Rubio,FL,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S313,Bernard Sanders,VT,I,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S382,Ben Sasse,NE,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S353,Brian Schatz,HI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S270,Charles Schumer,NY,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S404,Rick Scott,FL,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S365,Tim Scott,SC,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S324,Jeanne Shaheen,NH,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S184,Richard Shelby,AL,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S403,Kyrsten Sinema,AZ,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S394,Tina Smith,MN,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S284,Debbie Stabenow,MI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S383,Dan Sullivan,AK,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S314,Jon Tester,MT,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S303,John Thune,SD,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S384,Thomas Tillis,NC,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S351,Patrick Toomey,PA,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S412,Tommy Tuberville,AL,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S390,Chris Van Hollen,MD,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S327,Mark Warner,VA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S415,Raphael Warnock,GA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S366,Elizabeth Warren,MA,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S316,Sheldon Whitehouse,RI,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S318,Roger Wicker,MS,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+S247,Ron Wyden,OR,D,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,yes,True,False
+S391,Todd Young,IN,R,senate,,abruzzo_nlrb_117,Abruzzo NLRB General Counsel Confirmation,117,no,False,False
+A000370,Adams,NC,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+A000055,Aderholt,AL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+A000371,Aguilar,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+A000372,Allen,GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+A000376,Allred,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+A000369,Amodei,NV,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+A000377,Armstrong,ND,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+A000375,Arrington,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+A000148,Auchincloss,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+A000378,Axne,IA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001291,Babin,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001298,Bacon,NE,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001307,Baird,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001306,Balderson,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001299,Banks,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001282,Barr,KY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001300,BarragÃ¡n,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001270,Bass,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001281,Beatty,OH,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B000668,Bentz,OR,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001287,Bera,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001301,Bergman,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001292,Beyer,VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B000740,Bice (OK),OK,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001302,Biggs,AZ,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001257,Bilirakis,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B000490,Bishop (GA),GA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001311,Bishop (NC),NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B000574,Blumenauer,OR,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001303,Blunt Rochester,DE,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B000825,Boebert,CO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001278,Bonamici,OR,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001295,Bost,IL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+B001312,Bourdeaux,GA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001223,Bowman,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001296,"Boyle, Brendan F.",PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B000755,Brady,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+B001274,Brooks,AL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001304,Brown,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001285,Brownley,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001260,Buchanan,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001297,Buck,CO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001275,Bucshon,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001305,Budd,NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001309,Burchett,TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+B001248,Burgess,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+B001224,Bush,MO,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001286,Bustos,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+B001251,Butterfield,NC,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C000059,Calvert,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001039,Cammack,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001112,Carbajal,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001097,CÃ¡rdenas,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001054,Carl,AL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001072,Carson,IN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001103,Carter (GA),GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001051,Carter (TX),TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001090,Cartwright,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001055,Case,HI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001117,Casten,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001066,Castor (FL),FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001091,Castro (TX),TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001104,Cawthorn,NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C000266,Chabot,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001109,Cheney,WY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001080,Chu,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001084,Cicilline,RI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001101,Clark (MA),MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001067,Clarke (NY),NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001061,Cleaver,MO,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001118,Cline,VA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001115,Cloud,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C000537,Clyburn,SC,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001116,Clyde,GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001068,Cohen,TN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001053,Cole,OK,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001108,Comer,KY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001078,Connolly,VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C000754,Cooper,TN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001110,Correa,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001059,Costa,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001069,Courtney,CT,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001119,Craig,MN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001087,Crawford,AR,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001120,Crenshaw,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+C001111,Crist,FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001121,Crow,CO,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001063,Cuellar,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+C001114,Curtis,UT,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+D000629,Davids (KS),KS,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000626,Davidson,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+D000096,"Davis, Danny K.",IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000619,"Davis, Rodney",IL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000631,Dean,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000191,DeFazio,OR,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000197,DeGette,CO,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000216,DeLauro,CT,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000617,DelBene,WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000630,Delgado,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000627,Demings,FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000623,DeSaulnier,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000616,DesJarlais,TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+D000610,Deutch,FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+D000600,Diaz-Balart,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000624,Dingell,MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000399,Doggett,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000032,Donalds,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+D000482,"Doyle, Michael F.",PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+D000615,Duncan,SC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+D000628,Dunn,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+E000294,Emmer,MN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+E000299,Escobar,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+E000215,Eshoo,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+E000297,Espaillat,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+E000298,Estes,KS,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+E000296,Evans,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000246,Fallon,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000446,Feenstra,IA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000465,Ferguson,GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000470,Fischbach,MN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000471,Fitzgerald,WI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000466,Fitzpatrick,PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000459,Fleischmann,TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000468,Fletcher,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000449,Fortenberry,NE,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000454,Foster,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000450,Foxx,NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000462,"Frankel, Lois",FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000472,"Franklin, C. Scott",FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+F000455,Fudge,OH,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+F000469,Fulcher,ID,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000578,Gaetz,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000579,Gallagher,WI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000574,Gallego,AZ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000559,Garamendi,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000597,Garbarino,NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000061,Garcia (CA),CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000586,GarcÃ­a (IL),IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000587,Garcia (TX),TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000563,Gibbs,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000593,Gimenez,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000552,Gohmert,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000592,Golden,ME,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000585,Gomez,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000594,"Gonzales, Tony",TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000588,Gonzalez (OH),OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000581,"Gonzalez, Vicente",TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000595,Good (VA),VA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000589,Gooden (TX),TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000565,Gosar,AZ,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000583,Gottheimer,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000377,Granger,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000577,Graves (LA),LA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000546,Graves (MO),MO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000590,Green (TN),TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000553,"Green, Al (TX)",TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000596,Greene (GA),GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000568,Griffith,VA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000551,Grijalva,AZ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+G000576,Grothman,WI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000591,Guest,MS,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+G000558,Guthrie,KY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001080,Haaland,NM,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001088,Hagedorn,MN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001090,Harder (CA),CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001052,Harris,MD,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001086,Harshbarger,TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001053,Hartzler,MO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H000324,Hastings,FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001081,Hayes,CT,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001082,Hern,OK,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001084,Herrell,NM,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001056,Herrera Beutler,WA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001071,Hice (GA),GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001077,Higgins (LA),LA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+H001038,Higgins (NY),NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001072,Hill,AR,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001047,Himes,CT,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001091,Hinson,IA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001074,Hollingsworth,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001066,Horsford,NV,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001085,Houlahan,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H000874,Hoyer,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001067,Hudson,NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+H001068,Huffman,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+H001058,Huizenga,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+I000056,Issa,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+J000304,Jackson,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+J000032,Jackson Lee,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000305,Jacobs (CA),CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000020,Jacobs (NY),NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+J000298,Jayapal,WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000294,Jeffries,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000288,Johnson (GA),GA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000299,Johnson (LA),LA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+J000292,Johnson (OH),OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000301,Johnson (SD),SD,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+J000126,Johnson (TX),TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000306,Jones,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000289,Jordan,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+J000295,Joyce (OH),OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+J000302,Joyce (PA),PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+K000396,Kahele,HI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000009,Kaptur,OH,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000386,Katko,NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000375,Keating,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000395,Keller,PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+K000385,Kelly (IL),IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000388,Kelly (MS),MS,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+K000376,Kelly (PA),PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+K000389,Khanna,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000380,Kildee,MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000381,Kilmer,WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000397,Kim (CA),CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+K000394,Kim (NJ),NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000188,Kind,WI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000378,Kinzinger,IL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000368,Kirkpatrick,AZ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000391,Krishnamoorthi,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000382,Kuster,NH,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+K000392,Kustoff,TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000585,LaHood,IL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000578,LaMalfa,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000588,Lamb,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000564,Lamborn,CO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000559,Langevin,RI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000560,Larsen (WA),WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000557,Larson (CT),CT,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000566,Latta,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000266,LaTurner,KS,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000581,Lawrence,MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000586,Lawson (FL),FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000551,Lee (CA),CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000590,Lee (NV),NV,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000273,Leger Fernandez,NM,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000589,Lesko,AZ,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000593,Levin (CA),CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000592,Levin (MI),MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000582,Lieu,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000397,Lofgren,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000576,Long,MO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000583,Loudermilk,GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000579,Lowenthal,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000491,Lucas,OK,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000569,Luetkemeyer,MO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+L000591,Luria,VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+L000562,Lynch,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M000194,Mace,SC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001203,Malinowski,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M000317,Malliotakis,NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M000087,"Maloney, Carolyn B.",NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001185,"Maloney, Sean",NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M000871,Mann,KS,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001135,Manning,NC,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001184,Massie,KY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001199,Mast,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001163,Matsui,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001208,McBath,GA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001165,McCarthy,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001157,McCaul,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001136,McClain,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001177,McClintock,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001143,McCollum,MN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001200,McEachin,VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M000312,McGovern,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001156,McHenry,NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001180,McKinley,WV,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001166,McNerney,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001137,Meeks,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001186,Meijer,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001188,Meng,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001204,Meuser,PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M000687,Mfume,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001211,Miller (IL),IL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001205,Miller (WV),WV,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001215,Miller-Meeks,IA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001194,Moolenaar,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001195,Mooney,WV,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001212,Moore (AL),AL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001213,Moore (UT),UT,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001160,Moore (WI),WI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001206,Morelle,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001196,Moulton,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001214,Mrvan,IN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001190,Mullin,OK,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001202,Murphy (FL),FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+M001210,Murphy (NC),NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+N000002,Nadler,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000179,Napolitano,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000015,Neal,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000191,Neguse,CO,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000026,Nehls,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+N000189,Newhouse,WA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000192,Newman,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000188,Norcross,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+N000190,Norman,SC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+N000181,Nunes,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+O000171,O'Halleran,AZ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+O000019,Obernolte,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+O000172,Ocasio-Cortez,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+O000173,Omar,MN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+O000086,Owens,UT,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+P000601,Palazzo,MS,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+P000034,Pallone,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000609,Palmer,AL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+P000613,Panetta,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000614,Pappas,NH,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000096,Pascrell,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000604,Payne,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000615,Pence,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+P000593,Perlmutter,CO,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000605,Perry,PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+P000608,Peters,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000048,Pfluger,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+P000616,Phillips,MN,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000597,Pingree,ME,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000607,Pocan,WI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000618,Porter,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000599,Posey,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+P000617,Pressley,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+P000523,Price (NC),NC,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+Q000023,Quigley,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000606,Raskin,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000585,Reed,NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000610,Reschenthaler,PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000602,Rice (NY),NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000597,Rice (SC),SC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+M001159,Rodgers (WA),WA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000575,Rogers (AL),AL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000395,Rogers (KY),KY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000612,Rose,TN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000103,Rosendale,MT,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000305,Ross,NC,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000603,Rouzer,NC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000614,Roy,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000486,Roybal-Allard,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000599,Ruiz,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000576,Ruppersberger,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000515,Rush,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+R000609,Rutherford,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+R000577,Ryan,OH,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S000168,Salazar,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001156,SÃ¡nchez,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001168,Sarbanes,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001176,Scalise,LA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001205,Scanlon,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001145,Schakowsky,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001150,Schiff,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001190,Schneider,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001180,Schrader,OR,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001216,Schrier,WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001183,Schweikert,AZ,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S000185,Scott (VA),VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001189,"Scott, Austin",GA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001157,"Scott, David",GA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S000250,Sessions,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001185,Sewell,AL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S000344,Sherman,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001207,Sherrill,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001148,Simpson,ID,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001165,Sires,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001208,Slotkin,MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001195,Smith (MO),MO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001172,Smith (NE),NE,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S000522,Smith (NJ),NJ,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S000510,Smith (WA),WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001199,Smucker,PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001200,Soto,FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001209,Spanberger,VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S000929,Spartz,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001175,Speier,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001211,Stanton,AZ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001212,Stauber,MN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001135,Steel,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001196,Stefanik,NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001213,Steil,WI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001214,Steube,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+S001215,Stevens,MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001192,Stewart,UT,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+S001187,Stivers,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001159,Strickland,WA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001201,Suozzi,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+S001193,Swalwell,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000472,Takano,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000479,Taylor,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+T000460,Thompson (CA),CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000193,Thompson (MS),MS,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000467,Thompson (PA),PA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+T000165,Tiffany,WI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+T000480,Timmons,SC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+T000468,Titus,NV,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000481,Tlaib,MI,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000469,Tonko,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000474,Torres (CA),CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000486,Torres (NY),NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000482,Trahan,MA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000483,Trone,MD,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+T000463,Turner,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+U000040,Underwood,IL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+U000031,Upton,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+V000129,Valadao,CA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+V000133,Van Drew,NJ,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+V000134,Van Duyne,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+V000130,Vargas,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+V000131,Veasey,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+V000132,Vela,TX,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+V000081,VelÃ¡zquez,NY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000812,Wagner,MO,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000798,Walberg,MI,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000813,Walorski,IN,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000823,Waltz,FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000797,Wasserman Schultz,FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000187,Waters,CA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000822,Watson Coleman,NJ,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000814,Weber (TX),TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000806,Webster (FL),FL,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+W000800,Welch,VT,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000815,Wenstrup,OH,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000821,Westerman,AR,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000825,Wexton,VA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000826,Wild,PA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000788,Williams (GA),GA,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000816,Williams (TX),TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000808,Wilson (FL),FL,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+W000795,Wilson (SC),SC,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000804,Wittman,VA,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000809,Womack,AR,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,no,False,False
+W000827,Wright,TX,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,not voting,False,True
+Y000062,Yarmuth,KY,D,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+Y000033,Young,AK,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
+Z000017,Zeldin,NY,R,house,,apprenticeship_act_117,National Apprenticeship Act,117,yes,True,False
