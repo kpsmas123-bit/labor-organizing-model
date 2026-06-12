@@ -22,6 +22,11 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 - [x] Quadrant badge with human-readable QUADRANT_LABELS
 - [x] Deprecated v1 fields commented out (terrain_score, priority_tier, OOS)
 - [x] _setBar null-safe for removed bar elements
+- [x] MSA layer (Gate 6b): classifyMsaQuadrant() using threshold comparison on aggregated scores
+- [x] MSA layer: sls_capital/sls_community/p1_presidential named fields on msaScore object
+- [x] MSA layer: FIPS join confirmed working via msa_lookup.json enrichment at load time
+- [x] Detail panel label: "Capital Leverage" → "Strategic Leverage"
+- [x] p2_alignment null safety: shows "Data pending" instead of "–"
 - [ ] Intro overlay update — separate future session
 - [ ] county_scores_v2_test.json → county_scores.json rename — after regression validation
 
