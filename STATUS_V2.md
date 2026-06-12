@@ -22,7 +22,19 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 - [x] Quadrant badge with human-readable QUADRANT_LABELS
 - [x] Deprecated v1 fields commented out (terrain_score, priority_tier, OOS)
 - [x] _setBar null-safe for removed bar elements
-- [ ] Intro overlay update — separate future session
+- [x] Intro overlay: v2.0 narrative arc and case studies (2026-06-12)
+      - 7-slide arc: stakes → dual track → targeting → two scores → key finding → how to read → CTA
+      - deploy_now_both = 0 finding highlighted as key insight in Slide 5
+      - Case studies use real scores from county_scores_v2_test.json:
+        Centre County PA (42027), Green County WI (55045),
+        Muskegon County MI (26121), LA County CA (06037)
+      - Slide 7 case panel updated: 8 cards covering all 6 active quadrants
+        (Warren GA, Centre PA, Clark NV, Green WI, LA County, Maricopa AZ,
+        Philadelphia PA, Montour PA)
+      - McAlevey three-forms framework (advocacy/mobilization/organizing) in Slide 2
+      - v2.0 scoring dimensions (SLS Capital, SLS Community, P1, P2, Quadrant) in Slide 3
+      - Sector SVS updated to real v2.0 values from sector_reach_scores.json
+      - No layout, animation, CSS, or scroll-snap changes
 - [ ] county_scores_v2_test.json → county_scores.json rename — after regression validation
 
 ---
