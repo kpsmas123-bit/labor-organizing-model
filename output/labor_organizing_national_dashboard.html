@@ -1030,12 +1030,11 @@ document.querySelector('.terrain-nav__hamburger')
 
           <div class="opp-score-display">
             <div class="opp-score-number" id="dp-opp">–</div>
-            <div class="opp-score-label">Organizing<br>Opportunity</div>
+            <div class="opp-score-label">Strategic<br>Leverage</div>
           </div>
 
           <div class="badge-row">
-            <span class="badge" id="dp-int-badge">–</span>
-            <span class="badge" id="dp-tier-badge">–</span>
+            <span class="badge" id="dp-quadrant-badge">–</span>
           </div>
 
           <div class="detail-section" id="dp-summary-section" style="display:none">
@@ -1045,33 +1044,28 @@ document.querySelector('.terrain-nav__hamburger')
 
           <div class="score-bars" id="dp-score-bars">
             <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-org">Organizing</div>
+              <div class="score-bar-label" id="lbl-bar-org">Community Leverage</div>
               <div class="score-bar-track"><div class="score-bar-fill" id="bar-org" style="background:#E8732A"></div></div>
               <div class="score-bar-val" id="val-org">–</div>
             </div>
             <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-sect">Sectoral</div>
+              <div class="score-bar-label" id="lbl-bar-sect">Capital Leverage</div>
               <div class="score-bar-track"><div class="score-bar-fill" id="bar-sect" style="background:#F5C842"></div></div>
               <div class="score-bar-val" id="val-sect">–</div>
             </div>
             <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-pres">Presidential</div>
+              <div class="score-bar-label" id="lbl-bar-pres">Electoral Leverage</div>
               <div class="score-bar-track"><div class="score-bar-fill" id="bar-pres" style="background:#8B3A1A"></div></div>
               <div class="score-bar-val" id="val-pres">–</div>
             </div>
-            <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-state">Statewide</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-state" style="background:#6B4A1A"></div></div>
-              <div class="score-bar-val" id="val-state">–</div>
-            </div>
-            <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-cong">Congressional</div>
+            <div class="score-bar-row" id="row-bar-cong">
+              <div class="score-bar-label" id="lbl-bar-cong">P1 Congressional</div>
               <div class="score-bar-track"><div class="score-bar-fill" id="bar-cong" style="background:#3A4A2A"></div></div>
               <div class="score-bar-val" id="val-cong">–</div>
             </div>
             <div class="score-bar-row">
-              <div class="score-bar-label" id="lbl-bar-infra">Infrastructure</div>
-              <div class="score-bar-track"><div class="score-bar-fill" id="bar-infra" style="background:#A09385"></div></div>
+              <div class="score-bar-label" id="lbl-bar-infra">P2 Alignment</div>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-infra" style="background:#4a90d9"></div></div>
               <div class="score-bar-val" id="val-infra">–</div>
             </div>
           </div>
@@ -1080,9 +1074,10 @@ document.querySelector('.terrain-nav__hamburger')
             <h4>Metro Area</h4>
             <div class="detail-row"><span class="label">Counties</span><span class="val" id="dp-pop">–</span></div>
             <div class="detail-row"><span class="label">Population</span><span class="val" id="dp-rurban">–</span></div>
-            <div class="detail-row"><span class="label">Union Culture</span><span class="val" id="dp-culture">–</span></div>
-            <div class="detail-row"><span class="label">Organized Scale</span><span class="val" id="dp-scale">–</span></div>
             <div class="detail-row"><span class="label">Swing State(s)</span><span class="val" id="dp-swing">–</span></div>
+            <!-- DEPRECATED v1 — union_culture_score and organized_scale_score not in v2.0 -->
+            <div class="detail-row" style="display:none"><span class="label">Union Culture</span><span class="val" id="dp-culture">–</span></div>
+            <div class="detail-row" style="display:none"><span class="label">Organized Scale</span><span class="val" id="dp-scale">–</span></div>
           </div>
 
           <div class="detail-section" id="dp-counties-section">
@@ -1129,14 +1124,12 @@ document.querySelector('.terrain-nav__hamburger')
               <th data-col="rank">#</th>
               <th data-col="county_name">County</th>
               <th data-col="state">ST</th>
-              <th data-col="organizing_opportunity_score">OPP<span class="sort-indicator">↓</span></th>
-              <th data-col="intervention_type">Type</th>
-              <th data-col="presidential_score">Pres</th>
-              <th data-col="statewide_score">State</th>
-              <th data-col="congressional_score">Cong</th>
-              <th data-col="organizing_score">Org</th>
-              <th data-col="sectoral_score">Sect</th>
-              <th data-col="infra_score">Infra</th>
+              <th data-col="sls_capital">Capital<span class="sort-indicator">↓</span></th>
+              <th data-col="sls_community">Community</th>
+              <th data-col="quadrant">Quadrant</th>
+              <th data-col="p1_presidential">P1 Pres</th>
+              <th data-col="p1_congressional">P1 Cong</th>
+              <th data-col="p2_alignment">P2 Align</th>
               <th data-col="margin_2024">2024</th>
               <th data-col="swing_state">Swing</th>
             </tr>
@@ -1646,7 +1639,7 @@ let filteredCounties = [];
 let gl_msaSummaries = {};      // msa_name → {summary, news_headlines}
 let gl_countyExplanations = {}; // fips → explanation string
 let currentView = "methodology";
-let sortCol = "organizing_opportunity_score";
+let sortCol = "sls_capital";
 let sortAsc = false;
 let goalFilter = "power";
 let filters = { state: "", swingOnly: false };
@@ -1657,23 +1650,24 @@ let filters = { state: "", swingOnly: false };
 async function loadData() {
   document.getElementById("loading-indicator").style.display = "block";
   setStatus("Loading county data…");
-  const localUrl = "../data/county_scores.json";
+  const localUrl = "../data/county_scores_v2_test.json";
   try {
     const resp = await fetch(localUrl);
     if (resp.ok) {
       const data = await resp.json();
-      allCounties = data.filter(c => c.organizing_opportunity_score !== null);
+      const raw = data.counties || data;
+      allCounties = raw.filter(c => c.sls_capital !== null && c.sls_capital !== undefined);
       setStatus(`Loaded ${allCounties.length} scored counties`);
       document.getElementById("loading-indicator").style.display = "none";
     } else {
       allCounties = [];
-      setStatus("Could not load data/county_scores.json — run export_county_scores.py first");
+      setStatus("Could not load data/county_scores_v2_test.json — run pipeline/build_v2_scores_true.py first");
       document.getElementById("loading-indicator").style.display = "none";
       return;
     }
   } catch (e) {
     allCounties = [];
-    setStatus("Could not load data/county_scores.json — run export_county_scores.py first");
+    setStatus("Could not load data/county_scores_v2_test.json — run pipeline/build_v2_scores_true.py first");
     document.getElementById("loading-indicator").style.display = "none";
     return;
   }
@@ -1706,24 +1700,45 @@ async function loadData() {
 // Score display helpers
 // ──────────────────────────────────────────────────────────────
 function getDisplayScore(c) {
-  if (goalFilter === "presidential") return c.organizing_opportunity_score;
-  if (goalFilter === "power")        return getCountyPowerScore(c);
-  return c.organizing_opportunity_score;
+  if (goalFilter === "presidential") return c.p1_presidential || 0;
+  if (goalFilter === "power")        return c.sls_capital || 0;
+  return c.sls_capital || 0;
 }
 
 // Warm palette — quantile scales built after data loads
 let oppColorScale, electoralColorScales = {};
 
 const YLORRD       = ["#FFFFB2","#FED976","#FEB24C","#FD8D3C","#F03B20","#BD0026"];
-const JENKS        = [20, 35, 50, 65, 80];
-const JENKS_LABELS = ["0–19","20–34","35–49","50–64","65–79","80–100"];
+// Recalibrated for v2.0 sls_capital distribution (median=0.23, p95=5.21, max=84.16)
+const JENKS        = [0.5, 1.5, 3.0, 8.0, 20.0];
+const JENKS_LABELS = ["0–0.5","0.5–1.5","1.5–3","3–8","8–20","20+"];
 const NO_DATA_COLOR    = "#D8CFC4";
 const FILTERED_COLOR   = "#EDE7DF";
 const TYPE_COLORS = { A: "#2d6a4f", B: "#e76f51", C: "#457b9d" };
 let activeLens = "default"; // "default" | "community" | "capital"
 
 // ── Goal-view constants ───────────────────────────────────────
-const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV"]);
+const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV","NC"]);
+
+const QUADRANT_COLORS = {
+  "deploy_now_both":          "#7b0020",  // darkest red
+  "deploy_now_capital":       "#bd0026",  // accent red
+  "deploy_now_community":     "#d9534f",  // medium red
+  "primary_target_capital":   "#f4a460",  // orange
+  "primary_target_community": "#ffd700",  // gold
+  "power_building":           "#4a90d9",  // blue
+  "lower_priority":           "#ccc4bb"   // gray
+};
+
+const QUADRANT_LABELS = {
+  "deploy_now_both":          "Deploy Now — Capital + Community",
+  "deploy_now_capital":       "Deploy Now — Capital",
+  "deploy_now_community":     "Deploy Now — Community",
+  "primary_target_capital":   "Primary Target — Capital",
+  "primary_target_community": "Primary Target — Community",
+  "power_building":           "Power Building Terrain",
+  "lower_priority":           "Lower Priority"
+};
 const NON_SWING_COLOR = "#ccc4bb";
 
 const SENATE_TIERS = {
@@ -1736,14 +1751,17 @@ const SENATE_TIERS = {
 const SENATE_TIER_COLORS = { 1:"#bd0026", 2:"#f03b20", 3:"#fd8d3c", 4:"#fecc5c", 5:"#ffffb2" };
 const SENATE_TIER_LABELS = { 1:"Most likely to flip", 2:"Toss-up", 3:"Reach", 4:"Longer shot", 5:"Watch" };
 
+// DEPRECATED v1 — replaced by quadrant field in v2.0
+// function computeRawPowerScore(c) { ... }
+// function buildGlobalPowerRange() { ... }
+// function getCountyPowerScore(c) { ... }
 let globalPowerMin = 0, globalPowerMax = 100;
 
 function computeRawPowerScore(c) {
-  const oos = c.organizing_opportunity_score || 0;
-  const sw  = c.statewide_score || 0;
-  const osc = c.organized_scale_score || 0;
+  // DEPRECATED v1 — kept for gallery MSA aggregation fallback only
+  const oos = c.v1_organizing_opportunity_score || 0;
   const swing_bonus = c.swing_state ? 20 : 0;
-  return oos * 0.40 + sw * 0.30 + swing_bonus * 0.20 + osc * 0.10;
+  return oos * 0.60 + swing_bonus * 0.40;
 }
 
 function buildGlobalPowerRange() {
@@ -1767,10 +1785,13 @@ function getSenateColor(state) {
 function getGoalFill(c) {
   if (goalFilter === "presidential") {
     return SWING_STATES_PRES.has(c.state)
-      ? getFillByScore(getCountyLensScore(c, activeLens))
+      ? getFillByScore(c.p1_presidential || 0)
       : NON_SWING_COLOR;
   }
-  if (goalFilter === "power")  return getFillByScore(getCountyLensScore(c, activeLens));
+  if (goalFilter === "power") {
+    const q = c.quadrant;
+    return QUADRANT_COLORS[q] || NO_DATA_COLOR;
+  }
   if (goalFilter === "senate") return getSenateColor(c.state);
   return NO_DATA_COLOR;
 }
@@ -1783,9 +1804,11 @@ function getMsaLensScore(msa) {
 
 function getMsaGoalFill(msa) {
   if (goalFilter === "presidential") {
-    return msa.hasSwingers ? getFillByScore(getMsaLensScore(msa)) : NON_SWING_COLOR;
+    return msa.hasSwingers ? getFillByScore(msa.presidential || 0) : NON_SWING_COLOR;
   }
-  if (goalFilter === "power") return getFillByScore(getMsaLensScore(msa));
+  if (goalFilter === "power") {
+    return QUADRANT_COLORS[msa.dominantQuadrant] || NO_DATA_COLOR;
+  }
   if (goalFilter === "senate") {
     const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
     if (!tierNums.length) return NON_SWING_COLOR;
@@ -1799,16 +1822,9 @@ function getFillByType(typeLetter) {
 }
 
 function getCountyLensScore(c, lens) {
-  const oos = c.organizing_opportunity_score || 0;
-  if (lens === "community") {
-    const factor = 1 + 0.2 * ((c.union_culture_score || 0) / 40);
-    return Math.min(100, oos * factor);
-  }
-  if (lens === "capital") {
-    const factor = 1 + 0.2 * ((c.sectoral_score || 0) / 100);
-    return Math.min(100, oos * factor);
-  }
-  return oos;
+  if (lens === "community") return c.sls_community || 0;
+  if (lens === "capital")   return c.sls_capital || 0;
+  return c.sls_capital || 0; // default lens uses capital as primary score
 }
 
 function getFillByScore(score) {
@@ -1818,7 +1834,8 @@ function getFillByScore(score) {
 function buildColorScales() {
   const thresh = d3.scaleThreshold().domain(JENKS).range(YLORRD);
   oppColorScale = thresh;
-  for (const key of ["presidential_score","statewide_score","congressional_score"])
+  // v2.0 electoral fields use same color scale
+  for (const key of ["p1_presidential","p1_congressional","p2_alignment"])
     electoralColorScales[key] = thresh;
 }
 
@@ -1854,7 +1871,7 @@ function updateLegend() {
     return;
   }
   if (goalFilter === "presidential") {
-    document.getElementById("legend-title").textContent = "Organizing Opportunity Score";
+    document.getElementById("legend-title").textContent = "Electoral Leverage (P1 Presidential)";
     document.getElementById("legend-tiers").innerHTML =
       YLORRD.map((color, i) =>
         `<div class="legend-tier">
@@ -1869,11 +1886,11 @@ function updateLegend() {
     return;
   }
   if (goalFilter === "power") {
-    document.getElementById("legend-title").textContent = "Long-Term Power Score";
-    document.getElementById("legend-tiers").innerHTML = YLORRD.map((color, i) =>
+    document.getElementById("legend-title").textContent = "7-Category Quadrant";
+    document.getElementById("legend-tiers").innerHTML = Object.entries(QUADRANT_COLORS).map(([key, color]) =>
       `<div class="legend-tier">
         <div class="legend-tier-swatch" style="background:${color}"></div>
-        <div class="legend-tier-label">${JENKS_LABELS[i]}</div>
+        <div class="legend-tier-label" style="font-size:9px">${QUADRANT_LABELS[key]}</div>
       </div>`
     ).join("");
     return;
@@ -1947,9 +1964,9 @@ function buildMsaScoreLookup() {
   for (const [msaName, counties] of Object.entries(msaGroups)) {
     const totalPop = counties.reduce((s, c) => s + (c.population || 1), 0);
     const wavg = f => Math.round(counties.reduce((s, c) => s + (+(c[f] || 0)) * (c.population || 1), 0) / totalPop);
-    // Dominant intervention type by population weight
+    // Dominant intervention type by population weight (uses v1_intervention_type carried forward in v2.0)
     const tw = {A:0, B:0, C:0};
-    for (const c of counties) { const t = (c.intervention_type || "").charAt(5); if (tw[t] !== undefined) tw[t] += (c.population || 1); }
+    for (const c of counties) { const t = (c.v1_intervention_type || "").charAt(5); if (tw[t] !== undefined) tw[t] += (c.population || 1); }
     const domLetter = Object.entries(tw).sort((a,b) => b[1]-a[1])[0][0];
     const domType = domLetter === "A" ? "Type A: Organize the Unorganized"
                   : domLetter === "B" ? "Type B: Politically Activate Existing Unions"
@@ -1961,28 +1978,27 @@ function buildMsaScoreLookup() {
     const powerRaw = totalPowerRaw / totalPop;
     const powerScaled = (globalPowerMax === globalPowerMin) ? 50
       : (powerRaw - globalPowerMin) / (globalPowerMax - globalPowerMin) * 100;
-    const communityScore = Math.round(
-      counties.reduce((s, c) => s + Math.min(100,
-        (c.organizing_opportunity_score || 0) * (1 + 0.2 * ((c.union_culture_score || 0) / 40))
-      ) * (c.population || 1), 0) / totalPop
-    );
-    const capitalScore = Math.round(
-      counties.reduce((s, c) => s + Math.min(100,
-        (c.organizing_opportunity_score || 0) * (1 + 0.2 * ((c.sectoral_score || 0) / 100))
-      ) * (c.population || 1), 0) / totalPop
-    );
+    // v2.0: read sls_community and sls_capital directly
+    const communityScore = counties.reduce((s, c) => s + (c.sls_community || 0) * (c.population || 1), 0) / totalPop;
+    const capitalScore   = counties.reduce((s, c) => s + (c.sls_capital   || 0) * (c.population || 1), 0) / totalPop;
+    // Dominant quadrant by population weight
+    const qw = {};
+    for (const c of counties) { const q = c.quadrant || "lower_priority"; qw[q] = (qw[q] || 0) + (c.population || 1); }
+    const dominantQuadrant = Object.entries(qw).sort((a,b) => b[1]-a[1])[0][0];
     const msaScore = {
-      opp:              wavg("organizing_opportunity_score"),
+      opp:              communityScore, // MSA "opp" = community avg for legacy tooltip
       communityScore,
       capitalScore,
-      presidential:     wavg("presidential_score"),
-      statewide:        wavg("statewide_score"),
-      congressional:    wavg("congressional_score"),
-      organizing:       wavg("organizing_score"),
-      sectoral:         wavg("sectoral_score"),
-      infra:            wavg("infra_score"),
-      unionCulture:     wavg("union_culture_score"),
-      organizedScale:   wavg("organized_scale_score"),
+      presidential:     wavg("p1_presidential"),
+      statewide:        null, // DEPRECATED v1 — no v2 equivalent
+      congressional:    wavg("p1_congressional"),
+      organizing:       null, // DEPRECATED v1
+      sectoral:         null, // DEPRECATED v1
+      infra:            null, // DEPRECATED v1
+      p2Alignment:      wavg("p2_alignment"),
+      unionCulture:     null, // DEPRECATED v1
+      organizedScale:   null, // DEPRECATED v1
+      dominantQuadrant,
       power:            Math.round(powerScaled),
       hasSwingers:      counties.some(c => SWING_STATES_PRES.has(c.state)),
       totalPop,
@@ -2107,12 +2123,13 @@ async function initMap() {
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (msa.hasSwingers) {
-            scoreHtml = `<br><span class="tt-opp">Default: ${Math.round(msa.opp)} · Community: ${Math.round(msa.communityScore)} · Capital: ${Math.round(msa.capitalScore)}</span>`;
+            scoreHtml = `<br><span class="tt-opp">P1 Pres: ${(msa.presidential||0).toFixed(2)} · Capital: ${(msa.capitalScore||0).toFixed(2)} · Community: ${(msa.communityScore||0).toFixed(1)}</span>`;
           } else {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          scoreHtml = `<br><span class="tt-opp">Default: ${Math.round(msa.opp)} · Community: ${Math.round(msa.communityScore)} · Capital: ${Math.round(msa.capitalScore)}</span>`;
+          const ql = QUADRANT_LABELS[msa.dominantQuadrant] || msa.dominantQuadrant || "–";
+          scoreHtml = `<br><span class="tt-opp">${ql}</span>`;
         } else if (goalFilter === "senate") {
           const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
           scoreHtml = tierNums.length
@@ -2153,18 +2170,16 @@ async function initMap() {
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (SWING_STATES_PRES.has(c.state)) {
-            const d = Math.round(getCountyLensScore(c, "default"));
-            const com = Math.round(getCountyLensScore(c, "community"));
-            const cap = Math.round(getCountyLensScore(c, "capital"));
-            scoreHtml = `<br><span class="tt-opp">Default: ${d} · Community: ${com} · Capital: ${cap}</span>`;
+            const pres = (c.p1_presidential || 0).toFixed(2);
+            const com  = (c.sls_community  || 0).toFixed(1);
+            const cap  = (c.sls_capital    || 0).toFixed(2);
+            scoreHtml = `<br><span class="tt-opp">P1 Pres: ${pres} · Capital: ${cap} · Community: ${com}</span>`;
           } else {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          const d = Math.round(getCountyLensScore(c, "default"));
-          const com = Math.round(getCountyLensScore(c, "community"));
-          const cap = Math.round(getCountyLensScore(c, "capital"));
-          scoreHtml = `<br><span class="tt-opp">Default: ${d} · Community: ${com} · Capital: ${cap}</span>`;
+          const q = c.quadrant || "lower_priority";
+          scoreHtml = `<br><span class="tt-opp">${QUADRANT_LABELS[q] || q}</span>`;
         } else if (goalFilter === "senate") {
           const tier = SENATE_TIERS[c.state];
           scoreHtml = tier
@@ -2204,7 +2219,7 @@ async function initMap() {
     for (const f of nonMetroFeatures) {
       const c = countyByFips[f.id];
       if (!c) continue;
-      const letter = (c.intervention_type || "").charAt(5);
+      const letter = (c.v1_intervention_type || "").charAt(5);
       if (!["A","B","C"].includes(letter)) continue;
       const [cx, cy] = path.centroid(f);
       addIntSymbol(cx, cy, letter);
@@ -2254,18 +2269,31 @@ function updateMapColors() {
 // Detail panel
 // ──────────────────────────────────────────────────────────────
 function _setBar(barId, valId, lblId, score, highlighted) {
+  const bar = document.getElementById(barId);
+  const val = document.getElementById(valId);
+  const lbl = document.getElementById(lblId);
+  if (!bar || !val || !lbl) return; // element removed in v2.0 — skip silently
   const pct = score !== null && score !== undefined ? Math.min(100, Math.max(0, score)) : 0;
-  document.getElementById(barId).style.width = pct + "%";
-  document.getElementById(valId).textContent = score !== null && score !== undefined ? Math.round(score) : "–";
-  document.getElementById(valId).className = "score-bar-val" + (highlighted ? " highlighted" : "");
-  document.getElementById(lblId).className = "score-bar-label" + (highlighted ? " highlighted" : "");
+  bar.style.width = pct + "%";
+  val.textContent = score !== null && score !== undefined ? (Number.isInteger(score) ? score : score.toFixed(2)) : "–";
+  val.className = "score-bar-val" + (highlighted ? " highlighted" : "");
+  lbl.className = "score-bar-label" + (highlighted ? " highlighted" : "");
 }
 
+function _setQuadrantBadge(quadrant) {
+  const badge = document.getElementById("dp-quadrant-badge");
+  if (!badge) return;
+  badge.textContent = QUADRANT_LABELS[quadrant] || quadrant || "–";
+  badge.className = "badge badge-int-b";
+  if (quadrant && quadrant.startsWith("deploy_now")) badge.className = "badge badge-int-c";
+  else if (quadrant && quadrant.startsWith("primary_target")) badge.className = "badge badge-int-b";
+  else if (quadrant === "power_building") badge.className = "badge badge-tier-a";
+  else badge.className = "badge badge-tier-c";
+}
+
+// DEPRECATED v1 — kept for MSA fallback compatibility only
 function _setIntBadge(intType) {
-  const intBadge = document.getElementById("dp-int-badge");
-  intBadge.textContent = intType || "–";
-  intBadge.className = "badge " + ((intType || "").startsWith("Type A") ? "badge-int-a"
-                                 : (intType || "").startsWith("Type B") ? "badge-int-b" : "badge-int-c");
+  _setQuadrantBadge(null);
 }
 
 // MSA panel — shown when clicking a merged metro region
@@ -2279,14 +2307,9 @@ function showMsaDetail(msaName) {
 
   document.getElementById("dp-name").textContent = msaName;
   document.getElementById("dp-state").textContent = msa.states;
-  document.getElementById("dp-opp").textContent = Math.round(msa.opp);
+  document.getElementById("dp-opp").textContent = (msa.capitalScore || 0).toFixed(2);
 
-  _setIntBadge(msa.dominantType);
-
-  const tierBadge = document.getElementById("dp-tier-badge");
-  const tierLetter = msa.dominantLetter;
-  tierBadge.textContent = `Tier ${tierLetter}`;
-  tierBadge.className = "badge " + (tierLetter === "A" ? "badge-tier-a" : tierLetter === "B" ? "badge-tier-b" : "badge-tier-c");
+  _setQuadrantBadge(msa.dominantQuadrant);
 
   // Show AI summary if available
   const summarySection = document.getElementById("dp-summary-section");
@@ -2299,24 +2322,22 @@ function showMsaDetail(msaName) {
     summarySection.style.display = "none";
   }
 
-  _setBar("bar-org",   "val-org",   "lbl-bar-org",  msa.organizing,    false);
-  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", msa.sectoral,      false);
-  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", msa.presidential,  goalFilter === "presidential");
-  _setBar("bar-state", "val-state", "lbl-bar-state",msa.statewide,     goalFilter === "power");
-  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", msa.congressional, goalFilter === "congressional");
-  _setBar("bar-infra", "val-infra", "lbl-bar-infra",msa.infra,         false);
+  // v2.0 bars: community, capital, electoral (p1_presidential), congressional (p1_congressional), p2_alignment
+  _setBar("bar-org",   "val-org",   "lbl-bar-org",  msa.communityScore,   false);
+  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", msa.capitalScore,     false);
+  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", msa.presidential,     goalFilter === "presidential");
+  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", msa.congressional,    false);
+  _setBar("bar-infra", "val-infra", "lbl-bar-infra", msa.p2Alignment != null ? msa.p2Alignment * 100 : null, false);
 
   document.getElementById("dp-pop").textContent = msa.countyCount + (msa.countyCount === 1 ? " county" : " counties");
   document.getElementById("dp-rurban").textContent = msa.totalPop ? msa.totalPop.toLocaleString() : "–";
-  document.getElementById("dp-culture").textContent = Math.round(msa.unionCulture);
-  document.getElementById("dp-scale").textContent = Math.round(msa.organizedScale);
   document.getElementById("dp-swing").textContent = msa.swingStates || "None";
 
-  // County list
+  // County list sorted by sls_capital
   const countyList = document.getElementById("dp-county-list");
-  const sorted = [...msa.counties].sort((a, b) => (b.organizing_opportunity_score || 0) - (a.organizing_opportunity_score || 0));
+  const sorted = [...msa.counties].sort((a, b) => (b.sls_capital || 0) - (a.sls_capital || 0));
   countyList.innerHTML = sorted.map(c =>
-    `<div>${c.county_name}<span style="color:#A09385"> ${Math.round(c.organizing_opportunity_score || 0)}</span></div>`
+    `<div>${c.county_name}<span style="color:#A09385"> ${(c.sls_capital || 0).toFixed(2)}</span></div>`
   ).join("");
   document.getElementById("dp-counties-section").style.display = "block";
 }
@@ -2331,28 +2352,22 @@ function showDetail(c) {
 
   document.getElementById("dp-name").textContent = `${c.county_name}, ${c.state}`;
   document.getElementById("dp-state").textContent = `${c.region || "Non-Metro"} · Non-Metro`;
-  document.getElementById("dp-opp").textContent = c.organizing_opportunity_score ?? "–";
+  document.getElementById("dp-opp").textContent = (c.sls_capital != null) ? c.sls_capital.toFixed(2) : "–";
 
-  _setIntBadge(c.intervention_type);
-
-  const tier = (c.priority_tier || "").charAt(0);
-  const tierBadge = document.getElementById("dp-tier-badge");
-  tierBadge.textContent = c.priority_tier ? `Tier ${tier}` : "–";
-  tierBadge.className = "badge " + (tier === "A" ? "badge-tier-a" : tier === "B" ? "badge-tier-b" : "badge-tier-c");
+  _setQuadrantBadge(c.quadrant);
 
   document.getElementById("dp-summary-section").style.display = "none";
 
-  _setBar("bar-org",   "val-org",   "lbl-bar-org",  c.organizing_score,    false);
-  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sectoral_score,      false);
-  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.presidential_score,  goalFilter === "presidential");
-  _setBar("bar-state", "val-state", "lbl-bar-state",c.statewide_score,     goalFilter === "power");
-  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.congressional_score, goalFilter === "congressional");
-  _setBar("bar-infra", "val-infra", "lbl-bar-infra",c.infra_score,         false);
+  // v2.0 bars: community (sls_community), capital (sls_capital), electoral (p1_presidential),
+  // congressional (p1_congressional), p2 alignment (p2_alignment scaled 0-100)
+  _setBar("bar-org",   "val-org",   "lbl-bar-org",  c.sls_community,    false);
+  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sls_capital,      false);
+  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.p1_presidential,  goalFilter === "presidential");
+  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.p1_congressional, false);
+  _setBar("bar-infra", "val-infra", "lbl-bar-infra", c.p2_alignment != null ? c.p2_alignment * 100 : null, false);
 
   document.getElementById("dp-pop").textContent = "1 county";
   document.getElementById("dp-rurban").textContent = c.population ? c.population.toLocaleString() : "–";
-  document.getElementById("dp-culture").textContent = c.union_culture_score ?? "–";
-  document.getElementById("dp-scale").textContent = c.organized_scale_score ?? "–";
   document.getElementById("dp-swing").textContent = c.swing_state ? c.state : "No";
   document.getElementById("dp-counties-section").style.display = "none";
   document.getElementById("dp-county-list").innerHTML = "";
@@ -2380,23 +2395,24 @@ function applyFilters() {
 
 function updateStats() {
   document.getElementById("stat-total").textContent = allCounties.length.toLocaleString();
-  document.getElementById("stat-inta").textContent = allCounties.filter(c => (c.intervention_type || "").startsWith("Type A")).length.toLocaleString();
-  document.getElementById("stat-intb").textContent = allCounties.filter(c => (c.intervention_type || "").startsWith("Type B")).length.toLocaleString();
-  document.getElementById("stat-intc").textContent = allCounties.filter(c => (c.intervention_type || "").startsWith("Type C")).length.toLocaleString();
+  // Use v1_intervention_type (carried forward in v2.0) for A/B/C counts
+  document.getElementById("stat-inta").textContent = allCounties.filter(c => (c.v1_intervention_type || "").startsWith("Type A")).length.toLocaleString();
+  document.getElementById("stat-intb").textContent = allCounties.filter(c => (c.v1_intervention_type || "").startsWith("Type B")).length.toLocaleString();
+  document.getElementById("stat-intc").textContent = allCounties.filter(c => (c.v1_intervention_type || "").startsWith("Type C")).length.toLocaleString();
   document.getElementById("stat-visible").textContent = filteredCounties.length.toLocaleString();
 }
 
 function updateTop10() {
   const top = [...filteredCounties]
-    .sort((a, b) => (b.organizing_opportunity_score ?? 0) - (a.organizing_opportunity_score ?? 0))
+    .sort((a, b) => (b.sls_capital ?? 0) - (a.sls_capital ?? 0))
     .slice(0, 10);
   const container = document.getElementById("top10-list");
   container.innerHTML = top.map((c, i) => {
-    const scoreColor = (c.intervention_type || "").startsWith("Type A") ? "#7A5A00"
-                     : (c.intervention_type || "").startsWith("Type B") ? "#8B3A00" : "#7A2000";
+    const q = c.quadrant || "lower_priority";
+    const scoreColor = QUADRANT_COLORS[q] || "#7A6F64";
     return `<div class="top10-row" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')}); zoomToCounty('${c.fips}')">
       <span class="top10-name">${i+1}. ${c.county_name}, ${c.state}</span>
-      <span class="top10-score" style="color:${scoreColor}">${c.organizing_opportunity_score}</span>
+      <span class="top10-score" style="color:${scoreColor}">${(c.sls_capital || 0).toFixed(2)}</span>
     </div>`;
   }).join("");
 }
@@ -2433,7 +2449,7 @@ document.querySelectorAll("[data-goal]").forEach(btn => {
 function renderTable() {
   const sorted = [...filteredCounties].sort((a, b) => {
     let va = a[sortCol], vb = b[sortCol];
-    if (sortCol === "intervention_type") {
+    if (sortCol === "quadrant" || sortCol === "county_name" || sortCol === "state") {
       va = va || ""; vb = vb || "";
       return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
     }
@@ -2455,22 +2471,20 @@ function renderTable() {
   const fmt = v => v ?? "–";
 
   tbody.innerHTML = sorted.map((c, i) => {
-    const oppScore = c.organizing_opportunity_score ?? 0;
-    const oppCol = oppScore >= 60 ? "#C4512A" : oppScore >= 40 ? "#E8732A" : oppScore >= 20 ? "#C49940" : "#7A6F64";
-    const intCol = (c.intervention_type || "").startsWith("Type A") ? "#7A5A00"
-                 : (c.intervention_type || "").startsWith("Type B") ? "#8B3A00" : "#7A2000";
+    const capScore = c.sls_capital ?? 0;
+    const capCol = capScore >= 20 ? "#C4512A" : capScore >= 8 ? "#E8732A" : capScore >= 3 ? "#C49940" : "#7A6F64";
+    const qColor = QUADRANT_COLORS[c.quadrant] || "#7A6F64";
+    const qShort = (c.quadrant || "–").replace("deploy_now_", "DN-").replace("primary_target_", "PT-").replace("power_building","PB").replace("lower_priority","LP");
     return `<tr style="cursor:pointer" onclick="showDetail(${JSON.stringify(c).replace(/"/g,'&quot;')})">
       <td style="color:#A09385">${i+1}</td>
       <td style="font-weight:500">${c.county_name}</td>
       <td>${c.state}</td>
-      <td style="color:${oppCol}; font-weight:600">${fmt(c.organizing_opportunity_score)}</td>
-      <td style="color:${intCol}; font-size:11px">${c.intervention_type || "–"}</td>
-      <td>${fmt(c.presidential_score)}</td>
-      <td>${fmt(c.statewide_score)}</td>
-      <td>${fmt(c.congressional_score)}</td>
-      <td>${fmt(c.organizing_score)}</td>
-      <td>${fmt(c.sectoral_score)}</td>
-      <td>${fmt(c.infra_score)}</td>
+      <td style="color:${capCol}; font-weight:600">${(c.sls_capital ?? 0).toFixed(2)}</td>
+      <td>${(c.sls_community ?? 0).toFixed(1)}</td>
+      <td style="color:${qColor}; font-size:10px; font-weight:600">${qShort}</td>
+      <td>${(c.p1_presidential ?? 0).toFixed(2)}</td>
+      <td>${(c.p1_congressional ?? 0).toFixed(2)}</td>
+      <td>${(c.p2_alignment ?? 0).toFixed(2)}</td>
       <td>${fmtMargin(c.margin_2024)}</td>
       <td>${c.swing_state ? "✓" : ""}</td>
     </tr>`;
@@ -2767,7 +2781,7 @@ function glBuildMSAMap() {
     const totalPop = counties.reduce((s,c) => s + (c.population||1), 0);
     const wavg = f => counties.reduce((s,c) => s + (+(c[f]||0))*(c.population||1), 0) / totalPop;
     const tw = {A:0,B:0,C:0};
-    for (const c of counties) { const t=(c.intervention_type||"").charAt(5); if(tw[t]!==undefined) tw[t]+=(c.population||1); }
+    for (const c of counties) { const t=(c.v1_intervention_type||"").charAt(5); if(tw[t]!==undefined) tw[t]+=(c.population||1); }
     const domType = Object.entries(tw).sort((a,b)=>b[1]-a[1])[0][0];
     const totalPowerRaw = counties.reduce((s,c) => s + computeRawPowerScore(c) * (c.population||1), 0);
     const powerRaw = totalPowerRaw / totalPop;
@@ -2775,13 +2789,13 @@ function glBuildMSAMap() {
       : (powerRaw - globalPowerMin) / (globalPowerMax - globalPowerMin) * 100;
     gl_msaMap[name] = {
       name, states:[...new Set(counties.map(c=>c.state))].sort().join(", "), totalPop, dominantType:domType,
-      organizing_opportunity_score: wavg("organizing_opportunity_score"),
-      presidential_score:  wavg("presidential_score"),
-      congressional_score: wavg("congressional_score"),
-      statewide_score:     wavg("statewide_score"),
+      organizing_opportunity_score: wavg("sls_capital"),  // gallery card "OOS" field → now sls_capital
+      presidential_score:  wavg("p1_presidential"),
+      congressional_score: wavg("p1_congressional"),
+      statewide_score:     0, // DEPRECATED v1
       power_score,
-      organized_scale_score: wavg("organized_scale_score"),
-      union_culture_score:   wavg("union_culture_score"),
+      organized_scale_score: 0, // DEPRECATED v1
+      union_culture_score:   0, // DEPRECATED v1
     };
   }
   console.log(`[Gallery] ${Object.keys(gl_msaMap).length} MSA groups built`);
