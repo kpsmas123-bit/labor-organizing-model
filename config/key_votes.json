@@ -1,0 +1,89 @@
+{
+  "_note": "Defined key votes for P2 Incumbent Alignment scoring.",
+  "_version": "2.0",
+  "_last_updated": "2026-06-11",
+  "_rationale": "Votes selected for direct relevance to labor organizing rights. All are floor votes with documented roll-call records. All four votes verified against official Senate.gov XML and clerk.house.gov before entry.",
+  "_data_sources": {
+    "house_clerk_xml": "https://clerk.house.gov/evs/{year}/roll{NNN:03d}.xml — used for 117th Congress House votes",
+    "congress_gov_api": "https://api.congress.gov/v3/house-vote/{congress}/{session}/{roll_call}/members — used for 118th Congress and later (beta)",
+    "senate_gov_xml": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote{congress}{session}/vote_{congress}_{session}_{vote_number:05d}.xml"
+  },
+
+  "federal_votes": [
+    {
+      "id": "pro_act_117",
+      "name": "PRO Act",
+      "full_name": "Protecting the Right to Organize Act",
+      "congress": 117,
+      "session": 1,
+      "chamber": "house",
+      "bill_id": "hr842-117",
+      "vote_type": "passage",
+      "roll_call_number": 70,
+      "year": 2021,
+      "date": "2021-03-09",
+      "data_source": "house_clerk_xml",
+      "pro_labor_vote": "yes",
+      "floor_vote": true,
+      "_note": "Passed House 225-206. Never received Senate floor vote. Roll Call 70 confirmed via clerk.house.gov and govtrack.us."
+    },
+    {
+      "id": "sanders_min_wage_117",
+      "name": "Sanders Minimum Wage Amendment",
+      "full_name": "$15 Minimum Wage — Sanders Amdt. No. 972 to American Rescue Plan",
+      "congress": 117,
+      "session": 1,
+      "chamber": "senate",
+      "bill_id": "hr1319-117",
+      "amendment_id": "samdt972-117",
+      "vote_type": "amendment_waiver",
+      "roll_call_number": 74,
+      "year": 2021,
+      "date": "2021-03-05",
+      "data_source": "senate_gov_xml",
+      "pro_labor_vote": "yes",
+      "floor_vote": true,
+      "_note": "Formal question: 'Motion to Waive All Applicable Budgetary Discipline Re: Sanders Amdt. No. 972.' Failed 42-58 (3/5 required). Voting Yea = supporting the $15 minimum wage = pro-labor. Roll Call 74 confirmed via senate.gov XML. Note: Sam initially provided Roll Call 48, which was the Lee health savings account amendment (Feb 5, 2021)."
+    },
+    {
+      "id": "abruzzo_nlrb_117",
+      "name": "Abruzzo NLRB General Counsel Confirmation",
+      "full_name": "Confirmation of Jennifer Ann Abruzzo as NLRB General Counsel",
+      "congress": 117,
+      "session": 1,
+      "chamber": "senate",
+      "bill_id": null,
+      "nomination_id": "pn126-117",
+      "vote_type": "confirmation",
+      "roll_call_number": 273,
+      "year": 2021,
+      "date": "2021-07-21",
+      "data_source": "senate_gov_xml",
+      "pro_labor_vote": "yes",
+      "floor_vote": true,
+      "_note": "Confirmed 50-50 with VP Harris casting tie-breaking Yea. Strict party-line vote. Abruzzo is a pro-labor NLRB GC; voting to confirm = pro-labor. Roll Call 273 confirmed via senate.gov XML. Note: Sam initially provided Roll Call 232 (Lina Khan FTC cloture, 72-25) and Roll Call 190 (McReynolds USPS nomination, 59-38) — both wrong. Note: Sam said 50-48; actual was 50-50 + VP."
+    },
+    {
+      "id": "apprenticeship_act_117",
+      "name": "National Apprenticeship Act",
+      "full_name": "National Apprenticeship Act of 2021",
+      "congress": 117,
+      "session": 1,
+      "chamber": "house",
+      "bill_id": "hr447-117",
+      "vote_type": "passage",
+      "roll_call_number": 31,
+      "year": 2021,
+      "date": "2021-02-05",
+      "data_source": "house_clerk_xml",
+      "pro_labor_vote": "yes",
+      "floor_vote": true,
+      "_note": "Passed House. Expands registered apprenticeship programs with labor standards protections. Never received Senate floor vote. Roll Call 31 confirmed via clerk.house.gov and govtrack.us. Note: Sam initially provided HR7309 Roll Call 8 — HR7309 is WIOA reauthorization (Roll Call 193, May 2022); Roll Call 8 (Jan 2022) was H.Res.868 (NASA property leases rule)."
+    }
+  ],
+
+  "_coverage_note": "Federal votes only in this version. State legislative votes are Phase 4C. All four votes verified against official government XML sources before entry into config.",
+  "_actionable_votes": ["pro_act_117", "sanders_min_wage_117", "abruzzo_nlrb_117", "apprenticeship_act_117"],
+  "_pending_sam_decision": [],
+  "_confirmed_skips": []
+}
