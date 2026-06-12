@@ -31,6 +31,16 @@ Sam's approval before config/thresholds.json update.
 - Quadrant (placeholder threshold=50): Q2=4, Q3=95, Q4=3,044
 - Known limitations: P1 Congressional uses county margin as district proxy;
   P2 uses state-level averaging (district field empty in Agent C source)
+- deploy_now_both = 0: No county currently clears both SLS-Capital >= 2.5,
+  SLS-Community >= 35, AND P1 >= 5. This reflects the structural reality
+  that major labor metros are concentrated in non-swing states.
+  This is a genuine finding, not a calibration error.
+- Small county amplification: SLS-Community uses workforce share,
+  which can produce high scores in tiny rural counties where a single
+  sector dominates local employment. Niobrara WY (pop. 2,354) scores
+  43.1 on community reach. This is methodologically correct but
+  strategically limited by absolute workforce scale.
+  Future versions may add a minimum workforce floor.
 
 ---
 

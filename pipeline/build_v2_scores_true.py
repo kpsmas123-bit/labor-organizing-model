@@ -167,17 +167,27 @@ def _state_fips_to_abbr(fips_2):
     return _FIPS_TO_ABBR.get(fips_2, fips_2)
 
 
-def classify_quadrant(sls_capital, p1_presidential, sls_threshold, p1_threshold):
-    sls_high = sls_capital >= sls_threshold
+def classify_quadrant(sls_capital, sls_community, p1_presidential,
+                       cap_threshold, comm_threshold, p1_threshold):
+    capital_high = sls_capital >= cap_threshold
+    community_high = sls_community >= comm_threshold
     p1_high = p1_presidential >= p1_threshold
-    if sls_high and p1_high:
-        return "1_high_leverage_swing"
-    elif sls_high and not p1_high:
-        return "2_high_leverage_safe"
-    elif not sls_high and p1_high:
-        return "3_low_leverage_swing"
+    both_high = capital_high and community_high
+
+    if both_high and p1_high:
+        return "deploy_now_both"
+    elif capital_high and p1_high:
+        return "deploy_now_capital"
+    elif community_high and p1_high:
+        return "deploy_now_community"
+    elif capital_high:
+        return "primary_target_capital"
+    elif community_high:
+        return "primary_target_community"
+    elif p1_high:
+        return "power_building"
     else:
-        return "4_lower_priority"
+        return "lower_priority"
 
 
 def main():
@@ -205,8 +215,10 @@ def main():
     existing_by_fips = {c["fips"]: c for c in v2_existing["counties"]}
 
     denominator = weights["svs_normalization"]["denominator"]
-    p1_threshold = thresholds.get("sls", {}).get("p1_high", 5.0)
-    sls_threshold_placeholder = 50.0  # will be recalibrated after full run
+    q = thresholds["quadrant"]
+    cap_threshold = q["sls_capital_high_boundary"]
+    comm_threshold = q["sls_community_high_boundary"]
+    p1_threshold = q["p1_high_boundary"]
 
     print(f"Denominator: {denominator:,}")
 
@@ -265,10 +277,12 @@ def main():
                 fips, state_abbr, p2_state_index
             )
 
-            # Quadrant: use placeholder threshold for now (will recalibrate)
+            capital_high = sls_capital >= cap_threshold
+            community_high = sls_community >= comm_threshold
+            p1_high = p1_presidential >= p1_threshold
             quadrant = classify_quadrant(
-                sls_capital, p1_presidential,
-                sls_threshold_placeholder, p1_threshold
+                sls_capital, sls_community, p1_presidential,
+                cap_threshold, comm_threshold, p1_threshold
             )
 
             record = {
@@ -286,8 +300,9 @@ def main():
                 "p1_congressional": p1_congressional,
                 "p2_alignment": p2_alignment,
                 "p2_coverage": p2_coverage,
-                "sls_high": sls_capital >= sls_threshold_placeholder,
-                "p1_high": p1_presidential >= p1_threshold,
+                "capital_high": capital_high,
+                "community_high": community_high,
+                "p1_high": p1_high,
                 "quadrant": quadrant,
                 # Carry forward v1 fields for regression comparison
                 "v1_organizing_opportunity_score": existing.get(
@@ -297,10 +312,6 @@ def main():
                 "v1_intervention_type": existing.get("v1_intervention_type"),
                 "v1_priority_tier": existing.get("v1_priority_tier"),
                 "_model_version": "2.0-true",
-                "_sls_threshold_note": (
-                    "sls_high threshold=50 is placeholder; "
-                    "recalibrate after full run distribution review"
-                ),
                 "_generated": datetime.now(timezone.utc).isoformat(),
             }
             results.append(record)
@@ -315,10 +326,12 @@ def main():
         "_counties_scored": len(results),
         "_errors": len(errors),
         "_denominator": denominator,
-        "_note": (
-            "True SLS scores. sls_high threshold is placeholder at 50; "
-            "recalibrate after reviewing full distribution."
-        ),
+        "_thresholds": {
+            "sls_capital_high": cap_threshold,
+            "sls_community_high": comm_threshold,
+            "p1_high": p1_threshold,
+        },
+        "_note": "True SLS scores. Dual-dimension quadrant classification (capital + community).",
         "counties": results,
         "errors": errors,
     }
@@ -388,21 +401,26 @@ def _print_distributions(results):
     dist([r["p1_congressional"] for r in results], "P1 Congressional")
     dist([r["p2_alignment"] for r in results], "P2 Alignment")
 
+    order = [
+        "deploy_now_both",
+        "deploy_now_capital",
+        "deploy_now_community",
+        "primary_target_capital",
+        "primary_target_community",
+        "power_building",
+        "lower_priority",
+    ]
     quadrant_counts = defaultdict(int)
     for r in results:
         quadrant_counts[r["quadrant"]] += 1
-    print("\nQuadrant distribution (sls_threshold=50 placeholder):")
-    for q in sorted(quadrant_counts):
-        print(f"  {q}: {quadrant_counts[q]}")
-
-    # Propose SLS threshold
-    sls_vals = sorted(r["sls_capital"] for r in results)
-    n = len(sls_vals)
-    p90 = sls_vals[int(n * 0.90)]
-    p95 = sls_vals[int(n * 0.95)]
-    print(f"\nFor top-10% threshold: p90 = {p90:.2f}")
-    print(f"For top-5% threshold:  p95 = {p95:.2f}")
-    print("NOTE: Sam must approve threshold before updating config/thresholds.json")
+    total = len(results)
+    print("\nQuadrant distribution:")
+    for cat in order:
+        n = quadrant_counts.get(cat, 0)
+        print(f"  {cat:<30} {n:>5}  ({100*n/total:.1f}%)")
+    unclassified = set(quadrant_counts) - set(order)
+    for cat in unclassified:
+        print(f"  {cat:<30} {quadrant_counts[cat]:>5}  (unclassified)")
 
 
 if __name__ == "__main__":

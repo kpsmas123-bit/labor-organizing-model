@@ -19,10 +19,13 @@
   },
 
   "quadrant": {
-    "sls_high_low_boundary": 50,
-    "pts_high_low_boundary": 50,
-    "_source": "MASTER_PLAN.md",
-    "_rationale": "Default midpoint thresholds for v2.0 quadrant map. Will be recalibrated after regression validation."
+    "sls_capital_high_boundary": 2.5,
+    "sls_community_high_boundary": 35,
+    "p1_high_boundary": 5.0,
+    "_calibrated": "2026-06-12",
+    "_source": "Agent D true scoring run — approved by Sam 2026-06-12",
+    "_rationale": "sls_capital>=2.5 captures top ~10% of counties (~320), regional hubs and above. sls_community>=35 captures top ~10% by community crisis reach. p1_high>=5 from Gate 5 calibration. Replaces placeholder midpoint (50/50) with data-driven thresholds.",
+    "_deprecated": "sls_high_low_boundary and pts_high_low_boundary removed — replaced by dual-dimension thresholds"
   },
 
   "swing_states_presidential": {
