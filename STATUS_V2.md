@@ -7,7 +7,26 @@
 ## Current Gate: Gate 7 — Regression validation before rename
 
 Gate 6 display layer migration complete (2026-06-12).
+Map UI cleanup complete (2026-06-12).
 Next: validate map renders correctly, then rename county_scores_v2_test.json → county_scores.json.
+
+---
+
+## Map UI Cleanup — Complete (2026-06-12)
+- [x] Legacy A/B/C sidebar counts replaced with quadrant counts
+- [x] Congressional Districts button removed from map sidebar
+- [x] Intervention Types overlay removed (v1 legacy)
+- [x] QUADRANT_COLORS updated for colorblind accessibility
+- [x] Legend: "Strategic Terrain" heading, shortened labels
+- [x] Model version indicator added to status bar
+
+## Next Sessions
+- [ ] County/MSA info card redesign
+  (gallery Congressional card also needs removal — flag for this session)
+- [ ] Literature verification
+- [ ] Regression design — dependent variable decision needed
+- [ ] county_scores_v2_test.json → county_scores.json rename
+  (after browser validation confirms v2.0 map correct)
 
 ---
 
