@@ -4,11 +4,9 @@
 
 ---
 
-## Current Gate: Agent D complete — SLS threshold calibration pending
+## Current Gate: Gate 6 — Display layer update
 
-True scoring run complete. All 3,143 counties scored with real SLS-Capital,
-SLS-Community, P1 Congressional, and P2 Alignment. SLS threshold needs
-Sam's approval before config/thresholds.json update.
+All agent branches merged to main. Phase 4 complete.
 
 ---
 
@@ -16,11 +14,11 @@ Sam's approval before config/thresholds.json update.
 - [x] Agent A: sector reach scores + county employment exported
 - [x] Agent B: district-county crosswalk + chamber seat counts
 - [x] Agent C: federal key votes (4 votes, 533 members scored)
-- [x] Agent D: true SLS formula running on real data
+- [x] Agent D: true v2.0 scoring run complete
 - [x] config/weights.json denominator recalibrated to 210,000
-- [x] county_scores_v2_test.json: real scores, no proxies (3,143 counties, 0 errors)
-- [ ] Gate 6: SLS threshold calibration — pending Sam approval
-- [ ] Gate 7: display layer update — pending
+- [x] county_scores_v2_test.json: real scores, 7-quadrant system
+- [x] All agent branches merged to main
+- [ ] Gate 6: display layer update — NEXT
 
 ### Agent D Notes (2026-06-12)
 - SLS-Capital: min=0.00, median=0.23, p75=0.72, p90=2.38, p95=5.21, max=84.16
