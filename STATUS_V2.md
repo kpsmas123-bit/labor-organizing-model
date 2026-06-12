@@ -35,6 +35,15 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
       - v2.0 scoring dimensions (SLS Capital, SLS Community, P1, P2, Quadrant) in Slide 3
       - Sector SVS updated to real v2.0 values from sector_reach_scores.json
       - No layout, animation, CSS, or scroll-snap changes
+- [x] Map UI cleanup — legacy v1 elements removed, accessibility improved (2026-06-12)
+      - A/B/C sidebar counts replaced with quadrant distribution counts (Deploy Now / Primary Target / Electoral Leverage / Lower Priority)
+      - Congressional Districts [PAUSED] button removed from map sidebar
+      - "Show Intervention Types" overlay removed (v1 legacy data — will return in v3.0 with v2.0 classification)
+      - QUADRANT_COLORS updated for colorblind accessibility (burnt orange, amber, dark goldenrod, stronger blue)
+      - Legend heading: "7-Category Quadrant" → "Strategic Terrain"
+      - Legend labels shortened (Capital Target, Community Target, Electoral Leverage)
+      - Model version indicator: "Terrain v2.0 · Data: 2024" in status bar
+      - Attribution line "Model v2.0 · Data: 2024 · laborterrain.net" in legend
 - [ ] county_scores_v2_test.json → county_scores.json rename — after regression validation
 
 ---

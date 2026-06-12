@@ -39,14 +39,10 @@
   .seg-btn.goal-pres.active  { background: #8B3A1A; border-color: #8B3A1A; }
   .seg-btn.goal-power.active { background: #6B4A1A; border-color: #6B4A1A; }
   .seg-btn.goal-senate.active{ background: #1A3A5A; border-color: #1A3A5A; }
-  .seg-btn.goal-cong { opacity: 0.4; cursor: not-allowed !important; }
   .lens-btn.active[data-lens="default"]   { background: #2C2C2C !important; border-color: #2C2C2C !important; color: #FAF7F2 !important; }
   .lens-btn.active[data-lens="community"] { background: #2C5A3C !important; border-color: #2C5A3C !important; color: #FAF7F2 !important; }
   .lens-btn.active[data-lens="capital"]   { background: #1A3A5A !important; border-color: #1A3A5A !important; color: #FAF7F2 !important; }
   #lens-badge { position: absolute; top: 12px; left: 12px; z-index: 20; background: rgba(44,44,44,0.80); color: #FAF7F2; font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 20px; pointer-events: none; letter-spacing: 0.03em; }
-  #btn-int-types { width: 100%; font-size: 11px; text-align: center; }
-  #btn-int-types.active { background: #2C3A5A !important; border-color: #2C3A5A !important; color: #FAF7F2 !important; }
-  #int-type-legend { font-size: 10px; color: #7A6F64; line-height: 1.9; margin-top: 4px; }
 
   .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 12px; color: #2C2C2C; }
   .toggle-btn input { accent-color: #E8732A; width: 14px; height: 14px; }
@@ -558,9 +554,6 @@
 
   #summary-stats { font-size: 12px; line-height: 1.9; color: #7A6F64; }
   #summary-stats .stat-label { color: #7A6F64; }
-  #summary-stats .stat-a { color: #7A5A00; font-weight: 600; }
-  #summary-stats .stat-b { color: #8B3A00; font-weight: 600; }
-  #summary-stats .stat-c { color: #7A2000; font-weight: 600; }
   #summary-stats .stat-total { color: #2C2C2C; font-weight: 600; }
 
   #top10-list .top10-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #EDE7DF; cursor: pointer; font-size: 11px; }
@@ -984,7 +977,6 @@ document.querySelector('.terrain-nav__hamburger')
         <div class="seg-btn goal-pres" data-goal="presidential">Presidential Swing</div>
         <div class="seg-btn goal-power active" data-goal="power">Long-Term Power Building</div>
         <div class="seg-btn goal-senate" data-goal="senate">Senate Battlegrounds</div>
-        <div class="seg-btn goal-cong" data-goal="congressional" title="Paused — mid-decade redistricting makes district data unreliable. Returning after 2026 elections.">Congressional Districts <span style="font-size:9px;font-weight:700;letter-spacing:.06em;opacity:0.75">[PAUSED]</span></div>
       </div>
     </div>
 
@@ -1008,9 +1000,10 @@ document.querySelector('.terrain-nav__hamburger')
     <h2>Summary</h2>
     <div id="summary-stats">
       <div><span class="stat-label">Total counties: </span><span class="stat-total" id="stat-total">–</span></div>
-      <div><span class="stat-label">A — Build New Power: </span><span class="stat-a" id="stat-inta">–</span></div>
-      <div><span class="stat-label">B — Wake the Giant: </span><span class="stat-b" id="stat-intb">–</span></div>
-      <div><span class="stat-label">C — Move Together: </span><span class="stat-c" id="stat-intc">–</span></div>
+      <div><span class="stat-label">Deploy Now: </span><span style="color:#bd0026;font-weight:600" id="stat-deploy-now">–</span></div>
+      <div><span class="stat-label">Primary Target: </span><span style="color:#d4860a;font-weight:600" id="stat-primary-target">–</span></div>
+      <div><span class="stat-label">Electoral Leverage: </span><span style="color:#2166ac;font-weight:600" id="stat-power-building">–</span></div>
+      <div><span class="stat-label">Lower Priority: </span><span style="color:#a09385;font-weight:600" id="stat-lower-priority">–</span></div>
       <div><span class="stat-label">Visible: </span><span class="stat-total" id="stat-visible">–</span></div>
     </div>
 
@@ -1114,14 +1107,7 @@ document.querySelector('.terrain-nav__hamburger')
             </div>
             <div class="legend-title" id="legend-title">Intervention Type</div>
             <div id="legend-tiers"></div>
-            <div style="margin-top:8px;border-top:1px solid #DDD5C8;padding-top:8px;">
-              <div class="seg-btn" id="btn-int-types" onclick="toggleIntTypes()">Show Intervention Types</div>
-              <div id="int-type-legend" style="display:none">
-                <div>▲ Type A — Build New Power</div>
-                <div>● Type B — Wake the Giant</div>
-                <div>■ Type C — Move Together</div>
-              </div>
-            </div>
+            <div style="margin-top:8px;border-top:1px solid #EDE7DF;padding-top:6px;font-size:8.5px;color:#A09385">Model v2.0 · Data: 2024 · laborterrain.net</div>
           </div>
         </div>
 
@@ -1732,22 +1718,22 @@ let activeLens = "default"; // "default" | "community" | "capital"
 const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV","NC"]);
 
 const QUADRANT_COLORS = {
-  "deploy_now_both":          "#7b0020",  // darkest red
-  "deploy_now_capital":       "#bd0026",  // accent red
-  "deploy_now_community":     "#d9534f",  // medium red
-  "primary_target_capital":   "#f4a460",  // orange
-  "primary_target_community": "#ffd700",  // gold
-  "power_building":           "#4a90d9",  // blue
-  "lower_priority":           "#ccc4bb"   // gray
+  "deploy_now_both":          "#7b0020",  // darkest red — keep, very distinct
+  "deploy_now_capital":       "#bd0026",  // accent red — keep, brand color
+  "deploy_now_community":     "#e05c00",  // burnt orange — distinct from red for colorblind users
+  "primary_target_capital":   "#d4860a",  // amber — replaces sandy orange
+  "primary_target_community": "#b8860b",  // dark goldenrod — replaces yellow (fails on light bg)
+  "power_building":           "#2166ac",  // stronger blue — more distinct from gray
+  "lower_priority":           "#ccc4bb"   // gray — keep
 };
 
 const QUADRANT_LABELS = {
-  "deploy_now_both":          "Deploy Now — Capital + Community",
+  "deploy_now_both":          "Deploy Now",
   "deploy_now_capital":       "Deploy Now — Capital",
   "deploy_now_community":     "Deploy Now — Community",
-  "primary_target_capital":   "Primary Target — Capital",
-  "primary_target_community": "Primary Target — Community",
-  "power_building":           "Power Building Terrain",
+  "primary_target_capital":   "Capital Target",
+  "primary_target_community": "Community Target",
+  "power_building":           "Electoral Leverage",
   "lower_priority":           "Lower Priority"
 };
 const NON_SWING_COLOR = "#ccc4bb";
@@ -1897,7 +1883,7 @@ function updateLegend() {
     return;
   }
   if (goalFilter === "power") {
-    document.getElementById("legend-title").textContent = "7-Category Quadrant";
+    document.getElementById("legend-title").textContent = "Strategic Terrain";
     document.getElementById("legend-tiers").innerHTML = Object.entries(QUADRANT_COLORS).map(([key, color]) =>
       `<div class="legend-tier">
         <div class="legend-tier-swatch" style="background:${color}"></div>
@@ -1910,17 +1896,6 @@ function updateLegend() {
   document.getElementById("legend-tiers").innerHTML = "";
 }
 
-let showIntTypes = false;
-function toggleIntTypes() {
-  showIntTypes = !showIntTypes;
-  const overlay = document.getElementById("int-type-overlay");
-  const btn = document.getElementById("btn-int-types");
-  const legend = document.getElementById("int-type-legend");
-  if (overlay) overlay.style.display = showIntTypes ? "" : "none";
-  btn.classList.toggle("active", showIntTypes);
-  btn.textContent = showIntTypes ? "Hide Intervention Types" : "Show Intervention Types";
-  if (legend) legend.style.display = showIntTypes ? "" : "none";
-}
 
 document.querySelectorAll(".lens-btn").forEach(btn => {
   btn.addEventListener("click", function() {
@@ -2421,10 +2396,14 @@ function applyFilters() {
 
 function updateStats() {
   document.getElementById("stat-total").textContent = allCounties.length.toLocaleString();
-  // Use v1_intervention_type (carried forward in v2.0) for A/B/C counts
-  document.getElementById("stat-inta").textContent = allCounties.filter(c => (c.v1_intervention_type || "").startsWith("Type A")).length.toLocaleString();
-  document.getElementById("stat-intb").textContent = allCounties.filter(c => (c.v1_intervention_type || "").startsWith("Type B")).length.toLocaleString();
-  document.getElementById("stat-intc").textContent = allCounties.filter(c => (c.v1_intervention_type || "").startsWith("Type C")).length.toLocaleString();
+  const deployNow     = filteredCounties.filter(c => c.quadrant && c.quadrant.startsWith("deploy_now")).length;
+  const primaryTarget = filteredCounties.filter(c => c.quadrant && c.quadrant.startsWith("primary_target")).length;
+  const powerBuilding = filteredCounties.filter(c => c.quadrant === "power_building").length;
+  const lowerPriority = filteredCounties.filter(c => c.quadrant === "lower_priority" || !c.quadrant).length;
+  document.getElementById("stat-deploy-now").textContent     = deployNow.toLocaleString();
+  document.getElementById("stat-primary-target").textContent = primaryTarget.toLocaleString();
+  document.getElementById("stat-power-building").textContent = powerBuilding.toLocaleString();
+  document.getElementById("stat-lower-priority").textContent = lowerPriority.toLocaleString();
   document.getElementById("stat-visible").textContent = filteredCounties.length.toLocaleString();
 }
 
@@ -2458,7 +2437,6 @@ document.getElementById("filter-swing").addEventListener("change", e => { filter
 
 document.querySelectorAll("[data-goal]").forEach(btn => {
   btn.addEventListener("click", function() {
-    if (this.dataset.goal === "congressional") return;
     document.querySelectorAll("[data-goal]").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     goalFilter = this.dataset.goal;
@@ -3172,7 +3150,7 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   await initMap();
   applyFilters();
   if (currentView === 'gallery') glInitGallery();  // re-run if ?view=gallery fired before data loaded
-  document.getElementById("data-timestamp").textContent = `Data: ${new Date().toLocaleDateString()}`;
+  document.getElementById("data-timestamp").textContent = "Terrain v2.0 · Data: 2024";
 })();
 </script>
 
