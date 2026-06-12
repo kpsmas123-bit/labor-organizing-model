@@ -4,10 +4,10 @@
 
 ---
 
-## Current Gate: 6 — Display layer migration
+## Current Gate: 3 — Extract scoring functions to scoring/
 
-Gate 5 complete. v2.0 scoring pipeline built and validated. All 3,144 counties scored.
-Next: update display layer to read v2.0 fields from county_scores_v2_test.json.
+Config layer is in place. Regression tests are passing. Safe to begin extracting scoring
+functions to `scoring/` in the next session.
 
 ---
 
@@ -48,23 +48,6 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
-<<<<<<< HEAD
-## Phase 4 — First v2.0 Scoring Run (Gate 5)
-- [x] `data/state_tipping_weights.json` created (2024 cycle, 538-derived)
-- [x] `pipeline/build_v2_scores.py` written — v2.0 scoring orchestrator
-- [x] `scoring/sls.py` created — SLS-Capital and SLS-Community functions
-- [x] `scoring/electoral.py` created — P1 Presidential continuous formula
-- [x] 50-county test run complete — Sam reviewed
-- [x] Full 3,144-county run complete — 0 errors
-- [x] `data/county_scores_v2_test.json` produced
-- [x] P1 threshold calibrated to 5 after reviewing full distribution
-- [ ] Display layer update — Gate 6
-
-### Scoring notes
-- SLS scores are proxies (v1 `sectoral_score` as stand-in). True formula requires per-sector Notion data (Phase 4 full pipeline).
-- P1 Presidential uses v2.0 continuous formula: `tipping_weight × (1/margin) × 357.14`
-- P1 threshold set to 5 = top 3.1% nationally (96 counties), all genuine swing counties in decisive states.
-=======
 ## Phase 4 — Full Scoring Pipeline
 - [x] Agent A: `data/processed/sector_reach_scores.json` (42 sectors, cap/comm reach exported)
 - [x] Agent A: `data/processed/county_sector_employment.json` (3,143 counties, 101,917 records)
@@ -81,7 +64,6 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
   records (NAICS prefix 9) not yet linked to the sector taxonomy in Notion. CBP-sourced records
   are fully linked.
 - LA County (06037) raw SLS-Capital: 1,889,256; normalized /1M = 1.89; SLS-Community = 0.83
->>>>>>> claude/lucid-maxwell-f985e5
 
 ---
 
@@ -91,8 +73,8 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 |---|---|---|
 | 1 | Config layer foundation + freeze scripts | ✅ Complete (2026-06-11) |
 | 2 | Regression tests + archival analysis | ✅ Complete (worktree, 2026-06-11) |
-| 3 | Extract scoring functions to `scoring/` | ✅ Complete (2026-06-11, Gate 5) |
+| 3 | Extract scoring functions to `scoring/` | ⬜ Ready to begin |
 | 4 | Rewrite ingestion scripts to `ingestion/` | ⬜ Blocked on Gate 3 |
-| 5 | First v2.0 scoring run | ✅ Complete (2026-06-11) |
-| 6 | Display layer migration | ⬜ Ready to begin |
-| 7 | Full pipeline (per-sector Notion data) | ⬜ Blocked on Gate 4 |
+| 5 | Build `pipeline/build_county_scores.py` | ⬜ Blocked on Gate 4 |
+| 6 | Full 3,144-county validation run | ⬜ Requires Sam approval |
+| 7 | Display layer migration | ⬜ Blocked on Gate 6 |
