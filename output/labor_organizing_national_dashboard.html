@@ -730,46 +730,49 @@ document.querySelector('.terrain-nav__hamburger')
     <!-- Slide 1 — stakes -->
     <div class="intro-slide" id="stakes" data-slide="1">
       <div class="intro-slide-inner">
-        <h1 class="intro-h">Welcome to Terrain.</h1>
-        <p class="intro-body">We have analyzed every county in the United States to help identify where labor organizing could be most impactful politically. Scroll to learn more or explore the map yourself.</p>
+        <h1 class="intro-h">The American labor movement was built to win.</h1>
+        <p class="intro-body">The American labor movement was built through profound sacrifice, skill, and strategy. Workers organized against hostile conditions and won — because they built relationships, solidarity, and collective power.</p>
+        <p class="intro-body">That foundation has been under attack since the 1970s. The movement has increasingly relied on existing institutions rather than returning to the on-the-ground organizing that first brought unions to power.</p>
+        <p class="intro-body">We are once again in a moment that demands a return to those fundamentals.</p>
       </div>
     </div>
 
     <!-- Slide 2 — urgency -->
     <div class="intro-slide" id="urgency" data-slide="2">
       <div class="intro-slide-inner">
-        <h1 class="intro-h">Urgency requires strategy and prioritization.</h1>
-        <p class="intro-body">We don't have the time or the luxury to not build the strongest labor movement capable of transforming this country. That requires an important distinction. Every worker deserves a union — the hospital worker, the farm worker, the software engineer. But not all workers are equally strategic for large-scale political change. That does not mean they don't deserve democracy in their workplace. It means that if we want to win fast, we need to prioritize some sectors in some locations.</p>
+        <h1 class="intro-h">There are three forms of political activity.</h1>
+        <p class="intro-body">Advocacy directs resources at policymakers. Mobilization activates people already convinced. Organizing is different — it brings unengaged workers into campaigns, trains them, builds worker-led structures, and wins material gains that prove collective action works.</p>
+        <p class="intro-body">The labor movement has relied heavily on the first two. Deep organizing — the kind that builds durable power — is underinvested.</p>
       </div>
     </div>
 
     <!-- Slide 3 — methodology -->
     <div class="intro-slide" id="methodology" data-slide="3">
       <div class="intro-slide-inner" style="max-width: min(760px, 60vw)">
-        <h1 class="intro-h">We score every U.S. county on five variables. We score every sector on its strategic value.</h1>
-        <p class="intro-body">The result is a map of where power can be built — and what kind.</p>
+        <h1 class="intro-h">Not all terrain is equally strategic.</h1>
+        <p class="intro-body">Every worker deserves a union. That right is not conditional on strategic value. But to build a movement large enough to win in the face of rising political hostility, we have to prioritize. Terrain is a tool for that prioritization.</p>
         <div class="slide-panels-section">
-          <div class="slide-panels-label">County variables</div>
+          <div class="slide-panels-label">County scoring dimensions</div>
           <div class="slide-panels-grid">
             <div class="slide-panel">
-              <div class="slide-panel__name">Strike Capacity</div>
-              <div class="slide-panel__desc">Can workers cause a crisis?</div>
+              <div class="slide-panel__name">SLS Capital</div>
+              <div class="slide-panel__desc">Can workers interrupt capital flow?</div>
             </div>
             <div class="slide-panel">
-              <div class="slide-panel__name">Political Alignment</div>
-              <div class="slide-panel__desc">Is terrain winnable electorally?</div>
+              <div class="slide-panel__name">SLS Community</div>
+              <div class="slide-panel__desc">Are workers in community-facing sectors?</div>
             </div>
             <div class="slide-panel">
-              <div class="slide-panel__name">Community Embeddedness</div>
-              <div class="slide-panel__desc">Are workers embedded in community relationships?</div>
+              <div class="slide-panel__name">P1 Electoral Leverage</div>
+              <div class="slide-panel__desc">Does this county decide elections?</div>
             </div>
             <div class="slide-panel">
-              <div class="slide-panel__name">Existing Infrastructure</div>
-              <div class="slide-panel__desc">Are unions already organized here?</div>
+              <div class="slide-panel__name">P2 Incumbent Alignment</div>
+              <div class="slide-panel__desc">Are incumbents aligned with labor?</div>
             </div>
             <div class="slide-panel">
-              <div class="slide-panel__name">Electoral Alignment</div>
-              <div class="slide-panel__desc">Is the county competitive?</div>
+              <div class="slide-panel__name">Quadrant Classification</div>
+              <div class="slide-panel__desc">Where does this county fit in the strategy?</div>
             </div>
           </div>
         </div>
@@ -778,27 +781,27 @@ document.querySelector('.terrain-nav__hamburger')
           <div class="slide-panels-grid slide-panels-grid--3">
             <div class="slide-panel">
               <div class="slide-panel__name">Hospitals</div>
-              <div class="slide-panel__score">100</div>
+              <div class="slide-panel__score">45</div>
             </div>
             <div class="slide-panel">
               <div class="slide-panel__name">K-12 Education</div>
-              <div class="slide-panel__score">100</div>
+              <div class="slide-panel__score">45</div>
+            </div>
+            <div class="slide-panel">
+              <div class="slide-panel__name">Rail Freight</div>
+              <div class="slide-panel__score">50</div>
             </div>
             <div class="slide-panel">
               <div class="slide-panel__name">Ports</div>
-              <div class="slide-panel__score">95</div>
+              <div class="slide-panel__score">45</div>
             </div>
             <div class="slide-panel">
-              <div class="slide-panel__name">Utilities</div>
-              <div class="slide-panel__score">85</div>
+              <div class="slide-panel__name">Public Transit</div>
+              <div class="slide-panel__score">35</div>
             </div>
             <div class="slide-panel">
-              <div class="slide-panel__name">Retail</div>
-              <div class="slide-panel__score">10</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">Tech</div>
-              <div class="slide-panel__score">0</div>
+              <div class="slide-panel__name">Home Health</div>
+              <div class="slide-panel__score">25</div>
             </div>
           </div>
         </div>
@@ -809,24 +812,24 @@ document.querySelector('.terrain-nav__hamburger')
     <!-- Slide 4 — leverage -->
     <div class="intro-slide" id="leverage" data-slide="4">
       <div class="intro-slide-inner">
-        <h1 class="intro-h">Different workers are powerful in different ways. We've divided leverage into two buckets.</h1>
-        <p class="intro-body">A port strike chokes capital flow — economic pressure forces a response. A teachers strike chokes the community — parents, students, churches mobilize as active allies. Jane McAlevey called this whole-worker organizing: workers aren't just employees, they're embedded in relationships that can be mobilized into power. Same county, completely different organizing strategy.</p>
+        <h1 class="intro-h">The model asks two questions about every U.S. county.</h1>
+        <p class="intro-body">First: how much structural power would organized workers here have? That is the Strategic Leverage Score — measured separately for capital-facing leverage (ports, logistics, energy) and community-facing leverage (hospitals, schools, transit). Second: how much does organizing here translate into political impact? That is the Political Terrain Score — how decisive is this geography electorally, and how aligned are its incumbents with labor's agenda.</p>
         <div class="slide-county-pair">
           <div class="slide-cs-card">
-            <div class="slide-cs-county">Logan County</div>
-            <div class="slide-cs-badge">WV · Type B</div>
-            <div class="slide-cs-oos">19.21</div>
-            <div class="slide-cs-meta">OPP SCORE · Sectoral: 2.2 · Scale: 10</div>
-            <p class="slide-cs-story">Once the largest coal-producing county in WV. Nearly 28% poverty rate today. Capital extracted the wealth and left. High chokepoint potential, low community infrastructure.</p>
-            <a class="slide-cs-link" href="https://dialogic.blogspot.com/2011/03/npr-coal-reignites-mighty-battle-of.html" target="_blank" rel="noopener">Coal Reignites A Mighty Battle of Labor History ↗</a>
+            <div class="slide-cs-county">Centre County</div>
+            <div class="slide-cs-badge">PA · Community Leverage</div>
+            <div class="slide-cs-oos">17.4</div>
+            <div class="slide-cs-meta">SLS COMMUNITY · Capital: 1.9 · P1: 35.3</div>
+            <p class="slide-cs-story">Home of Penn State. Hospital staff, university employees, and K-12 teachers in a county that tipped by 2.83 points in 2024. Community leverage is relational — workers are woven into every family in the county.</p>
+            <a class="slide-cs-link" href="#" target="_blank" rel="noopener">Power Building Terrain ↗</a>
           </div>
           <div class="slide-cs-card">
-            <div class="slide-cs-county">Kanawha County</div>
-            <div class="slide-cs-badge">WV · Type B</div>
-            <div class="slide-cs-oos">40.6</div>
-            <div class="slide-cs-meta">OPP SCORE · Union Culture: 80 · Scale: 60</div>
-            <p class="slide-cs-story">2018 wildcat strike shut down all 55 counties. Rank-and-file refused back-to-work orders from their own union leaders. Launched the national Red for Ed movement.</p>
-            <a class="slide-cs-link" href="https://www.bloomberg.com/news/articles/2018-03-02/biggest-wildcat-strike-in-decades-hints-at-new-u-s-labor-unrest" target="_blank" rel="noopener">Biggest Wildcat Strike in Decades Hints at New U.S. Labor Unrest ↗</a>
+            <div class="slide-cs-county">Green County</div>
+            <div class="slide-cs-badge">WI · Tightest Margin</div>
+            <div class="slide-cs-oos">100.0</div>
+            <div class="slide-cs-meta">P1 ELECTORAL · Community: 14.6 · Margin: +0.27</div>
+            <p class="slide-cs-story">Decided by 0.27 points in 2024 — the tightest county in the dataset. Electoral leverage here is existential: the margin is smaller than any single organizing campaign would need to move.</p>
+            <a class="slide-cs-link" href="#" target="_blank" rel="noopener">Power Building Terrain ↗</a>
           </div>
         </div>
       </div>
@@ -835,127 +838,135 @@ document.querySelector('.terrain-nav__hamburger')
     <!-- Slide 5 — goals-types (dims overlay, pulses .seg-buttons) -->
     <div class="intro-slide" id="goals-types" data-slide="5">
       <div class="intro-slide-inner" style="max-width: min(680px, 55vw)">
-        <h1 class="intro-h">Your goal shapes what you see. Your terrain type tells you what to do with it.</h1>
-        <p class="intro-body">A Senate race in 2026 needs you to activate existing organized power fast. A decade of power building in Texas means finding places where new organizing can take root. Switch the goal — the map responds.</p>
-        <p class="intro-body" style="margin: 0 0 6px;">▲ <strong>Type A</strong> — Build new power from scratch.</p>
-        <p class="intro-body" style="margin: 0 0 6px;">● <strong>Type B</strong> — Activate existing organized power.</p>
-        <p class="intro-body" style="margin: 0 0 16px;">■ <strong>Type C</strong> — Coordinate aligned organizations.</p>
-        <p class="intro-body">Examples: Clark County NV is Type C — Culinary Union knocked on 900,000 doors in 2024. Cook County IL is Type B — CTU's 2012 strike launched a national movement but the organized power still isn't fully activated politically. Kanawha County WV is Type B — 20,000 workers shut down 55 counties without leadership support.</p>
+        <h1 class="intro-h">One finding stood out when we ran the model.</h1>
+        <p class="intro-body">When we ran the model on all 3,144 U.S. counties, one finding stood out: no county simultaneously has high capital leverage, high community leverage, AND decisive electoral geography. The Deploy Now — Capital + Community quadrant is empty.</p>
+        <p class="intro-body" style="margin: 0 0 6px;"><strong>Centre County, Pennsylvania</strong> — Home of Penn State. Tightest county in the most decisive swing state. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">P1: 35.3 · SLS Community: 17.4 · Power Building</span><br>The workers who could move this county: hospital staff, university employees, public school teachers.</p>
+        <p class="intro-body" style="margin: 0 0 6px;"><strong>Green County, Wisconsin</strong> — Decided by 0.27 points in 2024. The tightest margin in the dataset. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">P1: 100.0 · SLS Community: 14.6 · Power Building</span><br>The margin is smaller than any organizing campaign would need to move.</p>
+        <p class="intro-body" style="margin: 0 0 16px;"><strong>Muskegon County, Michigan</strong> — Swing county in a swing state. Growing healthcare sector, light manufacturing base. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">P1: 35.9 · SLS Community: 8.3 · Power Building</span></p>
+        <p class="intro-body">By contrast: Los Angeles County has the highest capital leverage in the country — but decides nothing electorally. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">SLS Capital: 84.2 · P1: 0.1 · Primary Target — Capital</span><br>The counties that decide elections are smaller. Their leverage is community-facing.</p>
+        <p class="intro-body">The conclusion: community sectors in tipping counties are the strategic frontier. Hospital staff, school teachers, transit workers in Centre, Green, and Muskegon — not port workers in Los Angeles.</p>
       </div>
     </div>
 
     <!-- Slide 6 — why-different -->
     <div class="intro-slide" id="why-different" data-slide="6">
       <div class="intro-slide-inner" style="max-width: min(680px, 55vw)">
-        <h1 class="intro-h">Why Terrain is different from traditional labor strategy.</h1>
-        <p class="intro-body">Since the 1970s, much of the labor movement has used union density — how many workers have unions in a given sector or region — as the primary goal and metric for success. We push back against that.</p>
-        <p class="intro-body">The real power of workers is not in their technical membership. It's whether the actual workers on the ground are actively organized and ready to ultimately force the hand of those in power. A union more focused on increasing membership numbers than on strikes, contract negotiations, and competitive elections is doing little to change the country.</p>
-        <p class="intro-body">We focus on political impact. And this is a good moment to be clear: just because a sector isn't strategic for large-scale change doesn't mean those workers don't matter. Hospitality workers often have some of the worst working conditions in the country and have built some of the strongest organizations — Clark County NV is proof. But a hotel strike is unlikely to create the kind of community or capital crisis that moves elections. Terrain helps you see the difference.</p>
+        <h1 class="intro-h">How to read the map.</h1>
+        <p class="intro-body">The map shows every U.S. county classified into one of six strategic categories. Deploy Now counties have both structural leverage and decisive electoral geography. Primary Target counties have leverage but need political activation. Power Building counties are electorally decisive but need deeper organizing infrastructure.</p>
+        <p class="intro-body">Use the lens toggle to switch between Capital Leverage — ports, logistics, energy, absolute crisis potential — and Community Leverage — hospitals, schools, transit, relational crisis potential.</p>
+        <p class="intro-body">Use the goal toggle to filter by electoral context: Presidential Swing, Senate Battlegrounds, or Long-Term Power Building. The same county can look very different depending on which horizon you're organizing toward.</p>
       </div>
     </div>
 
     <!-- Slide 7 — explore (final) -->
     <div class="intro-slide intro-slide-last" id="explore" data-slide="7">
       <div class="intro-slide-inner">
-        <h1 class="intro-h">3,144 counties. Every one scored. Start with a goal.</h1>
-        <p class="intro-body">Explore the map or dig into case studies below.</p>
+        <h1 class="intro-h">Two tools. One framework.</h1>
+        <p class="intro-body">The map helps organizations decide where to deploy collective resources. The Jobs Board helps individuals find where they can have the most personal impact — filtered by location, experience, and the same strategic terrain logic.</p>
         <div class="intro-cta-row">
-          <button class="intro-btn-primary" id="intro-explore-btn">Start exploring →</button>
+          <button class="intro-btn-primary" id="intro-explore-btn">Explore the map →</button>
           <button class="intro-btn-secondary" id="intro-cases-btn">Explore case studies ↓</button>
         </div>
       </div>
       <div id="intro-case-panel">
-        <!-- Kanawha WV -->
-        <div class="cs-card" data-fips="54039">
-          <div class="cs-county">Kanawha County</div>
-          <div class="cs-badge">WV · Type B: Political Activation</div>
-          <div class="cs-oos">40.6</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+        <!-- Warren GA — deploy_now_community -->
+        <div class="cs-card" data-fips="13301">
+          <div class="cs-county">Warren County</div>
+          <div class="cs-badge">GA · Deploy Now — Community</div>
+          <div class="cs-oos">52.3</div>
+          <div class="cs-oos-label">SLS COMMUNITY</div>
           <div class="cs-data">
-            <span>Union Culture: 80</span>
-            <span>Scale: 60</span>
+            <span>P1: 6.8</span>
+            <span>Margin: +4.71</span>
           </div>
-          <p class="cs-story">2018 wildcat strike shut down all 55 counties. Rank-and-file refused back-to-work orders from their own union leaders. Launched the national Red for Ed movement.</p>
+          <p class="cs-story">Rural Georgia. Healthcare workers dominate the employment base — the local hospital is the largest employer. High community leverage, slight D lean. Classic whole-worker organizing terrain.</p>
         </div>
-        <!-- Logan WV -->
-        <div class="cs-card" data-fips="54045">
-          <div class="cs-county">Logan County</div>
-          <div class="cs-badge">WV · Type B: Political Activation</div>
-          <div class="cs-oos">19.21</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+        <!-- Centre PA — power_building -->
+        <div class="cs-card" data-fips="42027">
+          <div class="cs-county">Centre County</div>
+          <div class="cs-badge">PA · Power Building</div>
+          <div class="cs-oos">35.3</div>
+          <div class="cs-oos-label">P1 ELECTORAL</div>
           <div class="cs-data">
-            <span>Sectoral: 2.2</span>
-            <span>Scale: 10</span>
+            <span>SLS Community: 17.4</span>
+            <span>Margin: +2.83</span>
           </div>
-          <p class="cs-story">Once the largest coal-producing county in WV. Nearly 28% poverty rate today. Capital extracted the wealth and left. High chokepoint potential, low community infrastructure.</p>
+          <p class="cs-story">Home of Penn State. Decided by 2.83 points in 2024. Hospital staff, university employees, and K-12 teachers in the most decisive swing state. Organizing here builds community leverage in terrain that decides elections.</p>
         </div>
-        <!-- Clark NV -->
+        <!-- Clark NV — deploy_now_capital -->
         <div class="cs-card" data-fips="32003">
           <div class="cs-county">Clark County</div>
-          <div class="cs-badge">NV · Type C: Partnership</div>
-          <div class="cs-oos">86.5</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+          <div class="cs-badge">NV · Deploy Now — Capital</div>
+          <div class="cs-oos">29.1</div>
+          <div class="cs-oos-label">SLS CAPITAL</div>
           <div class="cs-data">
-            <span>Union Culture: 80</span>
-            <span>Scale: 100</span>
+            <span>P1: 8.2</span>
+            <span>Margin: +2.63</span>
           </div>
-          <p class="cs-story">Culinary Union Local 226. 60,000 hospitality workers. 900,000+ doors knocked in 2024. Pivotal in flipping Nevada Democratic every cycle since 2008.</p>
+          <p class="cs-story">Las Vegas metro — logistics, freight, and a massive hospitality sector embedded in regional supply chains. Culinary Union Local 226 has proven the organizing model here. Swing terrain with capital leverage already in motion.</p>
         </div>
-        <!-- Cook IL -->
-        <div class="cs-card" data-fips="17031">
-          <div class="cs-county">Cook County</div>
-          <div class="cs-badge">IL · Type B: Political Activation</div>
-          <div class="cs-oos">86.5</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+        <!-- Green WI — power_building -->
+        <div class="cs-card" data-fips="55045">
+          <div class="cs-county">Green County</div>
+          <div class="cs-badge">WI · Power Building</div>
+          <div class="cs-oos">100.0</div>
+          <div class="cs-oos-label">P1 ELECTORAL</div>
           <div class="cs-data">
-            <span>Scale: 100</span>
+            <span>SLS Community: 14.6</span>
+            <span>Margin: +0.27</span>
           </div>
-          <p class="cs-story">CTU's 2012 strike launched a national movement and directly inspired the WV wildcat. Organizers were studying McAlevey's book about CTU when they started planning. Bargaining for the common good.</p>
+          <p class="cs-story">Decided by 0.27 points in 2024 — the tightest county in the dataset. Every new union member here is a potential election outcome. Maximum electoral leverage. Needs organizing investment to activate.</p>
         </div>
-        <!-- Allegheny PA -->
-        <div class="cs-card" data-fips="42003">
-          <div class="cs-county">Allegheny County</div>
-          <div class="cs-badge">PA · Type C: Partnership</div>
-          <div class="cs-oos">86.5</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+        <!-- LA County CA — primary_target_capital -->
+        <div class="cs-card" data-fips="06037">
+          <div class="cs-county">Los Angeles County</div>
+          <div class="cs-badge">CA · Primary Target — Capital</div>
+          <div class="cs-oos">84.2</div>
+          <div class="cs-oos-label">SLS CAPITAL</div>
           <div class="cs-data">
-            <span>Union Culture: 100</span>
+            <span>P1: 0.1</span>
+            <span>Margin: +32.92</span>
           </div>
-          <p class="cs-story">Deep union history. Strong infrastructure. But labor leaders told state lawmakers in 2023 they're worried about declining membership despite widespread public support. Classic Type B: power exists, not yet activated.</p>
+          <p class="cs-story">The highest capital leverage county in the country. Ports of LA and Long Beach handle 40% of US container imports. An action here creates a national crisis. Safe Democratic — political impact is inside accountability, not swing terrain.</p>
         </div>
-        <!-- Maricopa AZ -->
+        <!-- Maricopa AZ — deploy_now_capital -->
         <div class="cs-card" data-fips="04013">
           <div class="cs-county">Maricopa County</div>
-          <div class="cs-badge">AZ · Type C: Partnership</div>
-          <div class="cs-oos">75.25</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+          <div class="cs-badge">AZ · Deploy Now — Capital</div>
+          <div class="cs-oos">49.7</div>
+          <div class="cs-oos-label">SLS CAPITAL</div>
           <div class="cs-data">
-            <span>Union Culture: 20</span>
-            <span>Scale: 100</span>
+            <span>P1: 10.3</span>
+            <span>Margin: −3.48</span>
           </div>
-          <p class="cs-story">Arizona teachers struck in 2018 inspired by WV. Today it's swing Senate terrain. High organized scale, low union culture score — built for deployment, not organic solidarity. Goal matters here.</p>
+          <p class="cs-story">Phoenix metro — logistics hub, aerospace manufacturing, freight rail. Workers here could choke supply chains across the Southwest. Tipped R by 3.5 points in 2024. Capital leverage is ready to deploy.</p>
         </div>
-        <!-- Philadelphia PA -->
+        <!-- Philadelphia PA — primary_target_capital -->
         <div class="cs-card" data-fips="42101">
           <div class="cs-county">Philadelphia County</div>
-          <div class="cs-badge">PA · Type C: Partnership</div>
-          <div class="cs-oos">86.5</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+          <div class="cs-badge">PA · Primary Target — Capital</div>
+          <div class="cs-oos">13.1</div>
+          <div class="cs-oos-label">SLS CAPITAL</div>
           <div class="cs-data">
-            <span>Union Culture: 100</span>
+            <span>SLS Community: 38.7</span>
+            <span>P1: 1.7</span>
           </div>
-          <p class="cs-story">High OOS, concentrated healthcare and education sectors, dense community embeddedness. The potential is here. The organizing infrastructure is not yet at scale.</p>
+          <p class="cs-story">Major port, rail hub, and healthcare anchor — dual leverage profile. Safe Democratic, so electoral impact runs through primary accountability and long-term power building, not presidential swing.</p>
         </div>
-        <!-- Multnomah OR -->
-        <div class="cs-card" data-fips="41051">
-          <div class="cs-county">Multnomah County</div>
-          <div class="cs-badge">OR · Type B: Political Activation</div>
-          <div class="cs-oos">70.31</div>
-          <div class="cs-oos-label">OPP SCORE</div>
+        <!-- Monongalia WV — primary_target_community -->
+        <div class="cs-card" data-fips="54061">
+          <div class="cs-county">Monongalia County, WV</div>
+          <div class="cs-badge">WV · Primary Target — Community</div>
+          <div class="cs-oos">0.9</div>
+          <div class="cs-oos-label">SLS CAPITAL</div>
           <div class="cs-data">
-            <span>Scale: 80</span>
+            <span>SLS Community: 42.8</span>
+            <span>P1: 0.4</span>
+            <span>P2: 0.2</span>
+            <span>Pop: 107,718</span>
+            <span>Margin: −4.39</span>
           </div>
-          <p class="cs-story">Portland. Strong progressive infrastructure, community-facing sectors well represented. Type B — organized power looking for the right campaign.</p>
+          <p class="cs-story">Morgantown — home of WVU and the WVU hospital system, the state's largest employer. High community leverage from healthcare and university workers, competitive margin, but not nationally decisive electorally. The structural power is here; the political translation requires a longer horizon.</p>
         </div>
       </div>
     </div>
