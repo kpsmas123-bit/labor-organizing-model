@@ -48,6 +48,21 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 
 ---
 
+## Phase 4 — Full Scoring Pipeline
+- [x] Agent A: `data/processed/sector_reach_scores.json` (42 sectors, cap/comm reach exported)
+- [x] Agent A: `data/processed/county_sector_employment.json` (3,143 counties, 101,917 records)
+- [ ] Agent B: `district_county_crosswalk.csv` — pending
+- [ ] Agent C: `federal_key_votes.csv` — pending
+- [ ] Agent D: full scoring run with true SLS formula — pending
+
+### Agent A Notes (2026-06-12)
+- 38,272 employment records skipped (no sector relation) — these are QCEW government-sector
+  records (NAICS prefix 9) not yet linked to the sector taxonomy in Notion. CBP-sourced records
+  are fully linked.
+- LA County (06037) raw SLS-Capital: 1,889,256; normalized /1M = 1.89; SLS-Community = 0.83
+
+---
+
 ## Gate Status
 
 | Gate | Description | Status |
