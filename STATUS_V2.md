@@ -54,6 +54,10 @@ Pre-condition: ✅ config layer complete, ✅ regression tests in place.
 - [ ] Agent B: `district_county_crosswalk.csv` — pending
 - [ ] Agent C: `federal_key_votes.csv` — pending
 - [ ] Agent D: full scoring run with true SLS formula — pending
+  - **Note:** Before producing final scores, Agent D must calculate the actual maximum
+    raw SLS-Capital sum across all 3,143 counties using the exported employment data,
+    then update `config/weights.json` `svs_normalization.denominator` (currently 100,000)
+    to that maximum value. This ensures the 0–100 scale reflects real data range.
 
 ### Agent A Notes (2026-06-12)
 - 38,272 employment records skipped (no sector relation) — these are QCEW government-sector
