@@ -1,0 +1,19 @@
+{
+  "_source": "538 tipping point probabilities, 2024 presidential cycle",
+  "_note": "Probability that this state provides the decisive electoral votes. Update each cycle.",
+  "_vintage": "2024",
+  "PA": 0.28,
+  "MI": 0.18,
+  "WI": 0.15,
+  "AZ": 0.10,
+  "GA": 0.09,
+  "NV": 0.06,
+  "NC": 0.05,
+  "MN": 0.03,
+  "NH": 0.02,
+  "VA": 0.01,
+  "FL": 0.01,
+  "TX": 0.01,
+  "OH": 0.01,
+  "_default": 0.005
+}
