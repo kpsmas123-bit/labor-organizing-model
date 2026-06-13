@@ -1,534 +1,534 @@
 member_id,member_name,state,party,chamber,district,votes_cast,pro_labor_votes,key_vote_score
 S383,Dan Sullivan,AK,R,senate,,2,0,0.0
 S288,Lisa Murkowski,AK,R,senate,,2,0,0.0
-Y000033,Young,AK,R,house,,2,2,1.0
-A000055,Aderholt,AL,R,house,,2,0,0.0
-B001274,Brooks,AL,R,house,,2,0,0.0
-C001054,Carl,AL,R,house,,2,0,0.0
-M001212,Moore (AL),AL,R,house,,2,0,0.0
-P000609,Palmer,AL,R,house,,2,0,0.0
+Y000033,Young,AK,R,house,00,2,2,1.0
+A000055,Aderholt,AL,R,house,04,2,0,0.0
+B001274,Brooks,AL,R,house,05,2,0,0.0
+C001054,Carl,AL,R,house,01,2,0,0.0
+M001212,Moore (AL),AL,R,house,01,2,0,0.0
+P000609,Palmer,AL,R,house,06,2,0,0.0
 S184,Richard Shelby,AL,R,senate,,2,0,0.0
-R000575,Rogers (AL),AL,R,house,,2,0,0.0
-S001185,Sewell,AL,D,house,,2,2,1.0
+R000575,Rogers (AL),AL,R,house,03,2,0,0.0
+S001185,Sewell,AL,D,house,07,2,2,1.0
 S412,Tommy Tuberville,AL,R,senate,,2,0,0.0
-C001087,Crawford,AR,R,house,,2,0,0.0
-H001072,Hill,AR,R,house,,2,0,0.0
+C001087,Crawford,AR,R,house,01,2,0,0.0
+H001072,Hill,AR,R,house,02,2,0,0.0
 S343,John Boozman,AR,R,senate,,2,0,0.0
 S374,Tom Cotton,AR,R,senate,,2,0,0.0
-W000821,Westerman,AR,R,house,,2,0,0.0
-W000809,Womack,AR,R,house,,2,0,0.0
-B001302,Biggs,AZ,R,house,,2,0,0.0
-G000574,Gallego,AZ,D,house,,2,2,1.0
-G000565,Gosar,AZ,R,house,,2,0,0.0
-G000551,Grijalva,AZ,D,house,,2,2,1.0
-K000368,Kirkpatrick,AZ,D,house,,2,2,1.0
+W000821,Westerman,AR,R,house,04,2,0,0.0
+W000809,Womack,AR,R,house,03,2,0,0.0
+B001302,Biggs,AZ,R,house,05,2,0,0.0
+G000574,Gallego,AZ,D,house,07,2,2,1.0
+G000565,Gosar,AZ,R,house,09,2,0,0.0
+G000551,Grijalva,AZ,D,house,07,2,2,1.0
+K000368,Kirkpatrick,AZ,D,house,02,2,2,1.0
 S403,Kyrsten Sinema,AZ,D,senate,,2,1,0.5
-L000589,Lesko,AZ,R,house,,2,0,0.0
+L000589,Lesko,AZ,R,house,08,2,0,0.0
 S406,Mark Kelly,AZ,D,senate,,2,2,1.0
-O000171,O'Halleran,AZ,D,house,,2,2,1.0
-S001183,Schweikert,AZ,R,house,,2,0,0.0
-S001211,Stanton,AZ,D,house,,2,2,1.0
-A000371,Aguilar,CA,D,house,,2,2,1.0
+O000171,O'Halleran,AZ,D,house,01,2,2,1.0
+S001183,Schweikert,AZ,R,house,01,2,0,0.0
+S001211,Stanton,AZ,D,house,04,2,2,1.0
+A000371,Aguilar,CA,D,house,33,2,2,1.0
 S413,Alex Padilla,CA,D,senate,,2,2,1.0
-B001300,BarragÃ¡n,CA,D,house,,2,2,1.0
-B001270,Bass,CA,D,house,,2,2,1.0
-B001287,Bera,CA,D,house,,2,2,1.0
-B001285,Brownley,CA,D,house,,2,2,1.0
-C000059,Calvert,CA,R,house,,2,0,0.0
-C001112,Carbajal,CA,D,house,,2,2,1.0
-C001080,Chu,CA,D,house,,2,2,1.0
-C001110,Correa,CA,D,house,,2,2,1.0
-C001059,Costa,CA,D,house,,2,2,1.0
-C001097,CÃ¡rdenas,CA,D,house,,2,2,1.0
-D000623,DeSaulnier,CA,D,house,,2,2,1.0
+B001300,BarragÃ¡n,CA,D,house,44,2,2,1.0
+B001270,Bass,CA,D,house,37,2,2,1.0
+B001287,Bera,CA,D,house,06,2,2,1.0
+B001285,Brownley,CA,D,house,26,2,2,1.0
+C000059,Calvert,CA,R,house,41,2,0,0.0
+C001112,Carbajal,CA,D,house,24,2,2,1.0
+C001080,Chu,CA,D,house,28,2,2,1.0
+C001110,Correa,CA,D,house,46,2,2,1.0
+C001059,Costa,CA,D,house,21,2,2,1.0
+C001097,CÃ¡rdenas,CA,D,house,29,2,2,1.0
+D000623,DeSaulnier,CA,D,house,10,2,2,1.0
 S221,Dianne Feinstein,CA,D,senate,,2,2,1.0
-E000215,Eshoo,CA,D,house,,2,2,1.0
-G000559,Garamendi,CA,D,house,,2,2,1.0
-G000061,Garcia (CA),CA,R,house,,2,0,0.0
-G000585,Gomez,CA,D,house,,2,2,1.0
-H001090,Harder (CA),CA,D,house,,2,2,1.0
-H001068,Huffman,CA,D,house,,2,2,1.0
-I000056,Issa,CA,R,house,,2,0,0.0
-J000305,Jacobs (CA),CA,D,house,,2,2,1.0
-K000389,Khanna,CA,D,house,,2,2,1.0
-K000397,Kim (CA),CA,R,house,,2,0,0.0
-L000578,LaMalfa,CA,R,house,,2,0,0.0
-L000551,Lee (CA),CA,D,house,,2,2,1.0
-L000593,Levin (CA),CA,D,house,,2,2,1.0
-L000582,Lieu,CA,D,house,,2,2,1.0
-L000397,Lofgren,CA,D,house,,2,2,1.0
-L000579,Lowenthal,CA,D,house,,2,2,1.0
-M001163,Matsui,CA,D,house,,2,2,1.0
-M001165,McCarthy,CA,R,house,,2,0,0.0
-M001177,McClintock,CA,R,house,,2,0,0.0
-M001166,McNerney,CA,D,house,,2,2,1.0
-N000179,Napolitano,CA,D,house,,2,2,1.0
-N000181,Nunes,CA,R,house,,1,0,0.0
-O000019,Obernolte,CA,R,house,,2,0,0.0
-P000613,Panetta,CA,D,house,,2,2,1.0
-P000197,Pelosi,CA,D,house,,1,1,1.0
-P000608,Peters,CA,D,house,,2,2,1.0
-P000618,Porter,CA,D,house,,2,2,1.0
-R000486,Roybal-Allard,CA,D,house,,2,2,1.0
-R000599,Ruiz,CA,D,house,,2,2,1.0
-S001150,Schiff,CA,D,house,,2,2,1.0
-S000344,Sherman,CA,D,house,,2,2,1.0
-S001175,Speier,CA,D,house,,2,2,1.0
-S001135,Steel,CA,R,house,,2,0,0.0
-S001193,Swalwell,CA,D,house,,2,2,1.0
-S001156,SÃ¡nchez,CA,D,house,,2,2,1.0
-T000472,Takano,CA,D,house,,2,2,1.0
-T000460,Thompson (CA),CA,D,house,,2,2,1.0
-T000474,Torres (CA),CA,D,house,,2,2,1.0
-V000129,Valadao,CA,R,house,,2,0,0.0
-V000130,Vargas,CA,D,house,,2,2,1.0
-W000187,Waters,CA,D,house,,2,2,1.0
-B000825,Boebert,CO,R,house,,2,0,0.0
-B001297,Buck,CO,R,house,,2,0,0.0
-C001121,Crow,CO,D,house,,2,2,1.0
-D000197,DeGette,CO,D,house,,2,2,1.0
+E000215,Eshoo,CA,D,house,16,2,2,1.0
+G000559,Garamendi,CA,D,house,08,2,2,1.0
+G000061,Garcia (CA),CA,R,house,27,2,0,0.0
+G000585,Gomez,CA,D,house,34,2,2,1.0
+H001090,Harder (CA),CA,D,house,09,2,2,1.0
+H001068,Huffman,CA,D,house,02,2,2,1.0
+I000056,Issa,CA,R,house,48,2,0,0.0
+J000305,Jacobs (CA),CA,D,house,51,2,2,1.0
+K000389,Khanna,CA,D,house,17,2,2,1.0
+K000397,Kim (CA),CA,R,house,40,2,0,0.0
+L000578,LaMalfa,CA,R,house,01,2,0,0.0
+L000551,Lee (CA),CA,D,house,12,2,2,1.0
+L000593,Levin (CA),CA,D,house,49,2,2,1.0
+L000582,Lieu,CA,D,house,36,2,2,1.0
+L000397,Lofgren,CA,D,house,18,2,2,1.0
+L000579,Lowenthal,CA,D,house,47,2,2,1.0
+M001163,Matsui,CA,D,house,07,2,2,1.0
+M001165,McCarthy,CA,R,house,20,2,0,0.0
+M001177,McClintock,CA,R,house,05,2,0,0.0
+M001166,McNerney,CA,D,house,09,2,2,1.0
+N000179,Napolitano,CA,D,house,31,2,2,1.0
+N000181,Nunes,CA,R,house,22,1,0,0.0
+O000019,Obernolte,CA,R,house,23,2,0,0.0
+P000613,Panetta,CA,D,house,19,2,2,1.0
+P000197,Pelosi,CA,D,house,11,1,1,1.0
+P000608,Peters,CA,D,house,50,2,2,1.0
+P000618,Porter,CA,D,house,47,2,2,1.0
+R000486,Roybal-Allard,CA,D,house,40,2,2,1.0
+R000599,Ruiz,CA,D,house,25,2,2,1.0
+S001150,Schiff,CA,D,house,28,2,2,1.0
+S000344,Sherman,CA,D,house,32,2,2,1.0
+S001175,Speier,CA,D,house,14,2,2,1.0
+S001135,Steel,CA,R,house,45,2,0,0.0
+S001193,Swalwell,CA,D,house,14,2,2,1.0
+S001156,SÃ¡nchez,CA,D,house,38,2,2,1.0
+T000472,Takano,CA,D,house,39,2,2,1.0
+T000460,Thompson (CA),CA,D,house,04,2,2,1.0
+T000474,Torres (CA),CA,D,house,35,2,2,1.0
+V000129,Valadao,CA,R,house,22,2,0,0.0
+V000130,Vargas,CA,D,house,52,2,2,1.0
+W000187,Waters,CA,D,house,43,2,2,1.0
+B000825,Boebert,CO,R,house,04,2,0,0.0
+B001297,Buck,CO,R,house,04,2,0,0.0
+C001121,Crow,CO,D,house,06,2,2,1.0
+D000197,DeGette,CO,D,house,01,2,2,1.0
 S408,John Hickenlooper,CO,D,senate,,2,2,1.0
-L000564,Lamborn,CO,R,house,,2,0,0.0
+L000564,Lamborn,CO,R,house,05,2,0,0.0
 S330,Michael Bennet,CO,D,senate,,2,2,1.0
-N000191,Neguse,CO,D,house,,2,2,1.0
-P000593,Perlmutter,CO,D,house,,2,2,1.0
+N000191,Neguse,CO,D,house,02,2,2,1.0
+P000593,Perlmutter,CO,D,house,07,2,2,1.0
 S364,Christopher Murphy,CT,D,senate,,2,2,1.0
-C001069,Courtney,CT,D,house,,2,2,1.0
-D000216,DeLauro,CT,D,house,,2,2,1.0
-H001081,Hayes,CT,D,house,,2,2,1.0
-H001047,Himes,CT,D,house,,2,2,1.0
-L000557,Larson (CT),CT,D,house,,2,2,1.0
+C001069,Courtney,CT,D,house,02,2,2,1.0
+D000216,DeLauro,CT,D,house,03,2,2,1.0
+H001081,Hayes,CT,D,house,05,2,2,1.0
+H001047,Himes,CT,D,house,04,2,2,1.0
+L000557,Larson (CT),CT,D,house,01,2,2,1.0
 S341,Richard Blumenthal,CT,D,senate,,2,2,1.0
-B001303,Blunt Rochester,DE,D,house,,2,2,1.0
+B001303,Blunt Rochester,DE,D,house,00,2,2,1.0
 S337,Christopher Coons,DE,D,senate,,2,1,0.5
 S277,Thomas Carper,DE,D,senate,,2,1,0.5
-B001257,Bilirakis,FL,R,house,,2,0,0.0
-B001260,Buchanan,FL,R,house,,2,0,0.0
-C001039,Cammack,FL,R,house,,2,0,0.0
-C001066,Castor (FL),FL,D,house,,2,2,1.0
-C001111,Crist,FL,D,house,,2,2,1.0
-D000627,Demings,FL,D,house,,2,2,1.0
-D000610,Deutch,FL,D,house,,1,1,1.0
-D000600,Diaz-Balart,FL,R,house,,2,1,0.5
-D000032,Donalds,FL,R,house,,2,0,0.0
-D000628,Dunn,FL,R,house,,2,0,0.0
-F000462,"Frankel, Lois",FL,D,house,,2,2,1.0
-F000472,"Franklin, C. Scott",FL,R,house,,2,0,0.0
-G000578,Gaetz,FL,R,house,,2,0,0.0
-G000593,Gimenez,FL,R,house,,2,1,0.5
-H000324,Hastings,FL,D,house,,2,2,1.0
-L000586,Lawson (FL),FL,D,house,,2,2,1.0
+B001257,Bilirakis,FL,R,house,12,2,0,0.0
+B001260,Buchanan,FL,R,house,16,2,0,0.0
+C001039,Cammack,FL,R,house,03,2,0,0.0
+C001066,Castor (FL),FL,D,house,14,2,2,1.0
+C001111,Crist,FL,D,house,13,2,2,1.0
+D000627,Demings,FL,D,house,10,2,2,1.0
+D000610,Deutch,FL,D,house,22,1,1,1.0
+D000600,Diaz-Balart,FL,R,house,26,2,1,0.5
+D000032,Donalds,FL,R,house,19,2,0,0.0
+D000628,Dunn,FL,R,house,02,2,0,0.0
+F000462,"Frankel, Lois",FL,D,house,22,2,2,1.0
+F000472,"Franklin, C. Scott",FL,R,house,18,2,0,0.0
+G000578,Gaetz,FL,R,house,01,2,0,0.0
+G000593,Gimenez,FL,R,house,28,2,1,0.5
+H000324,Hastings,FL,D,house,20,2,2,1.0
+L000586,Lawson (FL),FL,D,house,05,2,2,1.0
 S350,Marco Rubio,FL,R,senate,,2,0,0.0
-M001199,Mast,FL,R,house,,2,0,0.0
-M001202,Murphy (FL),FL,D,house,,2,2,1.0
-P000599,Posey,FL,R,house,,1,0,0.0
+M001199,Mast,FL,R,house,21,2,0,0.0
+M001202,Murphy (FL),FL,D,house,07,2,2,1.0
+P000599,Posey,FL,R,house,08,1,0,0.0
 S404,Rick Scott,FL,R,senate,,2,0,0.0
-R000609,Rutherford,FL,R,house,,2,0,0.0
-S000168,Salazar,FL,R,house,,2,1,0.5
-S001200,Soto,FL,D,house,,2,2,1.0
-S001214,Steube,FL,R,house,,1,0,0.0
-W000823,Waltz,FL,R,house,,2,0,0.0
-W000797,Wasserman Schultz,FL,D,house,,2,2,1.0
-W000806,Webster (FL),FL,R,house,,1,0,0.0
-W000808,Wilson (FL),FL,D,house,,2,2,1.0
-A000372,Allen,GA,R,house,,2,0,0.0
-B000490,Bishop (GA),GA,D,house,,2,2,1.0
-B001312,Bourdeaux,GA,D,house,,2,2,1.0
-C001103,Carter (GA),GA,R,house,,2,0,0.0
-C001116,Clyde,GA,R,house,,2,0,0.0
-F000465,Ferguson,GA,R,house,,2,0,0.0
-G000596,Greene (GA),GA,R,house,,2,0,0.0
-H001071,Hice (GA),GA,R,house,,2,0,0.0
-J000288,Johnson (GA),GA,D,house,,2,2,1.0
+R000609,Rutherford,FL,R,house,05,2,0,0.0
+S000168,Salazar,FL,R,house,27,2,1,0.5
+S001200,Soto,FL,D,house,09,2,2,1.0
+S001214,Steube,FL,R,house,17,1,0,0.0
+W000823,Waltz,FL,R,house,06,2,0,0.0
+W000797,Wasserman Schultz,FL,D,house,25,2,2,1.0
+W000806,Webster (FL),FL,R,house,11,1,0,0.0
+W000808,Wilson (FL),FL,D,house,24,2,2,1.0
+A000372,Allen,GA,R,house,12,2,0,0.0
+B000490,Bishop (GA),GA,D,house,02,2,2,1.0
+B001312,Bourdeaux,GA,D,house,07,2,2,1.0
+C001103,Carter (GA),GA,R,house,01,2,0,0.0
+C001116,Clyde,GA,R,house,09,2,0,0.0
+F000465,Ferguson,GA,R,house,03,2,0,0.0
+G000596,Greene (GA),GA,R,house,14,2,0,0.0
+H001071,Hice (GA),GA,R,house,10,2,0,0.0
+J000288,Johnson (GA),GA,D,house,04,2,2,1.0
 S414,Jon Ossoff,GA,D,senate,,2,2,1.0
-L000583,Loudermilk,GA,R,house,,2,0,0.0
-M001208,McBath,GA,D,house,,2,2,1.0
+L000583,Loudermilk,GA,R,house,11,2,0,0.0
+M001208,McBath,GA,D,house,06,2,2,1.0
 S415,Raphael Warnock,GA,D,senate,,2,2,1.0
-S001189,"Scott, Austin",GA,R,house,,2,0,0.0
-S001157,"Scott, David",GA,D,house,,2,2,1.0
-W000788,Williams (GA),GA,D,house,,2,2,1.0
+S001189,"Scott, Austin",GA,R,house,08,2,0,0.0
+S001157,"Scott, David",GA,D,house,13,2,2,1.0
+W000788,Williams (GA),GA,D,house,05,2,2,1.0
 S353,Brian Schatz,HI,D,senate,,2,2,1.0
-C001055,Case,HI,D,house,,2,2,1.0
-K000396,Kahele,HI,D,house,,2,2,1.0
+C001055,Case,HI,D,house,01,2,2,1.0
+K000396,Kahele,HI,D,house,02,2,2,1.0
 S361,Mazie Hirono,HI,D,senate,,2,2,1.0
-A000378,Axne,IA,D,house,,2,2,1.0
+A000378,Axne,IA,D,house,03,2,2,1.0
 S153,Charles Grassley,IA,R,senate,,2,0,0.0
-F000446,Feenstra,IA,R,house,,2,0,0.0
-H001091,Hinson,IA,R,house,,2,0,0.0
+F000446,Feenstra,IA,R,house,04,2,0,0.0
+H001091,Hinson,IA,R,house,02,2,0,0.0
 S376,Joni Ernst,IA,R,senate,,2,0,0.0
-M001215,Miller-Meeks,IA,R,house,,2,0,0.0
-F000469,Fulcher,ID,R,house,,2,0,0.0
+M001215,Miller-Meeks,IA,R,house,01,2,0,0.0
+F000469,Fulcher,ID,R,house,01,2,0,0.0
 S323,James Risch,ID,R,senate,,2,0,0.0
 S266,Mike Crapo,ID,R,senate,,2,0,0.0
-S001148,Simpson,ID,R,house,,2,0,0.0
-B001295,Bost,IL,R,house,,1,0,0.0
-B001286,Bustos,IL,D,house,,2,2,1.0
-C001117,Casten,IL,D,house,,2,2,1.0
-D000096,"Davis, Danny K.",IL,D,house,,2,2,1.0
-D000619,"Davis, Rodney",IL,R,house,,2,1,0.5
-F000454,Foster,IL,D,house,,2,2,1.0
-G000586,GarcÃ­a (IL),IL,D,house,,2,2,1.0
-K000385,Kelly (IL),IL,D,house,,2,2,1.0
-K000378,Kinzinger,IL,R,house,,2,1,0.5
-K000391,Krishnamoorthi,IL,D,house,,2,2,1.0
-L000585,LaHood,IL,R,house,,2,0,0.0
-M001211,Miller (IL),IL,R,house,,2,0,0.0
-N000192,Newman,IL,D,house,,2,2,1.0
-Q000023,Quigley,IL,D,house,,2,2,1.0
+S001148,Simpson,ID,R,house,02,2,0,0.0
+B001295,Bost,IL,R,house,12,1,0,0.0
+B001286,Bustos,IL,D,house,17,2,2,1.0
+C001117,Casten,IL,D,house,06,2,2,1.0
+D000096,"Davis, Danny K.",IL,D,house,07,2,2,1.0
+D000619,"Davis, Rodney",IL,R,house,13,2,1,0.5
+F000454,Foster,IL,D,house,11,2,2,1.0
+G000586,GarcÃ­a (IL),IL,D,house,04,2,2,1.0
+K000385,Kelly (IL),IL,D,house,02,2,2,1.0
+K000378,Kinzinger,IL,R,house,16,2,1,0.5
+K000391,Krishnamoorthi,IL,D,house,08,2,2,1.0
+L000585,LaHood,IL,R,house,16,2,0,0.0
+M001211,Miller (IL),IL,R,house,15,2,0,0.0
+N000192,Newman,IL,D,house,03,2,2,1.0
+Q000023,Quigley,IL,D,house,05,2,2,1.0
 S253,Richard Durbin,IL,D,senate,,2,2,1.0
-R000515,Rush,IL,D,house,,2,2,1.0
-S001145,Schakowsky,IL,D,house,,2,2,1.0
-S001190,Schneider,IL,D,house,,2,2,1.0
+R000515,Rush,IL,D,house,01,2,2,1.0
+S001145,Schakowsky,IL,D,house,09,2,2,1.0
+S001190,Schneider,IL,D,house,10,2,2,1.0
 S386,Tammy Duckworth,IL,D,senate,,2,2,1.0
-U000040,Underwood,IL,D,house,,2,2,1.0
-B001307,Baird,IN,R,house,,2,0,0.0
-B001299,Banks,IN,R,house,,2,0,0.0
-B001275,Bucshon,IN,R,house,,2,0,0.0
-C001072,Carson,IN,D,house,,2,2,1.0
-H001074,Hollingsworth,IN,R,house,,2,0,0.0
+U000040,Underwood,IL,D,house,14,2,2,1.0
+B001307,Baird,IN,R,house,04,2,0,0.0
+B001299,Banks,IN,R,house,03,2,0,0.0
+B001275,Bucshon,IN,R,house,08,2,0,0.0
+C001072,Carson,IN,D,house,07,2,2,1.0
+H001074,Hollingsworth,IN,R,house,09,2,0,0.0
 S397,Mike Braun,IN,R,senate,,2,0,0.0
-M001214,Mrvan,IN,D,house,,2,2,1.0
-P000615,Pence,IN,R,house,,2,0,0.0
-S000929,Spartz,IN,R,house,,2,0,0.0
+M001214,Mrvan,IN,D,house,01,2,2,1.0
+P000615,Pence,IN,R,house,06,2,0,0.0
+S000929,Spartz,IN,R,house,05,2,0,0.0
 S391,Todd Young,IN,R,senate,,2,0,0.0
-W000813,Walorski,IN,R,house,,2,0,0.0
-D000629,Davids (KS),KS,D,house,,2,2,1.0
-E000298,Estes,KS,R,house,,2,0,0.0
+W000813,Walorski,IN,R,house,02,2,0,0.0
+D000629,Davids (KS),KS,D,house,03,2,2,1.0
+E000298,Estes,KS,R,house,04,2,0,0.0
 S347,Jerry Moran,KS,R,senate,,2,0,0.0
-L000266,LaTurner,KS,R,house,,2,0,0.0
-M000871,Mann,KS,R,house,,2,0,0.0
+L000266,LaTurner,KS,R,house,02,2,0,0.0
+M000871,Mann,KS,R,house,01,2,0,0.0
 S411,Roger Marshall,KS,R,senate,,2,0,0.0
-B001282,Barr,KY,R,house,,2,0,0.0
-C001108,Comer,KY,R,house,,2,0,0.0
-G000558,Guthrie,KY,R,house,,2,0,0.0
-M001184,Massie,KY,R,house,,2,0,0.0
+B001282,Barr,KY,R,house,06,2,0,0.0
+C001108,Comer,KY,R,house,01,2,0,0.0
+G000558,Guthrie,KY,R,house,02,2,0,0.0
+M001184,Massie,KY,R,house,04,2,0,0.0
 S174,Mitch McConnell,KY,R,senate,,2,0,0.0
 S348,Rand Paul,KY,R,senate,,2,0,0.0
-R000395,Rogers (KY),KY,R,house,,2,0,0.0
-Y000062,Yarmuth,KY,D,house,,2,2,1.0
+R000395,Rogers (KY),KY,R,house,05,2,0,0.0
+Y000062,Yarmuth,KY,D,house,03,2,2,1.0
 S373,Bill Cassidy,LA,R,senate,,2,0,0.0
-G000577,Graves (LA),LA,R,house,,2,0,0.0
-H001077,Higgins (LA),LA,R,house,,1,0,0.0
+G000577,Graves (LA),LA,R,house,06,2,0,0.0
+H001077,Higgins (LA),LA,R,house,03,1,0,0.0
 S389,John Kennedy,LA,R,senate,,2,0,0.0
-J000299,Johnson (LA),LA,R,house,,2,0,0.0
-S001176,Scalise,LA,R,house,,2,0,0.0
-A000148,Auchincloss,MA,D,house,,2,2,1.0
-C001101,Clark (MA),MA,D,house,,2,2,1.0
+J000299,Johnson (LA),LA,R,house,04,2,0,0.0
+S001176,Scalise,LA,R,house,01,2,0,0.0
+A000148,Auchincloss,MA,D,house,04,2,2,1.0
+C001101,Clark (MA),MA,D,house,05,2,2,1.0
 S369,Edward Markey,MA,D,senate,,2,2,1.0
 S366,Elizabeth Warren,MA,D,senate,,2,2,1.0
-K000375,Keating,MA,D,house,,2,2,1.0
-L000562,Lynch,MA,D,house,,2,2,1.0
-M000312,McGovern,MA,D,house,,2,2,1.0
-M001196,Moulton,MA,D,house,,2,2,1.0
-N000015,Neal,MA,D,house,,2,2,1.0
-P000617,Pressley,MA,D,house,,2,2,1.0
-T000482,Trahan,MA,D,house,,2,2,1.0
+K000375,Keating,MA,D,house,09,2,2,1.0
+L000562,Lynch,MA,D,house,08,2,2,1.0
+M000312,McGovern,MA,D,house,02,2,2,1.0
+M001196,Moulton,MA,D,house,06,2,2,1.0
+N000015,Neal,MA,D,house,01,2,2,1.0
+P000617,Pressley,MA,D,house,07,2,2,1.0
+T000482,Trahan,MA,D,house,03,2,2,1.0
 S308,Ben Cardin,MD,D,senate,,2,2,1.0
-B001304,Brown,MD,D,house,,2,2,1.0
+B001304,Brown,MD,D,house,04,2,2,1.0
 S390,Chris Van Hollen,MD,D,senate,,2,2,1.0
-H001052,Harris,MD,R,house,,2,0,0.0
-H000874,Hoyer,MD,D,house,,2,2,1.0
-M000687,Mfume,MD,D,house,,2,2,1.0
-R000606,Raskin,MD,D,house,,2,2,1.0
-R000576,Ruppersberger,MD,D,house,,2,2,1.0
-S001168,Sarbanes,MD,D,house,,2,2,1.0
-T000483,Trone,MD,D,house,,2,2,1.0
+H001052,Harris,MD,R,house,01,2,0,0.0
+H000874,Hoyer,MD,D,house,05,2,2,1.0
+M000687,Mfume,MD,D,house,07,2,2,1.0
+R000606,Raskin,MD,D,house,08,2,2,1.0
+R000576,Ruppersberger,MD,D,house,02,2,2,1.0
+S001168,Sarbanes,MD,D,house,03,2,2,1.0
+T000483,Trone,MD,D,house,06,2,2,1.0
 S363,Angus King,ME,I,senate,,2,1,0.5
-G000592,Golden,ME,D,house,,2,2,1.0
-P000597,Pingree,ME,D,house,,2,2,1.0
+G000592,Golden,ME,D,house,02,2,2,1.0
+P000597,Pingree,ME,D,house,01,2,2,1.0
 S252,Susan Collins,ME,R,senate,,2,0,0.0
-B001301,Bergman,MI,R,house,,2,0,0.0
+B001301,Bergman,MI,R,house,01,2,0,0.0
 S284,Debbie Stabenow,MI,D,senate,,2,2,1.0
-D000624,Dingell,MI,D,house,,2,2,1.0
+D000624,Dingell,MI,D,house,06,2,2,1.0
 S380,Gary Peters,MI,D,senate,,2,2,1.0
-H001058,Huizenga,MI,R,house,,2,0,0.0
-K000380,Kildee,MI,D,house,,2,2,1.0
-L000581,Lawrence,MI,D,house,,2,2,1.0
-L000592,Levin (MI),MI,D,house,,2,2,1.0
-M001136,McClain,MI,R,house,,2,0,0.0
-M001186,Meijer,MI,R,house,,2,0,0.0
-M001194,Moolenaar,MI,R,house,,2,0,0.0
-S001208,Slotkin,MI,D,house,,2,2,1.0
-S001215,Stevens,MI,D,house,,2,2,1.0
-T000481,Tlaib,MI,D,house,,2,2,1.0
-U000031,Upton,MI,R,house,,2,1,0.5
-W000798,Walberg,MI,R,house,,2,0,0.0
+H001058,Huizenga,MI,R,house,04,2,0,0.0
+K000380,Kildee,MI,D,house,08,2,2,1.0
+L000581,Lawrence,MI,D,house,14,2,2,1.0
+L000592,Levin (MI),MI,D,house,09,2,2,1.0
+M001136,McClain,MI,R,house,09,2,0,0.0
+M001186,Meijer,MI,R,house,03,2,0,0.0
+M001194,Moolenaar,MI,R,house,02,2,0,0.0
+S001208,Slotkin,MI,D,house,08,2,2,1.0
+S001215,Stevens,MI,D,house,11,2,2,1.0
+T000481,Tlaib,MI,D,house,12,2,2,1.0
+U000031,Upton,MI,R,house,06,2,1,0.5
+W000798,Walberg,MI,R,house,05,2,0,0.0
 S311,Amy Klobuchar,MN,D,senate,,2,2,1.0
-C001119,Craig,MN,D,house,,2,2,1.0
-E000294,Emmer,MN,R,house,,2,1,0.5
-F000470,Fischbach,MN,R,house,,2,0,0.0
-H001088,Hagedorn,MN,R,house,,2,0,0.0
-M001143,McCollum,MN,D,house,,2,2,1.0
-O000173,Omar,MN,D,house,,2,2,1.0
-P000616,Phillips,MN,D,house,,2,2,1.0
-S001212,Stauber,MN,R,house,,2,1,0.5
+C001119,Craig,MN,D,house,02,2,2,1.0
+E000294,Emmer,MN,R,house,06,2,1,0.5
+F000470,Fischbach,MN,R,house,07,2,0,0.0
+H001088,Hagedorn,MN,R,house,01,2,0,0.0
+M001143,McCollum,MN,D,house,04,2,2,1.0
+O000173,Omar,MN,D,house,05,2,2,1.0
+P000616,Phillips,MN,D,house,03,2,2,1.0
+S001212,Stauber,MN,R,house,08,2,1,0.5
 S394,Tina Smith,MN,D,senate,,2,2,1.0
-B001224,Bush,MO,D,house,,2,2,1.0
-C001061,Cleaver,MO,D,house,,2,2,1.0
-G000546,Graves (MO),MO,R,house,,2,0,0.0
-H001053,Hartzler,MO,R,house,,2,0,0.0
+B001224,Bush,MO,D,house,01,2,2,1.0
+C001061,Cleaver,MO,D,house,05,2,2,1.0
+G000546,Graves (MO),MO,R,house,06,2,0,0.0
+H001053,Hartzler,MO,R,house,04,2,0,0.0
 S399,Josh Hawley,MO,R,senate,,2,0,0.0
-L000576,Long,MO,R,house,,2,0,0.0
-L000569,Luetkemeyer,MO,R,house,,2,0,0.0
+L000576,Long,MO,R,house,07,2,0,0.0
+L000569,Luetkemeyer,MO,R,house,03,2,0,0.0
 S342,Roy Blunt,MO,R,senate,,2,0,0.0
-S001195,Smith (MO),MO,R,house,,2,0,0.0
-W000812,Wagner,MO,R,house,,2,0,0.0
+S001195,Smith (MO),MO,R,house,08,2,0,0.0
+W000812,Wagner,MO,R,house,02,2,0,0.0
 S395,Cindy Hyde-Smith,MS,R,senate,,2,0,0.0
-G000591,Guest,MS,R,house,,2,0,0.0
-K000388,Kelly (MS),MS,R,house,,2,0,0.0
-P000601,Palazzo,MS,R,house,,2,0,0.0
+G000591,Guest,MS,R,house,03,2,0,0.0
+K000388,Kelly (MS),MS,R,house,01,2,0,0.0
+P000601,Palazzo,MS,R,house,04,2,0,0.0
 S318,Roger Wicker,MS,R,senate,,2,0,0.0
-T000193,Thompson (MS),MS,D,house,,2,2,1.0
+T000193,Thompson (MS),MS,D,house,02,2,2,1.0
 S314,Jon Tester,MT,D,senate,,2,1,0.5
-R000103,Rosendale,MT,R,house,,2,0,0.0
+R000103,Rosendale,MT,R,house,02,2,0,0.0
 S375,Steve Daines,MT,R,senate,,2,0,0.0
-A000370,Adams,NC,D,house,,2,2,1.0
-B001311,Bishop (NC),NC,R,house,,2,0,0.0
-B001305,Budd,NC,R,house,,2,0,0.0
-B001251,Butterfield,NC,D,house,,2,2,1.0
-C001104,Cawthorn,NC,R,house,,2,0,0.0
-F000450,Foxx,NC,R,house,,2,0,0.0
-H001067,Hudson,NC,R,house,,2,0,0.0
-M001135,Manning,NC,D,house,,2,2,1.0
-M001156,McHenry,NC,R,house,,2,0,0.0
-M001210,Murphy (NC),NC,R,house,,2,0,0.0
-P000523,Price (NC),NC,D,house,,2,2,1.0
+A000370,Adams,NC,D,house,12,2,2,1.0
+B001311,Bishop (NC),NC,R,house,08,2,0,0.0
+B001305,Budd,NC,R,house,13,2,0,0.0
+B001251,Butterfield,NC,D,house,01,2,2,1.0
+C001104,Cawthorn,NC,R,house,11,2,0,0.0
+F000450,Foxx,NC,R,house,05,2,0,0.0
+H001067,Hudson,NC,R,house,09,2,0,0.0
+M001135,Manning,NC,D,house,06,2,2,1.0
+M001156,McHenry,NC,R,house,10,2,0,0.0
+M001210,Murphy (NC),NC,R,house,03,2,0,0.0
+P000523,Price (NC),NC,D,house,04,2,2,1.0
 S300,Richard Burr,NC,R,senate,,2,0,0.0
-R000305,Ross,NC,D,house,,2,2,1.0
-R000603,Rouzer,NC,R,house,,2,0,0.0
+R000305,Ross,NC,D,house,02,2,2,1.0
+R000603,Rouzer,NC,R,house,07,2,0,0.0
 S384,Thomas Tillis,NC,R,senate,,2,0,0.0
-A000377,Armstrong,ND,R,house,,1,0,0.0
+A000377,Armstrong,ND,R,house,00,1,0,0.0
 S344,John Hoeven,ND,R,senate,,2,0,0.0
 S398,Kevin Cramer,ND,R,senate,,2,0,0.0
-B001298,Bacon,NE,R,house,,2,1,0.5
+B001298,Bacon,NE,R,house,02,2,1,0.5
 S382,Ben Sasse,NE,R,senate,,2,0,0.0
 S357,Deb Fischer,NE,R,senate,,2,0,0.0
-F000449,Fortenberry,NE,R,house,,2,1,0.5
-S001172,Smith (NE),NE,R,house,,2,0,0.0
+F000449,Fortenberry,NE,R,house,01,2,1,0.5
+S001172,Smith (NE),NE,R,house,03,2,0,0.0
 S324,Jeanne Shaheen,NH,D,senate,,2,1,0.5
-K000382,Kuster,NH,D,house,,2,2,1.0
+K000382,Kuster,NH,D,house,02,2,2,1.0
 S388,Maggie Hassan,NH,D,senate,,2,1,0.5
-P000614,Pappas,NH,D,house,,2,2,1.0
+P000614,Pappas,NH,D,house,01,2,2,1.0
 S370,Cory Booker,NJ,D,senate,,2,2,1.0
-G000583,Gottheimer,NJ,D,house,,2,2,1.0
-K000394,Kim (NJ),NJ,D,house,,2,2,1.0
-M001203,Malinowski,NJ,D,house,,2,2,1.0
-N000188,Norcross,NJ,D,house,,2,2,1.0
-P000034,Pallone,NJ,D,house,,2,2,1.0
-P000096,Pascrell,NJ,D,house,,2,2,1.0
-P000604,Payne,NJ,D,house,,2,2,1.0
+G000583,Gottheimer,NJ,D,house,05,2,2,1.0
+K000394,Kim (NJ),NJ,D,house,03,2,2,1.0
+M001203,Malinowski,NJ,D,house,07,2,2,1.0
+N000188,Norcross,NJ,D,house,01,2,2,1.0
+P000034,Pallone,NJ,D,house,06,2,2,1.0
+P000096,Pascrell,NJ,D,house,09,2,2,1.0
+P000604,Payne,NJ,D,house,10,2,2,1.0
 S306,Robert Menendez,NJ,D,senate,,2,2,1.0
-S001207,Sherrill,NJ,D,house,,2,2,1.0
-S001165,Sires,NJ,D,house,,2,2,1.0
-S000522,Smith (NJ),NJ,R,house,,2,2,1.0
-V000133,Van Drew,NJ,R,house,,2,2,1.0
-W000822,Watson Coleman,NJ,D,house,,2,2,1.0
+S001207,Sherrill,NJ,D,house,11,2,2,1.0
+S001165,Sires,NJ,D,house,08,2,2,1.0
+S000522,Smith (NJ),NJ,R,house,04,2,2,1.0
+V000133,Van Drew,NJ,R,house,02,2,2,1.0
+W000822,Watson Coleman,NJ,D,house,12,2,2,1.0
 S409,Ben Lujan,NM,D,senate,,2,2,1.0
-H001080,Haaland,NM,D,house,,2,2,1.0
-H001084,Herrell,NM,R,house,,2,0,0.0
-L000273,Leger Fernandez,NM,D,house,,2,2,1.0
+H001080,Haaland,NM,D,house,01,2,2,1.0
+H001084,Herrell,NM,R,house,02,2,0,0.0
+L000273,Leger Fernandez,NM,D,house,03,2,2,1.0
 S359,Martin Heinrich,NM,D,senate,,2,2,1.0
-A000369,Amodei,NV,R,house,,2,0,0.0
+A000369,Amodei,NV,R,house,02,2,0,0.0
 S385,Catherine Cortez Masto,NV,D,senate,,2,2,1.0
-H001066,Horsford,NV,D,house,,2,2,1.0
+H001066,Horsford,NV,D,house,04,2,2,1.0
 S402,Jacklyn Rosen,NV,D,senate,,2,2,1.0
-L000590,Lee (NV),NV,D,house,,2,2,1.0
-T000468,Titus,NV,D,house,,2,2,1.0
-B001223,Bowman,NY,D,house,,2,2,1.0
+L000590,Lee (NV),NV,D,house,03,2,2,1.0
+T000468,Titus,NV,D,house,01,2,2,1.0
+B001223,Bowman,NY,D,house,16,2,2,1.0
 S270,Charles Schumer,NY,D,senate,,2,2,1.0
-C001067,Clarke (NY),NY,D,house,,2,2,1.0
-D000630,Delgado,NY,D,house,,2,2,1.0
-E000297,Espaillat,NY,D,house,,2,2,1.0
-G000597,Garbarino,NY,R,house,,2,1,0.5
-H001038,Higgins (NY),NY,D,house,,2,2,1.0
-J000020,Jacobs (NY),NY,R,house,,2,0,0.0
-J000294,Jeffries,NY,D,house,,2,2,1.0
-J000306,Jones,NY,D,house,,2,2,1.0
-K000386,Katko,NY,R,house,,2,2,1.0
+C001067,Clarke (NY),NY,D,house,09,2,2,1.0
+D000630,Delgado,NY,D,house,19,2,2,1.0
+E000297,Espaillat,NY,D,house,13,2,2,1.0
+G000597,Garbarino,NY,R,house,02,2,1,0.5
+H001038,Higgins (NY),NY,D,house,26,2,2,1.0
+J000020,Jacobs (NY),NY,R,house,27,2,0,0.0
+J000294,Jeffries,NY,D,house,08,2,2,1.0
+J000306,Jones,NY,D,house,17,2,2,1.0
+K000386,Katko,NY,R,house,24,2,2,1.0
 S331,Kirsten Gillibrand,NY,D,senate,,2,2,1.0
-M000317,Malliotakis,NY,R,house,,2,1,0.5
-M000087,"Maloney, Carolyn B.",NY,D,house,,2,2,1.0
-M001185,"Maloney, Sean",NY,D,house,,2,2,1.0
-M001137,Meeks,NY,D,house,,2,2,1.0
-M001188,Meng,NY,D,house,,2,2,1.0
-M001206,Morelle,NY,D,house,,2,2,1.0
-N000002,Nadler,NY,D,house,,2,2,1.0
-O000172,Ocasio-Cortez,NY,D,house,,2,2,1.0
-R000585,Reed,NY,R,house,,2,1,0.5
-R000602,Rice (NY),NY,D,house,,2,2,1.0
-S001196,Stefanik,NY,R,house,,2,0,0.0
-S001201,Suozzi,NY,D,house,,2,2,1.0
-T000478,Tenney,NY,R,house,,1,0,0.0
-T000469,Tonko,NY,D,house,,2,2,1.0
-T000486,Torres (NY),NY,D,house,,2,2,1.0
-V000081,VelÃ¡zquez,NY,D,house,,2,2,1.0
-Z000017,Zeldin,NY,R,house,,2,1,0.5
-B001306,Balderson,OH,R,house,,2,0,0.0
-B001281,Beatty,OH,D,house,,2,2,1.0
-C000266,Chabot,OH,R,house,,2,0,0.0
-D000626,Davidson,OH,R,house,,2,0,0.0
-F000455,Fudge,OH,D,house,,2,2,1.0
-G000563,Gibbs,OH,R,house,,2,0,0.0
-G000588,Gonzalez (OH),OH,R,house,,2,1,0.5
-J000292,Johnson (OH),OH,R,house,,2,1,0.5
-J000289,Jordan,OH,R,house,,2,0,0.0
-J000295,Joyce (OH),OH,R,house,,2,1,0.5
-K000009,Kaptur,OH,D,house,,2,2,1.0
-L000566,Latta,OH,R,house,,2,0,0.0
+M000317,Malliotakis,NY,R,house,11,2,1,0.5
+M000087,"Maloney, Carolyn B.",NY,D,house,12,2,2,1.0
+M001185,"Maloney, Sean",NY,D,house,18,2,2,1.0
+M001137,Meeks,NY,D,house,05,2,2,1.0
+M001188,Meng,NY,D,house,06,2,2,1.0
+M001206,Morelle,NY,D,house,25,2,2,1.0
+N000002,Nadler,NY,D,house,12,2,2,1.0
+O000172,Ocasio-Cortez,NY,D,house,14,2,2,1.0
+R000585,Reed,NY,R,house,23,2,1,0.5
+R000602,Rice (NY),NY,D,house,04,2,2,1.0
+S001196,Stefanik,NY,R,house,21,2,0,0.0
+S001201,Suozzi,NY,D,house,03,2,2,1.0
+T000478,Tenney,NY,R,house,24,1,0,0.0
+T000469,Tonko,NY,D,house,20,2,2,1.0
+T000486,Torres (NY),NY,D,house,15,2,2,1.0
+V000081,VelÃ¡zquez,NY,D,house,07,2,2,1.0
+Z000017,Zeldin,NY,R,house,01,2,1,0.5
+B001306,Balderson,OH,R,house,12,2,0,0.0
+B001281,Beatty,OH,D,house,03,2,2,1.0
+C000266,Chabot,OH,R,house,01,2,0,0.0
+D000626,Davidson,OH,R,house,08,2,0,0.0
+F000455,Fudge,OH,D,house,11,2,2,1.0
+G000563,Gibbs,OH,R,house,07,2,0,0.0
+G000588,Gonzalez (OH),OH,R,house,16,2,1,0.5
+J000292,Johnson (OH),OH,R,house,06,2,1,0.5
+J000289,Jordan,OH,R,house,04,2,0,0.0
+J000295,Joyce (OH),OH,R,house,14,2,1,0.5
+K000009,Kaptur,OH,D,house,09,2,2,1.0
+L000566,Latta,OH,R,house,05,2,0,0.0
 S349,Rob Portman,OH,R,senate,,2,0,0.0
-R000577,Ryan,OH,D,house,,2,2,1.0
+R000577,Ryan,OH,D,house,13,2,2,1.0
 S307,Sherrod Brown,OH,D,senate,,2,2,1.0
-S001187,Stivers,OH,R,house,,2,1,0.5
-T000463,Turner,OH,R,house,,2,0,0.0
-W000815,Wenstrup,OH,R,house,,2,0,0.0
-B000740,Bice (OK),OK,R,house,,2,0,0.0
-C001053,Cole,OK,R,house,,2,0,0.0
-H001082,Hern,OK,R,house,,2,0,0.0
+S001187,Stivers,OH,R,house,15,2,1,0.5
+T000463,Turner,OH,R,house,10,2,0,0.0
+W000815,Wenstrup,OH,R,house,02,2,0,0.0
+B000740,Bice (OK),OK,R,house,05,2,0,0.0
+C001053,Cole,OK,R,house,04,2,0,0.0
+H001082,Hern,OK,R,house,01,2,0,0.0
 S378,James Lankford,OK,R,senate,,2,0,0.0
 S236,Jim Inhofe,OK,R,senate,,2,0,0.0
-L000491,Lucas,OK,R,house,,2,0,0.0
-M001190,Mullin,OK,R,house,,2,0,0.0
-B000668,Bentz,OR,R,house,,2,0,0.0
-B000574,Blumenauer,OR,D,house,,2,2,1.0
-B001278,Bonamici,OR,D,house,,2,2,1.0
-D000191,DeFazio,OR,D,house,,2,2,1.0
+L000491,Lucas,OK,R,house,03,2,0,0.0
+M001190,Mullin,OK,R,house,02,2,0,0.0
+B000668,Bentz,OR,R,house,02,2,0,0.0
+B000574,Blumenauer,OR,D,house,03,2,2,1.0
+B001278,Bonamici,OR,D,house,01,2,2,1.0
+D000191,DeFazio,OR,D,house,04,2,2,1.0
 S322,Jeff Merkley,OR,D,senate,,2,2,1.0
 S247,Ron Wyden,OR,D,senate,,2,2,1.0
-S001180,Schrader,OR,D,house,,2,2,1.0
+S001180,Schrader,OR,D,house,05,2,2,1.0
 S309,Bob Casey,PA,D,senate,,2,2,1.0
-B001296,"Boyle, Brendan F.",PA,D,house,,2,2,1.0
-C001090,Cartwright,PA,D,house,,2,2,1.0
-D000631,Dean,PA,D,house,,2,2,1.0
-D000482,"Doyle, Michael F.",PA,D,house,,2,2,1.0
-E000296,Evans,PA,D,house,,2,2,1.0
-F000466,Fitzpatrick,PA,R,house,,2,2,1.0
-H001085,Houlahan,PA,D,house,,2,2,1.0
-J000302,Joyce (PA),PA,R,house,,2,0,0.0
-K000395,Keller,PA,R,house,,2,0,0.0
-K000376,Kelly (PA),PA,R,house,,2,0,0.0
-L000588,Lamb,PA,D,house,,2,2,1.0
-M001204,Meuser,PA,R,house,,2,0,0.0
+B001296,"Boyle, Brendan F.",PA,D,house,02,2,2,1.0
+C001090,Cartwright,PA,D,house,08,2,2,1.0
+D000631,Dean,PA,D,house,04,2,2,1.0
+D000482,"Doyle, Michael F.",PA,D,house,18,2,2,1.0
+E000296,Evans,PA,D,house,03,2,2,1.0
+F000466,Fitzpatrick,PA,R,house,01,2,2,1.0
+H001085,Houlahan,PA,D,house,06,2,2,1.0
+J000302,Joyce (PA),PA,R,house,13,2,0,0.0
+K000395,Keller,PA,R,house,12,2,0,0.0
+K000376,Kelly (PA),PA,R,house,16,2,0,0.0
+L000588,Lamb,PA,D,house,17,2,2,1.0
+M001204,Meuser,PA,R,house,09,2,0,0.0
 S351,Patrick Toomey,PA,R,senate,,2,0,0.0
-P000605,Perry,PA,R,house,,2,0,0.0
-R000610,Reschenthaler,PA,R,house,,2,1,0.5
-S001205,Scanlon,PA,D,house,,2,2,1.0
-S001199,Smucker,PA,R,house,,2,0,0.0
-T000467,Thompson (PA),PA,R,house,,2,0,0.0
-W000826,Wild,PA,D,house,,2,2,1.0
-C001084,Cicilline,RI,D,house,,2,2,1.0
+P000605,Perry,PA,R,house,10,2,0,0.0
+R000610,Reschenthaler,PA,R,house,14,2,1,0.5
+S001205,Scanlon,PA,D,house,05,2,2,1.0
+S001199,Smucker,PA,R,house,11,2,0,0.0
+T000467,Thompson (PA),PA,R,house,15,2,0,0.0
+W000826,Wild,PA,D,house,07,2,2,1.0
+C001084,Cicilline,RI,D,house,01,2,2,1.0
 S259,John Reed,RI,D,senate,,2,2,1.0
-L000559,Langevin,RI,D,house,,2,2,1.0
+L000559,Langevin,RI,D,house,02,2,2,1.0
 S316,Sheldon Whitehouse,RI,D,senate,,2,2,1.0
-C000537,Clyburn,SC,D,house,,2,2,1.0
-D000615,Duncan,SC,R,house,,2,0,0.0
+C000537,Clyburn,SC,D,house,06,2,2,1.0
+D000615,Duncan,SC,R,house,03,2,0,0.0
 S293,Lindsey Graham,SC,R,senate,,2,0,0.0
-M000194,Mace,SC,R,house,,2,0,0.0
-N000190,Norman,SC,R,house,,2,0,0.0
-R000597,Rice (SC),SC,R,house,,2,0,0.0
+M000194,Mace,SC,R,house,01,2,0,0.0
+N000190,Norman,SC,R,house,05,2,0,0.0
+R000597,Rice (SC),SC,R,house,07,2,0,0.0
 S365,Tim Scott,SC,R,senate,,2,0,0.0
-T000480,Timmons,SC,R,house,,2,0,0.0
-W000795,Wilson (SC),SC,R,house,,2,0,0.0
+T000480,Timmons,SC,R,house,04,2,0,0.0
+W000795,Wilson (SC),SC,R,house,02,2,0,0.0
 S303,John Thune,SD,R,senate,,2,0,0.0
-J000301,Johnson (SD),SD,R,house,,2,0,0.0
+J000301,Johnson (SD),SD,R,house,00,2,0,0.0
 S381,Mike Rounds,SD,R,senate,,2,0,0.0
 S407,Bill Hagerty,TN,R,senate,,2,0,0.0
-B001309,Burchett,TN,R,house,,2,0,0.0
-C001068,Cohen,TN,D,house,,2,2,1.0
-C000754,Cooper,TN,D,house,,2,2,1.0
-D000616,DesJarlais,TN,R,house,,2,0,0.0
-F000459,Fleischmann,TN,R,house,,2,0,0.0
-G000590,Green (TN),TN,R,house,,2,0,0.0
-H001086,Harshbarger,TN,R,house,,2,0,0.0
-K000392,Kustoff,TN,R,house,,2,0,0.0
+B001309,Burchett,TN,R,house,02,2,0,0.0
+C001068,Cohen,TN,D,house,09,2,2,1.0
+C000754,Cooper,TN,D,house,05,2,2,1.0
+D000616,DesJarlais,TN,R,house,04,2,0,0.0
+F000459,Fleischmann,TN,R,house,03,2,0,0.0
+G000590,Green (TN),TN,R,house,07,2,0,0.0
+H001086,Harshbarger,TN,R,house,01,2,0,0.0
+K000392,Kustoff,TN,R,house,08,2,0,0.0
 S396,Marsha Blackburn,TN,R,senate,,2,0,0.0
-R000612,Rose,TN,R,house,,2,0,0.0
-A000376,Allred,TX,D,house,,2,2,1.0
-A000375,Arrington,TX,R,house,,2,0,0.0
-B001291,Babin,TX,R,house,,2,0,0.0
-B000755,Brady,TX,R,house,,1,0,0.0
-B001248,Burgess,TX,R,house,,1,0,0.0
-C001051,Carter (TX),TX,R,house,,2,0,0.0
-C001091,Castro (TX),TX,D,house,,2,2,1.0
-C001115,Cloud,TX,R,house,,2,0,0.0
-C001120,Crenshaw,TX,R,house,,2,0,0.0
-C001063,Cuellar,TX,D,house,,2,1,0.5
-D000399,Doggett,TX,D,house,,2,2,1.0
-E000299,Escobar,TX,D,house,,2,2,1.0
-F000246,Fallon,TX,R,house,,2,0,0.0
-F000468,Fletcher,TX,D,house,,2,2,1.0
-G000587,Garcia (TX),TX,D,house,,2,2,1.0
-G000552,Gohmert,TX,R,house,,2,0,0.0
-G000594,"Gonzales, Tony",TX,R,house,,2,1,0.5
-G000581,"Gonzalez, Vicente",TX,D,house,,2,2,1.0
-G000589,Gooden (TX),TX,R,house,,2,0,0.0
-G000377,Granger,TX,R,house,,2,0,0.0
-G000553,"Green, Al (TX)",TX,D,house,,2,2,1.0
-J000304,Jackson,TX,R,house,,2,0,0.0
-J000032,Jackson Lee,TX,D,house,,2,2,1.0
+R000612,Rose,TN,R,house,06,2,0,0.0
+A000376,Allred,TX,D,house,32,2,2,1.0
+A000375,Arrington,TX,R,house,19,2,0,0.0
+B001291,Babin,TX,R,house,36,2,0,0.0
+B000755,Brady,TX,R,house,08,1,0,0.0
+B001248,Burgess,TX,R,house,26,1,0,0.0
+C001051,Carter (TX),TX,R,house,31,2,0,0.0
+C001091,Castro (TX),TX,D,house,20,2,2,1.0
+C001115,Cloud,TX,R,house,27,2,0,0.0
+C001120,Crenshaw,TX,R,house,02,2,0,0.0
+C001063,Cuellar,TX,D,house,28,2,1,0.5
+D000399,Doggett,TX,D,house,37,2,2,1.0
+E000299,Escobar,TX,D,house,16,2,2,1.0
+F000246,Fallon,TX,R,house,04,2,0,0.0
+F000468,Fletcher,TX,D,house,07,2,2,1.0
+G000587,Garcia (TX),TX,D,house,29,2,2,1.0
+G000552,Gohmert,TX,R,house,01,2,0,0.0
+G000594,"Gonzales, Tony",TX,R,house,23,2,1,0.5
+G000581,"Gonzalez, Vicente",TX,D,house,34,2,2,1.0
+G000589,Gooden (TX),TX,R,house,05,2,0,0.0
+G000377,Granger,TX,R,house,12,2,0,0.0
+G000553,"Green, Al (TX)",TX,D,house,09,2,2,1.0
+J000304,Jackson,TX,R,house,13,2,0,0.0
+J000032,Jackson Lee,TX,D,house,18,2,2,1.0
 S287,John Cornyn,TX,R,senate,,2,0,0.0
-J000126,Johnson (TX),TX,D,house,,2,2,1.0
-M001157,McCaul,TX,R,house,,2,0,0.0
-N000026,Nehls,TX,R,house,,2,0,0.0
-P000048,Pfluger,TX,R,house,,2,0,0.0
-R000614,Roy,TX,R,house,,2,0,0.0
-S000250,Sessions,TX,R,house,,2,0,0.0
-T000479,Taylor,TX,R,house,,2,0,0.0
+J000126,Johnson (TX),TX,D,house,30,2,2,1.0
+M001157,McCaul,TX,R,house,10,2,0,0.0
+N000026,Nehls,TX,R,house,22,2,0,0.0
+P000048,Pfluger,TX,R,house,11,2,0,0.0
+R000614,Roy,TX,R,house,21,2,0,0.0
+S000250,Sessions,TX,R,house,17,2,0,0.0
+T000479,Taylor,TX,R,house,03,2,0,0.0
 S355,Ted Cruz,TX,R,senate,,2,0,0.0
-V000134,Van Duyne,TX,R,house,,2,0,0.0
-V000131,Veasey,TX,D,house,,2,2,1.0
-V000132,Vela,TX,D,house,,2,2,1.0
-W000814,Weber (TX),TX,R,house,,2,0,0.0
-W000816,Williams (TX),TX,R,house,,2,0,0.0
-W000827,Wright,TX,R,house,,0,0,
-C001114,Curtis,UT,R,house,,2,0,0.0
+V000134,Van Duyne,TX,R,house,24,2,0,0.0
+V000131,Veasey,TX,D,house,33,2,2,1.0
+V000132,Vela,TX,D,house,34,2,2,1.0
+W000814,Weber (TX),TX,R,house,14,2,0,0.0
+W000816,Williams (TX),TX,R,house,25,2,0,0.0
+W000827,Wright,TX,R,house,06,0,0,
+C001114,Curtis,UT,R,house,03,2,0,0.0
 S346,Mike Lee,UT,R,senate,,2,0,0.0
 S401,Mitt Romney,UT,R,senate,,2,0,0.0
-M001213,Moore (UT),UT,R,house,,2,0,0.0
-O000086,Owens,UT,R,house,,2,0,0.0
-S001192,Stewart,UT,R,house,,2,0,0.0
-B001292,Beyer,VA,D,house,,2,2,1.0
-C001118,Cline,VA,R,house,,2,0,0.0
-C001078,Connolly,VA,D,house,,2,2,1.0
-G000595,Good (VA),VA,R,house,,2,0,0.0
-G000568,Griffith,VA,R,house,,2,0,0.0
-L000591,Luria,VA,D,house,,2,2,1.0
+M001213,Moore (UT),UT,R,house,01,2,0,0.0
+O000086,Owens,UT,R,house,04,2,0,0.0
+S001192,Stewart,UT,R,house,02,2,0,0.0
+B001292,Beyer,VA,D,house,08,2,2,1.0
+C001118,Cline,VA,R,house,06,2,0,0.0
+C001078,Connolly,VA,D,house,11,2,2,1.0
+G000595,Good (VA),VA,R,house,05,2,0,0.0
+G000568,Griffith,VA,R,house,09,2,0,0.0
+L000591,Luria,VA,D,house,02,2,2,1.0
 S327,Mark Warner,VA,D,senate,,2,2,1.0
-M001200,McEachin,VA,D,house,,2,2,1.0
-S000185,Scott (VA),VA,D,house,,2,2,1.0
-S001209,Spanberger,VA,D,house,,2,2,1.0
+M001200,McEachin,VA,D,house,04,2,2,1.0
+S000185,Scott (VA),VA,D,house,03,2,2,1.0
+S001209,Spanberger,VA,D,house,07,2,2,1.0
 S362,Timothy Kaine,VA,D,senate,,2,2,1.0
-W000825,Wexton,VA,D,house,,2,2,1.0
-W000804,Wittman,VA,R,house,,2,0,0.0
+W000825,Wexton,VA,D,house,10,2,2,1.0
+W000804,Wittman,VA,R,house,01,2,0,0.0
 S313,Bernard Sanders,VT,I,senate,,2,2,1.0
 S057,Patrick Leahy,VT,D,senate,,2,2,1.0
-W000800,Welch,VT,D,house,,2,2,1.0
-D000617,DelBene,WA,D,house,,2,2,1.0
-H001056,Herrera Beutler,WA,R,house,,2,0,0.0
-J000298,Jayapal,WA,D,house,,2,2,1.0
-K000381,Kilmer,WA,D,house,,2,2,1.0
-L000560,Larsen (WA),WA,D,house,,2,2,1.0
+W000800,Welch,VT,D,house,00,2,2,1.0
+D000617,DelBene,WA,D,house,01,2,2,1.0
+H001056,Herrera Beutler,WA,R,house,03,2,0,0.0
+J000298,Jayapal,WA,D,house,07,2,2,1.0
+K000381,Kilmer,WA,D,house,06,2,2,1.0
+L000560,Larsen (WA),WA,D,house,02,2,2,1.0
 S275,Maria Cantwell,WA,D,senate,,2,2,1.0
-N000189,Newhouse,WA,R,house,,2,1,0.5
+N000189,Newhouse,WA,R,house,04,2,1,0.5
 S229,Patty Murray,WA,D,senate,,2,2,1.0
-M001159,Rodgers (WA),WA,R,house,,2,0,0.0
-S001216,Schrier,WA,D,house,,2,2,1.0
-S000510,Smith (WA),WA,D,house,,2,2,1.0
-S001159,Strickland,WA,D,house,,2,2,1.0
-F000471,Fitzgerald,WI,R,house,,2,0,0.0
-G000579,Gallagher,WI,R,house,,2,0,0.0
-G000576,Grothman,WI,R,house,,2,0,0.0
-K000188,Kind,WI,D,house,,2,2,1.0
-M001160,Moore (WI),WI,D,house,,2,2,1.0
-P000607,Pocan,WI,D,house,,2,2,1.0
+M001159,Rodgers (WA),WA,R,house,05,2,0,0.0
+S001216,Schrier,WA,D,house,08,2,2,1.0
+S000510,Smith (WA),WA,D,house,09,2,2,1.0
+S001159,Strickland,WA,D,house,10,2,2,1.0
+F000471,Fitzgerald,WI,R,house,05,2,0,0.0
+G000579,Gallagher,WI,R,house,08,2,0,0.0
+G000576,Grothman,WI,R,house,06,2,0,0.0
+K000188,Kind,WI,D,house,03,2,2,1.0
+M001160,Moore (WI),WI,D,house,04,2,2,1.0
+P000607,Pocan,WI,D,house,02,2,2,1.0
 S345,Ron Johnson,WI,R,senate,,2,0,0.0
-S001213,Steil,WI,R,house,,2,1,0.5
+S001213,Steil,WI,R,house,01,2,1,0.5
 S354,Tammy Baldwin,WI,D,senate,,2,2,1.0
-T000165,Tiffany,WI,R,house,,1,0,0.0
+T000165,Tiffany,WI,R,house,07,1,0,0.0
 S338,Joseph Manchin,WV,D,senate,,2,1,0.5
-M001180,McKinley,WV,R,house,,2,1,0.5
-M001205,Miller (WV),WV,R,house,,2,0,0.0
-M001195,Mooney,WV,R,house,,2,0,0.0
+M001180,McKinley,WV,R,house,01,2,1,0.5
+M001205,Miller (WV),WV,R,house,01,2,0,0.0
+M001195,Mooney,WV,R,house,02,2,0,0.0
 S372,Shelley Capito,WV,R,senate,,2,0,0.0
-C001109,Cheney,WY,R,house,,2,0,0.0
+C001109,Cheney,WY,R,house,00,2,0,0.0
 S410,Cynthia Lummis,WY,R,senate,,2,0,0.0
 S317,John Barrasso,WY,R,senate,,2,0,0.0

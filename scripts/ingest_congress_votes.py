@@ -58,6 +58,11 @@ HOUSE_CLERK_XML_BASE = "https://clerk.house.gov/evs"
 SENATE_XML_BASE = "https://www.senate.gov/legislative/LIS/roll_call_votes"
 RATE_LIMIT_DELAY = 0.5  # seconds between API requests
 
+# States with exactly one at-large House seat (2-letter codes).
+# Congress.gov returns district=None for these members; we assign "00"
+# to match the district_county_crosswalk.csv convention.
+AT_LARGE_STATES = {"AK", "DE", "MT", "ND", "SD", "VT", "WY"}
+
 VOTE_CSV_FIELDS = [
     "member_id", "member_name", "state", "party", "chamber", "district",
     "vote_id", "vote_name", "congress", "vote_position", "is_pro_labor",
@@ -210,6 +215,140 @@ def parse_senate_xml(root: ET.Element) -> list[dict]:
         })
 
     return results
+
+
+# ---------------------------------------------------------------------------
+# Member district lookup — Congress.gov Members API
+# ---------------------------------------------------------------------------
+
+def fetch_member_districts(congress: int, api_key: str) -> dict[str, str]:
+    """
+    Return a dict mapping bioguide_id → district_number (as zero-padded 2-char string)
+    for all House members who served in the given Congress.
+
+    Uses the Congress.gov /v3/member list endpoint with congress+chamber filters.
+    Paginates until all results are collected. Returns e.g. {"A000370": "12"}.
+    District number is zero-padded to 2 digits to match district_county_crosswalk.csv
+    format ("01", "12", "00" for at-large).
+    """
+    log.info("Fetching member districts from Congress.gov API for Congress %d", congress)
+    districts: dict[str, str] = {}
+    offset = 0
+    limit = 250
+
+    while True:
+        data = congress_api_get(
+            "member",
+            api_key,
+            params={"congress": congress, "chamber": "house", "offset": offset, "limit": limit},
+        )
+        time.sleep(RATE_LIMIT_DELAY)
+
+        if not data:
+            log.warning("Empty response fetching member list at offset %d", offset)
+            break
+
+        members = data.get("members", [])
+        if not members:
+            break
+
+        for m in members:
+            bioguide = m.get("bioguideId", "")
+            raw_district = m.get("district")
+            if bioguide and raw_district is not None:
+                # Zero-pad to 2 digits; at-large districts (district=0) → "00"
+                districts[bioguide] = str(raw_district).zfill(2)
+
+        pagination = data.get("pagination", {})
+        total = pagination.get("count", 0)
+        offset += limit
+        if offset >= total or not pagination.get("next"):
+            break
+
+    log.info("  Loaded districts for %d House members", len(districts))
+    return districts
+
+
+def fetch_member_district_fallback(bioguide: str, congress: int, api_key: str) -> str:
+    """
+    Look up the district a specific member held during a given Congress
+    using the individual member endpoint.
+
+    Returns zero-padded district string (e.g. "07", "00" for at-large) or "".
+    Used when the bulk members list omits members whose current role changed
+    (e.g. former House members now serving as Senators).
+    """
+    data = congress_api_get(f"member/{bioguide}", api_key)
+    time.sleep(RATE_LIMIT_DELAY)
+    if not data:
+        return ""
+
+    member = data.get("member", {})
+
+    # Check top-level district first (valid if still in House)
+    top_district = member.get("district")
+    if top_district is not None:
+        return str(top_district).zfill(2)
+
+    # Search terms for the matching congress + House term
+    terms = member.get("terms", [])
+    if isinstance(terms, dict):
+        terms = terms.get("item", [])
+    for term in terms:
+        if (
+            str(term.get("congress", "")) == str(congress)
+            and "house" in term.get("chamber", "").lower()
+        ):
+            d = term.get("district")
+            if d is not None:
+                return str(d).zfill(2)
+
+    return ""
+
+
+def enrich_records_with_districts(
+    records: list[dict],
+    districts: dict[str, str],
+    congress: int,
+    api_key: str,
+) -> None:
+    """
+    Mutate records in place: fill the district field for House members.
+    First pass: bulk lookup dict. Second pass: individual API fallback for any
+    still-missing members (e.g. former reps now serving as Senators).
+    Senators (empty district) are left unchanged.
+    """
+    # First pass — bulk lookup
+    still_missing: set[str] = set()
+    for r in records:
+        if r.get("chamber") == "house" and not r.get("district"):
+            mid = r["member_id"]
+            d = districts.get(mid, "")
+            r["district"] = d
+            if not d:
+                still_missing.add(mid)
+
+    if not still_missing:
+        return
+
+    log.info("Fetching districts for %d members via individual fallback", len(still_missing))
+    fallback_cache: dict[str, str] = {}
+    for bioguide in sorted(still_missing):
+        fallback_cache[bioguide] = fetch_member_district_fallback(bioguide, congress, api_key)
+
+    # Second pass — apply fallback results; use "00" for known at-large states
+    final_missing = 0
+    for r in records:
+        if r.get("chamber") == "house" and not r.get("district"):
+            d = fallback_cache.get(r["member_id"], "")
+            if not d and r.get("state", "").upper() in AT_LARGE_STATES:
+                d = "00"
+            r["district"] = d
+            if not d:
+                final_missing += 1
+
+    if final_missing:
+        log.warning("%d House member records still have no district after fallback", final_missing)
 
 
 # ---------------------------------------------------------------------------
@@ -514,6 +653,19 @@ def main() -> None:
     if not all_records:
         log.error("No vote records fetched. Check config and API key.")
         sys.exit(1)
+
+    # Enrich House records with district numbers (not in House Clerk XML).
+    # Collect the set of congresses that have House votes and fetch once per congress.
+    house_congresses = {
+        v["congress"] for v in federal_votes
+        if v.get("chamber") == "house" and v.get("floor_vote") is True
+    }
+    all_districts: dict[str, str] = {}
+    for cong in sorted(house_congresses):
+        all_districts.update(fetch_member_districts(cong, api_key))
+    # Use the first (and currently only) House congress for the fallback lookup
+    house_congress = min(house_congresses) if house_congresses else 117
+    enrich_records_with_districts(all_records, all_districts, house_congress, api_key)
 
     log.info("Total member-vote records: %d", len(all_records))
     write_csv(VOTES_CSV, VOTE_CSV_FIELDS, all_records)
