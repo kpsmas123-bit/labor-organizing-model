@@ -1,0 +1,66 @@
+name: Monthly State P2 Refresh
+
+on:
+  schedule:
+    # First day of each month at 6am UTC
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      states:
+        description: 'Specific states to refresh (space-separated, e.g. "WA WI WV WY"). Leave blank for all 50.'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run (fetch but do not write output)'
+        required: false
+        default: 'false'
+
+jobs:
+  refresh-state-p2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests pandas
+
+      - name: Run state P2 refresh
+        env:
+          OPENSTATES_API_KEY: ${{ secrets.OPENSTATES_API_KEY }}
+        run: |
+          STATES="${{ github.event.inputs.states }}"
+          DRY_RUN="${{ github.event.inputs.dry_run }}"
+
+          ARGS=""
+          if [ -n "$STATES" ]; then
+            ARGS="--states $STATES"
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+
+          python scripts/refresh_state_p2.py $ARGS
+
+      - name: Commit updated state P2 data
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/processed/state_p2_county_alignment.csv
+          git add logs/state_p2_refresh.log || true
+          git diff --staged --quiet || git commit -m "data: monthly state P2 refresh $(date +%Y-%m-%d)"
+
+      - name: Push changes
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: ad-hoc/git-push-action@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

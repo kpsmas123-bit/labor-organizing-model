@@ -31,6 +31,14 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 - [x] Legend: "Strategic Terrain" heading, shortened labels
 - [x] Model version indicator added to status bar
 
+## Automated Refresh Routines
+- [x] .github/workflows/refresh_state_p2.yml — monthly, first of each month
+  Fetches current state legislators from Open States, matches to DIME CFscores,
+  rebuilds state_p2_county_alignment.csv and commits to main.
+  Requires OPENSTATES_API_KEY secret in GitHub repo settings.
+- [ ] Annual DIME file update — download new version from data.stanford.edu/dime
+  (DIME updates annually; current file covers through 2024)
+
 ## Next Sessions
 - [ ] County/MSA info card redesign
   (gallery Congressional card also needs removal — flag for this session)
