@@ -60,8 +60,31 @@ Key vote score results:
 - 7 partial Senate Dems all voted YES on Abruzzo + NO on Sanders MW: Manchin, Sinema, Coons, Carper, Tester, Shaheen, Hassan
 - Median score: 1.0 (driven by Democratic majority on House votes)
 
-Known limitation: House member district field is empty (House Clerk XML district parsing to investigate).
+House member district field fixed: enriched via Congress.gov Members API bulk + individual fallback + at-large hardcode.
+District → county mapping built: scripts/build_p2_county_scores.py via district_county_crosswalk.csv.
+p2_county_alignment.csv produced: 3,142 counties, 3,035 house_and_senate, 107 senate_only.
 Campaign finance (Capitol Trace): key not in .env — Phase 4C per Sam.
+
+Spot-check validation (2026-06-12):
+- Philadelphia PA (42101): score=0.9929  legislators=5  coverage=house_and_senate  ✓
+- Centre County PA (42027): score=0.1295  legislators=3  coverage=house_and_senate  ✓
+- Green County WI (55045): score=0.9151  legislators=3  coverage=house_and_senate  ✓
+- LA County CA (06037):    score=0.9036  legislators=18 coverage=house_and_senate  ✓
+- Maricopa County AZ (04013): score=0.4769 legislators=11 coverage=house_and_senate  ✓
+
+Senate weighting: equal across all counties in state (approximation — population weighting deferred Phase 4C).
+
+P2 federal layer status:
+- [x] config/key_votes.json — 4 confirmed votes
+- [x] scripts/ingest_congress_votes.py — House + Senate ingestion complete
+- [x] data/processed/federal_key_votes.csv — 1,063 member-vote records
+- [x] data/processed/federal_key_vote_scores.csv — 533 members scored
+- [x] House district field populated
+- [x] scripts/build_p2_county_scores.py — district→county aggregation
+- [x] data/processed/p2_county_alignment.csv — 3,142 counties
+- [ ] State legislative votes — Agent E (next)
+- [ ] Business funding share — Agent F (next)
+- [ ] P2 added to quadrant classification — blocked on E + F
 
 ### Next Session
 Gate 3: Extract scoring functions to `scoring/` modules.
