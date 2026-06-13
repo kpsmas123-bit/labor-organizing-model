@@ -12,6 +12,43 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 
 ---
 
+## Agent E — State P2 Alignment (IN PROGRESS, 2026-06-13)
+
+### Approach: DIME CFscores + Open States legislator roster
+- Floor vote approach abandoned: state labor bills die in committee in most states
+  and do not produce floor votes. This is a structural reality, not a data gap.
+- Switched to DIME (Database on Ideology, Money in Politics, and Elections) CFscores
+  as the primary pro-labor signal for state legislators.
+- CFscore normalization: inverse_cfscore = clip((2 - cfscore) / 4, 0, 1)
+  Maps cfscore=-2 → 1.0 (most pro-labor), cfscore=+2 → 0.0 (most anti-labor)
+- Source: data/raw/dime_recipients_1979_2024.csv (DIME 2024 release, cycles 2018–2022)
+
+### Imputation note (DOCUMENTED LIMITATION)
+- 26.6% of state legislators (1,861 of 7,009) had no DIME match in 2018–2022 cycles.
+- These legislators receive party-based imputation:
+    Republican unmatched → inverse_cfscore = 0.20
+    Democrat unmatched   → inverse_cfscore = 0.75
+    Independent/other    → inverse_cfscore = 0.50
+- match_type = "party_imputed" in state_key_vote_scores.csv
+- Reasons for no DIME match: legislator did not run/file in 2018–2022 (term-limited
+  predecessor, special election, appointed), or DIME coverage gap for that cycle.
+- Common low-match states: NH (47%, very large House), NE (53%, unicameral nonpartisan),
+  SD (53%), NJ (53%).
+
+### Session status (2026-06-13, partial)
+- [x] DIME loaded: 42,833 records (2018–2022), 25,987 unique (lname, state, chamber) keys
+- [x] Open States legislators fetched: 7,009 across 46 states
+- [x] Nebraska chamber fix: unicameral mapped state:upper → 'legislature'
+- [x] Match report complete: 5,148 matched (73.4%), 1,861 party-imputed (26.6%)
+- [x] Party imputation logic added to scripts/ingest_openstates.py
+- [ ] WA, WV, WI, WY — NOT YET FETCHED (hit 250 req/day API limit 2026-06-13)
+      WI required for spot-check validation (Green County WI, FIPS 55045)
+      Re-fetch tomorrow — costs ~36 API calls, within 250/day limit
+- [ ] state_key_vote_scores.csv — written with 46-state data; re-write after WI/WA/WV/WY added
+- [ ] state_p2_county_alignment.csv — NOT YET WRITTEN (awaiting WI/WA/WV/WY + Sam approval)
+
+---
+
 ## Map UI Cleanup — Complete (2026-06-12)
 - [x] Legacy A/B/C sidebar counts replaced with quadrant counts
 - [x] Congressional Districts button removed from map sidebar
