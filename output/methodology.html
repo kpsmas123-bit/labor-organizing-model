@@ -804,16 +804,32 @@
       <h2 class="section-title" id="model-heading">What the Model Does</h2>
 
       <h3 class="method-subheading">What the Model Measures</h3>
-      <p class="method-body">Terrain looks at two things for every U.S. county. First, the relative leverage of workers in that county — analyzing 42 sectors scored on their capacity to create economic and community crisis, then adjusting those scores for the actual composition of each county's workforce. Second, the electoral status of that county — how it fits into the broader political map, whether it sits in a competitive state or district, and how much organizing there would translate into political impact.</p>
+      <p class="method-body">Terrain scores every U.S. county on two independent dimensions:</p>
+      <p class="method-body"><strong>Strategic Leverage Score (SLS)</strong> — How much structural power would organized workers here have?</p>
+      <p class="method-body">Computed separately for two types of leverage:</p>
+      <ul class="method-body">
+        <li><strong>Capital Leverage (SLS-Capital):</strong> The absolute crisis-creating potential against capital flows — ports, logistics, energy infrastructure, concentrated manufacturing. Measured as the sum of each sector's capital crisis reach score weighted by raw employment count, normalized against the national benchmark county.</li>
+        <li><strong>Community Leverage (SLS-Community):</strong> The relational crisis-creating potential within the community — hospitals, schools, public transit, home health. Measured as the weighted share of the county workforce in community-facing sectors, so that a hospital employing 40% of a rural county scores differently than the same hospital at 2% of a metro workforce.</li>
+      </ul>
+      <p class="method-body"><strong>Political Terrain Score (PTS)</strong> — How much does organizing here translate into political impact?</p>
+      <p class="method-body">Two sub-scores, each computed under two lenses:</p>
+      <ul class="method-body">
+        <li><strong>P1 Electoral Leverage:</strong> How decisive is this county's geography in consequential elections? Formula: <code>state_tipping_weight × (1 / abs(county_margin))</code>. Counties in decisive states with tight margins score highest.</li>
+        <li><strong>P2 Incumbent Alignment:</strong> How aligned are this county's current elected officials with labor's legislative agenda? Computed from voting records on defined key votes and ideology scores derived from legislative behavior patterns.</li>
+      </ul>
 
-      <h3 class="method-subheading">What the Model Does Not Claim</h3>
-      <p class="method-body">The model does not replace organizer judgment. It cannot see associational networks, existing relationships, community trust, or the conditions that determine whether a campaign actually wins. It does not predict whether any specific campaign will succeed, determine which candidates are worth supporting, or resolve questions that require local knowledge and human strategic judgment.</p>
+      <h3 class="method-subheading">Two Lenses</h3>
+      <p class="method-body">The model produces scores under two strategic frames:</p>
+      <ul class="method-body">
+        <li><strong>National Lens:</strong> Uses federal electoral tipping point weights and federal incumbent alignment (Congress). For organizations deploying national resources.</li>
+        <li><strong>State Lens:</strong> Uses state legislative chamber control weights and state incumbent alignment. For state federations and regional organizations.</li>
+      </ul>
 
       <h3 class="method-subheading">A Note on AI</h3>
-      <p class="method-body">Much of the software coding and technical design of this project was built with Anthropic AI tools. All research decisions, methodological design, and theoretical framing were made by human researchers. We believe in an open and honest conversation about the role, limits, and possibilities of AI tools in academic research — and we think that conversation is better served by transparency than by silence.</p>
+      <p class="method-body">SLS scores are computed by a deterministic formula applied to BLS employment data and the sector scoring rubric. No AI is involved in the primary model. AI (Claude Sonnet) is used to generate MSA narrative summaries shown in the detail panel — those summaries are labeled as AI-generated and should be treated accordingly.</p>
 
       <h3 class="method-subheading">The Jobs Board</h3>
-      <p class="method-body">The map is designed for people thinking about where to deploy organizational resources. The jobs board applies the same logic at the individual level: given your skills, your location, and your life, where can you have the most impact as an organizer or rank-and-file worker? Same framework, different scale of application.</p>
+      <p class="method-body">The companion jobs board at laborterrain.org/jobs matches individuals to labor movement roles using the same terrain data. The model shows terrain. The user brings the goal.</p>
     </section>
 
     <!-- SECTION 4 — STRATEGIC LEVERAGE SCORE -->
@@ -822,12 +838,12 @@
       <h2 class="section-title" id="sls-heading">Score 1: Strategic Leverage Score</h2>
 
       <h3 class="method-subheading">What Strategic Leverage Measures</h3>
-      <p class="method-body">Not all workers have equal structural power. A hospital worker has different leverage than a retail worker. A port worker has different leverage than a software engineer. The Strategic Leverage Score attempts to measure that difference systematically — first at the sector level, then adjusted for the actual composition of each county's workforce.</p>
+      <p class="method-body">Strategic leverage is the structural capacity of workers to disrupt the conditions that matter to their employer or to the broader political economy. Two types of disruption are measured independently because they operate through different mechanisms and require different organizing approaches.</p>
 
       <h3 class="method-subheading">The Sector Strategic Value Score</h3>
-      <p class="method-body">Each of the 42 sectors in the model is scored on four variables. <strong>Capital Crisis-Creating Reach</strong> measures how much a work stoppage in this sector would disrupt capital flows, supply chains, or critical economic infrastructure — scored from 0 to 25 points across four levels: none, local, state, and national. <strong>Community Crisis-Creating Reach</strong> measures how much a work stoppage would disrupt the daily life of communities — essential services, healthcare, transit, education — scored on the same scale. <strong>Community-Facing Reach</strong> measures how deeply a sector is embedded in community trust networks, not just whether workers can cause disruption but whether they can build lasting solidarity with the people they serve, scored 0 to 15 points. <strong>Non-Offshoreable</strong> measures whether jobs in this sector can be relocated, scored 0 to 5 points.</p>
+      <p class="method-body">Every sector is scored on four components derived from the organizing literature. <strong>Capital Crisis Reach</strong> measures the capacity to disrupt capital flows through work stoppage — scored 0, 10, 15, or 25 points. <strong>Community Crisis Reach</strong> measures the capacity to create community-facing crisis — scored on the same scale. <strong>Community Facing Reach</strong> measures pre-existing relationships of trust with the public — scored 0, 5, 10, or 15 points. <strong>Non-Offshoreable</strong> measures whether work is structurally tied to physical U.S. location — scored 0, 3, or 5 points. Maximum sector score: 80 points.</p>
 
-      <p class="method-body">Two interaction bonuses capture cases where variables reinforce each other. A sector scoring above zero on both capital and community crisis reach receives a <strong>Dual-Crisis bonus</strong> of 5 points. A sector scoring above zero on both community crisis reach and community-facing reach receives a <strong>Whole-Worker bonus</strong> of 5 points.</p>
+      <p class="method-body">Two interaction bonuses capture cases where variables reinforce each other. A sector scoring above zero on both capital and community crisis reach receives a <strong>Dual-Crisis bonus</strong> of 5 points (+5 if Capital Reach &gt; 0 AND Community Reach &gt; 0). A sector scoring above zero on both community crisis reach and community-facing reach receives a <strong>Whole-Worker bonus</strong> of 5 points (+5 if Community Reach &gt; 0 AND Community Facing &gt; 0).</p>
 
       <div class="formula-block">SVS = Capital Reach + Community Reach + Community-Facing Reach + Non-Offshoreable + Dual-Crisis Bonus + Whole-Worker Bonus
 Maximum: 80 points</div>
@@ -895,20 +911,18 @@ Maximum: 80 points</div>
       </div>
 
       <h3 class="method-subheading">SLS-Capital: Absolute Crisis Potential</h3>
-      <p class="method-body">The first county-level sub-score multiplies each sector's Capital Crisis-Creating Reach score by the raw number of workers employed in that sector in that county, then sums across all sectors. The result is normalized to a 0 to 100 scale using an absolute benchmark — the theoretical maximum weighted employment score across all sectors nationally — so that a score of 75 in Pennsylvania means the same as a 75 in Texas.</p>
+      <p class="method-body">The first county-level sub-score multiplies each sector's Capital Crisis Reach score by the raw number of workers employed in that sector in that county, then sums across all sectors. Scale matters here — a port employing 50,000 workers can halt more supply chain activity than a port employing 5,000.</p>
 
-      <p class="method-body">Raw employment count drives this score deliberately. The capacity to disrupt capital flows, supply chains, or critical economic infrastructure scales with the absolute number of workers involved. Ten thousand port workers have more capital-facing leverage than one thousand port workers regardless of what share of the local economy they represent.</p>
+      <div class="formula-block">SLS-Capital = Σ(cap_reach_score[sector] × employment[sector]) / 210,000</div>
 
-      <div class="formula-block">SLS-Capital = Σ(cap_reach_score × raw_employment_in_sector) / national_benchmark
-Normalized to 0–100</div>
+      <p class="method-body">Normalization benchmark of 210,000 places Los Angeles County (the national maximum) at 84.2 on a 0–100 scale. Counties with major port, logistics, or energy workforces score highest. Grounded in: Womack (2005) on technically strategic positions; Silver (2003) on workplace bargaining power and spatial fixes.</p>
 
       <h3 class="method-subheading">SLS-Community: Relative Crisis Potential</h3>
-      <p class="method-body">The second county-level sub-score multiplies each sector's Community Crisis-Creating Reach score by that sector's share of the county's total workforce, then sums across all sectors. Share of workforce drives this score rather than raw count.</p>
+      <p class="method-body">The second county-level sub-score multiplies each sector's Community Crisis Reach score by that sector's share of the county's total workforce, then sums across all sectors. Share matters here — a hospital employing 40% of a rural county's workforce is structurally central to that community in a way the same hospital cannot be at 2% of a large metro workforce.</p>
 
-      <p class="method-body">A hospital that employs 30 percent of a rural county's workforce creates qualitatively different community mobilization potential than a hospital employing 4 percent of a large metro county's workforce, even if the metro hospital employs more people in absolute terms. When a sector is structurally central to a community's daily life, a work stoppage is impossible to ignore. That structural centrality is what this score captures.</p>
+      <div class="formula-block">SLS-Community = Σ(comm_reach_score[sector] × (employment[sector] / total_employment)) × 4</div>
 
-      <div class="formula-block">SLS-Community = Σ(comm_reach_score × employment_share_in_sector)
-Normalized to 0–100</div>
+      <p class="method-body">The ×4 normalization scales to 0–100 where a county with 100% of workers in a national-level community crisis sector scores 100. Counties with concentrated healthcare, education, or public transit workforces score highest. Grounded in: McAlevey (2016) on whole-worker organizing and community mobilization; Fox-Hodess (2023) on social contingency in organizing.</p>
 
       <h3 class="method-subheading">Why Two Scores Rather Than One</h3>
       <p class="method-body">Collapsing these into a single number would obscure a distinction that matters strategically. A county can score high on SLS-Capital and low on SLS-Community — a logistics hub in a large metro area, for example — or high on SLS-Community and low on SLS-Capital, such as a rural county where the hospital is the dominant employer. Those are different types of terrain requiring different organizing approaches. The model keeps them separate so users can see both dimensions independently.</p>
@@ -920,56 +934,65 @@ Normalized to 0–100</div>
       <h2 class="section-title" id="pts-heading">Score 2: Political Terrain Score</h2>
 
       <h3 class="method-subheading">What Political Terrain Measures</h3>
-      <p class="method-body">Not all geographies are equally consequential for the political goals of the labor movement. The American electoral system distributes political weight unevenly — through the Electoral College, Senate malapportionment, and legislative district boundaries that do not reflect population equally. The Political Terrain Score attempts to capture that unequal distribution honestly, across two independent dimensions.</p>
+      <p class="method-body">Political terrain answers: how much does labor organizing in this county change the political environment? Two components are measured independently.</p>
 
       <h3 class="method-subheading">P1: Electoral Leverage</h3>
-      <p class="method-body">The first sub-score measures how much this specific county matters for outcomes that determine labor law and policy. It is calculated as the state's tipping point weight multiplied by the inverse of the county's electoral margin. State tipping point weight reflects the probability that a given state provides the decisive votes in a presidential, Senate, or state legislative race. County margin reflects how contested the county itself is. A county in a decisive state with a narrow margin scores high. A heavily partisan county in a safe state scores low regardless of its size.</p>
+      <p class="method-body">P1 measures how decisive this county's geography is in elections that determine labor's legislative environment.</p>
 
-      <p class="method-body">The model calculates three variants of this score independently: presidential, congressional, and state legislative. Congressional and state legislative scores are aggregated to the county level using Census district-to-county relationship files, averaging across districts where boundaries do not align with county lines.<a href="#fn-2" class="fn-ref" id="fn-ref-2">[2]</a></p>
+      <div class="formula-block">P1 = state_tipping_weight × (1 / abs(county_margin))</div>
 
-      <div class="formula-block">P1 = state_tipping_point_weight × (1 / county_electoral_margin)</div>
+      <p class="method-body"><strong>State tipping weight</strong> is the probability that this state is the decisive state in the relevant election, derived from historical swing state analysis and current electoral projections. Pennsylvania = 0.28; Georgia = 0.09; California = 0.005. <strong>County margin</strong> is the absolute margin (D–R) in the most recent relevant election. Tight margins produce high P1 scores even in states with lower tipping weights.</p>
+
+      <p class="method-body">Under the <strong>National Lens</strong>, P1 uses presidential electoral weights. Under the <strong>State Lens</strong>, P1 uses state legislative chamber tipping weights — how close is chamber control in this county's state?</p>
+
+      <p class="method-body">The P1 distribution is extremely right-skewed. 75% of all U.S. counties have P1 &lt; 0.28. The top 3% of counties by P1 are the genuinely decisive geographies. Centre County, Pennsylvania — home of Penn State and one of the tightest-margined counties in the most decisive swing state — scores P1 = 35.3.</p>
 
       <p class="method-transition">This is a simplified proxy for a full two-stage empirical Banzhaf power index (Banzhaf, 1968).<a href="#fn-3" class="fn-ref" id="fn-ref-3">[3]</a> That upgrade is planned for a future version of the model.</p>
 
       <p class="method-body">Organizing in counties that swing elections produces electoral returns that extend beyond union households into surrounding communities — research suggests newly organized workers generate measurable progressive vote gains in their commuting zones, with the majority of the effect operating through indirect community channels.<a href="#fn-4" class="fn-ref" id="fn-ref-4">[4]</a></p>
 
       <h3 class="method-subheading">P2: Incumbent Alignment</h3>
-      <p class="method-body">The second sub-score measures whether the existing political environment is aligned with labor's agenda — based on demonstrated behavior rather than party label or endorsement history.</p>
+      <p class="method-body">P2 measures how aligned this county's current elected officials are with labor's legislative agenda. Low P2 + high SLS + high P1 identifies the highest-value organizing targets: places where the workforce has leverage, the geography is decisive, and the incumbent is hostile to labor.</p>
 
-      <p class="method-body">Two signals drive this score. The first is a key vote alignment score: for each incumbent representing a county, we calculate the share of a defined set of labor-relevant votes cast in a pro-labor direction. The second signal is the inverse of the business funding share for each incumbent — the ratio of business contributions to total campaign contributions. High business funding concentration is a reliable negative signal for labor alignment regardless of party.<a href="#fn-6" class="fn-ref" id="fn-ref-6">[6]</a></p>
+      <div class="formula-block">P2 = key_vote_score × 0.60 + inverse_ideology_score × 0.40</div>
 
-      <div class="formula-block">P2 = (key_vote_score × 0.60) + (inverse_business_funding_share × 0.40)</div>
+      <p class="method-body"><strong>Key vote component (60%):</strong> Each legislator is scored on votes directly relevant to labor organizing rights. All roll call numbers verified against House Clerk XML and Senate.gov XML records.</p>
 
-      <table class="method-table votes-table" aria-label="Key votes list by jurisdiction">
+      <table class="method-table votes-table" aria-label="Key votes used in P2 scoring">
         <thead>
           <tr>
-            <th scope="col">Federal</th>
-            <th scope="col">State</th>
+            <th scope="col">Vote</th>
+            <th scope="col">Chamber / Roll Call</th>
+            <th scope="col">Date</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>1. PRO Act / NLRA reform</td>
-            <td>6. RTW passage or repeal</td>
+            <td>PRO Act</td>
+            <td>House Roll Call 70</td>
+            <td>March 9, 2021</td>
           </tr>
           <tr>
-            <td>2. NLRB funding votes</td>
-            <td>7. Public sector bargaining expansion or restriction</td>
+            <td>Sanders $15 Minimum Wage Amendment</td>
+            <td>Senate Roll Call 74</td>
+            <td>March 5, 2021</td>
           </tr>
           <tr>
-            <td>3. Anti-scab / Replacement Worker Act</td>
-            <td>8. Prevailing wage / project labor agreement laws</td>
+            <td>Abruzzo NLRB General Counsel Confirmation</td>
+            <td>Senate Roll Call 273</td>
+            <td>July 21, 2021</td>
           </tr>
           <tr>
-            <td>4. Public sector bargaining rights</td>
-            <td>9. Card check</td>
-          </tr>
-          <tr>
-            <td>5. Minimum wage floor</td>
-            <td>10. Strike replacement worker restrictions</td>
+            <td>National Apprenticeship Act</td>
+            <td>House Roll Call 31</td>
+            <td>February 5, 2021</td>
           </tr>
         </tbody>
       </table>
+
+      <p class="method-body"><strong>Ideology component (40%):</strong> Legislative behavior ideology scores derived from bill sponsorship and cosponsorship patterns (GovTrack, 119th Congress). Normalized so that progressive = high signal, conservative = low signal. County P2 is aggregated from individual legislator scores weighted by district-county overlap from the Census district-county relationship file.</p>
+
+      <p class="method-body"><strong>Current P2 coverage:</strong> Federal P2: 533 legislators scored, 3,142 counties with alignment data. State P2: in progress — using DIME CFscores (Stanford) for current state legislators where available.</p>
 
       <div class="note-box">
         <span class="note-box__label">Data Sources Considered and Rejected</span>
@@ -983,43 +1006,42 @@ Normalized to 0–100</div>
       <span class="section-label">Section 6</span>
       <h2 class="section-title" id="map-heading">Reading the Map</h2>
 
-      <h3 class="method-subheading">Four Types of Terrain</h3>
-      <p class="method-body">The two scores produce a simple but useful strategic picture. A county's Strategic Leverage Score tells you how much structural power organized workers there would have. The Political Terrain Score tells you how much organizing there would translate into political impact.</p>
+      <h3 class="method-subheading">Six Types of Strategic Terrain</h3>
+      <p class="method-body">The model classifies every county into one of six categories based on the combination of SLS, P1, and P2 scores. The classification answers two questions simultaneously: how much organizing leverage exists here, and what strategic posture does the political terrain require?</p>
 
-      <div class="quadrant-wrapper">
-        <p class="quadrant-axis-y">↑ Strategic Leverage (high → low)</p>
-        <div class="quadrant-grid" role="region" aria-label="Strategic terrain quadrant matrix">
-          <div class="quadrant-cell quadrant-cell--red">
-            <span class="quadrant-cell__tag">High Leverage / High Alignment</span>
-            <p class="quadrant-cell__desc">Deploy now — organized workers here have both structural power and a political environment capable of translating that power into change.</p>
-          </div>
-          <div class="quadrant-cell quadrant-cell--orange">
-            <span class="quadrant-cell__tag">High Leverage / Low Alignment</span>
-            <p class="quadrant-cell__desc">Primary target or challenger opportunity — high leverage terrain held by incumbents with demonstrated anti-labor records. The model's most novel output.</p>
-          </div>
-          <div class="quadrant-cell quadrant-cell--blue">
-            <span class="quadrant-cell__tag">Low Leverage / High Alignment</span>
-            <p class="quadrant-cell__desc">Long-term power building — favorable political conditions, weaker structural terrain. Rewards sustained investment over time.</p>
-          </div>
-          <div class="quadrant-cell quadrant-cell--gray">
-            <span class="quadrant-cell__tag">Low Leverage / Low Alignment</span>
-            <p class="quadrant-cell__desc">Not a current priority given scarce resources.</p>
-          </div>
-        </div>
-        <div class="quadrant-x-labels">
-          <p class="quadrant-x-label">← High Alignment</p>
-          <p class="quadrant-x-label">Low Alignment →</p>
-        </div>
-      </div>
+      <h3 class="method-subheading">Tier 1 — Transform</h3>
+      <p class="method-body"><strong>High SLS + High P1 + Low P2 (hostile incumbent)</strong></p>
+      <p class="method-body">The highest-priority organizing terrain. Workers here have structural leverage AND the geography is electorally decisive AND the incumbent is misaligned with labor. Organizing campaigns here can simultaneously build worker power and shift the political environment by targeting a hostile incumbent who cannot afford to lose organized worker opposition. These are primary challenge and electoral accountability targets as much as organizing targets.</p>
+      <ul class="method-body">
+        <li><strong>Tier 1 — Capital:</strong> High capital leverage (ports, logistics, energy)</li>
+        <li><strong>Tier 1 — Community:</strong> High community leverage (hospitals, schools, transit)</li>
+      </ul>
+
+      <h3 class="method-subheading">Tier 2 — Activate</h3>
+      <p class="method-body"><strong>High SLS + High P1 + High P2 (aligned incumbent)</strong></p>
+      <p class="method-body">High leverage, decisive terrain, but the incumbent is already aligned with labor. The strategic posture shifts from challenge to mobilization — protecting incumbents, turning out existing members, defending labor-aligned policy. Organizing here builds organizational capacity in territory where the political return is defending gains rather than making them.</p>
+      <ul class="method-body">
+        <li><strong>Tier 2 — Capital:</strong> High capital leverage, aligned incumbent</li>
+        <li><strong>Tier 2 — Community:</strong> High community leverage, aligned incumbent</li>
+      </ul>
+
+      <h3 class="method-subheading">Tier 3 — Electoral Terrain</h3>
+      <p class="method-body"><strong>Low SLS + High P1 (decisive geography, organizing base needed)</strong></p>
+      <p class="method-body">The geography is electorally decisive but the organizing infrastructure does not yet exist at scale to move the county. These are long-term investment targets — building the worker organization that currently isn't there. Centre County, Pennsylvania and Green County, Wisconsin are canonical examples: smaller workforces, extreme electoral leverage, organizing bases that do not yet match their political importance.</p>
+
+      <h3 class="method-subheading">Tier 4 — Lower Priority</h3>
+      <p class="method-body"><strong>Neither SLS nor P1 threshold met at current thresholds.</strong></p>
+      <p class="method-body">Not a current strategic priority given current organizing capacity constraints. The model does not claim these workers are unimportant — every worker deserves representation. It claims that with finite resources, the above categories offer higher expected political return per organizing dollar.</p>
 
       <div class="note-box">
-        <span class="note-box__label">Shading within quadrants</span>
-        <p>Within each quadrant, counties are shaded dark to light by national significance — how far above the threshold each score sits, weighted by state tipping point. A dark red county is a top national target. A pale red county is the same terrain type but lower national stakes.</p>
+        <span class="note-box__label">The Critical Finding: No County is Tier 1 in Both Dimensions</span>
+        <p>When we ran the model on all 3,143 U.S. counties, no county simultaneously cleared all three thresholds (SLS-Capital ≥ 2.5, SLS-Community ≥ 35, P1 ≥ 5). The largest labor markets are concentrated in states that do not decide elections. The counties that do decide elections are smaller, with workforces dominated by community-facing sectors.</p>
+        <p>This is not a modeling failure. It is an empirical description of American political and economic geography. It confirms McAlevey's sectoral argument independently: if you want to organize where it matters electorally, organize hospitals and schools in Pennsylvania, Michigan, and Wisconsin — not ports and logistics hubs in California.</p>
       </div>
 
-      <p class="method-transition">Quadrant thresholds are set at the midpoint of each score's 0 to 100 range by default and are documented in the project's open configuration files. They will be revisited through regression validation against known organizing campaigns.</p>
-
-      <h3 class="method-subheading">What This Does Not Resolve</h3>
+      <h3 class="method-subheading">Two Strategic Lenses</h3>
+      <p class="method-body">Use the <strong>National</strong> lens to identify where national labor organizations should deploy resources to move federal elections and federal policy. P1 uses presidential electoral tipping weights.</p>
+      <p class="method-body">Use the <strong>State</strong> lens to identify where state federations and regional organizations should invest. P1 uses state legislative chamber tipping weights — how close is chamber control in this state's legislature?</p>
       <p class="method-body">The scores are independent of each other by design. The model does not combine them into a single ranking because doing so would require imposing a weighting between structural leverage and political terrain — a decision that depends on the user's theory of change and strategic goals, not on the data. The model surfaces both dimensions and leaves that judgment where it belongs.</p>
     </section>
 
@@ -1039,7 +1061,7 @@ Normalized to 0–100</div>
           <span class="expand-card__arrow" aria-hidden="true">▾</span>
         </button>
         <div class="expand-card__body">
-          <p>The Census Bureau's County Business Patterns dataset excludes government employees by design. Teachers, public hospital workers, transit operators, sanitation workers, and public administrators do not appear in CBP counts. This means counties with large public sector workforces — state capitals, county seats, districts with major public university systems — show lower Strategic Leverage Scores than their actual structural importance warrants. BLS QCEW data provides partial correction for public sector sectors in the model, but the gap is not fully resolved. Future versions will expand QCEW government data integration to reduce this gap.</p>
+          <p>SLS scores use Census Bureau County Business Patterns data, which excludes government employees. Counties where government employment is dominant — state capitals, counties with large military installations, Washington D.C. — will have understated SLS scores. QCEW government data has been ingested separately for public sector employment but the full integration is in progress.</p>
         </div>
       </div>
 
@@ -1068,7 +1090,7 @@ Normalized to 0–100</div>
           <span class="expand-card__arrow" aria-hidden="true">▾</span>
         </button>
         <div class="expand-card__body">
-          <p>All three electoral leverage calculations are grounded in county-level 2024 presidential election margins. Congressional and state legislative scores apply those margins as proxies for district-level competitiveness. Presidential margins do not perfectly predict congressional or state legislative race outcomes, particularly in gerrymandered districts. All three electoral sub-scores should be treated as directional signals rather than precise measurements. Future versions will incorporate actual district-level race results and Cook Political Report competitiveness ratings.</p>
+          <p>The current P1 formula uses presidential electoral margins as the primary proxy for congressional and state legislative district competitiveness. True district-level margins require separate ingestion of district-level election results, which is in progress. Counties that span multiple competitive districts may be under- or over-scored.</p>
         </div>
       </div>
 
@@ -1111,6 +1133,20 @@ Normalized to 0–100</div>
         </button>
         <div class="expand-card__body">
           <p>The electoral leverage calculations rely in part on research that measures labor's political impact through Democratic vote share — a proxy that has historically been strong but is becoming more complex. The model attempts to address this through the P2 Incumbent Alignment score, which measures demonstrated legislative behavior rather than party label. However, the underlying electoral leverage calculation still depends on competitive margin data that reflects the two-party system. Future versions will seek to measure political alignment in ways less dependent on the two-party frame.</p>
+        </div>
+      </div>
+
+      <div class="expand-card" data-expanded="false">
+        <button class="expand-card__btn" onclick="toggleCard(this.parentElement)" aria-expanded="false">
+          <span class="expand-card__num">07</span>
+          <div class="expand-card__meta">
+            <span class="expand-card__title">P2 Incumbent Alignment data coverage is uneven</span>
+            <span class="expand-card__summary">Federal P2 is complete; state P2 relies on DIME CFscores with sparse 2022–2024 coverage for state legislators.</span>
+          </div>
+          <span class="expand-card__arrow" aria-hidden="true">▾</span>
+        </button>
+        <div class="expand-card__body">
+          <p>Federal P2 scores are complete for all 533 current federal legislators across 3,142 counties. State P2 scores use DIME CFscores (Stanford, 1979–2024) matched to current state legislators via Open States. State legislative ideology data is most reliable for the 2010–2020 period; 2022–2024 state legislative coverage is sparse. State P2 is flagged as <code>coverage_type = cfscore_only</code> in the underlying data.</p>
         </div>
       </div>
     </section>
@@ -1189,6 +1225,30 @@ Normalized to 0–100</div>
             <td>Sector definitions and industry codes.</td>
             <td>Current</td>
             <td><a href="https://www.census.gov/naics/" target="_blank" rel="noopener noreferrer">census.gov/naics</a></td>
+          </tr>
+          <tr>
+            <td>Congress.gov API</td>
+            <td>Federal legislative voting records. Verified against official House Clerk XML and Senate.gov XML records.</td>
+            <td>Per vote</td>
+            <td><a href="https://api.congress.gov/" target="_blank" rel="noopener noreferrer">api.congress.gov</a></td>
+          </tr>
+          <tr>
+            <td>GovTrack Bulk Data</td>
+            <td>Federal legislator ideology scores based on bill sponsorship and cosponsorship patterns. 119th Congress.</td>
+            <td>Per Congress</td>
+            <td><a href="https://www.govtrack.us/developers/data" target="_blank" rel="noopener noreferrer">govtrack.us/developers</a></td>
+          </tr>
+          <tr>
+            <td>Open States API</td>
+            <td>Current state legislators matched to DIME CFscores for state P2 alignment scoring. Covers all 50 states + DC.</td>
+            <td>Ongoing</td>
+            <td><a href="https://openstates.org/api/" target="_blank" rel="noopener noreferrer">openstates.org/api</a></td>
+          </tr>
+          <tr>
+            <td>DIME — Database on Ideology, Money in Politics, and Elections</td>
+            <td>Candidate ideology scores (CFscores) for state and federal legislators. 850M+ contribution records, 1979–2024.</td>
+            <td>2024</td>
+            <td><a href="https://data.stanford.edu/dime" target="_blank" rel="noopener noreferrer">data.stanford.edu/dime</a></td>
           </tr>
         </tbody>
       </table>
