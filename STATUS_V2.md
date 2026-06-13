@@ -12,6 +12,17 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 
 ---
 
+## Agent F — GovTrack Ideology Scores — Complete (2026-06-13)
+- [x] GovTrack ideology scores downloaded (119th Congress, sponsorshipanalysis_s/h.txt)
+- [x] legislators-current.yaml used for LIS→GovTrack and bioguide→GovTrack crosswalk
+- [x] federal_ideology_scores.csv produced (533 legislators)
+- [x] federal_p2_combined.csv produced (533 legislators)
+- [x] Combined P2 = key_vote × 0.60 + inverse_ideology × 0.40
+- Coverage: 365 legislators with both signals, 167 key_vote_only, 0 ideology_only, 1 neither
+- Ideology range: 0.0 (most progressive) to 1.0 (most conservative), from GovTrack sponsorship analysis
+- Spot checks: Bernie=1.0, AOC=0.948, McConnell=0.126, Manchin=0.5 (key_vote_only, retired)
+- Note: ideology from 119th Congress, key votes from 117th — 167 members retired/lost seats between congresses
+
 ## Map UI Cleanup — Complete (2026-06-12)
 - [x] Legacy A/B/C sidebar counts replaced with quadrant counts
 - [x] Congressional Districts button removed from map sidebar
