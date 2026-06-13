@@ -31,6 +31,18 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 - [x] Legend: "Strategic Terrain" heading, shortened labels
 - [x] Model version indicator added to status bar
 
+## Methodology Page Navigation — Complete (2026-06-13)
+- [x] Top tab navigation (8 tabs: Overview, Assumptions, SLS, PTS, Reading the Map, Limitations, Data Sources, Literature)
+- [x] File-browser visual language with active tab border and accent underline
+- [x] Breadcrumb navigation (Methodology / [active tab])
+- [x] Hash-based deep linking (#sls, #pts, etc.)
+- [x] Score 1: 3 expandable detail cards (SVS formula, SLS-Capital, SLS-Community)
+  with variable explanations, normalization rationale, and worked examples
+- [x] Score 2: 3 expandable detail cards (P1 formula with tipping weights table,
+  P2 formula with verified roll call numbers and spot checks, National vs State lens)
+- [x] All CSS uses terrain.css variables only — no new variables introduced
+- [x] toggleDetail() uses data-open, no conflict with existing toggleCard()/toggleLit()
+
 ## Next Sessions
 - [ ] County/MSA info card redesign
   (gallery Congressional card also needs removal — flag for this session)
