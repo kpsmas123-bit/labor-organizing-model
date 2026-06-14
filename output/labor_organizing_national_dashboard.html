@@ -42,6 +42,12 @@
   .lens-btn.active[data-lens="default"]   { background: #2C2C2C !important; border-color: #2C2C2C !important; color: #FAF7F2 !important; }
   .lens-btn.active[data-lens="community"] { background: #2C5A3C !important; border-color: #2C5A3C !important; color: #FAF7F2 !important; }
   .lens-btn.active[data-lens="capital"]   { background: #1A3A5A !important; border-color: #1A3A5A !important; color: #FAF7F2 !important; }
+  .lens-toggle { display: flex; gap: 0; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: var(--space-2); }
+  .sidebar-lens-btn { flex: 1; padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; border: none; background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .sidebar-lens-btn:hover { background: var(--color-bg-subtle); color: var(--color-text); }
+  .sidebar-lens-btn.active { background: var(--color-text); color: var(--color-bg); }
+  .lens-description { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.4; min-height: 32px; }
+  .sidebar-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
   #lens-badge { position: absolute; top: 12px; left: 12px; z-index: 20; background: rgba(44,44,44,0.80); color: #FAF7F2; font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 20px; pointer-events: none; letter-spacing: 0.03em; }
 
   .toggle-btn { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 12px; color: #2C2C2C; }
@@ -803,6 +809,15 @@ document.querySelector('.terrain-nav__hamburger')
   });
 </script>
 
+<div class="panel-flash"></div>
+<div class="section-rail">
+  <div class="rail-item active" data-panel="map" onclick="navigateTo('map')">01</div>
+  <div class="rail-item" data-panel="jobs" onclick="navigateTo('jobs')">02</div>
+  <div class="rail-item" data-panel="methodology" onclick="navigateTo('methodology')">03</div>
+</div>
+
+<div id="panel-map" class="terrain-panel active">
+
 <div id="beta-banner" style="position:relative;z-index:200;padding:6px 24px;display:flex;align-items:center;gap:10px;background:#FEF3C7;border-bottom:1px solid #F6D860;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;">
   <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
   <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
@@ -1062,15 +1077,13 @@ document.querySelector('.terrain-nav__hamburger')
 
 <div id="layout">
   <div id="sidebar" style="display:none">
-    <h2>Map Goal</h2>
-
-    <div class="filter-group">
-      <label>Color map by electoral goal</label>
-      <div class="seg-buttons">
-        <div class="seg-btn goal-pres" data-goal="presidential">Presidential Swing</div>
-        <div class="seg-btn goal-power active" data-goal="power">Long-Term Power Building</div>
-        <div class="seg-btn goal-senate" data-goal="senate">Senate Battlegrounds</div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">LENS</div>
+      <div class="lens-toggle">
+        <button class="sidebar-lens-btn active" id="btn-national" onclick="setLens('national')">National</button>
+        <button class="sidebar-lens-btn" id="btn-state" onclick="setLens('state')">State</button>
       </div>
+      <div class="lens-description" id="lens-desc">Federal electoral tipping points + federal incumbent alignment</div>
     </div>
 
     <hr class="divider">
@@ -1093,10 +1106,10 @@ document.querySelector('.terrain-nav__hamburger')
     <h2>Summary</h2>
     <div id="summary-stats">
       <div><span class="stat-label">Total counties: </span><span class="stat-total" id="stat-total">–</span></div>
-      <div><span class="stat-label">Deploy Now: </span><span style="color:#bd0026;font-weight:600" id="stat-deploy-now">–</span></div>
-      <div><span class="stat-label">Primary Target: </span><span style="color:#d4860a;font-weight:600" id="stat-primary-target">–</span></div>
-      <div><span class="stat-label">Electoral Leverage: </span><span style="color:#2166ac;font-weight:600" id="stat-power-building">–</span></div>
-      <div><span class="stat-label">Lower Priority: </span><span style="color:#a09385;font-weight:600" id="stat-lower-priority">–</span></div>
+      <div><span class="stat-label">Tier 1: </span><span style="color:#bd0026;font-weight:600" id="stat-tier1">–</span></div>
+      <div><span class="stat-label">Tier 2: </span><span style="color:#d4860a;font-weight:600" id="stat-tier2">–</span></div>
+      <div><span class="stat-label">Tier 3 — Electoral: </span><span style="color:#2166ac;font-weight:600" id="stat-tier3">–</span></div>
+      <div><span class="stat-label">Tier 4: </span><span style="color:#a09385;font-weight:600" id="stat-tier4">–</span></div>
       <div><span class="stat-label">Visible: </span><span class="stat-total" id="stat-visible">–</span></div>
     </div>
 
@@ -1199,6 +1212,7 @@ document.querySelector('.terrain-nav__hamburger')
               <div class="seg-btn lens-btn" data-lens="capital">Capital</div>
             </div>
             <div class="legend-title" id="legend-title">Intervention Type</div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
             <div id="legend-tiers"></div>
             <div style="margin-top:8px;border-top:1px solid #EDE7DF;padding-top:6px;font-size:8.5px;color:#A09385">Model v2.0 · Data: 2024 · laborterrain.net</div>
           </div>
@@ -1731,7 +1745,28 @@ let gl_countyExplanations = {}; // fips → explanation string
 let currentView = "methodology";
 let sortCol = "sls_capital";
 let sortAsc = false;
-let goalFilter = "power";
+let goalFilter = "power"; // locked — goal toggle removed; always "power" (Strategic Terrain)
+
+let _currentLens = 'national';
+const LENS_DESCRIPTIONS = {
+  national: 'Federal electoral tipping points + federal incumbent alignment',
+  state:    'State legislative chamber control + state incumbent alignment'
+};
+function setLens(lens) {
+  _currentLens = lens;
+  document.getElementById('btn-national').classList.toggle('active', lens === 'national');
+  document.getElementById('btn-state').classList.toggle('active', lens === 'state');
+  document.getElementById('lens-desc').textContent = LENS_DESCRIPTIONS[lens];
+  const lensLabel = document.getElementById('legend-lens-label');
+  if (lensLabel) lensLabel.textContent = lens === 'national' ? 'National lens' : 'State lens';
+  applyFilters();
+  updateLegend();
+}
+function getLensQuadrant(county) {
+  if (_currentLens === 'state' && county.quadrant_state) return county.quadrant_state;
+  if (_currentLens === 'national' && county.quadrant_national) return county.quadrant_national;
+  return county.quadrant || 'tier4';
+}
 let filters = { state: "", swingOnly: false };
 
 // ──────────────────────────────────────────────────────────────
@@ -2042,13 +2077,26 @@ const QUADRANT_COLORS = {
 };
 
 const QUADRANT_LABELS = {
-  "deploy_now_both":          "Deploy Now",
-  "deploy_now_capital":       "Deploy Now — Capital",
-  "deploy_now_community":     "Deploy Now — Community",
-  "primary_target_capital":   "Capital Target",
-  "primary_target_community": "Community Target",
-  "power_building":           "Electoral Leverage",
-  "lower_priority":           "Lower Priority"
+  // v2.0 Agent G tier fields
+  "tier1_capital":            "Tier 1 — Capital",
+  "tier1_community":          "Tier 1 — Community",
+  "tier1_capital_community":  "Tier 1 — Capital + Community",
+  "tier2_activate_capital":   "Tier 2 — Capital",
+  "tier2_activate_community": "Tier 2 — Community",
+  "tier2_build_capital":      "Tier 2 — Capital",
+  "tier2_build_community":    "Tier 2 — Community",
+  "tier2_unknown_capital":    "Tier 2 — Capital",
+  "tier2_unknown_community":  "Tier 2 — Community",
+  "tier3_electoral":          "Tier 3 — Electoral",
+  "tier4":                    "Tier 4",
+  // Current fields (before Agent G)
+  "deploy_now_capital":       "Tier 1 — Capital",
+  "deploy_now_community":     "Tier 1 — Community",
+  "deploy_now_both":          "Tier 1 — Capital + Community",
+  "primary_target_capital":   "Tier 2 — Capital",
+  "primary_target_community": "Tier 2 — Community",
+  "power_building":           "Tier 3 — Electoral",
+  "lower_priority":           "Tier 4"
 };
 const NON_SWING_COLOR = "#ccc4bb";
 
@@ -2100,7 +2148,7 @@ function getGoalFill(c) {
       : NON_SWING_COLOR;
   }
   if (goalFilter === "power") {
-    const q = c.quadrant;
+    const q = getLensQuadrant(c);
     return QUADRANT_COLORS[q] || NO_DATA_COLOR;
   }
   if (goalFilter === "senate") return getSenateColor(c.state);
@@ -2211,10 +2259,10 @@ function updateLegend() {
 }
 
 
-document.querySelectorAll(".lens-btn").forEach(btn => {
+document.querySelectorAll("#lens-btns .lens-btn").forEach(btn => {
   btn.addEventListener("click", function() {
     activeLens = this.dataset.lens;
-    document.querySelectorAll(".lens-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll("#lens-btns .lens-btn").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     const labels = { default: "Default", community: "Community", capital: "Capital" };
     document.getElementById("lens-badge").textContent = `Viewing: ${labels[activeLens]} lens`;
@@ -2984,14 +3032,18 @@ function applyFilters() {
 
 function updateStats() {
   document.getElementById("stat-total").textContent = allCounties.length.toLocaleString();
-  const deployNow     = filteredCounties.filter(c => c.quadrant && c.quadrant.startsWith("deploy_now")).length;
-  const primaryTarget = filteredCounties.filter(c => c.quadrant && c.quadrant.startsWith("primary_target")).length;
-  const powerBuilding = filteredCounties.filter(c => c.quadrant === "power_building").length;
-  const lowerPriority = filteredCounties.filter(c => c.quadrant === "lower_priority" || !c.quadrant).length;
-  document.getElementById("stat-deploy-now").textContent     = deployNow.toLocaleString();
-  document.getElementById("stat-primary-target").textContent = primaryTarget.toLocaleString();
-  document.getElementById("stat-power-building").textContent = powerBuilding.toLocaleString();
-  document.getElementById("stat-lower-priority").textContent = lowerPriority.toLocaleString();
+  const counts = { tier1: 0, tier2: 0, tier3: 0, tier4: 0 };
+  filteredCounties.forEach(c => {
+    const n = _tierNum(getLensQuadrant(c));
+    if (n === 1) counts.tier1++;
+    else if (n === 2) counts.tier2++;
+    else if (n === 3) counts.tier3++;
+    else counts.tier4++;
+  });
+  document.getElementById("stat-tier1").textContent = counts.tier1.toLocaleString();
+  document.getElementById("stat-tier2").textContent = counts.tier2.toLocaleString();
+  document.getElementById("stat-tier3").textContent = counts.tier3.toLocaleString();
+  document.getElementById("stat-tier4").textContent = counts.tier4.toLocaleString();
   document.getElementById("stat-visible").textContent = filteredCounties.length.toLocaleString();
 }
 
@@ -3023,17 +3075,8 @@ function populateStateFilter() {
 document.getElementById("filter-state").addEventListener("change", e => { filters.state = e.target.value; applyFilters(); });
 document.getElementById("filter-swing").addEventListener("change", e => { filters.swingOnly = e.target.checked; applyFilters(); });
 
-document.querySelectorAll("[data-goal]").forEach(btn => {
-  btn.addEventListener("click", function() {
-    document.querySelectorAll("[data-goal]").forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-    goalFilter = this.dataset.goal;
-    applyFilters();
-    updateLegend();
-    const banner = document.getElementById("senate-banner");
-    if (banner) banner.style.display = goalFilter === "senate" ? "block" : "none";
-  });
-});
+// REMOVED: goal toggle click handler (Presidential Swing / LT Power Building / Senate)
+// goalFilter is now locked to "power" — lens switching handled by setLens()
 
 // ──────────────────────────────────────────────────────────────
 // Table view
@@ -3742,6 +3785,8 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
 })();
 </script>
 
+</div><!-- /panel-map -->
+
 <footer class="terrain-footer">
   <div class="terrain-footer__inner">
     <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
@@ -3751,5 +3796,44 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     </ul>
   </div>
 </footer>
+
+<script>
+// === TERRAIN PANEL NAVIGATION ===
+(function() {
+  const PANELS = ['map', 'jobs', 'methodology'];
+  let current = 'map';
+
+  window.navigateTo = function(panelId) {
+    if (panelId === current) return;
+    const flash = document.querySelector('.panel-flash');
+    const from = document.querySelector('.terrain-panel.active');
+    const to = document.getElementById('panel-' + panelId);
+    if (!to) return;
+
+    if (flash) flash.classList.add('flashing');
+    setTimeout(() => {
+      from && from.classList.remove('active');
+      to.classList.add('active');
+      current = panelId;
+      window.location.hash = panelId;
+      document.querySelectorAll('.rail-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.panel === panelId);
+      });
+      if (flash) flash.classList.remove('flashing');
+    }, 150);
+  };
+
+  window.addEventListener('load', function() {
+    const hash = window.location.hash.replace('#','');
+    if (PANELS.includes(hash)) navigateTo(hash);
+  });
+
+  window.addEventListener('hashchange', function() {
+    const hash = window.location.hash.replace('#','');
+    if (PANELS.includes(hash) && hash !== current) navigateTo(hash);
+  });
+})();
+</script>
+
 </body>
 </html>
