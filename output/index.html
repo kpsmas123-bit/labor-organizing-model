@@ -32,9 +32,13 @@
     /* === COVER PANEL === */
     #panel-cover {
       background: var(--color-bg);
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
-      padding: var(--space-16) var(--space-16);
+      align-items: center;
+      text-align: center;
+      padding: var(--space-16) var(--space-8);
+      min-height: calc(100vh - var(--nav-height));
     }
 
     .cover-eyebrow {
@@ -48,29 +52,30 @@
 
     .cover-title {
       font-family: var(--font-display);
-      font-size: clamp(3rem, 6vw, 5rem);
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
       font-weight: 500;
       color: var(--color-text);
       line-height: 1.05;
       letter-spacing: -0.02em;
-      max-width: 720px;
-      margin-bottom: var(--space-8);
+      max-width: 680px;
+      margin: 0 auto var(--space-8) auto;
     }
 
     .cover-rule {
       width: 48px;
       height: 3px;
       background: var(--color-accent);
-      margin-bottom: var(--space-6);
+      margin: 0 auto var(--space-6) auto;
     }
 
     .cover-abstract {
       font-family: var(--font-body);
-      font-size: var(--text-lg);
+      font-size: var(--text-base);
       color: var(--color-text-secondary);
-      max-width: 560px;
-      line-height: 1.7;
-      margin-bottom: var(--space-12);
+      max-width: 520px;
+      margin: 0 auto var(--space-10) auto;
+      line-height: 1.75;
+      text-align: center;
     }
 
     .cover-authors {
@@ -78,7 +83,8 @@
       font-size: var(--text-xs);
       color: var(--color-text-muted);
       letter-spacing: 0.05em;
-      margin-bottom: var(--space-2);
+      text-align: center;
+      margin-bottom: var(--space-1);
     }
 
     .cover-meta {
@@ -86,18 +92,17 @@
       font-size: var(--text-xs);
       color: var(--color-text-muted);
       letter-spacing: 0.05em;
+      text-align: center;
     }
 
     .cover-scroll-hint {
       position: absolute;
       bottom: var(--space-8);
-      left: var(--space-16);
+      left: 50%;
+      transform: translateX(-50%);
       font-family: var(--font-mono);
       font-size: var(--text-xs);
       color: var(--color-text-muted);
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
       animation: bounce-hint 2s ease-in-out infinite;
     }
 
@@ -213,9 +218,9 @@
       <span>T</span>errain
     </a>
     <div class="topnav-links">
-      <a href="index.html" class="topnav-link active">Home</a>
-      <a href="labor_organizing_national_dashboard.html" class="topnav-link">Map</a>
-      <a href="methodology.html" class="topnav-link">Methodology</a>
+      <a href="index.html" class="topnav-link active" id="nav-home">Home</a>
+      <a href="labor_organizing_national_dashboard.html" class="topnav-link" id="nav-map">Map</a>
+      <a href="methodology.html" class="topnav-link" id="nav-methodology">Methodology</a>
       <a href="jobs.html" class="topnav-jobs">Jobs Board →</a>
     </div>
   </nav>
@@ -239,7 +244,7 @@
       </p>
       <div class="cover-authors">Sam Kaplan-Pettus</div>
       <div class="cover-meta">
-        UC Berkeley Political Science · laborterrain.net
+        UC Berkeley Political Science · laborterrain.org
       </div>
       <div class="cover-scroll-hint">
         ↓ scroll
@@ -251,11 +256,13 @@
       <div class="about-main">
         <h2 class="about-heading">About This Project</h2>
         <p class="about-body">
-          The American labor movement was built through profound sacrifice,
-          skill, and strategy. Workers organized against hostile conditions
-          and won — because they built relationships, solidarity, and
-          collective power. That foundation has been under systematic attack
-          since the 1970s.
+          Our theory of change rests on two claims. First, that durable
+          power is built through well-placed, interpersonal, organized
+          solidarity — irrespective of institutional permission. Second,
+          that winning material gains for workers in the workplace is the
+          fastest and most effective way to build a movement capable of
+          addressing our broader social and political needs. When workers
+          organize, they win. When workers win, we all win.
         </p>
         <p class="about-body">
           Terrain is an open-source research tool that operationalizes

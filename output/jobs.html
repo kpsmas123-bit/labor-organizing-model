@@ -59,19 +59,34 @@ body {
 .qdot.active { background: #bd0026 !important; transform: scale(1.25) !important; }
 /* === END TERRAIN OVERRIDES === */
 
+.jobs-topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height, 72px);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-8, 2rem);
+  background: var(--color-bg, #F7F5F0);
+  border-bottom: 1px solid var(--color-border, #C8C3B8);
+  z-index: 1000;
+}
+
 .back-to-terrain {
-  font-family: var(--font-ui);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  font-family: var(--font-ui, Inter, system-ui, sans-serif);
+  font-size: 0.75rem;
+  color: var(--color-text-muted, #5C6B7A);
   text-decoration: none;
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border, #C8C3B8);
+  padding: 0.25rem 0.75rem;
   border-radius: 999px;
   transition: color 0.15s, border-color 0.15s;
 }
+
 .back-to-terrain:hover {
-  color: var(--color-text);
-  border-color: var(--color-border-strong);
+  color: var(--color-text, #1A1A18);
+  border-color: var(--color-border-strong, #9E9890);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -121,7 +136,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .top-nav-tab.active { color: #2C2C2C; border-bottom-color: #bd0026; }
 
 /* === PAGE WRAP === */
-#page-wrap { max-width: 1280px; margin: 0 auto; padding: 0 var(--space-6) 80px; }
+#page-wrap { max-width: 1280px; margin: 0 auto; padding: var(--nav-height, 72px) var(--space-6) 80px; }
 
 /* === PAGE INTRO === */
 #page-intro {
@@ -1133,29 +1148,9 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 </head>
 <body>
 
-<nav class="terrain-nav">
-  <div class="terrain-nav__inner">
-    <a href="index.html" class="back-to-terrain">← Terrain</a>
-    <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
-    <ul class="terrain-nav__links">
-      <li><a href="labor_organizing_national_dashboard.html?view=map">Map</a></li>
-      <li><a href="jobs.html" class="active">Jobs</a></li>
-      <li><a href="education.html">Learn</a></li>
-      <li><a href="methodology.html">Method</a></li>
-    </ul>
-    <button class="terrain-nav__hamburger" aria-label="Toggle menu" onclick="this.closest('.terrain-nav').querySelector('.terrain-nav__drawer').classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <div class="terrain-nav__drawer">
-    <ul>
-      <li><a href="labor_organizing_national_dashboard.html?view=map">Map</a></li>
-      <li><a href="jobs.html" class="active">Jobs</a></li>
-      <li><a href="education.html">Learn</a></li>
-      <li><a href="methodology.html">Method</a></li>
-    </ul>
-  </div>
-</nav>
+<div class="jobs-topnav">
+  <a href="index.html" class="back-to-terrain">← Terrain</a>
+</div>
 
 <!-- BETA BANNER -->
 <div id="beta-banner">

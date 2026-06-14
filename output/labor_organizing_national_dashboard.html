@@ -780,11 +780,13 @@
 <body>
 
 <nav class="terrain-topnav">
-  <a href="index.html" class="topnav-wordmark"><span>T</span>errain</a>
+  <a href="index.html" class="topnav-wordmark">
+    <span>T</span>errain
+  </a>
   <div class="topnav-links">
-    <a href="index.html" class="topnav-link">Home</a>
-    <a href="labor_organizing_national_dashboard.html" class="topnav-link active">Map</a>
-    <a href="methodology.html" class="topnav-link">Methodology</a>
+    <a href="index.html" class="topnav-link" id="nav-home">Home</a>
+    <a href="labor_organizing_national_dashboard.html" class="topnav-link active" id="nav-map">Map</a>
+    <a href="methodology.html" class="topnav-link" id="nav-methodology">Methodology</a>
     <a href="jobs.html" class="topnav-jobs">Jobs Board →</a>
   </div>
 </nav>
@@ -798,10 +800,6 @@
 
 <div id="panel-map" class="terrain-panel active">
 
-<div id="beta-banner" style="position:relative;z-index:200;padding:6px 24px;display:flex;align-items:center;gap:10px;background:#FEF3C7;border-bottom:1px solid #F6D860;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;">
-  <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
-  <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
-</div>
 
 <div id="terrain-intro">
   <button id="intro-toggle-btn">&#8249;</button>
@@ -1242,14 +1240,14 @@
             <div class="legend-title" id="legend-title">Intervention Type</div>
             <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
             <div id="legend-tiers"></div>
-            <div style="margin-top:8px;border-top:1px solid #EDE7DF;padding-top:6px;font-size:8.5px;color:#A09385">Model v2.0 · Data: 2024 · laborterrain.net</div>
+            <div style="margin-top:8px;border-top:1px solid #EDE7DF;padding-top:6px;font-size:8.5px;color:#A09385">Model v2.0 · Data: 2024 · laborterrain.org</div>
           </div>
         </div>
 
             <div class="tooltip" id="tooltip"></div>
           </div><!-- /map-figure-body -->
           <div class="map-figure-footer">
-            Terrain v2.0 · 3,143 counties · laborterrain.net
+            Terrain v2.0 · 3,143 counties · laborterrain.org
           </div>
         </div><!-- /map-figure -->
       </div>
@@ -1767,6 +1765,34 @@
   </div>
 </div>
 
+<div class="map-paper-outro">
+  <div class="map-paper-inner">
+    <p class="map-paper-body">
+      Counties are classified into four tiers based on the
+      combination of Strategic Leverage Score and Political
+      Terrain Score. Tier 1 counties — shown in red (capital
+      leverage) and deep blue (community leverage) — represent
+      the highest-priority organizing terrain: places where
+      structural worker power, decisive electoral geography,
+      and a misaligned incumbent all converge.
+    </p>
+    <p class="map-paper-body">
+      Use the National lens to identify where federal
+      elections are determined. Use the State lens to
+      identify where state legislative control is closest.
+      Click any county to see its full strategic profile.
+    </p>
+    <p class="map-paper-method-link-row">
+      <a href="methodology.html#sls" class="map-paper-method-link">
+        Score 1: Strategic Leverage →
+      </a>
+      <a href="methodology.html#pts" class="map-paper-method-link">
+        Score 2: Political Terrain →
+      </a>
+    </p>
+  </div>
+</div>
+
 <script>
 // ──────────────────────────────────────────────────────────────
 // State
@@ -2091,8 +2117,8 @@ const YLORRD       = ["#FFFFB2","#FED976","#FEB24C","#FD8D3C","#F03B20","#BD0026
 // Recalibrated for v2.0 sls_capital distribution (median=0.23, p95=5.21, max=84.16)
 const JENKS        = [0.5, 1.5, 3.0, 8.0, 20.0];
 const JENKS_LABELS = ["0–0.5","0.5–1.5","1.5–3","3–8","8–20","20+"];
-const NO_DATA_COLOR    = "#D8CFC4";
-const FILTERED_COLOR   = "#EDE7DF";
+const NO_DATA_COLOR    = "#EDEAE3";
+const FILTERED_COLOR   = "#F0EDE8";
 const TYPE_COLORS = { A: "#2d6a4f", B: "#e76f51", C: "#457b9d" };
 let activeLens = "default"; // "default" | "community" | "capital"
 
@@ -2100,13 +2126,13 @@ let activeLens = "default"; // "default" | "community" | "capital"
 const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV","NC"]);
 
 const QUADRANT_COLORS = {
-  "deploy_now_both":          "#7b0020",  // darkest red — keep, very distinct
-  "deploy_now_capital":       "#bd0026",  // accent red — keep, brand color
-  "deploy_now_community":     "#e05c00",  // burnt orange — distinct from red for colorblind users
-  "primary_target_capital":   "#d4860a",  // amber — replaces sandy orange
-  "primary_target_community": "#b8860b",  // dark goldenrod — replaces yellow (fails on light bg)
-  "power_building":           "#2166ac",  // stronger blue — more distinct from gray
-  "lower_priority":           "#ccc4bb"   // gray — keep
+  "deploy_now_both":          "#6B0019",  // dark red — capital + community + electoral
+  "deploy_now_capital":       "#BD0026",  // Terrain Red — capital leverage
+  "deploy_now_community":     "#1a3a6b",  // deep blue — community leverage
+  "primary_target_capital":   "#E8736B",  // muted red — capital, build phase
+  "primary_target_community": "#4A7FB5",  // muted blue — community, build phase
+  "power_building":           "#7B6B9E",  // muted purple — electoral leverage only
+  "lower_priority":           "#E0DBD3"   // near-invisible warm gray
 };
 
 const QUADRANT_LABELS = {
@@ -2131,7 +2157,7 @@ const QUADRANT_LABELS = {
   "power_building":           "Tier 3 — Electoral",
   "lower_priority":           "Tier 4"
 };
-const NON_SWING_COLOR = "#ccc4bb";
+const NON_SWING_COLOR = "#E0DBD3";
 
 const SENATE_TIERS = {
   NC: 1,
@@ -2499,9 +2525,9 @@ async function initMap() {
       .attr("class", "msa-path")
       .attr("d", path)
       .attr("data-msa", d => d.properties.msaName)
-      .attr("stroke", "#8B7355")
-      .attr("stroke-width", "0.5")
-      .attr("stroke-opacity", "0.55")
+      .attr("stroke", "#C8C3B8")
+      .attr("stroke-width", "0.4")
+      .attr("stroke-opacity", "0.7")
       .attr("fill", d => {
         const msa = msaScoreByName[d.properties.msaName];
         if (!msa) return NO_DATA_COLOR;
@@ -3184,7 +3210,7 @@ function switchToView(view) {
   document.getElementById("gallery-view").style.display = view === "gallery" ? "block" : "none";
   document.getElementById("methodology-view").style.display = view === "methodology" ? "block" : "none";
   const sb = document.getElementById("sidebar");
-  sb.style.display = view === "map" ? "block" : "none";
+  sb.style.display = "none"; // sidebar shown only in expanded map mode
   const mft = document.getElementById("mobile-filter-toggle");
   if (mft) mft.style.display = (view === "map" && window.innerWidth <= 640) ? "flex" : "none";
   if (view === "table") renderTable();
@@ -3835,9 +3861,16 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
 function expandMap() {
   const fig = document.getElementById('map-figure');
   const btn = document.querySelector('.map-expand-btn');
+  const sidebar = document.getElementById('sidebar');
   if (!fig) return;
   const isExpanded = fig.classList.toggle('expanded');
   btn.textContent = isExpanded ? '↙ Collapse' : '↗ Expand';
+  document.body.style.overflow = isExpanded ? 'hidden' : '';
+  if (sidebar) {
+    sidebar.style.cssText = isExpanded
+      ? 'display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;width:320px;z-index:501;overflow-y:auto;background:var(--color-bg);border-right:1px solid var(--color-border);padding:1rem;'
+      : 'display:none;';
+  }
   setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
 }
 
