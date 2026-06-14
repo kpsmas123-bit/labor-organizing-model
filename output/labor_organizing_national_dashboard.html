@@ -1844,32 +1844,80 @@ function _tierDesc(q)  { return _TIER_DESCS[q]  || ""; }
 
 function getCountyNarrative(county) {
   if (county.narrative) return county.narrative;
-  const slsType = (county.sls_capital || 0) >= 2.5 ? "capital"
-    : (county.sls_community || 0) >= 35 ? "community" : null;
-  const p1High = (county.p1_presidential || 0) >= 5;
-  if (!slsType && !p1High) {
-    return `${county.county_name} falls below current strategic thresholds `
-      + `on leverage and electoral decisiveness.`;
+
+  const slsCap = county.sls_capital || 0;
+  const slsComm = county.sls_community || 0;
+  const p1 = county.p1_presidential || 0;
+  const p2 = county.federal_p2 ?? county.p2_alignment;
+  const name = county.county_name || "This county";
+  const state = county.state || "";
+
+  const capitalHigh = slsCap >= 2.5;
+  const communityHigh = slsComm >= 35;
+  const p1High = p1 >= 5;
+  const p2Aligned = p2 != null && p2 >= 0.6;
+  const p2Hostile = p2 != null && p2 < 0.4;
+
+  // Tier 4 — neither leverage nor electoral
+  if (!capitalHigh && !communityHigh && !p1High) {
+    return `${name} falls below current strategic thresholds on both ` +
+           `leverage dimensions and electoral geography.`;
   }
-  if (slsType === "capital") {
-    return `${county.county_name} has significant capital leverage `
-      + `(SLS-Capital: ${(county.sls_capital || 0).toFixed(1)}) `
-      + `through strategic workforce concentration. `
-      + (p1High
-        ? `Located in a decisive swing geography (P1: ${(county.p1_presidential || 0).toFixed(1)}).`
-        : `Electoral conditions need further development.`);
+
+  // High SLS + high P1 + hostile incumbent (Tier 1)
+  if ((capitalHigh || communityHigh) && p1High && p2Hostile) {
+    const leverageType = capitalHigh ? "capital leverage" : "community leverage";
+    return `${name} combines strong ${leverageType} with decisive ` +
+           `electoral geography and a misaligned incumbent. ` +
+           `Organizing here can build worker power and hold the ` +
+           `incumbent accountable simultaneously.`;
   }
-  if (slsType === "community") {
-    return `${county.county_name} has strong community leverage `
-      + `(SLS-Community: ${(county.sls_community || 0).toFixed(1)}) — `
-      + `essential service workers represent a significant share of the workforce. `
-      + (p1High
-        ? `Located in a decisive swing geography (P1: ${(county.p1_presidential || 0).toFixed(1)}).`
-        : `Electoral conditions need further development.`);
+
+  // High SLS + high P1 + aligned incumbent (Tier 2 activate)
+  if ((capitalHigh || communityHigh) && p1High && p2Aligned) {
+    const leverageType = capitalHigh ? "capital leverage" : "community leverage";
+    return `${name} has strong ${leverageType} in decisive electoral ` +
+           `terrain with an already-aligned incumbent. The strategic ` +
+           `posture here is to mobilize and protect — turn out organized ` +
+           `workers and defend existing gains.`;
   }
-  return `${county.county_name} is in decisive electoral terrain `
-    + `(P1: ${(county.p1_presidential || 0).toFixed(1)}) `
-    + `with limited current organizing leverage. Build the base here.`;
+
+  // High SLS + high P1 + P2 unknown
+  if ((capitalHigh || communityHigh) && p1High) {
+    const leverageType = capitalHigh ? "capital leverage" : "community leverage";
+    return `${name} combines strong ${leverageType} with decisive ` +
+           `electoral geography. Incumbent alignment data is pending.`;
+  }
+
+  // High capital + low P1 (safe state or wide margin)
+  if (capitalHigh && !p1High) {
+    return `${name} has significant capital leverage ` +
+           `(SLS-Capital: ${slsCap.toFixed(1)}) through concentrated ` +
+           `strategic workforce. Located in ${state}, which is not a ` +
+           `current electoral tipping point — organizing here builds ` +
+           `national labor power and long-term industry standards.`;
+  }
+
+  // High community + low P1 (safe state or wide margin)
+  if (communityHigh && !p1High) {
+    return `${name} has strong community leverage ` +
+           `(SLS-Community: ${slsComm.toFixed(1)}) — essential service ` +
+           `workers make up a significant share of the workforce. ` +
+           `Located in ${state}, which is not a current tipping point — ` +
+           `organizing here builds durable community power and ` +
+           `labor movement density.`;
+  }
+
+  // Low SLS + high P1 (Tier 3 electoral)
+  if (p1High && !capitalHigh && !communityHigh) {
+    return `${name} is in decisive electoral terrain ` +
+           `(P1: ${p1.toFixed(1)}) but does not yet have the ` +
+           `organizing infrastructure to match its political importance. ` +
+           `Long-term investment here builds the base that doesn't exist yet.`;
+  }
+
+  return `${name} is classified based on its combination of ` +
+         `strategic leverage and political terrain scores.`;
 }
 
 function getMsaNarrative(msa) {
