@@ -59,6 +59,21 @@ body {
 .qdot.active { background: #bd0026 !important; transform: scale(1.25) !important; }
 /* === END TERRAIN OVERRIDES === */
 
+.back-to-terrain {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.back-to-terrain:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; }
 
@@ -1120,6 +1135,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
 <nav class="terrain-nav">
   <div class="terrain-nav__inner">
+    <a href="index.html" class="back-to-terrain">← Terrain</a>
     <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
     <ul class="terrain-nav__links">
       <li><a href="labor_organizing_national_dashboard.html?view=map">Map</a></li>

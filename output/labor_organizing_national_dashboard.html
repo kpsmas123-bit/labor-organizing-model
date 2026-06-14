@@ -773,35 +773,15 @@
 </head>
 <body>
 
-<nav class="terrain-nav">
-  <div class="terrain-nav__inner">
-    <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
-    <ul class="terrain-nav__links">
-      <li><a href="labor_organizing_national_dashboard.html" class="active">Map</a></li>
-      <li><a href="jobs.html">Jobs</a></li>
-      <li><a href="education.html">Learn</a></li>
-      <li><a href="methodology.html">Method</a></li>
-    </ul>
-    <button class="terrain-nav__hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+<nav class="terrain-topnav">
+  <a href="index.html" class="topnav-wordmark"><span>T</span>errain</a>
+  <div class="topnav-links">
+    <a href="index.html" class="topnav-link">Home</a>
+    <a href="labor_organizing_national_dashboard.html" class="topnav-link active">Map</a>
+    <a href="methodology.html" class="topnav-link">Methodology</a>
+    <a href="jobs.html" class="topnav-jobs">Jobs Board →</a>
   </div>
 </nav>
-<div class="terrain-nav__drawer">
-  <ul>
-    <li><a href="labor_organizing_national_dashboard.html" class="active">Map</a></li>
-    <li><a href="jobs.html">Jobs</a></li>
-    <li><a href="education.html">Learn</a></li>
-    <li><a href="methodology.html">Method</a></li>
-  </ul>
-</div>
-<script>
-document.querySelector('.terrain-nav__hamburger')
-  .addEventListener('click', function() {
-    document.querySelector('.terrain-nav__drawer')
-      .classList.toggle('open');
-  });
-</script>
 
 <div class="panel-flash"></div>
 <div class="section-rail">
@@ -1066,6 +1046,43 @@ document.querySelector('.terrain-nav__hamburger')
       </div>
     </div>
 
+  </div>
+</div>
+
+<div class="map-paper-intro">
+  <div class="map-paper-inner">
+    <div class="section-number">§ 2</div>
+    <h2 class="map-paper-title">The Map</h2>
+    <p class="map-paper-lead">
+      Every U.S. county scored on strategic labor organizing terrain.
+      The model asks two questions: how much structural power would
+      organized workers have here, and how much does organizing here
+      change the political environment?
+    </p>
+    <div class="map-paper-findings">
+      <div class="map-finding">
+        <span class="map-finding-num">3,143</span>
+        <span class="map-finding-label">counties scored</span>
+      </div>
+      <div class="map-finding">
+        <span class="map-finding-num">36</span>
+        <span class="map-finding-label">Tier 1 counties</span>
+      </div>
+      <div class="map-finding">
+        <span class="map-finding-num">0</span>
+        <span class="map-finding-label">counties in both Capital + Community Tier 1</span>
+      </div>
+    </div>
+    <p class="map-paper-note">
+      The most significant finding: no county simultaneously has high
+      capital leverage, high community leverage, AND decisive electoral
+      geography. The largest labor markets are in safe states.
+      The decisive swing counties are smaller — their workforce dominated
+      by hospitals and schools.
+    </p>
+    <a href="methodology.html" class="map-paper-method-link">
+      Read full methodology →
+    </a>
   </div>
 </div>
 
