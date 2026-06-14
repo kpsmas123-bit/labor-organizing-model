@@ -1956,6 +1956,12 @@ async function loadData() {
       console.log(`[Data] MSA lookup merged onto ${allCounties.length} counties`);
     }
   } catch (_) { /* msa_lookup.json missing — MSA grouping will be inactive */ }
+
+  // Load legislators lookup (built by scripts/build_legislators_lookup.py)
+  fetch('../data/processed/county_legislators_lookup.json')
+    .then(r => r.json())
+    .then(data => { window._legislatorLookup = data.counties || {}; })
+    .catch(() => { window._legislatorLookup = {}; });
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -2664,6 +2670,16 @@ function showMsaDetail(msaName) {
       <span>▶ </span>Member counties (${msa.countyCount})
     </div>
     <div class="card-more-body">${countyRows}</div>
+
+    <div class="card-section-head" style="margin-top:var(--space-4);">
+      Current Legislators
+      <span style="font-family:var(--font-body);font-size:10px;
+                   color:var(--color-text-muted);font-weight:400;
+                   text-transform:none;letter-spacing:0;">
+        · updated monthly
+      </span>
+    </div>
+    ${buildMsaLegislatorsHTML(msa.counties)}
   `;
 
   panel.style.display = "block";
@@ -2681,6 +2697,88 @@ function showMsaDetail(msaName) {
     + `Explain what makes this metro area strategically significant, what type of leverage exists, `
     + `and what organizing here could accomplish.`;
   loadNarrative(msaProxy, tn, q, cacheKey, msaPrompt);
+}
+
+// ──────────────────────────────────────────────────────────────
+// Legislators section helpers
+// ──────────────────────────────────────────────────────────────
+function _legCard(leg) {
+  const p2Display = leg.p2_combined != null
+    ? (leg.p2_combined * 100).toFixed(0) + "% aligned"
+    : "score pending";
+  const partyColor = leg.party === "D" ? "#2c6fad"
+                   : leg.party === "R" ? "#bd0026"
+                   : "var(--color-text-muted)";
+  const p2Color = leg.p2_combined != null
+    ? leg.p2_combined >= 0.6 ? "#2c6fad"
+      : leg.p2_combined <= 0.4 ? "#bd0026"
+      : "var(--color-text-muted)"
+    : "var(--color-text-muted)";
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                padding:var(--space-2) 0;border-bottom:1px solid var(--color-border);">
+      <div>
+        <div style="font-size:var(--text-sm);color:var(--color-text);
+                    font-weight:500;">${leg.name}</div>
+        <div style="font-family:var(--font-mono);font-size:10px;
+                    color:${partyColor};margin-top:2px;">
+          ${leg.party} · ${leg.title}
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:var(--font-mono);font-size:10px;
+                    color:${p2Color};">${p2Display}</div>
+        ${leg.key_vote_score != null ? `
+        <div style="font-size:9px;color:var(--color-text-muted);margin-top:2px;">
+          ${(leg.key_vote_score * 4).toFixed(0)}/4 key votes pro-labor
+        </div>` : ""}
+      </div>
+    </div>`;
+}
+
+function buildLegislatorsHTML(fips, state) {
+  const data = window._legislatorLookup?.[fips];
+  if (!data) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      Legislator data loading…
+    </div>`;
+  }
+  const all = [...(data.federal || []), ...(data.state || [])];
+  if (!all.length) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      No legislator data available for this county.
+    </div>`;
+  }
+  return all.map(_legCard).join("");
+}
+
+function buildMsaLegislatorsHTML(msaCounties) {
+  if (!window._legislatorLookup) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      Legislator data loading…
+    </div>`;
+  }
+  const seen = new Set();
+  const all = [];
+  for (const c of msaCounties) {
+    const fips = String(c.fips || "").padStart(5, "0");
+    const data = window._legislatorLookup[fips];
+    if (!data) continue;
+    for (const leg of [...(data.federal || []), ...(data.state || [])]) {
+      // deduplicate by bioguide_id, fall back to name+chamber+district
+      const key = leg.bioguide_id || `${leg.name}|${leg.chamber}|${leg.district}`;
+      if (!seen.has(key)) { seen.add(key); all.push(leg); }
+    }
+  }
+  if (!all.length) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      No legislator data available for this metro area.
+    </div>`;
+  }
+  // Senators first, then House by P2 descending
+  all.sort((a, b) => (a.chamber === "senate" ? 0 : 1) - (b.chamber === "senate" ? 0 : 1)
+                     || (b.p2_combined || 0) - (a.p2_combined || 0));
+  return all.map(_legCard).join("");
 }
 
 // County detail panel (v2.0 — all counties, not just non-metro)
@@ -2723,6 +2821,15 @@ function showDetail(county) {
         <div style="font-family:var(--font-mono);font-size:var(--text-xs);
                     color:var(--color-text-muted);">
           ${county.state || ""}&nbsp;·&nbsp;Pop.&nbsp;${pop ? pop.toLocaleString() : "—"}
+        </div>
+        <div style="font-family:var(--font-mono);font-size:var(--text-xs);
+                    color:var(--color-text-muted);margin-top:var(--space-1);">
+          2024 presidential: ${margin != null
+            ? (margin >= 0
+               ? `<span style="color:#2c6fad">D+${Math.abs(margin).toFixed(1)}</span>`
+               : `<span style="color:#bd0026">R+${Math.abs(margin).toFixed(1)}</span>`)
+            : "—"}
+          &nbsp;·&nbsp;State tipping: ${sw != null ? (sw * 100).toFixed(0) + "%" : "—"}
         </div>
         <div style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:4px;">
           ${_tierDesc(q)}
@@ -2811,6 +2918,16 @@ function showDetail(county) {
                ? county.v1_organizing_opportunity_score.toFixed(1) : "—"}</span>
       </div>
     </div>
+
+    <div class="card-section-head" style="margin-top:var(--space-4);">
+      Current Legislators
+      <span style="font-family:var(--font-body);font-size:10px;
+                   color:var(--color-text-muted);font-weight:400;
+                   text-transform:none;letter-spacing:0;">
+        · updated monthly
+      </span>
+    </div>
+    ${buildLegislatorsHTML(fips, county.state)}
   `;
 
   panel.style.display = "block";
