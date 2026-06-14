@@ -1334,3 +1334,182 @@ img, svg {
   gap: var(--space-6);
   margin-top: var(--space-4);
 }
+
+/* ============================================================
+   MAP CASE STUDIES — 4-county grid below map
+   ============================================================ */
+
+.map-case-studies {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-10) 0;
+}
+
+.case-studies-heading {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.case-studies-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.case-study-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  background: var(--color-bg-card);
+}
+
+.case-study-county {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.case-study-tier {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-3);
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.case-study-body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  margin-bottom: var(--space-4);
+}
+
+.case-study-scores {
+  display: flex;
+  gap: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.cs-score {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cs-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cs-val {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+@media (max-width: 640px) {
+  .case-studies-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   TERRAIN FOOTER — consistent across all pages
+   ============================================================ */
+
+.terrain-footer {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-6) 0;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.footer-wordmark {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-right: var(--space-3);
+}
+
+.footer-wordmark span { color: var(--color-accent); }
+
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.footer-meta a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.footer-meta a:hover { color: var(--color-accent); }
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.footer-center {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.footer-link {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.15s;
+}
+
+.footer-link:hover { color: var(--color-accent); }
+
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-3);
+  }
+  .footer-right { flex-wrap: wrap; justify-content: center; }
+}
