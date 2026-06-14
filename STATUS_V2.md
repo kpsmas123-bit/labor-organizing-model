@@ -23,6 +23,47 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 - Spot checks: Bernie=1.0, AOC=0.948, McConnell=0.126, Manchin=0.5 (key_vote_only, retired)
 - Note: ideology from 119th Congress, key votes from 117th — 167 members retired/lost seats between congresses
 
+---
+
+## Agent E — State P2 Alignment (COMPLETE, 2026-06-14)
+
+### Approach: DIME CFscores + Open States legislator roster
+- Floor vote approach abandoned: state labor bills die in committee in most states
+  and do not produce floor votes. This is a structural reality, not a data gap.
+- Switched to DIME (Database on Ideology, Money in Politics, and Elections) CFscores
+  as the primary pro-labor signal for state legislators.
+- CFscore normalization: inverse_cfscore = clip((2 - cfscore) / 4, 0, 1)
+  Maps cfscore=-2 → 1.0 (most pro-labor), cfscore=+2 → 0.0 (most anti-labor)
+- Source: data/raw/dime_recipients_1979_2024.csv (DIME 2024 release, cycles 2018–2022)
+
+### Imputation note (DOCUMENTED LIMITATION)
+- 26.6% of state legislators (1,861 of 7,009) had no DIME match in 2018–2022 cycles.
+- These legislators receive party-based imputation:
+    Republican unmatched → inverse_cfscore = 0.20
+    Democrat unmatched   → inverse_cfscore = 0.75
+    Independent/other    → inverse_cfscore = 0.50
+- match_type = "party_imputed" in state_key_vote_scores.csv
+- Reasons for no DIME match: legislator did not run/file in 2018–2022 (term-limited
+  predecessor, special election, appointed), or DIME coverage gap for that cycle.
+- Common low-match states: NH (47%, very large House), NE (53%, unicameral nonpartisan),
+  SD (53%), NJ (53%).
+
+### Final results (2026-06-14)
+- [x] DIME loaded: 42,833 records (2018–2022), 25,987 unique (lname, state, chamber) keys
+- [x] Open States legislators fetched: 7,527 across all 50 states
+- [x] Nebraska chamber fix: unicameral mapped state:upper → 'legislature'
+- [x] Match results: 5,532 matched (73.5%), 1,995 party-imputed (26.5%)
+- [x] state_key_vote_scores.csv — 7,527 rows, all 50 states
+- [x] state_p2_county_alignment.csv — 3,142 counties, all covered (cfscore_plus_imputed)
+- [x] Spot checks passed:
+      Centre County PA (42027): 0.460
+      Green County WI (55045): 0.454  ← higher than AL ✓
+      Jefferson County AL (01073): 0.323  ← lower ✓
+      Cook County IL (17031): 0.542
+      Maricopa County AZ (04013): 0.444
+- [x] State ordering directionally correct:
+      CA=0.597, IL=0.542, MN=0.458, WI=0.454, PA=0.460, AZ=0.444, GA=0.426, TX=0.383, AL=0.323
+
 ## Map UI Cleanup — Complete (2026-06-12)
 - [x] Legacy A/B/C sidebar counts replaced with quadrant counts
 - [x] Congressional Districts button removed from map sidebar
