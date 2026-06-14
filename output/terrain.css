@@ -131,16 +131,15 @@ html {
 
 body {
   font-family: var(--font-body);
-  font-size: var(--text-base);
-  color: var(--color-text);
   background: var(--color-bg);
+  color: var(--color-text);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Display headings — Cormorant Garamond */
-h1, h2, .display-heading {
+/* Display headings — Cormorant Garamond for major titles only */
+h1, .display-heading, .intro-h {
   font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -148,22 +147,22 @@ h1, h2, .display-heading {
 }
 
 /* Section headings — Source Serif 4 */
-h3, h4, h5 {
+h2, h3, h4, h5 {
   font-family: var(--font-body);
   font-weight: 600;
 }
 
-/* UI elements — Inter */
-button, .btn, nav a, .nav-link,
-.sidebar-label, .method-tab,
-.lens-btn, .goal-btn {
+/* Nav and UI chrome — Inter */
+nav, .terrain-nav, button, .btn,
+.method-tab, .lens-btn, .goal-btn,
+.sidebar-label, .card-section-head {
   font-family: var(--font-ui);
 }
 
 /* Data labels — IBM Plex Mono */
 .font-mono, [class*="mono"],
 .card-score-label, .card-score-val,
-.sidebar-label, .map-stat {
+.map-stat {
   font-family: var(--font-mono);
 }
 
@@ -174,28 +173,12 @@ button, .btn, nav a, .nav-link,
   margin-right: auto;
 }
 
-/* Flat borders — no shadows */
-.card, .detail-panel, .info-card {
-  box-shadow: none;
-  border: 1px solid var(--color-border);
+/* Remove all box shadows except hover */
+* {
+  box-shadow: none !important;
 }
-
-/* Section breaks — thick top rule in Terrain Red */
-.section-break {
-  border-top: 3px solid var(--color-accent);
-  padding-top: var(--space-4);
-  margin-top: var(--space-8);
-}
-
-/* Section number — IBM Plex Mono */
-.section-number {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-accent);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: var(--space-2);
+.card:hover, .detail-card:hover, [class*="card"]:hover {
+  box-shadow: var(--shadow-card-hover) !important;
 }
 
 a {
@@ -778,6 +761,178 @@ img, svg {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ============================================================
+   VIEWPORT PANEL SYSTEM (Phase B)
+   ============================================================ */
+
+.terrain-stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.terrain-panel {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+  background: var(--color-bg);
+  padding-top: var(--nav-height);
+}
+
+.terrain-panel.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Paper flash between panels */
+.panel-flash {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 150ms ease;
+}
+.panel-flash.flashing { opacity: 1; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .terrain-panel, .panel-flash { transition: none; }
+}
+
+/* Section number rail — left side */
+.section-rail {
+  position: fixed;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.rail-item {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-border-strong);
+  cursor: pointer;
+  transition: color 0.15s;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.1em;
+  user-select: none;
+}
+.rail-item:hover, .rail-item.active { color: var(--color-accent); }
+
+@media (max-width: 768px) { .section-rail { display: none; } }
+
+/* ============================================================
+   COMPONENT RESKIN (Phase C)
+   ============================================================ */
+
+/* Cards */
+.card, .detail-card, .info-card,
+.cs-card, .slide-cs-card,
+.expand-card, .card-narrative {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+}
+
+/* Pills — lens toggles, filters, sub-nav */
+.pill, .lens-btn, .seg-btn,
+.filter-tag, .badge {
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.pill.active, .lens-btn.active, .seg-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+/* Buttons — sharp corners, ink style */
+.btn, button:not(.pill):not(.lens-btn):not(.seg-btn):not(.rail-item) {
+  border-radius: 0;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  border: 1px solid currentColor;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+.btn-primary, .intro-btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+.btn-primary:hover, .intro-btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+/* Section breaks — thick red rule */
+.section-break, .method-section-break {
+  border-top: 3px solid var(--color-accent);
+  padding-top: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.section-number {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+/* Marginalia tooltips */
+@media (min-width: 1100px) {
+  .marginalia-anchor { position: relative; }
+  .marginalia-tip {
+    position: absolute;
+    left: calc(100% + var(--space-6));
+    top: 0;
+    width: 190px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    border-left: 2px solid var(--color-rule);
+    padding-left: var(--space-3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10;
+  }
+  .marginalia-anchor:hover .marginalia-tip { opacity: 1; }
+}
+@media (max-width: 1099px) {
+  .marginalia-tip {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    border-left: 2px solid var(--color-rule);
+    padding-left: var(--space-3);
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    line-height: 1.5;
+  }
 }
 
 /* ============================================================

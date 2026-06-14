@@ -803,6 +803,15 @@ document.querySelector('.terrain-nav__hamburger')
   });
 </script>
 
+<div class="panel-flash"></div>
+<div class="section-rail">
+  <div class="rail-item active" data-panel="map" onclick="navigateTo('map')">01</div>
+  <div class="rail-item" data-panel="jobs" onclick="navigateTo('jobs')">02</div>
+  <div class="rail-item" data-panel="methodology" onclick="navigateTo('methodology')">03</div>
+</div>
+
+<div id="panel-map" class="terrain-panel active">
+
 <div id="beta-banner" style="position:relative;z-index:200;padding:6px 24px;display:flex;align-items:center;gap:10px;background:#FEF3C7;border-bottom:1px solid #F6D860;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;">
   <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
   <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
@@ -3742,6 +3751,8 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
 })();
 </script>
 
+</div><!-- /panel-map -->
+
 <footer class="terrain-footer">
   <div class="terrain-footer__inner">
     <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
@@ -3751,5 +3762,44 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     </ul>
   </div>
 </footer>
+
+<script>
+// === TERRAIN PANEL NAVIGATION ===
+(function() {
+  const PANELS = ['map', 'jobs', 'methodology'];
+  let current = 'map';
+
+  window.navigateTo = function(panelId) {
+    if (panelId === current) return;
+    const flash = document.querySelector('.panel-flash');
+    const from = document.querySelector('.terrain-panel.active');
+    const to = document.getElementById('panel-' + panelId);
+    if (!to) return;
+
+    if (flash) flash.classList.add('flashing');
+    setTimeout(() => {
+      from && from.classList.remove('active');
+      to.classList.add('active');
+      current = panelId;
+      window.location.hash = panelId;
+      document.querySelectorAll('.rail-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.panel === panelId);
+      });
+      if (flash) flash.classList.remove('flashing');
+    }, 150);
+  };
+
+  window.addEventListener('load', function() {
+    const hash = window.location.hash.replace('#','');
+    if (PANELS.includes(hash)) navigateTo(hash);
+  });
+
+  window.addEventListener('hashchange', function() {
+    const hash = window.location.hash.replace('#','');
+    if (PANELS.includes(hash) && hash !== current) navigateTo(hash);
+  });
+})();
+</script>
+
 </body>
 </html>

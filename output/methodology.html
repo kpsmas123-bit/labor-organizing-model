@@ -913,7 +913,7 @@ Maximum: 80 points</div>
       <h3 class="method-subheading">SLS-Capital: Absolute Crisis Potential</h3>
       <p class="method-body">The first county-level sub-score multiplies each sector's Capital Crisis Reach score by the raw number of workers employed in that sector in that county, then sums across all sectors. Scale matters here — a port employing 50,000 workers can halt more supply chain activity than a port employing 5,000.</p>
 
-      <div class="formula-block">SLS-Capital = Σ(cap_reach_score[sector] × employment[sector]) / 210,000</div>
+      <div class="formula-block">SLS-Capital = Σ(cap_reach_score[sector] × employment[sector]) <span class="marginalia-anchor">/ 210,000<span class="marginalia-tip">Calibrated to LA County's raw sum (17,673,345) → score 84.2</span></span></div>
 
       <p class="method-body">Normalization benchmark of 210,000 places Los Angeles County (the national maximum) at 84.2 on a 0–100 scale. Counties with major port, logistics, or energy workforces score highest. Grounded in: Womack (2005) on technically strategic positions; Silver (2003) on workplace bargaining power and spatial fixes.</p>
 
@@ -939,7 +939,7 @@ Maximum: 80 points</div>
       <h3 class="method-subheading">P1: Electoral Leverage</h3>
       <p class="method-body">P1 measures how decisive this county's geography is in elections that determine labor's legislative environment.</p>
 
-      <div class="formula-block">P1 = state_tipping_weight × (1 / abs(county_margin))</div>
+      <div class="formula-block"><span class="marginalia-anchor">P1 = state_tipping_weight × (1 / abs(county_margin))<span class="marginalia-tip">PA tipping weight: 0.28<br>Centre County margin: +2.83<br>→ P1 = 0.28 × (1/2.83) = 35.3</span></span></div>
 
       <p class="method-body"><strong>State tipping weight</strong> is the probability that this state is the decisive state in the relevant election, derived from historical swing state analysis and current electoral projections. Pennsylvania = 0.28; Georgia = 0.09; California = 0.005. <strong>County margin</strong> is the absolute margin (D–R) in the most recent relevant election. Tight margins produce high P1 scores even in states with lower tipping weights.</p>
 
@@ -956,7 +956,7 @@ Maximum: 80 points</div>
 
       <div class="formula-block">P2 = key_vote_score × 0.60 + inverse_ideology_score × 0.40</div>
 
-      <p class="method-body"><strong>Key vote component (60%):</strong> Each legislator is scored on votes directly relevant to labor organizing rights. All roll call numbers verified against House Clerk XML and Senate.gov XML records.</p>
+      <p class="method-body"><strong>Key vote component (60%):</strong> Each legislator is scored on <span class="marginalia-anchor">4 federal key votes<span class="marginalia-tip">PRO Act, Sanders MW, Abruzzo confirmation, National Apprenticeship Act — all 117th Congress</span></span> directly relevant to labor organizing rights. All roll call numbers verified against House Clerk XML and Senate.gov XML records.</p>
 
       <table class="method-table votes-table" aria-label="Key votes used in P2 scoring">
         <thead>
