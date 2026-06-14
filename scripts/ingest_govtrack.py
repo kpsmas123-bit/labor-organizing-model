@@ -31,12 +31,17 @@ IDEOLOGY_WEIGHT = 0.40
 
 
 def build_crosswalk(yaml_path):
-    """Return (lis_to_govtrack, bioguide_to_govtrack) dicts from legislators YAML."""
+    """Return (lis_to_govtrack, bioguide_to_govtrack, current_info) from legislators YAML.
+
+    current_info maps bioguide_id → {chamber, state, district, name} reflecting the
+    legislator's CURRENT role (not historical key-vote role).
+    """
     with open(yaml_path) as f:
         legislators = yaml.safe_load(f)
 
     lis_to_govtrack = {}
     bioguide_to_govtrack = {}
+    current_info = {}  # bioguide → current role
 
     for leg in legislators:
         ids = leg.get("id", {})
@@ -53,7 +58,21 @@ def build_crosswalk(yaml_path):
         if bioguide:
             bioguide_to_govtrack[bioguide] = govtrack_id
 
-    return lis_to_govtrack, bioguide_to_govtrack
+        # Record current role from most recent term
+        if bioguide and leg.get("terms"):
+            t = leg["terms"][-1]
+            typ = t.get("type", "")
+            chamber = "senate" if typ == "sen" else "house"
+            name_d = leg.get("name", {})
+            full = name_d.get("official_full") or f"{name_d.get('first','')} {name_d.get('last','')}".strip()
+            current_info[bioguide] = {
+                "chamber":  chamber,
+                "state":    t.get("state", ""),
+                "district": str(t.get("district", "")) if t.get("district") is not None else "",
+                "name":     full,
+            }
+
+    return lis_to_govtrack, bioguide_to_govtrack, current_info
 
 
 def parse_ideology_file(txt_path):
@@ -80,7 +99,7 @@ def normalize_ideology(score, min_score, max_score):
 
 def main():
     print("Building ID crosswalk from legislators YAML...")
-    lis_to_govtrack, bioguide_to_govtrack = build_crosswalk(RAW_YAML)
+    lis_to_govtrack, bioguide_to_govtrack, current_info = build_crosswalk(RAW_YAML)
     print(f"  LIS → GovTrack mappings: {len(lis_to_govtrack)}")
     print(f"  Bioguide → GovTrack mappings: {len(bioguide_to_govtrack)}")
 
@@ -101,7 +120,18 @@ def main():
     print("Reading federal key vote scores...")
     with open(KV_SCORES) as f:
         kv_rows = list(csv.DictReader(f))
-    print(f"  Key vote rows: {len(kv_rows)}")
+    print(f"  Key vote rows (raw): {len(kv_rows)}")
+
+    # Filter to current legislators only — removes deceased/retired members
+    current_lis = set(lis_to_govtrack.keys())
+    current_bioguide = set(bioguide_to_govtrack.keys())
+    before = len(kv_rows)
+    kv_rows = [
+        r for r in kv_rows
+        if (r["chamber"] == "senate" and r["member_id"] in current_lis)
+        or (r["chamber"] == "house"  and r["member_id"] in current_bioguide)
+    ]
+    print(f"  Key vote rows (current only): {len(kv_rows)} ({before - len(kv_rows)} removed)")
 
     # Save flat ideology mapping for inspection
     ideology_rows = []
@@ -173,18 +203,21 @@ def main():
 
         coverage_counts[coverage_type] += 1
 
+        # Use current chamber/state/district/name from YAML (overrides historical kv data)
+        bioguide = kv_row["member_id"]
+        cur = current_info.get(bioguide, {})
         combined_rows.append({
-            "bioguide_id":           kv_row["member_id"],
-            "name":                  kv_row["member_name"],
-            "state":                 kv_row["state"],
-            "party":                 kv_row["party"],
-            "chamber":               kv_row["chamber"],
-            "district":              kv_row.get("district", ""),
-            "key_vote_score":        kv_score if kv_score is not None else "",
-            "ideology_score":        ideo_row["ideology_score_raw"],
+            "bioguide_id":            bioguide,
+            "name":                   cur.get("name") or kv_row["member_name"],
+            "state":                  cur.get("state") or kv_row["state"],
+            "party":                  kv_row["party"],
+            "chamber":                cur.get("chamber") or kv_row["chamber"],
+            "district":               cur.get("district") if cur.get("chamber") == "house" else "",
+            "key_vote_score":         kv_score if kv_score is not None else "",
+            "ideology_score":         ideo_row["ideology_score_raw"],
             "inverse_ideology_score": inverse,
-            "p2_combined":           round(p2_combined, 6) if p2_combined is not None else "",
-            "coverage_type":         coverage_type,
+            "p2_combined":            round(p2_combined, 6) if p2_combined is not None else "",
+            "coverage_type":          coverage_type,
         })
 
     with open(OUT_COMBINED, "w", newline="") as f:
