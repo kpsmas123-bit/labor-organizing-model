@@ -1122,9 +1122,20 @@ document.querySelector('.terrain-nav__hamburger')
   <div id="main">
     <div id="views">
       <div id="map-view">
-        <div id="lens-badge">Viewing: Default lens</div>
-        <svg id="map-svg"></svg>
-        <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
+        <div class="map-figure" id="map-figure">
+          <div class="map-figure-header">
+            <div class="map-figure-caption">
+              <span class="map-figure-number">Fig. 2</span>
+              County-Level Strategic Terrain — United States, 2024
+            </div>
+            <button class="map-expand-btn" onclick="expandMap()" title="Expand to full screen">
+              ↗ Expand
+            </button>
+          </div>
+          <div class="map-figure-body">
+            <div id="lens-badge">Viewing: Default lens</div>
+            <svg id="map-svg"></svg>
+            <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
           (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
           target="_blank" rel="noopener noreferrer">Source: NPR — 2026 Senate Races to Watch</a>.
           Reflects structural competitiveness, not current cycle polling.</div>
@@ -1213,7 +1224,12 @@ document.querySelector('.terrain-nav__hamburger')
           </div>
         </div>
 
-        <div class="tooltip" id="tooltip"></div>
+            <div class="tooltip" id="tooltip"></div>
+          </div><!-- /map-figure-body -->
+          <div class="map-figure-footer">
+            Terrain v2.0 · 3,143 counties · laborterrain.net
+          </div>
+        </div><!-- /map-figure -->
       </div>
 
       <div id="table-view">
@@ -3762,6 +3778,25 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     </ul>
   </div>
 </footer>
+
+<script>
+// === MAP FIGURE EXPAND/COLLAPSE ===
+function expandMap() {
+  const fig = document.getElementById('map-figure');
+  const btn = document.querySelector('.map-expand-btn');
+  if (!fig) return;
+  const isExpanded = fig.classList.toggle('expanded');
+  btn.textContent = isExpanded ? '↙ Collapse' : '↗ Expand';
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const fig = document.getElementById('map-figure');
+    if (fig && fig.classList.contains('expanded')) expandMap();
+  }
+});
+</script>
 
 <script>
 // === TERRAIN PANEL NAVIGATION ===
