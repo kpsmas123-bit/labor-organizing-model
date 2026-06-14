@@ -4,11 +4,41 @@
 
 ---
 
-## Current Gate: Gate 7 — Regression validation before rename
+## Current Gate: Gate 7 complete — county_scores.json is now canonical
 
-Gate 6 display layer migration complete (2026-06-12).
-Map UI cleanup complete (2026-06-12).
-Next: validate map renders correctly, then rename county_scores_v2_test.json → county_scores.json.
+Agent G complete (2026-06-14).
+county_scores_v2_test.json renamed to county_scores.json.
+Dashboard updated to read county_scores.json.
+Next: browser validation of narrative fields in map UI.
+
+---
+
+## Agent G — Full P2 Integration (COMPLETE, 2026-06-14)
+- [x] Federal P2 re-aggregated from federal_p2_combined.csv (key votes + ideology)
+      House: overlap-weighted via district_county_crosswalk.csv
+      Senate: state-average applied to all counties
+      Coverage: 3,142/3,143 counties (1 null)
+- [x] State P2 joined from state_p2_county_alignment.csv (DIME CFscores)
+      Coverage: 3,133/3,143 counties (10 null — NE unicameral + edge cases)
+- [x] State P1 computed from chamber_seat_counts.json
+      Formula: 1 - (seats_to_flip / total_seats), averaged across both chambers
+- [x] Dual-lens quadrant classification: quadrant_national + quadrant_state
+      Tier 1 (Transform): high SLS + high P1 + hostile P2 (<0.4)
+      Tier 2 (Activate/Build): high SLS + high P1 + aligned P2, or high SLS + low P1
+      Tier 3 (Electoral): low SLS + high P1
+      Tier 4: neither threshold met
+- [x] Full 3,143-county run complete (0 errors)
+- [x] county_scores_v2_test.json renamed to county_scores.json
+- [x] Dashboard updated to read county_scores.json
+- [x] Narrative generation pipeline built (scripts/generate_narratives.py)
+- [x] Narratives generated for all 646 tier1-3 counties (Claude Haiku)
+- [x] Template narratives set for 2,497 tier4 counties
+- [x] 133 regression tests passing (scoring.electoral, scoring.sls, scoring.svs)
+
+### Key results
+National lens — Tier 1 counties (9): Erie PA, New Hanover NC, Dauphin PA,
+  Winnebago WI, Cumberland PA, Montgomery OH, Brown WI, Lancaster PA, Outagamie WI
+State lens — Tier 1 counties (46): PA (close chambers), WI, AZ, NV, GA, NC, MI swing states
 
 ---
 

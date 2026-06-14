@@ -25,6 +25,7 @@ Phase 4 full pipeline build. These functions implement the target formula.
 from typing import Optional
 
 
+
 NORMALIZATION_DENOMINATOR = 100_000
 
 
@@ -50,21 +51,33 @@ def score_sls_capital(
 
 
 def score_sls_community(
-    comm_reach_by_sector: dict,
     employment_by_sector: dict,
+    comm_reach_by_sector: dict,
+    total_employment: Optional[int] = None,
 ) -> float:
     """
-    SLS-Community: employment-weighted community-reach score.
+    SLS-Community: share-weighted community-reach score.
+
+    Community leverage is measured as the sector's share of the local workforce
+    times its community-reach score. This captures local crisis leverage rather
+    than absolute scale (which is captured by SLS-Capital).
 
     Args:
-        comm_reach_by_sector: {sector_id: comm_reach_score (0-15)} from SVS config
         employment_by_sector: {sector_id: employed_workers} in this county
+        comm_reach_by_sector: {sector_id: comm_reach_score (0-25)} from SVS config
+        total_employment: total county workforce. Falls back to NORMALIZATION_DENOMINATOR.
 
     Returns:
         float 0–100
     """
+    if total_employment is not None:
+        if total_employment == 0:
+            return 0.0
+        denom = float(total_employment)
+    else:
+        denom = float(NORMALIZATION_DENOMINATOR)
     total = 0.0
-    for sector_id, comm_reach in comm_reach_by_sector.items():
-        emp = employment_by_sector.get(sector_id, 0) or 0
-        total += float(comm_reach) * float(emp)
-    return min(100.0, round(total / NORMALIZATION_DENOMINATOR, 2))
+    for sector_id, emp in employment_by_sector.items():
+        comm_reach = comm_reach_by_sector.get(sector_id, 0) or 0
+        total += float(comm_reach) * (float(emp) / denom) * 100.0
+    return min(100.0, round(total, 2))

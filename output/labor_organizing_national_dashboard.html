@@ -1647,7 +1647,7 @@ let filters = { state: "", swingOnly: false };
 async function loadData() {
   document.getElementById("loading-indicator").style.display = "block";
   setStatus("Loading county data…");
-  const localUrl = "../data/county_scores_v2_test.json";
+  const localUrl = "../data/county_scores.json";
   try {
     const resp = await fetch(localUrl);
     if (resp.ok) {
@@ -1658,13 +1658,13 @@ async function loadData() {
       document.getElementById("loading-indicator").style.display = "none";
     } else {
       allCounties = [];
-      setStatus("Could not load data/county_scores_v2_test.json — run pipeline/build_v2_scores_true.py first");
+      setStatus("Could not load data/county_scores.json — run pipeline/build_v2_scores_true.py first");
       document.getElementById("loading-indicator").style.display = "none";
       return;
     }
   } catch (e) {
     allCounties = [];
-    setStatus("Could not load data/county_scores_v2_test.json — run pipeline/build_v2_scores_true.py first");
+    setStatus("Could not load data/county_scores.json — run pipeline/build_v2_scores_true.py first");
     document.getElementById("loading-indicator").style.display = "none";
     return;
   }

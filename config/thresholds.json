@@ -22,9 +22,12 @@
     "sls_capital_high_boundary": 2.5,
     "sls_community_high_boundary": 35,
     "p1_high_boundary": 5.0,
+    "state_p1_high_boundary": 0.85,
+    "p2_hostile_threshold": 0.4,
+    "p2_aligned_threshold": 0.6,
     "_calibrated": "2026-06-12",
-    "_source": "Agent D true scoring run — approved by Sam 2026-06-12",
-    "_rationale": "sls_capital>=2.5 captures top ~10% of counties (~320), regional hubs and above. sls_community>=35 captures top ~10% by community crisis reach. p1_high>=5 from Gate 5 calibration. Replaces placeholder midpoint (50/50) with data-driven thresholds.",
+    "_source": "Agent D true scoring run — approved by Sam 2026-06-12. P2 thresholds from Agent G dual-lens design.",
+    "_rationale": "sls_capital>=2.5 captures top ~10% of counties (~320), regional hubs and above. sls_community>=35 captures top ~10% by community crisis reach. p1_high>=5 from Gate 5 calibration. state_p1_high>=0.85 = chambers needing 3 or fewer seats to flip. p2_hostile<0.4 = incumbent votes labor interest <40% of time. p2_aligned>=0.6 = incumbent aligned.",
     "_deprecated": "sls_high_low_boundary and pts_high_low_boundary removed — replaced by dual-dimension thresholds"
   },
 
