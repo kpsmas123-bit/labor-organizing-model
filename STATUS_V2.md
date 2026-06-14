@@ -12,7 +12,7 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 
 ---
 
-## Agent E — State P2 Alignment (IN PROGRESS, 2026-06-13)
+## Agent E — State P2 Alignment (COMPLETE, 2026-06-14)
 
 ### Approach: DIME CFscores + Open States legislator roster
 - Floor vote approach abandoned: state labor bills die in committee in most states
@@ -35,17 +35,21 @@ Next: validate map renders correctly, then rename county_scores_v2_test.json →
 - Common low-match states: NH (47%, very large House), NE (53%, unicameral nonpartisan),
   SD (53%), NJ (53%).
 
-### Session status (2026-06-13, partial)
+### Final results (2026-06-14)
 - [x] DIME loaded: 42,833 records (2018–2022), 25,987 unique (lname, state, chamber) keys
-- [x] Open States legislators fetched: 7,009 across 46 states
+- [x] Open States legislators fetched: 7,527 across all 50 states
 - [x] Nebraska chamber fix: unicameral mapped state:upper → 'legislature'
-- [x] Match report complete: 5,148 matched (73.4%), 1,861 party-imputed (26.6%)
-- [x] Party imputation logic added to scripts/ingest_openstates.py
-- [ ] WA, WV, WI, WY — NOT YET FETCHED (hit 250 req/day API limit 2026-06-13)
-      WI required for spot-check validation (Green County WI, FIPS 55045)
-      Re-fetch tomorrow — costs ~36 API calls, within 250/day limit
-- [ ] state_key_vote_scores.csv — written with 46-state data; re-write after WI/WA/WV/WY added
-- [ ] state_p2_county_alignment.csv — NOT YET WRITTEN (awaiting WI/WA/WV/WY + Sam approval)
+- [x] Match results: 5,532 matched (73.5%), 1,995 party-imputed (26.5%)
+- [x] state_key_vote_scores.csv — 7,527 rows, all 50 states
+- [x] state_p2_county_alignment.csv — 3,142 counties, all covered (cfscore_plus_imputed)
+- [x] Spot checks passed:
+      Centre County PA (42027): 0.460
+      Green County WI (55045): 0.454  ← higher than AL ✓
+      Jefferson County AL (01073): 0.323  ← lower ✓
+      Cook County IL (17031): 0.542
+      Maricopa County AZ (04013): 0.444
+- [x] State ordering directionally correct:
+      CA=0.597, IL=0.542, MN=0.458, WI=0.454, PA=0.460, AZ=0.444, GA=0.426, TX=0.383, AL=0.323
 
 ---
 
