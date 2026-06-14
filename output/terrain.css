@@ -945,7 +945,7 @@ img, svg {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--color-dark);
+  background: var(--color-bg);
 }
 
 .map-figure-header {
@@ -1004,10 +1004,10 @@ img, svg {
   border-top: 1px solid var(--color-border);
 }
 
-/* Expanded state — full viewport */
+/* Expanded state — full viewport, sidebar occupies left 320px */
 .map-figure.expanded {
   position: fixed;
-  inset: 0;
+  inset: 0 0 0 320px;
   max-width: none;
   margin: 0;
   border-radius: 0;
@@ -1018,6 +1018,10 @@ img, svg {
 .map-figure.expanded .map-figure-body {
   height: calc(100vh - 80px);
 }
+
+/* Legend: hidden in paper mode, visible in expanded */
+#map-legend { display: none; }
+.map-figure.expanded #map-legend { display: block; }
 
 /* ============================================================
    RESPONSIVE — MOBILE (≤768px)
@@ -1238,4 +1242,29 @@ img, svg {
   height: 2px;
   background: var(--color-accent);
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+/* ============================================================
+   MAP PAPER OUTRO — prose below inline map
+   ============================================================ */
+
+.map-paper-outro {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-8) 0;
+}
+
+.map-paper-body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: var(--space-3);
+}
+
+.map-paper-method-link-row {
+  display: flex;
+  gap: var(--space-6);
+  margin-top: var(--space-4);
 }
