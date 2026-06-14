@@ -1,12 +1,42 @@
-## GIT WORKFLOW — ALL AGENTS MUST FOLLOW
+## GIT WORKFLOW
 
-At the end of every session, before stopping:
-1. git push origin HEAD
-2. Report your branch name to Sam
-3. Sam merges via GitHub browser — do not attempt to merge to main yourself
+### Default: push directly to main
 
-Never work assuming files from other branches exist locally.
-Always push your branch. Never merge other branches yourself.
+For most changes, commit and push directly to main:
+
+git add -A
+git commit -m "your message"
+git push origin main
+
+Do this for: data pipeline changes, scoring fixes, 
+bug fixes, new scripts, workflow files, CSS token 
+changes, content updates, test fixes.
+
+### Branch + PR required (Sam reviews before merge)
+
+Create a branch and PR — do NOT merge — for:
+
+1. VISUAL CHANGES — any change to HTML layout structure,
+   new CSS components, page redesigns, navigation changes
+2. SCORING MODEL CHANGES — any change to config/weights.json,
+   config/thresholds.json, or scoring/ module formulas
+3. DATA FILE RENAMES OR RESTRUCTURING — renaming canonical
+   data files, changing data schema
+
+For branch + PR:
+git checkout -b descriptive-branch-name
+git add -A
+git commit -m "your message"
+git push origin HEAD
+
+Then report the PR URL and stop. Sam merges via GitHub.
+
+### Never do
+- Force push
+- Push to a branch that already has an open PR
+  without being asked
+- Merge your own PR
+- Use GitHub API — standard git commands only
 
 ---
 
