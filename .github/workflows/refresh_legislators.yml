@@ -1,0 +1,47 @@
+name: Monthly Legislators Refresh
+
+on:
+  schedule:
+    # Second day of each month at 7am UTC (day after state P2 refresh)
+    - cron: '0 7 2 * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (build but do not commit)'
+        required: false
+        default: 'false'
+
+jobs:
+  refresh-legislators:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Build legislators lookup
+        run: python scripts/build_legislators_lookup.py
+
+      - name: Commit updated lookup
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/processed/county_legislators_lookup.json
+          git diff --staged --quiet || \
+            git commit -m "data: monthly legislators lookup refresh $(date +%Y-%m-%d)"
+
+      - name: Push changes
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push

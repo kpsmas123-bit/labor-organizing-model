@@ -676,6 +676,99 @@
 .terrain-footer__links { display: flex; align-items: center; gap: var(--space-5); list-style: none; padding: 0; margin: 0; }
 .terrain-footer__links a { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-muted); text-decoration: none; }
 .terrain-footer__links a:hover { color: var(--color-text-secondary); text-decoration: none; }
+
+/* Info Card v2.0 */
+.card-tier-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+.card-tier-1 { background: var(--color-accent); color: #fff; }
+.card-tier-2 { background: var(--color-bg-subtle); color: var(--color-text);
+                border: 1px solid var(--color-border-strong); }
+.card-tier-3 { background: var(--color-bg-subtle); color: var(--color-text-secondary);
+                border: 1px solid var(--color-border); }
+.card-tier-4 { background: transparent; color: var(--color-text-muted);
+                border: 1px solid var(--color-border); }
+.card-icons-row {
+  display: flex; gap: var(--space-3); margin-bottom: var(--space-3);
+}
+.card-icon-item {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.card-icon-svg {
+  width: 28px; height: 28px; color: var(--color-accent);
+}
+.card-icon-svg svg { width: 100%; height: 100%; }
+.card-icon-label {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--color-text-muted); text-align: center;
+  max-width: 42px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.card-score-row {
+  display: flex; align-items: center;
+  gap: var(--space-2); margin-bottom: var(--space-1);
+}
+.card-score-label {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-text-secondary); width: 150px; flex-shrink: 0;
+}
+.card-bar-wrap {
+  flex: 1; height: 4px; background: var(--color-border);
+  border-radius: 2px; overflow: hidden;
+}
+.card-bar-fill {
+  height: 100%; border-radius: 2px; transition: width 0.3s ease;
+}
+.card-bar-capital   { background: var(--color-accent); }
+.card-bar-community { background: #1a3a6b; }
+.card-bar-electoral { background: #6b4f9e; }
+.card-bar-alignment { background: #2c6fad; }
+.card-score-val {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-text); width: 40px; text-align: right; flex-shrink: 0;
+}
+.card-score-hint {
+  font-size: 10px; color: var(--color-text-muted);
+  padding-left: 158px; margin-bottom: var(--space-2); margin-top: -2px;
+}
+.card-section-head {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: var(--space-3) 0 var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+}
+.card-narrative {
+  font-size: var(--text-sm); color: var(--color-text-secondary);
+  line-height: 1.6; margin: var(--space-3) 0;
+  padding: var(--space-3);
+  background: var(--color-bg-subtle);
+  border-left: 2px solid var(--color-border-strong);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.card-more-toggle {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-text-muted); cursor: pointer;
+  display: flex; align-items: center; gap: var(--space-1);
+  margin-top: var(--space-3); user-select: none;
+}
+.card-more-toggle:hover { color: var(--color-text); }
+.card-more-body { display: none; margin-top: var(--space-2); }
+.card-more-body.open { display: block; }
+.card-more-row {
+  display: flex; justify-content: space-between;
+  font-size: var(--text-xs); color: var(--color-text-muted);
+  padding: var(--space-1) 0; border-bottom: 1px solid var(--color-border);
+}
+.card-more-key { color: var(--color-text-secondary); }
 </style>
 </head>
 <body>
@@ -1642,6 +1735,178 @@ let goalFilter = "power";
 let filters = { state: "", swingOnly: false };
 
 // ──────────────────────────────────────────────────────────────
+// Info Card v2.0 — Sector icons, tier helpers, narrative
+// ──────────────────────────────────────────────────────────────
+const _ANTHROPIC_API_KEY = ""; // paste key here or set window._TERRAIN_API_KEY
+
+const _svg = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+
+const SECTOR_ICONS = {
+  hospitals: _svg(`<path d="M12 7v4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M14 9h-4"/><path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/>`),
+  education: _svg(`<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>`),
+  ports:     _svg(`<circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/>`),
+  rail:      _svg(`<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 4v7"/><circle cx="8.5" cy="16" r="1.5"/><circle cx="15.5" cy="16" r="1.5"/><path d="M8 20l-2 2"/><path d="M16 20l2 2"/>`),
+  transit:   _svg(`<path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/>`),
+  home_health: _svg(`<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/>`),
+  warehousing: _svg(`<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>`),
+  utilities:   _svg(`<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>`),
+  manufacturing: _svg(`<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>`),
+  higher_ed:   _svg(`<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>`),
+  public_admin: _svg(`<line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/>`),
+  construction: _svg(`<path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v3"/>`),
+  default:     _svg(`<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>`)
+};
+
+const SECTOR_ICON_MAP = {
+  "hospital": "hospitals", "medical": "hospitals",
+  "k-12": "education", "elementary": "education", "school": "education",
+  "port": "ports", "water transport": "ports", "maritime": "ports",
+  "rail": "rail", "railroad": "rail", "freight": "rail",
+  "transit": "transit", "bus": "transit", "subway": "transit",
+  "home health": "home_health", "nursing": "home_health",
+  "residential care": "home_health",
+  "warehouse": "warehousing", "trucking": "warehousing",
+  "courier": "warehousing", "logistics": "warehousing",
+  "utilities": "utilities", "electric": "utilities", "gas": "utilities",
+  "manufacturing": "manufacturing", "factory": "manufacturing",
+  "university": "higher_ed", "college": "higher_ed",
+  "public admin": "public_admin", "government": "public_admin",
+  "construction": "construction", "building trades": "construction"
+};
+
+function getSectorIcon(sectorName) {
+  if (!sectorName) return SECTOR_ICONS.default;
+  const lower = sectorName.toLowerCase();
+  for (const [key, iconKey] of Object.entries(SECTOR_ICON_MAP)) {
+    if (lower.includes(key)) return SECTOR_ICONS[iconKey];
+  }
+  return SECTOR_ICONS.default;
+}
+
+function getTopStrategicSectors(county, n = 3) {
+  if (!window._sectorReach || !window._countyEmployment) return [];
+  const fips = String(county.fips || "").padStart(5, "0");
+  const countyEmp = window._countyEmployment[fips] || {};
+  const scores = [];
+  for (const [sid, emp] of Object.entries(countyEmp)) {
+    const sector = window._sectorReach.sectors?.[sid];
+    if (!sector || !emp.total_employment) continue;
+    scores.push({ name: sector.sector_name || sid, score: (sector.svs || 0) * emp.total_employment });
+  }
+  return scores.sort((a, b) => b.score - a.score).slice(0, n);
+}
+
+const _TIER_LABELS = {
+  tier1_capital: "Tier 1 — Capital",
+  tier1_community: "Tier 1 — Community",
+  tier1_capital_community: "Tier 1 — Capital + Community",
+  tier2_activate_capital: "Tier 2 — Capital",
+  tier2_activate_community: "Tier 2 — Community",
+  tier2_build_capital: "Tier 2 — Build Capital",
+  tier2_build_community: "Tier 2 — Build Community",
+  tier2_unknown_capital: "Tier 2 — Capital",
+  tier2_unknown_community: "Tier 2 — Community",
+  tier3_electoral: "Tier 3 — Electoral Terrain",
+  tier4: "Tier 4",
+  deploy_now_capital: "Tier 1 — Capital",
+  deploy_now_community: "Tier 1 — Community",
+  primary_target_capital: "Tier 2 — Capital",
+  primary_target_community: "Tier 2 — Community",
+  power_building: "Tier 3 — Electoral Terrain",
+  lower_priority: "Tier 4"
+};
+
+const _TIER_DESCS = {
+  tier1_capital: "High capital leverage + hostile incumbent",
+  tier1_community: "High community leverage + hostile incumbent",
+  tier2_activate_capital: "Capital leverage + aligned incumbent",
+  tier2_activate_community: "Community leverage + aligned incumbent",
+  tier2_build_capital: "High capital leverage — build electoral conditions",
+  tier2_build_community: "High community leverage — build electoral conditions",
+  tier3_electoral: "Decisive electoral terrain — build organizing base",
+  tier4: "Below current strategic thresholds",
+  deploy_now_capital: "High capital leverage + decisive electoral terrain",
+  deploy_now_community: "High community leverage + decisive electoral terrain",
+  primary_target_capital: "Capital leverage — build electoral conditions",
+  primary_target_community: "Community leverage — build electoral conditions",
+  power_building: "Decisive terrain — needs organizing infrastructure",
+  lower_priority: "Below current strategic thresholds"
+};
+
+function _tierNum(q) {
+  if (!q) return 4;
+  if (q.startsWith("tier1") || q.startsWith("deploy_now")) return 1;
+  if (q.startsWith("tier2") || q.startsWith("primary_target")) return 2;
+  if (q.startsWith("tier3") || q === "power_building") return 3;
+  return 4;
+}
+
+function _tierLabel(q) { return _TIER_LABELS[q] || q || "Unclassified"; }
+function _tierDesc(q)  { return _TIER_DESCS[q]  || ""; }
+
+const _narCache = {};
+
+async function loadNarrative(county, tierNum, quadrant, cacheKey, customPrompt) {
+  const el = document.getElementById("cnr-" + cacheKey);
+  if (!el) return;
+  if (_narCache[cacheKey]) { el.textContent = _narCache[cacheKey]; return; }
+
+  if (tierNum === 4) {
+    const t = `${county.county_name || county.name}, ${county.state || ""} scores below current `
+      + `strategic thresholds on both leverage dimensions and electoral geography. `
+      + `Lower priority under current model parameters.`;
+    el.textContent = t;
+    _narCache[cacheKey] = t;
+    return;
+  }
+
+  const apiKey = _ANTHROPIC_API_KEY || (typeof window._TERRAIN_API_KEY !== "undefined" ? window._TERRAIN_API_KEY : "");
+  if (!apiKey) { el.innerHTML = "<em>Set window._TERRAIN_API_KEY for AI assessment.</em>"; return; }
+
+  const prompt = customPrompt || (() => {
+    const margin = county.margin_2024;
+    const sw = county.state_tipping_weight;
+    const p2 = county.federal_p2 ?? county.p2_alignment;
+    return `Write a 2-3 sentence strategic assessment for a labor organizer. `
+      + `Be concrete, direct, under 60 words. Do not repeat the tier label. `
+      + `County: ${county.county_name}, ${county.state}. `
+      + `Population: ${(county.population || 0).toLocaleString()}. `
+      + `Tier: ${_tierDesc(quadrant)}. `
+      + `Capital Leverage: ${(county.sls_capital || 0).toFixed(1)}/100. `
+      + `Community Leverage: ${(county.sls_community || 0).toFixed(1)}/100. `
+      + `Electoral Leverage P1: ${(county.p1_presidential || 0).toFixed(1)}/100. `
+      + `Incumbent alignment P2: ${p2 != null ? (p2 * 100).toFixed(0) + "%" : "unknown"}. `
+      + `2024 margin: ${margin != null ? ((margin >= 0 ? "D+" : "R+") + Math.abs(margin).toFixed(1)) : "unknown"}. `
+      + `State decisive probability: ${sw != null ? (sw * 100).toFixed(0) + "%" : "unknown"}. `
+      + `Explain what makes this county strategically significant, what type of `
+      + `leverage exists, and what organizing here could accomplish.`;
+  })();
+
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 150,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text?.trim();
+    if (text) { el.textContent = text; _narCache[cacheKey] = text; }
+    else el.innerHTML = "<em>Assessment unavailable.</em>";
+  } catch {
+    el.innerHTML = "<em>Assessment unavailable.</em>";
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
 // Data loading
 // ──────────────────────────────────────────────────────────────
 async function loadData() {
@@ -1691,6 +1956,12 @@ async function loadData() {
       console.log(`[Data] MSA lookup merged onto ${allCounties.length} counties`);
     }
   } catch (_) { /* msa_lookup.json missing — MSA grouping will be inactive */ }
+
+  // Load legislators lookup (built by scripts/build_legislators_lookup.py)
+  fetch('../data/processed/county_legislators_lookup.json')
+    .then(r => r.json())
+    .then(data => { window._legislatorLookup = data.counties || {}; })
+    .catch(() => { window._legislatorLookup = {}; });
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -2120,28 +2391,28 @@ async function initMap() {
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
+        const _tc = t => t===1?"#bd0026":t===2?"#1a3a6b":t===3?"#6b4f9e":"#999";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (msa.hasSwingers) {
-            scoreHtml = `<br><span class="tt-opp">P1 Pres: ${(msa.presidential||0).toFixed(2)} · Capital: ${(msa.capitalScore||0).toFixed(2)} · Community: ${(msa.communityScore||0).toFixed(1)}</span>`;
+            scoreHtml = `<br><span class="tt-opp">P1: ${(msa.presidential||0).toFixed(1)} · Cap: ${(msa.capitalScore||0).toFixed(1)} · Comm: ${(msa.communityScore||0).toFixed(1)}</span>`;
           } else {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          const ql = QUADRANT_LABELS[msa.dominantQuadrant] || msa.dominantQuadrant || "–";
-          scoreHtml = `<br><span class="tt-opp">${ql}</span>`;
+          const q  = msa.dominantQuadrant || "tier4";
+          const tn = _tierNum(q);
+          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${_tc(tn)}">${_tierLabel(q)}</span>`
+            + `<br><span style="font-size:10px;color:#A09385">Cap: ${(msa.capitalScore||0).toFixed(1)} · Comm: ${(msa.communityScore||0).toFixed(1)}</span>`;
         } else if (goalFilter === "senate") {
           const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
           scoreHtml = tierNums.length
             ? `<br><span class="tt-opp">${SENATE_TIER_LABELS[Math.min(...tierNums)]}</span>`
             : `<br><span style="color:#888;font-size:10px">Not competitive</span>`;
         }
-        const intLetter = msa.dominantLetter;
-        const intClass = intLetter === "A" ? "int-type-a" : intLetter === "B" ? "int-type-b" : "int-type-c";
         tt.innerHTML = `<strong>${msaName}</strong>`
           + `<br><span style="font-size:10px;color:#A09385">${msa.states}</span>`
-          + scoreHtml
-          + `&nbsp;<span class="${intClass}">Type ${intLetter}</span>`;
+          + scoreHtml;
       })
       .on("mouseleave", () => { tt.style.opacity = "0"; })
       .on("click", (event, d) => { showMsaDetail(d.properties.msaName); });
@@ -2167,19 +2438,22 @@ async function initMap() {
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
+        const _tc = t => t===1?"#bd0026":t===2?"#1a3a6b":t===3?"#6b4f9e":"#999";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (SWING_STATES_PRES.has(c.state)) {
-            const pres = (c.p1_presidential || 0).toFixed(2);
+            const pres = (c.p1_presidential || 0).toFixed(1);
             const com  = (c.sls_community  || 0).toFixed(1);
-            const cap  = (c.sls_capital    || 0).toFixed(2);
-            scoreHtml = `<br><span class="tt-opp">P1 Pres: ${pres} · Capital: ${cap} · Community: ${com}</span>`;
+            const cap  = (c.sls_capital    || 0).toFixed(1);
+            scoreHtml = `<br><span class="tt-opp">P1: ${pres} · Cap: ${cap} · Comm: ${com}</span>`;
           } else {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          const q = c.quadrant || "lower_priority";
-          scoreHtml = `<br><span class="tt-opp">${QUADRANT_LABELS[q] || q}</span>`;
+          const q  = c.quadrant || "lower_priority";
+          const tn = _tierNum(q);
+          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${_tc(tn)}">${_tierLabel(q)}</span>`
+            + `<br><span style="font-size:10px;color:#A09385">Cap: ${(c.sls_capital||0).toFixed(1)} · Comm: ${(c.sls_community||0).toFixed(1)}</span>`;
         } else if (goalFilter === "senate") {
           const tier = SENATE_TIERS[c.state];
           scoreHtml = tier
@@ -2303,77 +2577,367 @@ function showMsaDetail(msaName) {
   if (!msa) return;
   highlightSelection(null, msaName);
   const panel = document.getElementById("detail-panel");
-  panel.style.display = "block";
   panel.scrollTop = 0;
 
-  document.getElementById("dp-name").textContent = msaName;
-  document.getElementById("dp-state").textContent = msa.states;
-  document.getElementById("dp-opp").textContent = (msa.capitalScore || 0).toFixed(2);
+  const q = msa.dominantQuadrant || "tier4";
+  const tn = _tierNum(q);
+  const slsCap   = msa.capitalScore;
+  const slsComm  = msa.communityScore;
+  const p1       = msa.presidential;
+  const p2Raw    = msa.p2Alignment;
+  const cacheKey = "msa_" + msaName.replace(/\W+/g, "_");
 
-  _setQuadrantBadge(msa.dominantQuadrant);
+  const fmt1   = v => v != null ? (+v).toFixed(1) : "—";
+  const fmtPct = v => v != null ? (v * 100).toFixed(0) + "%" : "Data pending";
+  const barW   = (v, max) => v != null ? Math.min(100, parseFloat(v) / max * 100).toFixed(1) + "%" : "0%";
 
-  // Show AI summary if available
-  const summarySection = document.getElementById("dp-summary-section");
-  const summaryText = document.getElementById("dp-summary-text");
-  const prebuilt = gl_msaSummaries[msaName];
-  if (prebuilt && prebuilt.summary) {
-    summaryText.textContent = prebuilt.summary;
-    summarySection.style.display = "block";
-  } else {
-    summarySection.style.display = "none";
-  }
-
-  // v2.0 bars: community, capital, electoral (p1_presidential), congressional (p1_congressional), p2_alignment
-  _setBar("bar-org",   "val-org",   "lbl-bar-org",  msa.communityScore,   false);
-  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", msa.capitalScore,     false);
-  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", msa.presidential,     goalFilter === "presidential");
-  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", msa.congressional,    false);
-  _setBar("bar-infra", "val-infra", "lbl-bar-infra", msa.p2Alignment != null ? msa.p2Alignment * 100 : null, false, "Data pending");
-
-  document.getElementById("dp-pop").textContent = msa.countyCount + (msa.countyCount === 1 ? " county" : " counties");
-  document.getElementById("dp-rurban").textContent = msa.totalPop ? msa.totalPop.toLocaleString() : "–";
-  document.getElementById("dp-swing").textContent = msa.swingStates || "None";
-
-  // County list sorted by sls_capital
-  const countyList = document.getElementById("dp-county-list");
   const sorted = [...msa.counties].sort((a, b) => (b.sls_capital || 0) - (a.sls_capital || 0));
-  countyList.innerHTML = sorted.map(c =>
-    `<div>${c.county_name}<span style="color:#A09385"> ${(c.sls_capital || 0).toFixed(2)}</span></div>`
-  ).join("");
-  document.getElementById("dp-counties-section").style.display = "block";
+  const countyRows = sorted.map(c => {
+    const cq = c.quadrant || "lower_priority";
+    return `<div class="card-more-row">
+      <span class="card-more-key">${c.county_name}, ${c.state}</span>
+      <span>${_tierLabel(cq).replace("Tier ", "T")} · ${(c.sls_capital || 0).toFixed(1)}</span>
+    </div>`;
+  }).join("");
+
+  panel.innerHTML = `
+    <button onclick="document.getElementById('detail-panel').style.display='none'"
+            style="position:absolute;top:10px;right:12px;background:none;border:none;
+                   font-size:18px;cursor:pointer;color:var(--color-text-muted);line-height:1;">×</button>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                margin-bottom:var(--space-3);">
+      <div>
+        <span class="card-tier-badge card-tier-${tn}">${_tierLabel(q)}</span>
+        <h3 style="font-family:var(--font-serif);font-size:var(--text-lg);
+                   color:var(--color-text);margin:0 0 2px;">${msaName}</h3>
+        <div style="font-family:var(--font-mono);font-size:var(--text-xs);
+                    color:var(--color-text-muted);">
+          ${msa.states}&nbsp;·&nbsp;${msa.countyCount} ${msa.countyCount === 1 ? "county" : "counties"}
+          &nbsp;·&nbsp;Pop.&nbsp;${msa.totalPop ? msa.totalPop.toLocaleString() : "—"}
+        </div>
+        <div style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:4px;">
+          ${_tierDesc(q)}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-narrative" id="cnr-${cacheKey}">
+      <span style="color:var(--color-text-muted);font-style:italic">Loading assessment…</span>
+    </div>
+
+    <div class="card-section-head">Strategic Leverage</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Capital Leverage</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-capital" style="width:${barW(slsCap, 100)}"></div>
+      </div>
+      <div class="card-score-val">${fmt1(slsCap)}</div>
+    </div>
+    <div class="card-score-hint">Pop.-weighted avg · crisis-creating power against capital flows</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Community Leverage</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-community" style="width:${barW(slsComm, 100)}"></div>
+      </div>
+      <div class="card-score-val">${fmt1(slsComm)}</div>
+    </div>
+    <div class="card-score-hint">Share of workforce in essential community roles</div>
+
+    <div class="card-section-head">Political Terrain</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Electoral Leverage (P1)</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-electoral" style="width:${barW(p1, 100)}"></div>
+      </div>
+      <div class="card-score-val">${fmt1(p1)}</div>
+    </div>
+    <div class="card-score-hint">Swing states in metro: ${msa.swingStates || "None"}</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Federal Alignment (P2)</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-alignment"
+             style="width:${p2Raw != null ? barW(p2Raw * 100, 100) : "0%"}"></div>
+      </div>
+      <div class="card-score-val">${fmtPct(p2Raw)}</div>
+    </div>
+    <div class="card-score-hint">Incumbent alignment on 4 federal labor key votes</div>
+
+    <div class="card-more-toggle"
+         onclick="this.nextElementSibling.classList.toggle('open');
+         this.querySelector('span').textContent =
+         this.nextElementSibling.classList.contains('open') ? '▼ ' : '▶ ';">
+      <span>▶ </span>Member counties (${msa.countyCount})
+    </div>
+    <div class="card-more-body">${countyRows}</div>
+
+    <div class="card-section-head" style="margin-top:var(--space-4);">
+      Current Legislators
+      <span style="font-family:var(--font-body);font-size:10px;
+                   color:var(--color-text-muted);font-weight:400;
+                   text-transform:none;letter-spacing:0;">
+        · updated monthly
+      </span>
+    </div>
+    ${buildMsaLegislatorsHTML(msa.counties)}
+  `;
+
+  panel.style.display = "block";
+
+  const msaProxy = { county_name: msaName, name: msaName, state: msa.states,
+                     population: msa.totalPop, sls_capital: slsCap, sls_community: slsComm,
+                     p1_presidential: p1, p2_alignment: p2Raw };
+  const msaPrompt = `Write a 2-3 sentence strategic assessment for a labor organizer. `
+    + `Be concrete, direct, under 60 words. Do not repeat the tier label. `
+    + `Metro Area: ${msaName} (${msa.countyCount} counties, states: ${msa.states}). `
+    + `Population: ${msa.totalPop ? msa.totalPop.toLocaleString() : "unknown"}. `
+    + `Tier: ${_tierDesc(q)}. `
+    + `Capital Leverage: ${fmt1(slsCap)}/100. Community Leverage: ${fmt1(slsComm)}/100. `
+    + `Electoral Leverage P1: ${fmt1(p1)}/100. Incumbent alignment P2: ${fmtPct(p2Raw)}. `
+    + `Explain what makes this metro area strategically significant, what type of leverage exists, `
+    + `and what organizing here could accomplish.`;
+  loadNarrative(msaProxy, tn, q, cacheKey, msaPrompt);
 }
 
-// Non-metro county panel (fallback for non-MSA county clicks)
-function showDetail(c) {
-  const msaForCounty = msaScoreByFips[c.fips];
-  highlightSelection(msaForCounty ? null : c.fips, msaForCounty ? msaForCounty.msaName : null);
+// ──────────────────────────────────────────────────────────────
+// Legislators section helpers
+// ──────────────────────────────────────────────────────────────
+function _legCard(leg) {
+  const p2Display = leg.p2_combined != null
+    ? (leg.p2_combined * 100).toFixed(0) + "% aligned"
+    : "score pending";
+  const partyColor = leg.party === "D" ? "#2c6fad"
+                   : leg.party === "R" ? "#bd0026"
+                   : "var(--color-text-muted)";
+  const p2Color = leg.p2_combined != null
+    ? leg.p2_combined >= 0.6 ? "#2c6fad"
+      : leg.p2_combined <= 0.4 ? "#bd0026"
+      : "var(--color-text-muted)"
+    : "var(--color-text-muted)";
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                padding:var(--space-2) 0;border-bottom:1px solid var(--color-border);">
+      <div>
+        <div style="font-size:var(--text-sm);color:var(--color-text);
+                    font-weight:500;">${leg.name}</div>
+        <div style="font-family:var(--font-mono);font-size:10px;
+                    color:${partyColor};margin-top:2px;">
+          ${leg.party} · ${leg.title}
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:var(--font-mono);font-size:10px;
+                    color:${p2Color};">${p2Display}</div>
+        ${leg.key_vote_score != null ? `
+        <div style="font-size:9px;color:var(--color-text-muted);margin-top:2px;">
+          ${(leg.key_vote_score * 4).toFixed(0)}/4 key votes pro-labor
+        </div>` : ""}
+      </div>
+    </div>`;
+}
+
+function buildLegislatorsHTML(fips, state) {
+  const data = window._legislatorLookup?.[fips];
+  if (!data) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      Legislator data loading…
+    </div>`;
+  }
+  const all = [...(data.federal || []), ...(data.state || [])];
+  if (!all.length) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      No legislator data available for this county.
+    </div>`;
+  }
+  return all.map(_legCard).join("");
+}
+
+function buildMsaLegislatorsHTML(msaCounties) {
+  if (!window._legislatorLookup) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      Legislator data loading…
+    </div>`;
+  }
+  const seen = new Set();
+  const all = [];
+  for (const c of msaCounties) {
+    const fips = String(c.fips || "").padStart(5, "0");
+    const data = window._legislatorLookup[fips];
+    if (!data) continue;
+    for (const leg of [...(data.federal || []), ...(data.state || [])]) {
+      // deduplicate by bioguide_id, fall back to name+chamber+district
+      const key = leg.bioguide_id || `${leg.name}|${leg.chamber}|${leg.district}`;
+      if (!seen.has(key)) { seen.add(key); all.push(leg); }
+    }
+  }
+  if (!all.length) {
+    return `<div style="font-size:var(--text-xs);color:var(--color-text-muted);">
+      No legislator data available for this metro area.
+    </div>`;
+  }
+  // Senators first, then House by P2 descending
+  all.sort((a, b) => (a.chamber === "senate" ? 0 : 1) - (b.chamber === "senate" ? 0 : 1)
+                     || (b.p2_combined || 0) - (a.p2_combined || 0));
+  return all.map(_legCard).join("");
+}
+
+// County detail panel (v2.0 — all counties, not just non-metro)
+function showDetail(county) {
+  const msaForCounty = msaScoreByFips[county.fips];
+  highlightSelection(msaForCounty ? null : county.fips, msaForCounty ? msaForCounty.msaName : null);
   const panel = document.getElementById("detail-panel");
-  panel.style.display = "block";
   panel.scrollTop = 0;
 
-  document.getElementById("dp-name").textContent = `${c.county_name}, ${c.state}`;
-  document.getElementById("dp-state").textContent = `${c.region || "Non-Metro"} · Non-Metro`;
-  document.getElementById("dp-opp").textContent = (c.sls_capital != null) ? c.sls_capital.toFixed(2) : "–";
+  const q      = county.quadrant_national || county.quadrant || "tier4";
+  const tn     = _tierNum(q);
+  const slsCap = county.sls_capital;
+  const slsComm= county.sls_community;
+  const p1     = county.p1_presidential;
+  const p2Raw  = county.federal_p2 ?? county.p2_alignment;
+  const margin = county.margin_2024;
+  const sw     = county.state_tipping_weight;
+  const pop    = county.population;
+  const fips   = String(county.fips || "").padStart(5, "0");
 
-  _setQuadrantBadge(c.quadrant);
+  const fmt1     = v => v != null ? (+v).toFixed(1) : "—";
+  const fmtPct   = v => v != null ? (v * 100).toFixed(0) + "%" : "Data pending";
+  const fmtMargin= v => v != null ? (v >= 0 ? "D+" : "R+") + Math.abs(v).toFixed(1) : "unknown";
+  const barW     = (v, max) => v != null ? Math.min(100, parseFloat(v) / max * 100).toFixed(1) + "%" : "0%";
 
-  document.getElementById("dp-summary-section").style.display = "none";
+  const topSectors = getTopStrategicSectors(county);
 
-  // v2.0 bars: community (sls_community), capital (sls_capital), electoral (p1_presidential),
-  // congressional (p1_congressional), p2 alignment (p2_alignment scaled 0-100)
-  _setBar("bar-org",   "val-org",   "lbl-bar-org",  c.sls_community,    false);
-  _setBar("bar-sect",  "val-sect",  "lbl-bar-sect", c.sls_capital,      false);
-  _setBar("bar-pres",  "val-pres",  "lbl-bar-pres", c.p1_presidential,  goalFilter === "presidential");
-  _setBar("bar-cong",  "val-cong",  "lbl-bar-cong", c.p1_congressional, false);
-  _setBar("bar-infra", "val-infra", "lbl-bar-infra", c.p2_alignment != null ? c.p2_alignment * 100 : null, false, "Data pending");
+  panel.innerHTML = `
+    <button onclick="document.getElementById('detail-panel').style.display='none'"
+            style="position:absolute;top:10px;right:12px;background:none;border:none;
+                   font-size:18px;cursor:pointer;color:var(--color-text-muted);line-height:1;">×</button>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;
+                margin-bottom:var(--space-3);">
+      <div>
+        <span class="card-tier-badge card-tier-${tn}">${_tierLabel(q)}</span>
+        <h3 style="font-family:var(--font-serif);font-size:var(--text-xl);
+                   color:var(--color-text);margin:0 0 2px;">
+          ${county.county_name || "County"}
+        </h3>
+        <div style="font-family:var(--font-mono);font-size:var(--text-xs);
+                    color:var(--color-text-muted);">
+          ${county.state || ""}&nbsp;·&nbsp;Pop.&nbsp;${pop ? pop.toLocaleString() : "—"}
+        </div>
+        <div style="font-family:var(--font-mono);font-size:var(--text-xs);
+                    color:var(--color-text-muted);margin-top:var(--space-1);">
+          2024 presidential: ${margin != null
+            ? (margin >= 0
+               ? `<span style="color:#2c6fad">D+${Math.abs(margin).toFixed(1)}</span>`
+               : `<span style="color:#bd0026">R+${Math.abs(margin).toFixed(1)}</span>`)
+            : "—"}
+          &nbsp;·&nbsp;State tipping: ${sw != null ? (sw * 100).toFixed(0) + "%" : "—"}
+        </div>
+        <div style="font-size:var(--text-xs);color:var(--color-text-muted);margin-top:4px;">
+          ${_tierDesc(q)}
+        </div>
+      </div>
+      ${topSectors.length ? `
+      <div class="card-icons-row">
+        ${topSectors.map(s => `
+          <div class="card-icon-item">
+            <div class="card-icon-svg">${getSectorIcon(s.name)}</div>
+            <div class="card-icon-label">${s.name.split(/\s+/)[0]}</div>
+          </div>`).join("")}
+      </div>` : ""}
+    </div>
 
-  document.getElementById("dp-pop").textContent = "1 county";
-  document.getElementById("dp-rurban").textContent = c.population ? c.population.toLocaleString() : "–";
-  document.getElementById("dp-swing").textContent = c.swing_state ? c.state : "No";
-  document.getElementById("dp-counties-section").style.display = "none";
-  document.getElementById("dp-county-list").innerHTML = "";
+    <div class="card-narrative" id="cnr-${fips}">
+      <span style="color:var(--color-text-muted);font-style:italic">Loading assessment…</span>
+    </div>
+
+    <div class="card-section-head">Strategic Leverage</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Capital Leverage</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-capital" style="width:${barW(slsCap, 100)}"></div>
+      </div>
+      <div class="card-score-val">${fmt1(slsCap)}</div>
+    </div>
+    <div class="card-score-hint">Crisis-creating power against capital flows</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Community Leverage</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-community" style="width:${barW(slsComm, 100)}"></div>
+      </div>
+      <div class="card-score-val">${fmt1(slsComm)}</div>
+    </div>
+    <div class="card-score-hint">Share of workforce in essential community roles</div>
+
+    <div class="card-section-head">Political Terrain</div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Electoral Leverage (P1)</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-electoral" style="width:${barW(p1, 100)}"></div>
+      </div>
+      <div class="card-score-val">${fmt1(p1)}</div>
+    </div>
+    <div class="card-score-hint">
+      2024 margin: ${fmtMargin(margin)}&nbsp;pts
+      · State decisive: ${sw != null ? (sw * 100).toFixed(0) + "%" : "—"}
+    </div>
+
+    <div class="card-score-row">
+      <div class="card-score-label">Federal Alignment (P2)</div>
+      <div class="card-bar-wrap">
+        <div class="card-bar-fill card-bar-alignment"
+             style="width:${p2Raw != null ? barW(p2Raw * 100, 100) : "0%"}"></div>
+      </div>
+      <div class="card-score-val">${fmtPct(p2Raw)}</div>
+    </div>
+    <div class="card-score-hint">Incumbent alignment on 4 federal labor key votes</div>
+
+    <div class="card-more-toggle"
+         onclick="this.nextElementSibling.classList.toggle('open');
+         this.querySelector('span').textContent =
+         this.nextElementSibling.classList.contains('open') ? '▼ ' : '▶ ';">
+      <span>▶ </span>Additional data
+    </div>
+    <div class="card-more-body">
+      <div class="card-more-row">
+        <span class="card-more-key">State electoral leverage (P1)</span>
+        <span>${county.state_p1 != null ? county.state_p1.toFixed(3) : "Data pending"}</span>
+      </div>
+      <div class="card-more-row">
+        <span class="card-more-key">State alignment (P2)</span>
+        <span>${fmtPct(county.state_p2)}</span>
+      </div>
+      <div class="card-more-row">
+        <span class="card-more-key">State lens tier</span>
+        <span>${county.quadrant_state ? _tierLabel(county.quadrant_state) : "Data pending"}</span>
+      </div>
+      <div class="card-more-row">
+        <span class="card-more-key">v1 OOS (reference only)</span>
+        <span>${county.v1_organizing_opportunity_score != null
+               ? county.v1_organizing_opportunity_score.toFixed(1) : "—"}</span>
+      </div>
+    </div>
+
+    <div class="card-section-head" style="margin-top:var(--space-4);">
+      Current Legislators
+      <span style="font-family:var(--font-body);font-size:10px;
+                   color:var(--color-text-muted);font-weight:400;
+                   text-transform:none;letter-spacing:0;">
+        · updated monthly
+      </span>
+    </div>
+    ${buildLegislatorsHTML(fips, county.state)}
+  `;
+
+  panel.style.display = "block";
+  loadNarrative(county, tn, q, fips);
 }
 
+// close button uses inline onclick in v2.0 templates; this handles the static fallback
 document.getElementById("close-detail").addEventListener("click", () => {
   document.getElementById("detail-panel").style.display = "none";
 });
