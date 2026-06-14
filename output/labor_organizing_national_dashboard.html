@@ -2391,28 +2391,28 @@ async function initMap() {
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
+        const _tc = t => t===1?"#bd0026":t===2?"#1a3a6b":t===3?"#6b4f9e":"#999";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (msa.hasSwingers) {
-            scoreHtml = `<br><span class="tt-opp">P1 Pres: ${(msa.presidential||0).toFixed(2)} · Capital: ${(msa.capitalScore||0).toFixed(2)} · Community: ${(msa.communityScore||0).toFixed(1)}</span>`;
+            scoreHtml = `<br><span class="tt-opp">P1: ${(msa.presidential||0).toFixed(1)} · Cap: ${(msa.capitalScore||0).toFixed(1)} · Comm: ${(msa.communityScore||0).toFixed(1)}</span>`;
           } else {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          const ql = QUADRANT_LABELS[msa.dominantQuadrant] || msa.dominantQuadrant || "–";
-          scoreHtml = `<br><span class="tt-opp">${ql}</span>`;
+          const q  = msa.dominantQuadrant || "tier4";
+          const tn = _tierNum(q);
+          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${_tc(tn)}">${_tierLabel(q)}</span>`
+            + `<br><span style="font-size:10px;color:#A09385">Cap: ${(msa.capitalScore||0).toFixed(1)} · Comm: ${(msa.communityScore||0).toFixed(1)}</span>`;
         } else if (goalFilter === "senate") {
           const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
           scoreHtml = tierNums.length
             ? `<br><span class="tt-opp">${SENATE_TIER_LABELS[Math.min(...tierNums)]}</span>`
             : `<br><span style="color:#888;font-size:10px">Not competitive</span>`;
         }
-        const intLetter = msa.dominantLetter;
-        const intClass = intLetter === "A" ? "int-type-a" : intLetter === "B" ? "int-type-b" : "int-type-c";
         tt.innerHTML = `<strong>${msaName}</strong>`
           + `<br><span style="font-size:10px;color:#A09385">${msa.states}</span>`
-          + scoreHtml
-          + `&nbsp;<span class="${intClass}">Type ${intLetter}</span>`;
+          + scoreHtml;
       })
       .on("mouseleave", () => { tt.style.opacity = "0"; })
       .on("click", (event, d) => { showMsaDetail(d.properties.msaName); });
@@ -2438,19 +2438,22 @@ async function initMap() {
         tt.style.opacity = "1";
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
+        const _tc = t => t===1?"#bd0026":t===2?"#1a3a6b":t===3?"#6b4f9e":"#999";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (SWING_STATES_PRES.has(c.state)) {
-            const pres = (c.p1_presidential || 0).toFixed(2);
+            const pres = (c.p1_presidential || 0).toFixed(1);
             const com  = (c.sls_community  || 0).toFixed(1);
-            const cap  = (c.sls_capital    || 0).toFixed(2);
-            scoreHtml = `<br><span class="tt-opp">P1 Pres: ${pres} · Capital: ${cap} · Community: ${com}</span>`;
+            const cap  = (c.sls_capital    || 0).toFixed(1);
+            scoreHtml = `<br><span class="tt-opp">P1: ${pres} · Cap: ${cap} · Comm: ${com}</span>`;
           } else {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          const q = c.quadrant || "lower_priority";
-          scoreHtml = `<br><span class="tt-opp">${QUADRANT_LABELS[q] || q}</span>`;
+          const q  = c.quadrant || "lower_priority";
+          const tn = _tierNum(q);
+          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${_tc(tn)}">${_tierLabel(q)}</span>`
+            + `<br><span style="font-size:10px;color:#A09385">Cap: ${(c.sls_capital||0).toFixed(1)} · Comm: ${(c.sls_community||0).toFixed(1)}</span>`;
         } else if (goalFilter === "senate") {
           const tier = SENATE_TIERS[c.state];
           scoreHtml = tier
