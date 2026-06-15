@@ -121,15 +121,15 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: var(--space-16) var(--space-8);
+      padding: var(--space-12) var(--space-8);
       min-height: calc(100vh - var(--nav-height));
       gap: var(--space-16);
       overflow: auto;
     }
 
     .about-main {
-      max-width: 520px;
-      flex: 1;
+      max-width: 480px;
+      width: 100%;
     }
 
     .about-heading {
@@ -150,18 +150,15 @@
     }
 
     .about-nav {
-      width: 280px;
+      width: 260px;
       flex-shrink: 0;
-      padding-top: var(--space-2);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
+      padding-top: var(--space-12);
     }
 
     .about-nav-label {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--color-text-muted);
       margin-bottom: var(--space-4);
@@ -197,8 +194,86 @@
       font-family: var(--font-body);
       font-size: var(--text-sm);
       color: var(--color-text-muted);
+      display: block;
       margin-top: 2px;
+      line-height: 1.4;
     }
+
+    /* === METHOD PREVIEW PANEL === */
+    #panel-method-preview {
+      background: var(--color-bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - var(--nav-height));
+    }
+
+    .method-preview-inner {
+      max-width: 680px;
+      width: 100%;
+      padding: var(--space-12) var(--space-8);
+    }
+
+    .method-preview-title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 500;
+      color: var(--color-text);
+      margin-bottom: var(--space-4);
+      line-height: 1.1;
+    }
+
+    .method-preview-lead {
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+      margin-bottom: var(--space-8);
+    }
+
+    .method-toc-preview {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .method-toc-item {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4) var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border);
+      text-decoration: none;
+      color: var(--color-text);
+      transition: color 0.15s;
+    }
+
+    .method-toc-item:hover { color: var(--color-accent); }
+
+    .method-toc-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      min-width: 24px;
+    }
+
+    .method-toc-label {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 500;
+    }
+
+    .method-preview-cta {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .method-preview-cta:hover { text-decoration: underline; }
 
     @media (max-width: 768px) {
       #panel-about { flex-direction: column; overflow-y: auto; }
@@ -248,7 +323,7 @@
         UC Berkeley Political Science · laborterrain.org
       </div>
       <div class="cover-scroll-hint">
-        ↓ scroll
+        ↓ scroll to explore
       </div>
     </div>
 
@@ -290,9 +365,9 @@
           <span class="about-link-num">01</span>
           <div>
             <div class="about-link-title">The Map</div>
-            <div class="about-link-desc">
+            <span class="about-link-desc">
               All 3,143 counties scored and classified
-            </div>
+            </span>
           </div>
         </a>
 
@@ -300,31 +375,75 @@
           <span class="about-link-num">02</span>
           <div>
             <div class="about-link-title">Methodology</div>
-            <div class="about-link-desc">
+            <span class="about-link-desc">
               SLS formula, P1 + P2 scoring, data sources
-            </div>
-          </div>
-        </a>
-
-        <a href="methodology.html#literature" class="about-link">
-          <span class="about-link-num">03</span>
-          <div>
-            <div class="about-link-title">Literature</div>
-            <div class="about-link-desc">
-              McAlevey, Silver, Womack, Feigenbaum et al.
-            </div>
+            </span>
           </div>
         </a>
 
         <a href="jobs.html" class="about-link">
-          <span class="about-link-num">04</span>
+          <span class="about-link-num">03</span>
           <div>
             <div class="about-link-title">Jobs Board</div>
-            <div class="about-link-desc">
+            <span class="about-link-desc">
               High-impact labor movement roles
-            </div>
+            </span>
           </div>
         </a>
+      </div>
+    </div>
+
+    <!-- PANEL 3: METHODOLOGY PREVIEW -->
+    <div class="paper-panel" id="panel-method-preview">
+      <div class="method-preview-inner">
+
+        <div class="section-number">§ 3</div>
+        <h2 class="method-preview-title">Methodology</h2>
+
+        <p class="method-preview-lead">
+          How the model works, what it measures,
+          and where it falls short.
+        </p>
+
+        <div class="method-toc-preview">
+          <a href="methodology.html#stakes" class="method-toc-item">
+            <span class="method-toc-num">01</span>
+            <span class="method-toc-label">The Stakes</span>
+          </a>
+          <a href="methodology.html#assumptions" class="method-toc-item">
+            <span class="method-toc-num">02</span>
+            <span class="method-toc-label">Core Assumptions</span>
+          </a>
+          <a href="methodology.html#sls" class="method-toc-item">
+            <span class="method-toc-num">03</span>
+            <span class="method-toc-label">Strategic Leverage Score</span>
+          </a>
+          <a href="methodology.html#pts" class="method-toc-item">
+            <span class="method-toc-num">04</span>
+            <span class="method-toc-label">Political Terrain Score</span>
+          </a>
+          <a href="methodology.html#map" class="method-toc-item">
+            <span class="method-toc-num">05</span>
+            <span class="method-toc-label">Reading the Map</span>
+          </a>
+          <a href="methodology.html#limitations" class="method-toc-item">
+            <span class="method-toc-num">06</span>
+            <span class="method-toc-label">Known Limitations</span>
+          </a>
+          <a href="methodology.html#data" class="method-toc-item">
+            <span class="method-toc-num">07</span>
+            <span class="method-toc-label">Data Sources</span>
+          </a>
+          <a href="methodology.html#literature" class="method-toc-item">
+            <span class="method-toc-num">08</span>
+            <span class="method-toc-label">Literature</span>
+          </a>
+        </div>
+
+        <a href="methodology.html" class="method-preview-cta">
+          Read full methodology →
+        </a>
+
       </div>
     </div>
 
@@ -342,7 +461,15 @@
     </div>
     <div class="footer-center">
       <span class="footer-credit">
-        Built by Sam Kaplan-Pettus · UC Berkeley Political Science
+        Sam Kaplan-Pettus · UC Berkeley Political Science
+      </span>
+      <span class="footer-legal">
+        © 2026 Sam Kaplan-Pettus. Model and methodology licensed
+        under <a href="https://creativecommons.org/licenses/by/4.0/"
+        target="_blank" rel="noopener">CC BY 4.0</a>.
+        Data from BLS, Census Bureau, MIT Election Lab,
+        GovTrack, and Stanford DIME.
+        Scores are research estimates — not definitive strategic guidance.
       </span>
     </div>
     <div class="footer-right">
