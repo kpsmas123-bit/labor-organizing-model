@@ -7,3 +7,7 @@ logs/*.txt
 logs/*.json
 config.json
 .env
+
+# Agent 2 state-leg ingest: large raw source downloads (re-downloadable)
+data/work_stateleg/*.zip
+data/work_stateleg/*.tab
