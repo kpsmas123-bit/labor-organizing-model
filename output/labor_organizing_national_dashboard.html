@@ -323,189 +323,6 @@
   #close-detail { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #A09385; cursor: pointer; font-size: 18px; line-height: 1; }
   #close-detail:hover { color: #2C2C2C; }
 
-  /* ── Terrain Intro Overlay ── */
-  @keyframes pulse-ring {
-    0%   { transform: scale(1);   opacity: 0.85; }
-    100% { transform: scale(2.4); opacity: 0;    }
-  }
-  #terrain-intro {
-    position: fixed; top: var(--nav-height); left: 0; right: auto; bottom: 0;
-    width: 75%; z-index: 90; background: #f7f4f0;
-    box-shadow: 4px 0 16px rgba(0,0,0,0.06);
-    overflow: visible;
-    transition: width 0.35s ease;
-    display: flex; flex-direction: column;
-  }
-  #terrain-intro.collapsed { width: 0; }
-  @media (max-width: 768px) {
-    #terrain-intro { top: var(--nav-height-mobile); width: 100%; right: 0; bottom: 0; }
-    #terrain-intro.collapsed { width: 0; }
-  }
-  #intro-slides {
-    flex: 1; min-height: 0; overflow-y: scroll; overflow-x: hidden; scroll-snap-type: y mandatory;
-    scrollbar-width: none; position: relative; z-index: 2;
-  }
-  #intro-slides::-webkit-scrollbar { display: none; }
-  .intro-slide {
-    min-height: 100%; height: auto; scroll-snap-align: start;
-    display: flex; flex-direction: column; justify-content: flex-start;
-    align-items: flex-start;
-    padding: clamp(80px, 12vh, 140px) 0 0 clamp(48px, 10vw, 140px);
-    box-sizing: border-box; flex-shrink: 0;
-  }
-  .intro-slide-last { min-height: 100%; height: auto; padding-bottom: 56px; }
-  .intro-slide-inner { max-width: min(640px, 55vw); }
-  .intro-eyebrow {
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-    letter-spacing: 0.12em; text-transform: uppercase; color: #bd0026;
-    margin-bottom: 16px;
-  }
-  .intro-h {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(1.5rem, 3.2vw, 2.6rem); font-weight: 700;
-    color: #1a1a1a; line-height: 1.18; letter-spacing: -0.02em;
-    margin: 0 0 22px; text-align: left;
-  }
-  .intro-body {
-    font-size: 16px; line-height: 1.7; color: #4a4a4a;
-    max-width: 600px; margin: 0 0 20px; text-align: left;
-  }
-  .intro-link {
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px;
-    color: #bd0026; text-decoration: none; letter-spacing: 0.04em;
-    display: inline-block;
-  }
-  .intro-link:hover { text-decoration: underline; }
-  #intro-toggle-btn {
-    position: absolute; right: -14px; top: 50%;
-    transform: translateY(-50%) rotate(0deg);
-    width: 28px; height: 48px; padding: 0;
-    background: #f7f4f0; border: 1px solid #e0dbd4;
-    border-left: none;
-    border-radius: 0 6px 6px 0;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.08);
-    cursor: pointer; font-size: 20px; line-height: 1; color: #6b6560;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 91; user-select: none;
-    transition: color 0.2s, background 0.2s, transform 0.35s ease;
-  }
-  #intro-toggle-btn:hover { color: #1a1a1a; background: #eeebe6; }
-  #terrain-intro.collapsed #intro-toggle-btn {
-    position: fixed; left: 0; top: 50%;
-    transform: translateY(-50%) rotate(180deg);
-    border-left: 1px solid #e0dbd4;
-    border-right: none;
-    border-radius: 6px 0 0 6px;
-    box-shadow: -2px 0 8px rgba(0,0,0,0.08);
-  }
-  #intro-progress {
-    position: absolute; bottom: 24px; left: clamp(48px, 10vw, 140px); z-index: 2010;
-    display: flex; align-items: center; gap: 0;
-  }
-  #terrain-intro.collapsed #intro-progress { display: none; }
-  .intro-dot {
-    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-    background: #c8c0b8; margin-right: 7px; transition: background 0.3s;
-  }
-  .intro-dot.active { background: #bd0026; }
-  .pulse-ring {
-    position: absolute; inset: -8px; border-radius: 6px;
-    border: 2px solid #bd0026;
-    animation: pulse-ring 1.4s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
-    pointer-events: none;
-  }
-  /* In-slide county cards (slides 4–5) */
-  .slide-county-pair { display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap; }
-  .slide-cs-card {
-    border: 1px solid #d4cfc9; padding: 16px 18px; background: #fff;
-    min-width: 196px; flex: 1; max-width: 260px;
-  }
-  .slide-cs-county {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px;
-  }
-  .slide-cs-badge {
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    color: #7a6f64; letter-spacing: 0.04em; margin-bottom: 10px;
-  }
-  .slide-cs-oos {
-    font-family: 'IBM Plex Mono', monospace; font-size: 24px;
-    font-weight: 700; color: #bd0026; line-height: 1;
-  }
-  .slide-cs-meta {
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    color: #a09385; letter-spacing: 0.04em; margin-top: 4px;
-  }
-  .slide-cs-story { font-size: 12px; color: #4a4a4a; line-height: 1.55; margin: 8px 0 0; }
-  .slide-cs-link {
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-    color: #bd0026; text-decoration: none; display: block; margin-top: 8px;
-  }
-  .slide-cs-link:hover { text-decoration: underline; }
-  /* Slide 3 gallery panels */
-  .slide-panels-section { margin-top: 20px; }
-  .slide-panels-section + .slide-panels-section { margin-top: 24px; }
-  .slide-panels-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #9A8F84; margin-bottom: 10px; }
-  .slide-panels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .slide-panels-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
-  .slide-panel { background: #fff; border: 1px solid #e0dbd4; border-radius: 6px; padding: 10px 12px; }
-  .slide-panel__name { font-family: 'Playfair Display', Georgia, serif; font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; line-height: 1.2; }
-  .slide-panel__desc { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #6b6560; line-height: 1.4; }
-  .slide-panel__score { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; color: #bd0026; margin-top: 6px; }
-  /* CTA buttons (slide 7) */
-  .intro-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
-  .intro-btn-primary {
-    font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700;
-    background: #bd0026; color: #fff; border: none; padding: 12px 28px;
-    cursor: pointer; letter-spacing: 0.01em;
-  }
-  .intro-btn-primary:hover { background: #a00020; }
-  .intro-btn-secondary {
-    font-family: 'Playfair Display', Georgia, serif; font-size: 15px; font-weight: 700;
-    background: none; color: #1a1a1a; border: 1px solid #1a1a1a;
-    padding: 12px 28px; cursor: pointer;
-  }
-  .intro-btn-secondary:hover { background: #ede9e3; }
-  /* Case study panel (slide 7, below CTA) */
-  #intro-case-panel {
-    display: flex; overflow-x: auto; gap: 16px;
-    padding: 0 clamp(24px, 10vw, 160px) 0 0;
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin; scrollbar-color: #d4cfc9 transparent;
-  }
-  #intro-case-panel::-webkit-scrollbar { height: 4px; }
-  #intro-case-panel::-webkit-scrollbar-thumb { background: #d4cfc9; border-radius: 2px; }
-  .cs-card {
-    border: 1px solid #d4cfc9; padding: 20px; background: #fff;
-    min-width: 252px; max-width: 272px; flex-shrink: 0;
-    scroll-snap-align: start; display: flex; flex-direction: column; gap: 7px;
-  }
-  .cs-county {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 16px; font-weight: 700; color: #1a1a1a; margin: 0;
-  }
-  .cs-badge {
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    color: #7a6f64; letter-spacing: 0.04em;
-  }
-  .cs-oos {
-    font-family: 'IBM Plex Mono', monospace; font-size: 2rem;
-    font-weight: 700; color: #bd0026; line-height: 1; margin: 4px 0 0;
-  }
-  .cs-oos-label {
-    font-family: 'IBM Plex Mono', monospace; font-size: 9px;
-    color: #a09385; letter-spacing: 0.08em; text-transform: uppercase;
-  }
-  .cs-data {
-    display: flex; flex-direction: column; gap: 3px;
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #4a4a4a;
-    border-top: 1px solid #ede9e3; padding-top: 8px; margin-top: 2px;
-  }
-  .cs-story { font-size: 13px; line-height: 1.6; color: #4a4a4a; margin: 0; flex: 1; }
-  .cs-source {
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
-    color: #a09385; margin-top: auto; padding-top: 8px;
-  }
 
   .legend { position: absolute; bottom: 16px; left: 16px; background: rgba(250,247,242,0.97); border: 1px solid #DDD5C8; border-radius: 7px; padding: 8px 12px 10px; min-width: 200px; max-width: 230px; }
   .legend-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -779,35 +596,17 @@
 </head>
 <body>
 
-<nav class="terrain-nav">
-  <div class="terrain-nav__inner">
-    <a href="../index.html" class="terrain-nav__brand">TERRAIN</a>
-    <ul class="terrain-nav__links">
-      <li><a href="labor_organizing_national_dashboard.html" class="active">Map</a></li>
-      <li><a href="jobs.html">Jobs</a></li>
-      <li><a href="education.html">Learn</a></li>
-      <li><a href="methodology.html">Method</a></li>
-    </ul>
-    <button class="terrain-nav__hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+<nav class="terrain-topnav">
+  <a href="index.html" class="topnav-wordmark">
+    <span>T</span>errain
+  </a>
+  <div class="topnav-links">
+    <a href="index.html" class="topnav-link" id="nav-home">Home</a>
+    <a href="labor_organizing_national_dashboard.html" class="topnav-link active" id="nav-map">Map</a>
+    <a href="methodology.html" class="topnav-link" id="nav-methodology">Methodology</a>
+    <a href="jobs.html" class="topnav-jobs">Jobs Board →</a>
   </div>
 </nav>
-<div class="terrain-nav__drawer">
-  <ul>
-    <li><a href="labor_organizing_national_dashboard.html" class="active">Map</a></li>
-    <li><a href="jobs.html">Jobs</a></li>
-    <li><a href="education.html">Learn</a></li>
-    <li><a href="methodology.html">Method</a></li>
-  </ul>
-</div>
-<script>
-document.querySelector('.terrain-nav__hamburger')
-  .addEventListener('click', function() {
-    document.querySelector('.terrain-nav__drawer')
-      .classList.toggle('open');
-  });
-</script>
 
 <div class="panel-flash"></div>
 <div class="section-rail">
@@ -818,260 +617,67 @@ document.querySelector('.terrain-nav__hamburger')
 
 <div id="panel-map" class="terrain-panel active">
 
-<div id="beta-banner" style="position:relative;z-index:200;padding:6px 24px;display:flex;align-items:center;gap:10px;background:#FEF3C7;border-bottom:1px solid #F6D860;color:#92400E;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.5;">
-  <span style="flex:1;">⚠️ <strong>Beta Version</strong> — This dashboard is under active development. Data, scores, and methodology are drafts. Do not treat any output as final until the dashboard is explicitly labeled as a stable release. Check back for updates.</span>
-  <button onclick="document.getElementById('beta-banner').style.display='none'" style="background:none;border:none;color:#92400E;font-size:16px;cursor:pointer;padding:0 4px;line-height:1;">×</button>
-</div>
 
-<div id="terrain-intro">
-  <button id="intro-toggle-btn">&#8249;</button>
-  <div id="intro-progress"></div>
-  <div id="intro-slides">
 
-    <!-- Slide 1 — stakes -->
-    <div class="intro-slide" id="stakes" data-slide="1">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">The American labor movement was built to win.</h1>
-        <p class="intro-body">The American labor movement was built through profound sacrifice, skill, and strategy. Workers organized against hostile conditions and won — because they built relationships, solidarity, and collective power.</p>
-        <p class="intro-body">That foundation has been under attack since the 1970s. The movement has increasingly relied on existing institutions rather than returning to the on-the-ground organizing that first brought unions to power.</p>
-        <p class="intro-body">We are once again in a moment that demands a return to those fundamentals.</p>
+<div class="map-paper-intro">
+  <div class="map-paper-inner">
+    <div class="section-number">§ 2</div>
+    <h2 class="map-paper-title">The Map</h2>
+
+    <p class="map-paper-lead">
+      The American labor movement was built through profound sacrifice,
+      skill, and strategy. Workers organized against hostile conditions
+      and won — because they built relationships, solidarity, and
+      collective power. We are once again in a moment that demands a
+      return to those fundamentals.
+    </p>
+
+    <p class="map-paper-body">
+      Every worker deserves a union. That right is not conditional on
+      strategic value. But to build a movement large enough to win in
+      the face of rising political hostility, we have to be strategic
+      about where we invest. Not every sector in every county is equally
+      capable of creating the kind of crisis that forces real political
+      change. Terrain is a tool for that prioritization.
+    </p>
+
+    <p class="map-paper-body">
+      The model scores every U.S. county on two independent dimensions:
+      how much structural power would organized workers here have
+      (Strategic Leverage Score), and how much does organizing here
+      translate into political impact (Political Terrain Score). Each
+      county is classified into one of six strategic categories based on
+      the combination of scores.
+    </p>
+
+    <div class="map-paper-findings">
+      <div class="map-finding">
+        <span class="map-finding-num">3,143</span>
+        <span class="map-finding-label">Counties scored</span>
+      </div>
+      <div class="map-finding">
+        <span class="map-finding-num">36</span>
+        <span class="map-finding-label">Tier 1 counties</span>
+      </div>
+      <div class="map-finding">
+        <span class="map-finding-num">0</span>
+        <span class="map-finding-label">Counties in both Capital + Community Tier 1</span>
       </div>
     </div>
 
-    <!-- Slide 2 — urgency -->
-    <div class="intro-slide" id="urgency" data-slide="2">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">There are three forms of political activity.</h1>
-        <p class="intro-body">Advocacy directs resources at policymakers. Mobilization activates people already convinced. Organizing is different — it brings unengaged workers into campaigns, trains them, builds worker-led structures, and wins material gains that prove collective action works.</p>
-        <p class="intro-body">The labor movement has relied heavily on the first two. Deep organizing — the kind that builds durable power — is underinvested.</p>
-      </div>
-    </div>
+    <p class="map-paper-body">
+      The most significant finding: no county simultaneously has high
+      capital leverage, high community leverage, and decisive electoral
+      geography. The largest labor markets are concentrated in safe
+      states. The counties that decide elections are smaller — their
+      workforces dominated by hospitals, schools, and public transit.
+      The conclusion is empirical: community sectors in tipping counties
+      are the strategic frontier.
+    </p>
 
-    <!-- Slide 3 — methodology -->
-    <div class="intro-slide" id="methodology" data-slide="3">
-      <div class="intro-slide-inner" style="max-width: min(760px, 60vw)">
-        <h1 class="intro-h">Not all terrain is equally strategic.</h1>
-        <p class="intro-body">Every worker deserves a union. That right is not conditional on strategic value. But to build a movement large enough to win in the face of rising political hostility, we have to prioritize. Terrain is a tool for that prioritization.</p>
-        <div class="slide-panels-section">
-          <div class="slide-panels-label">County scoring dimensions</div>
-          <div class="slide-panels-grid">
-            <div class="slide-panel">
-              <div class="slide-panel__name">SLS Capital</div>
-              <div class="slide-panel__desc">Can workers interrupt capital flow?</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">SLS Community</div>
-              <div class="slide-panel__desc">Are workers in community-facing sectors?</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">P1 Electoral Leverage</div>
-              <div class="slide-panel__desc">Does this county decide elections?</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">P2 Incumbent Alignment</div>
-              <div class="slide-panel__desc">Are incumbents aligned with labor?</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">Quadrant Classification</div>
-              <div class="slide-panel__desc">Where does this county fit in the strategy?</div>
-            </div>
-          </div>
-        </div>
-        <div class="slide-panels-section">
-          <div class="slide-panels-label">Sector strategic value (SVS)</div>
-          <div class="slide-panels-grid slide-panels-grid--3">
-            <div class="slide-panel">
-              <div class="slide-panel__name">Hospitals</div>
-              <div class="slide-panel__score">45</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">K-12 Education</div>
-              <div class="slide-panel__score">45</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">Rail Freight</div>
-              <div class="slide-panel__score">50</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">Ports</div>
-              <div class="slide-panel__score">45</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">Public Transit</div>
-              <div class="slide-panel__score">35</div>
-            </div>
-            <div class="slide-panel">
-              <div class="slide-panel__name">Home Health</div>
-              <div class="slide-panel__score">25</div>
-            </div>
-          </div>
-        </div>
-        <a href="/output/methodology.html" class="intro-link" style="margin-top: 20px; display: inline-block;">→ Full methodology</a>
-      </div>
-    </div>
-
-    <!-- Slide 4 — leverage -->
-    <div class="intro-slide" id="leverage" data-slide="4">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">The model asks two questions about every U.S. county.</h1>
-        <p class="intro-body">First: how much structural power would organized workers here have? That is the Strategic Leverage Score — measured separately for capital-facing leverage (ports, logistics, energy) and community-facing leverage (hospitals, schools, transit). Second: how much does organizing here translate into political impact? That is the Political Terrain Score — how decisive is this geography electorally, and how aligned are its incumbents with labor's agenda.</p>
-        <div class="slide-county-pair">
-          <div class="slide-cs-card">
-            <div class="slide-cs-county">Centre County</div>
-            <div class="slide-cs-badge">PA · Community Leverage</div>
-            <div class="slide-cs-oos">17.4</div>
-            <div class="slide-cs-meta">SLS COMMUNITY · Capital: 1.9 · P1: 35.3</div>
-            <p class="slide-cs-story">Home of Penn State. Hospital staff, university employees, and K-12 teachers in a county that tipped by 2.83 points in 2024. Community leverage is relational — workers are woven into every family in the county.</p>
-            <a class="slide-cs-link" href="#" target="_blank" rel="noopener">Power Building Terrain ↗</a>
-          </div>
-          <div class="slide-cs-card">
-            <div class="slide-cs-county">Green County</div>
-            <div class="slide-cs-badge">WI · Tightest Margin</div>
-            <div class="slide-cs-oos">100.0</div>
-            <div class="slide-cs-meta">P1 ELECTORAL · Community: 14.6 · Margin: +0.27</div>
-            <p class="slide-cs-story">Decided by 0.27 points in 2024 — the tightest county in the dataset. Electoral leverage here is existential: the margin is smaller than any single organizing campaign would need to move.</p>
-            <a class="slide-cs-link" href="#" target="_blank" rel="noopener">Power Building Terrain ↗</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 5 — goals-types (dims overlay, pulses .seg-buttons) -->
-    <div class="intro-slide" id="goals-types" data-slide="5">
-      <div class="intro-slide-inner" style="max-width: min(680px, 55vw)">
-        <h1 class="intro-h">One finding stood out when we ran the model.</h1>
-        <p class="intro-body">When we ran the model on all 3,144 U.S. counties, one finding stood out: no county simultaneously has high capital leverage, high community leverage, AND decisive electoral geography. The Deploy Now — Capital + Community quadrant is empty.</p>
-        <p class="intro-body" style="margin: 0 0 6px;"><strong>Centre County, Pennsylvania</strong> — Home of Penn State. Tightest county in the most decisive swing state. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">P1: 35.3 · SLS Community: 17.4 · Power Building</span><br>The workers who could move this county: hospital staff, university employees, public school teachers.</p>
-        <p class="intro-body" style="margin: 0 0 6px;"><strong>Green County, Wisconsin</strong> — Decided by 0.27 points in 2024. The tightest margin in the dataset. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">P1: 100.0 · SLS Community: 14.6 · Power Building</span><br>The margin is smaller than any organizing campaign would need to move.</p>
-        <p class="intro-body" style="margin: 0 0 16px;"><strong>Muskegon County, Michigan</strong> — Swing county in a swing state. Growing healthcare sector, light manufacturing base. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">P1: 35.9 · SLS Community: 8.3 · Power Building</span></p>
-        <p class="intro-body">By contrast: Los Angeles County has the highest capital leverage in the country — but decides nothing electorally. <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7A6F64;">SLS Capital: 84.2 · P1: 0.1 · Primary Target — Capital</span><br>The counties that decide elections are smaller. Their leverage is community-facing.</p>
-        <p class="intro-body">The conclusion: community sectors in tipping counties are the strategic frontier. Hospital staff, school teachers, transit workers in Centre, Green, and Muskegon — not port workers in Los Angeles.</p>
-      </div>
-    </div>
-
-    <!-- Slide 6 — why-different -->
-    <div class="intro-slide" id="why-different" data-slide="6">
-      <div class="intro-slide-inner" style="max-width: min(680px, 55vw)">
-        <h1 class="intro-h">How to read the map.</h1>
-        <p class="intro-body">The map shows every U.S. county classified into one of six strategic categories. Deploy Now counties have both structural leverage and decisive electoral geography. Primary Target counties have leverage but need political activation. Power Building counties are electorally decisive but need deeper organizing infrastructure.</p>
-        <p class="intro-body">Use the lens toggle to switch between Capital Leverage — ports, logistics, energy, absolute crisis potential — and Community Leverage — hospitals, schools, transit, relational crisis potential.</p>
-        <p class="intro-body">Use the goal toggle to filter by electoral context: Presidential Swing, Senate Battlegrounds, or Long-Term Power Building. The same county can look very different depending on which horizon you're organizing toward.</p>
-      </div>
-    </div>
-
-    <!-- Slide 7 — explore (final) -->
-    <div class="intro-slide intro-slide-last" id="explore" data-slide="7">
-      <div class="intro-slide-inner">
-        <h1 class="intro-h">Two tools. One framework.</h1>
-        <p class="intro-body">The map helps organizations decide where to deploy collective resources. The Jobs Board helps individuals find where they can have the most personal impact — filtered by location, experience, and the same strategic terrain logic.</p>
-        <div class="intro-cta-row">
-          <button class="intro-btn-primary" id="intro-explore-btn">Explore the map →</button>
-          <button class="intro-btn-secondary" id="intro-cases-btn">Explore case studies ↓</button>
-        </div>
-      </div>
-      <div id="intro-case-panel">
-        <!-- Warren GA — deploy_now_community -->
-        <div class="cs-card" data-fips="13301">
-          <div class="cs-county">Warren County</div>
-          <div class="cs-badge">GA · Deploy Now — Community</div>
-          <div class="cs-oos">52.3</div>
-          <div class="cs-oos-label">SLS COMMUNITY</div>
-          <div class="cs-data">
-            <span>P1: 6.8</span>
-            <span>Margin: +4.71</span>
-          </div>
-          <p class="cs-story">Rural Georgia. Healthcare workers dominate the employment base — the local hospital is the largest employer. High community leverage, slight D lean. Classic whole-worker organizing terrain.</p>
-        </div>
-        <!-- Centre PA — power_building -->
-        <div class="cs-card" data-fips="42027">
-          <div class="cs-county">Centre County</div>
-          <div class="cs-badge">PA · Power Building</div>
-          <div class="cs-oos">35.3</div>
-          <div class="cs-oos-label">P1 ELECTORAL</div>
-          <div class="cs-data">
-            <span>SLS Community: 17.4</span>
-            <span>Margin: +2.83</span>
-          </div>
-          <p class="cs-story">Home of Penn State. Decided by 2.83 points in 2024. Hospital staff, university employees, and K-12 teachers in the most decisive swing state. Organizing here builds community leverage in terrain that decides elections.</p>
-        </div>
-        <!-- Clark NV — deploy_now_capital -->
-        <div class="cs-card" data-fips="32003">
-          <div class="cs-county">Clark County</div>
-          <div class="cs-badge">NV · Deploy Now — Capital</div>
-          <div class="cs-oos">29.1</div>
-          <div class="cs-oos-label">SLS CAPITAL</div>
-          <div class="cs-data">
-            <span>P1: 8.2</span>
-            <span>Margin: +2.63</span>
-          </div>
-          <p class="cs-story">Las Vegas metro — logistics, freight, and a massive hospitality sector embedded in regional supply chains. Culinary Union Local 226 has proven the organizing model here. Swing terrain with capital leverage already in motion.</p>
-        </div>
-        <!-- Green WI — power_building -->
-        <div class="cs-card" data-fips="55045">
-          <div class="cs-county">Green County</div>
-          <div class="cs-badge">WI · Power Building</div>
-          <div class="cs-oos">100.0</div>
-          <div class="cs-oos-label">P1 ELECTORAL</div>
-          <div class="cs-data">
-            <span>SLS Community: 14.6</span>
-            <span>Margin: +0.27</span>
-          </div>
-          <p class="cs-story">Decided by 0.27 points in 2024 — the tightest county in the dataset. Every new union member here is a potential election outcome. Maximum electoral leverage. Needs organizing investment to activate.</p>
-        </div>
-        <!-- LA County CA — primary_target_capital -->
-        <div class="cs-card" data-fips="06037">
-          <div class="cs-county">Los Angeles County</div>
-          <div class="cs-badge">CA · Primary Target — Capital</div>
-          <div class="cs-oos">84.2</div>
-          <div class="cs-oos-label">SLS CAPITAL</div>
-          <div class="cs-data">
-            <span>P1: 0.1</span>
-            <span>Margin: +32.92</span>
-          </div>
-          <p class="cs-story">The highest capital leverage county in the country. Ports of LA and Long Beach handle 40% of US container imports. An action here creates a national crisis. Safe Democratic — political impact is inside accountability, not swing terrain.</p>
-        </div>
-        <!-- Maricopa AZ — deploy_now_capital -->
-        <div class="cs-card" data-fips="04013">
-          <div class="cs-county">Maricopa County</div>
-          <div class="cs-badge">AZ · Deploy Now — Capital</div>
-          <div class="cs-oos">49.7</div>
-          <div class="cs-oos-label">SLS CAPITAL</div>
-          <div class="cs-data">
-            <span>P1: 10.3</span>
-            <span>Margin: −3.48</span>
-          </div>
-          <p class="cs-story">Phoenix metro — logistics hub, aerospace manufacturing, freight rail. Workers here could choke supply chains across the Southwest. Tipped R by 3.5 points in 2024. Capital leverage is ready to deploy.</p>
-        </div>
-        <!-- Philadelphia PA — primary_target_capital -->
-        <div class="cs-card" data-fips="42101">
-          <div class="cs-county">Philadelphia County</div>
-          <div class="cs-badge">PA · Primary Target — Capital</div>
-          <div class="cs-oos">13.1</div>
-          <div class="cs-oos-label">SLS CAPITAL</div>
-          <div class="cs-data">
-            <span>SLS Community: 38.7</span>
-            <span>P1: 1.7</span>
-          </div>
-          <p class="cs-story">Major port, rail hub, and healthcare anchor — dual leverage profile. Safe Democratic, so electoral impact runs through primary accountability and long-term power building, not presidential swing.</p>
-        </div>
-        <!-- Monongalia WV — primary_target_community -->
-        <div class="cs-card" data-fips="54061">
-          <div class="cs-county">Monongalia County, WV</div>
-          <div class="cs-badge">WV · Primary Target — Community</div>
-          <div class="cs-oos">0.9</div>
-          <div class="cs-oos-label">SLS CAPITAL</div>
-          <div class="cs-data">
-            <span>SLS Community: 42.8</span>
-            <span>P1: 0.4</span>
-            <span>P2: 0.2</span>
-            <span>Pop: 107,718</span>
-            <span>Margin: −4.39</span>
-          </div>
-          <p class="cs-story">Morgantown — home of WVU and the WVU hospital system, the state's largest employer. High community leverage from healthcare and university workers, competitive margin, but not nationally decisive electorally. The structural power is here; the political translation requires a longer horizon.</p>
-        </div>
-      </div>
-    </div>
-
+    <a href="methodology.html" class="map-paper-method-link">
+      Read full methodology →
+    </a>
   </div>
 </div>
 
@@ -1126,9 +732,20 @@ document.querySelector('.terrain-nav__hamburger')
   <div id="main">
     <div id="views">
       <div id="map-view">
-        <div id="lens-badge">Viewing: Default lens</div>
-        <svg id="map-svg"></svg>
-        <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
+        <div class="map-figure" id="map-figure">
+          <div class="map-figure-header">
+            <div class="map-figure-caption">
+              <span class="map-figure-number">Fig. 2</span>
+              County-Level Strategic Terrain — United States, 2024
+            </div>
+            <button class="map-expand-btn" onclick="expandMap()" title="Expand to full screen">
+              ↗ Expand
+            </button>
+          </div>
+          <div class="map-figure-body">
+            <div id="lens-badge">Viewing: Default lens</div>
+            <svg id="map-svg"></svg>
+            <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
           (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
           target="_blank" rel="noopener noreferrer">Source: NPR — 2026 Senate Races to Watch</a>.
           Reflects structural competitiveness, not current cycle polling.</div>
@@ -1214,11 +831,16 @@ document.querySelector('.terrain-nav__hamburger')
             <div class="legend-title" id="legend-title">Intervention Type</div>
             <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
             <div id="legend-tiers"></div>
-            <div style="margin-top:8px;border-top:1px solid #EDE7DF;padding-top:6px;font-size:8.5px;color:#A09385">Model v2.0 · Data: 2024 · laborterrain.net</div>
+            <div style="margin-top:8px;border-top:1px solid #EDE7DF;padding-top:6px;font-size:8.5px;color:#A09385">Model v2.0 · Data: 2024 · laborterrain.org</div>
           </div>
         </div>
 
-        <div class="tooltip" id="tooltip"></div>
+            <div class="tooltip" id="tooltip"></div>
+          </div><!-- /map-figure-body -->
+          <div class="map-figure-footer">
+            Terrain v2.0 · 3,143 counties · laborterrain.org
+          </div>
+        </div><!-- /map-figure -->
       </div>
 
       <div id="table-view">
@@ -1734,6 +1356,146 @@ document.querySelector('.terrain-nav__hamburger')
   </div>
 </div>
 
+<div class="map-paper-outro">
+  <div class="map-paper-inner">
+    <p class="map-paper-body">
+      Counties are classified into four tiers based on the
+      combination of Strategic Leverage Score and Political
+      Terrain Score. Tier 1 counties — shown in red (capital
+      leverage) and deep blue (community leverage) — represent
+      the highest-priority organizing terrain: places where
+      structural worker power, decisive electoral geography,
+      and a misaligned incumbent all converge.
+    </p>
+    <p class="map-paper-body">
+      Use the National lens to identify where federal
+      elections are determined. Use the State lens to
+      identify where state legislative control is closest.
+      Click any county to see its full strategic profile.
+    </p>
+    <p class="map-paper-method-link-row">
+      <a href="methodology.html#sls" class="map-paper-method-link">
+        Score 1: Strategic Leverage →
+      </a>
+      <a href="methodology.html#pts" class="map-paper-method-link">
+        Score 2: Political Terrain →
+      </a>
+    </p>
+  </div>
+</div>
+
+<div class="map-case-studies">
+  <div class="map-paper-inner">
+    <h3 class="case-studies-heading">Case Studies</h3>
+    <p class="map-paper-body">
+      Four counties illustrate how the model works in practice.
+      Each represents a distinct terrain type.
+    </p>
+
+    <div class="case-studies-grid">
+
+      <div class="case-study-card">
+        <div class="case-study-county">Centre County, PA</div>
+        <div class="case-study-tier">Tier 3 Electoral</div>
+        <p class="case-study-body">
+          Home to Penn State in the most decisive swing state.
+          Low organizing infrastructure, maximum electoral leverage.
+          The county that most needs a base that doesn't exist yet.
+        </p>
+        <div class="case-study-scores">
+          <span class="cs-score">
+            <span class="cs-label">Capital</span>
+            <span class="cs-val">1.9</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">Community</span>
+            <span class="cs-val">17.4</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">P1</span>
+            <span class="cs-val">35.3</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="case-study-card">
+        <div class="case-study-county">Green County, WI</div>
+        <div class="case-study-tier">Tier 3 Electoral</div>
+        <p class="case-study-body">
+          Decided by 0.27 points in 2024. Maximum electoral
+          leverage, minimal workforce leverage. The quintessential
+          terrain-without-base county.
+        </p>
+        <div class="case-study-scores">
+          <span class="cs-score">
+            <span class="cs-label">Capital</span>
+            <span class="cs-val">0.5</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">Community</span>
+            <span class="cs-val">14.6</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">P1</span>
+            <span class="cs-val">100.0</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="case-study-card">
+        <div class="case-study-county">Monongalia County, WV</div>
+        <div class="case-study-tier" style="background: var(--color-tier-b); color: var(--color-type-b);">Tier 2 Community</div>
+        <p class="case-study-body">
+          Home of WVU and a hospital-dominant workforce.
+          Community leverage is among the highest in the country.
+          Not electorally decisive nationally, but a model for
+          community-based long-term power building.
+        </p>
+        <div class="case-study-scores">
+          <span class="cs-score">
+            <span class="cs-label">Capital</span>
+            <span class="cs-val">0.9</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">Community</span>
+            <span class="cs-val">42.8</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">P1</span>
+            <span class="cs-val">0.4</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="case-study-card">
+        <div class="case-study-county">Los Angeles County, CA</div>
+        <div class="case-study-tier" style="background: var(--color-tier-b); color: var(--color-type-b);">Tier 2 Capital</div>
+        <p class="case-study-body">
+          The largest capital leverage target in the country.
+          Safe state limits electoral ROI. Organizing here builds
+          national labor power and industry standards — not
+          swing-state margins.
+        </p>
+        <div class="case-study-scores">
+          <span class="cs-score">
+            <span class="cs-label">Capital</span>
+            <span class="cs-val">84.2</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">Community</span>
+            <span class="cs-val">28.5</span>
+          </span>
+          <span class="cs-score">
+            <span class="cs-label">P1</span>
+            <span class="cs-val">0.05</span>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 // ──────────────────────────────────────────────────────────────
 // State
@@ -2058,8 +1820,8 @@ const YLORRD       = ["#FFFFB2","#FED976","#FEB24C","#FD8D3C","#F03B20","#BD0026
 // Recalibrated for v2.0 sls_capital distribution (median=0.23, p95=5.21, max=84.16)
 const JENKS        = [0.5, 1.5, 3.0, 8.0, 20.0];
 const JENKS_LABELS = ["0–0.5","0.5–1.5","1.5–3","3–8","8–20","20+"];
-const NO_DATA_COLOR    = "#D8CFC4";
-const FILTERED_COLOR   = "#EDE7DF";
+const NO_DATA_COLOR    = "#EDEAE3";
+const FILTERED_COLOR   = "#F0EDE8";
 const TYPE_COLORS = { A: "#2d6a4f", B: "#e76f51", C: "#457b9d" };
 let activeLens = "default"; // "default" | "community" | "capital"
 
@@ -2067,13 +1829,13 @@ let activeLens = "default"; // "default" | "community" | "capital"
 const SWING_STATES_PRES = new Set(["PA","WI","MI","AZ","GA","NV","NC"]);
 
 const QUADRANT_COLORS = {
-  "deploy_now_both":          "#7b0020",  // darkest red — keep, very distinct
-  "deploy_now_capital":       "#bd0026",  // accent red — keep, brand color
-  "deploy_now_community":     "#e05c00",  // burnt orange — distinct from red for colorblind users
-  "primary_target_capital":   "#d4860a",  // amber — replaces sandy orange
-  "primary_target_community": "#b8860b",  // dark goldenrod — replaces yellow (fails on light bg)
-  "power_building":           "#2166ac",  // stronger blue — more distinct from gray
-  "lower_priority":           "#ccc4bb"   // gray — keep
+  "deploy_now_both":          "#6B0019",  // dark red — capital + community + electoral
+  "deploy_now_capital":       "#BD0026",  // Terrain Red — capital leverage
+  "deploy_now_community":     "#1a3a6b",  // deep blue — community leverage
+  "primary_target_capital":   "#E8736B",  // muted red — capital, build phase
+  "primary_target_community": "#4A7FB5",  // muted blue — community, build phase
+  "power_building":           "#7B6B9E",  // muted purple — electoral leverage only
+  "lower_priority":           "#E0DBD3"   // near-invisible warm gray
 };
 
 const QUADRANT_LABELS = {
@@ -2098,7 +1860,7 @@ const QUADRANT_LABELS = {
   "power_building":           "Tier 3 — Electoral",
   "lower_priority":           "Tier 4"
 };
-const NON_SWING_COLOR = "#ccc4bb";
+const NON_SWING_COLOR = "#E0DBD3";
 
 const SENATE_TIERS = {
   NC: 1,
@@ -2466,9 +2228,9 @@ async function initMap() {
       .attr("class", "msa-path")
       .attr("d", path)
       .attr("data-msa", d => d.properties.msaName)
-      .attr("stroke", "#8B7355")
-      .attr("stroke-width", "0.5")
-      .attr("stroke-opacity", "0.55")
+      .attr("stroke", "#C8C3B8")
+      .attr("stroke-width", "0.4")
+      .attr("stroke-opacity", "0.7")
       .attr("fill", d => {
         const msa = msaScoreByName[d.properties.msaName];
         if (!msa) return NO_DATA_COLOR;
@@ -3151,7 +2913,7 @@ function switchToView(view) {
   document.getElementById("gallery-view").style.display = view === "gallery" ? "block" : "none";
   document.getElementById("methodology-view").style.display = view === "methodology" ? "block" : "none";
   const sb = document.getElementById("sidebar");
-  sb.style.display = view === "map" ? "block" : "none";
+  sb.style.display = "none"; // sidebar shown only in expanded map mode
   const mft = document.getElementById("mobile-filter-toggle");
   if (mft) mft.style.display = (view === "map" && window.innerWidth <= 640) ? "flex" : "none";
   if (view === "table") renderTable();
@@ -3601,170 +3363,6 @@ async function glGenerateExplanation(card, msaName) {
 // ──────────────────────────────────────────────────────────────
 function setStatus(msg) { document.getElementById("status-msg").textContent = msg; }
 
-// ──────────────────────────────────────────────────────────────
-// Terrain Intro Overlay
-// ──────────────────────────────────────────────────────────────
-(function terrainIntro() {
-  const overlay     = document.getElementById('terrain-intro');
-  const slidesEl    = document.getElementById('intro-slides');
-  const slides      = Array.from(overlay.querySelectorAll('.intro-slide'));
-  const toggleBtn   = document.getElementById('intro-toggle-btn');
-  const progressEl  = document.getElementById('intro-progress');
-  let activeRingEl  = null;
-  let activeRingDiv = null;
-  let pulseScheduled = false;
-
-  let lastExpandedPct = 75; // remember last open width
-
-  function collapseIntro() {
-    slidesEl.style.scrollSnapType = 'none';
-    overlay.style.transition = 'width 0.35s ease';
-    overlay.style.width = '0';
-    overlay.classList.add('collapsed');
-    restoreRing();
-    setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
-  }
-
-  function expandIntro(pct) {
-    const targetPct = pct ?? lastExpandedPct;
-    slidesEl.style.scrollSnapType = 'none';
-    overlay.style.transition = 'width 0.35s ease';
-    overlay.style.width = `${targetPct}%`;
-    overlay.classList.remove('collapsed');
-    setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
-  }
-
-  // Drag-to-resize
-  toggleBtn.addEventListener('mousedown', (e) => {
-    if (overlay.classList.contains('collapsed')) {
-      expandIntro(lastExpandedPct);
-      return;
-    }
-    let dragged = false;
-    const startX = e.clientX;
-    const startW = overlay.offsetWidth;
-    overlay.style.transition = 'none';
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-
-    const onMove = (ev) => {
-      dragged = true;
-      const pct = Math.min(90, Math.max(0, (startW + ev.clientX - startX) / window.innerWidth * 100));
-      overlay.style.width = `${pct}%`;
-    };
-
-    const onUp = () => {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-      overlay.style.transition = 'width 0.35s ease';
-      const pct = overlay.offsetWidth / window.innerWidth * 100;
-      if (!dragged) {
-        collapseIntro();
-      } else if (pct < 10) {
-        collapseIntro();
-      } else {
-        lastExpandedPct = pct;
-        overlay.classList.remove('collapsed');
-        setTimeout(() => { slidesEl.style.scrollSnapType = ''; }, 350);
-      }
-    };
-
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-    e.preventDefault();
-  });
-
-  function renderDots(activeIdx) {
-    const isFinal = activeIdx === slides.length - 1;
-    progressEl.style.display = isFinal ? 'none' : '';
-    progressEl.innerHTML = slides.map((_, i) =>
-      `<span class="intro-dot${i === activeIdx ? ' active' : ''}"></span>`
-    ).join('');
-  }
-  renderDots(0);
-
-  // Track visible slide via IntersectionObserver
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const idx = slides.indexOf(e.target);
-      renderDots(idx);
-      restoreRing();
-    });
-  }, { root: slidesEl, threshold: 0.65 });
-  slides.forEach(s => io.observe(s));
-
-  function schedulePulse(selector, delayMs) {
-    setTimeout(() => {
-      const el = document.querySelector(selector);
-      if (!el) return;
-      restoreRing();
-      const prevPos = el.style.position;
-      const prevZ   = el.style.zIndex;
-      el.style.position = 'relative';
-      el.style.zIndex   = '2100';
-      const ring = document.createElement('div');
-      ring.className = 'pulse-ring';
-      el.appendChild(ring);
-      activeRingEl  = { el, prevPos, prevZ };
-      activeRingDiv = ring;
-      setTimeout(() => {
-        if (activeRingDiv === ring) restoreRing();
-      }, 1600);
-    }, delayMs);
-  }
-
-  function restoreRing() {
-    if (activeRingDiv) { activeRingDiv.remove(); activeRingDiv = null; }
-    if (activeRingEl)  {
-      activeRingEl.el.style.position = activeRingEl.prevPos;
-      activeRingEl.el.style.zIndex   = activeRingEl.prevZ;
-      activeRingEl = null;
-    }
-  }
-
-  // CTA buttons on slide 7
-  // Re-snap to active slide on resize so content never bleeds between slides
-  let activeSlideIdx = 0;
-  const origIo = io;
-  const snapToActive = () => {
-    const target = slides[activeSlideIdx];
-    if (target) target.scrollIntoView({ block: 'start' });
-  };
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(snapToActive, 100);
-  });
-
-  // Keep activeSlideIdx in sync — patch renderDots
-  const _renderDots = renderDots;
-  // track via the observer callback already running above; intercept via a wrapper
-  const io2 = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) activeSlideIdx = slides.indexOf(e.target);
-    });
-  }, { root: slidesEl, threshold: 0.65 });
-  slides.forEach(s => io2.observe(s));
-
-  document.getElementById('intro-explore-btn').addEventListener('click', collapseIntro);
-
-  document.querySelectorAll('#intro-case-panel .cs-card').forEach(card => {
-    card.style.cursor = 'pointer';
-    card.addEventListener('click', () => {
-      const c = allCounties.find(c => c.fips === card.dataset.fips);
-      if (c) showDetail(c);
-      collapseIntro();
-      setTimeout(() => zoomToCounty(card.dataset.fips), 400);
-    });
-  });
-
-  document.getElementById('intro-cases-btn').addEventListener('click', () => {
-    document.getElementById('intro-case-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-})();
 
 // ──────────────────────────────────────────────────────────────
 // Boot
@@ -3796,6 +3394,32 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
     </ul>
   </div>
 </footer>
+
+<script>
+// === MAP FIGURE EXPAND/COLLAPSE ===
+function expandMap() {
+  const fig = document.getElementById('map-figure');
+  const btn = document.querySelector('.map-expand-btn');
+  const sidebar = document.getElementById('sidebar');
+  if (!fig) return;
+  const isExpanded = fig.classList.toggle('expanded');
+  btn.textContent = isExpanded ? '↙ Collapse' : '↗ Expand';
+  document.body.style.overflow = isExpanded ? 'hidden' : '';
+  if (sidebar) {
+    sidebar.style.cssText = isExpanded
+      ? 'display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;width:320px;z-index:501;overflow-y:auto;background:var(--color-bg);border-right:1px solid var(--color-border);padding:1rem;'
+      : 'display:none;';
+  }
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const fig = document.getElementById('map-figure');
+    if (fig && fig.classList.contains('expanded')) expandMap();
+  }
+});
+</script>
 
 <script>
 // === TERRAIN PANEL NAVIGATION ===
@@ -3834,6 +3458,30 @@ function setStatus(msg) { document.getElementById("status-msg").textContent = ms
   });
 })();
 </script>
+
+<footer class="terrain-footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <span class="footer-wordmark"><span>T</span>errain</span>
+      <span class="footer-meta">
+        v2.0 · Open source ·
+        <a href="https://github.com/kpsmas123-bit/labor-organizing-model"
+           target="_blank" rel="noopener">GitHub</a>
+      </span>
+    </div>
+    <div class="footer-center">
+      <span class="footer-credit">
+        Built by Sam Kaplan-Pettus · UC Berkeley Political Science
+      </span>
+    </div>
+    <div class="footer-right">
+      <a href="index.html" class="footer-link">Home</a>
+      <a href="labor_organizing_national_dashboard.html" class="footer-link">Map</a>
+      <a href="methodology.html" class="footer-link">Methodology</a>
+      <a href="jobs.html" class="footer-link">Jobs Board</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
