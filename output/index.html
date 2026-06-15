@@ -117,83 +117,84 @@
 
     /* === ABOUT PANEL === */
     #panel-about {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 80px;
+      align-items: start;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      min-height: calc(100vh - var(--nav-height, 72px));
+      width: 100%;
       background: var(--color-bg);
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: var(--space-12) var(--space-8);
-      min-height: calc(100vh - var(--nav-height));
-      gap: var(--space-16);
       overflow: auto;
     }
 
     .about-main {
-      max-width: 480px;
-      width: 100%;
+      max-width: 520px;
     }
 
     .about-heading {
-      font-family: var(--font-display);
-      font-size: var(--text-3xl);
+      font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+      font-size: 2.5rem;
       font-weight: 500;
-      color: var(--color-text);
-      margin-bottom: var(--space-6);
+      color: var(--color-text, #1A1A18);
+      margin-bottom: 1.5rem;
       line-height: 1.15;
     }
 
     .about-body {
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      color: var(--color-text-secondary);
+      font-family: var(--font-body, 'Source Serif 4', Georgia, serif);
+      font-size: 1rem;
+      color: var(--color-text-secondary, #3D3D3A);
       line-height: 1.75;
-      margin-bottom: var(--space-6);
+      margin-bottom: 1.25rem;
     }
 
     .about-nav {
-      width: 260px;
-      flex-shrink: 0;
-      padding-top: var(--space-12);
+      padding-top: 12px;
     }
 
     .about-nav-label {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 0.7rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--color-text-muted);
-      margin-bottom: var(--space-4);
+      color: var(--color-text-muted, #5C6B7A);
+      margin-bottom: 1rem;
     }
 
     .about-link {
       display: flex;
       align-items: baseline;
-      gap: var(--space-3);
-      padding: var(--space-4) 0;
-      border-bottom: 1px solid var(--color-border);
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border, #C8C3B8);
       text-decoration: none;
-      color: var(--color-text);
+      color: var(--color-text, #1A1A18);
       transition: color 0.15s;
     }
 
-    .about-link:hover { color: var(--color-accent); }
+    .about-link:hover { color: var(--color-accent, #BD0026); }
 
     .about-link-num {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--color-text-muted);
-      min-width: 24px;
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 0.7rem;
+      color: var(--color-text-muted, #5C6B7A);
+      min-width: 22px;
     }
 
     .about-link-title {
-      font-family: var(--font-body);
-      font-size: var(--text-base);
+      font-family: var(--font-body, 'Source Serif 4', Georgia, serif);
+      font-size: 1rem;
       font-weight: 600;
+      display: block;
     }
 
     .about-link-desc {
-      font-family: var(--font-body);
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
+      font-family: var(--font-body, 'Source Serif 4', Georgia, serif);
+      font-size: 0.8rem;
+      color: var(--color-text-muted, #5C6B7A);
       display: block;
       margin-top: 2px;
       line-height: 1.4;
@@ -276,10 +277,11 @@
     .method-preview-cta:hover { text-decoration: underline; }
 
     @media (max-width: 768px) {
-      #panel-about { flex-direction: column; overflow-y: auto; }
-      .about-main { max-width: none; border-right: none;
-                    border-bottom: 1px solid var(--color-border); padding: var(--space-8); }
-      .about-nav { flex: none; padding: var(--space-8); }
+      #panel-about {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 40px 20px;
+      }
       .cover-title { font-size: 2.5rem; }
       #panel-cover { padding: var(--space-8); }
       .cover-scroll-hint { left: var(--space-8); }
