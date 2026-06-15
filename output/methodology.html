@@ -975,7 +975,7 @@
       </ul>
 
       <h3 class="method-subheading">A Note on AI</h3>
-      <p class="method-body">SLS scores are computed by a deterministic formula applied to BLS employment data and the sector scoring rubric. No AI is involved in the primary model. AI (Claude Sonnet) is used to generate MSA narrative summaries shown in the detail panel — those summaries are labeled as AI-generated and should be treated accordingly.</p>
+      <p class="method-body">SLS scores are computed by a deterministic formula applied to BLS employment data and the sector scoring rubric. No AI is involved in the primary model. The narrative summaries shown in a county's detail panel are also generated deterministically — assembled from that county's scores, tier, and electoral context — so there is no AI-written prose in the detail panel. AI (Claude) is used only in the separate narrative gallery feature, and that output is clearly labeled as AI-generated and should be treated accordingly.</p>
 
       <h3 class="method-subheading">The Jobs Board</h3>
       <p class="method-body">The companion jobs board at laborterrain.org/jobs matches individuals to labor movement roles using the same terrain data. The model shows terrain. The user brings the goal.</p>
@@ -1141,7 +1141,15 @@ Maximum: 80 points</div>
 
       <p class="method-body"><strong>Ideology component (40%):</strong> Legislative behavior ideology scores derived from bill sponsorship and cosponsorship patterns (GovTrack, 119th Congress). Normalized so that progressive = high signal, conservative = low signal. County P2 is aggregated from individual legislator scores weighted by district-county overlap from the Census district-county relationship file.</p>
 
-      <p class="method-body"><strong>Current P2 coverage:</strong> Federal P2: 533 legislators scored, 3,142 counties with alignment data. State P2: in progress — using DIME CFscores (Stanford) for current state legislators where available.</p>
+      <p class="method-body"><strong>Current P2 coverage:</strong> Federal P2: 533 legislators scored, 3,142 counties with alignment data.</p>
+
+      <p class="method-body"><strong>State P2</strong> is built with honest, per-legislator provenance because comparable state data does not exist everywhere. Each state legislator's alignment is sourced at one of three confidence levels:</p>
+      <ul class="method-body">
+        <li><strong>State key vote (<code>state_keyvote</code>) — highest confidence:</strong> For the subset of states that publish usable state roll-call data, real state key votes are incorporated directly. Most states do not publish this, so it covers only a minority of legislators.</li>
+        <li><strong>DIME matched (<code>dime_matched</code>):</strong> Where no usable roll-call data exists, the legislator is matched to a DIME CFscore (Stanford) via Open States. This is the primary signal for most state legislators.</li>
+        <li><strong>Party imputed (<code>party_imputed</code>) — lowest resolution:</strong> Where no DIME match exists — a meaningful minority of legislators — the model falls back to party as a proxy. This is a reliable but lower-resolution signal, and it is labeled as such.</li>
+      </ul>
+      <p class="method-body">The asymmetry is deliberate and stated plainly: unlike federal P2 (key votes 60% + ideology 40%), state P2 is primarily ideology- and finance-derived, because comparable state key-vote data is unavailable for most states. The model does not claim state key votes exist for every state.</p>
 
       <div class="note-box">
         <span class="note-box__label">Data Sources Considered and Rejected</span>
@@ -1253,7 +1261,7 @@ Maximum: 80 points</div>
           <span class="expand-card__arrow" aria-hidden="true">▾</span>
         </button>
         <div class="expand-card__body">
-          <p>P2 Incumbent Alignment depends on data sources with uneven coverage across states. VoteSmart and ProPublica cover federal legislators comprehensively but state legislative coverage varies. FollowTheMoney covers state campaign finance broadly but reporting requirements differ by state. Counties in states with weaker coverage will have less reliable P2 scores. The model flags coverage level for each county — full, partial, or unknown.</p>
+          <p>P2 Incumbent Alignment depends on data sources with uneven coverage across states. Federal voting records come from the Congress.gov API (verified against official House Clerk and Senate.gov XML records) and federal ideology from GovTrack, both of which cover federal legislators comprehensively. State-level alignment relies on DIME CFscores matched to current state legislators via Open States, where coverage is thinner and more variable — DIME matches do not exist for every legislator, and few states publish usable roll-call data. Counties in states with weaker coverage will have less reliable P2 scores, and state legislative coverage is consistently weaker than federal. The model flags coverage level for each county — full, partial, or unknown.</p>
         </div>
       </div>
 
@@ -1290,12 +1298,12 @@ Maximum: 80 points</div>
           <span class="expand-card__num">07</span>
           <div class="expand-card__meta">
             <span class="expand-card__title">P2 Incumbent Alignment data coverage is uneven</span>
-            <span class="expand-card__summary">Federal P2 is complete; state P2 relies on DIME CFscores with sparse 2022–2024 coverage for state legislators.</span>
+            <span class="expand-card__summary">Federal P2 is complete; state P2 carries three-tier provenance — real state key votes where published, DIME CFscores where matched, and party as a proxy otherwise.</span>
           </div>
           <span class="expand-card__arrow" aria-hidden="true">▾</span>
         </button>
         <div class="expand-card__body">
-          <p>Federal P2 scores are complete for all 533 current federal legislators across 3,142 counties. State P2 scores use DIME CFscores (Stanford, 1979–2024) matched to current state legislators via Open States. State legislative ideology data is most reliable for the 2010–2020 period; 2022–2024 state legislative coverage is sparse. State P2 is flagged as <code>coverage_type = cfscore_only</code> in the underlying data.</p>
+          <p>Federal P2 scores are complete for all 533 current federal legislators across 3,142 counties. State P2 is uneven by necessity and carries explicit per-legislator provenance. Where a state publishes usable roll-call data, real state key votes are used (<code>state_keyvote</code>) — but most states do not, so this covers only a minority of legislators. Where no roll-call data exists, the legislator is matched to a DIME CFscore (Stanford, 1979–2024) via Open States (<code>dime_matched</code>), the primary signal for most state legislators. Where no DIME match exists — a meaningful minority — the model falls back to party as a proxy (<code>party_imputed</code>), a reliable but lower-resolution signal. State legislative ideology data is most reliable for the 2010–2020 period, so counties in states with thinner recent coverage will have less reliable state P2 scores.</p>
         </div>
       </div>
     </section>
@@ -1344,30 +1352,6 @@ Maximum: 80 points</div>
             <td>State legislative chamber seat counts. Powers chamber tipping point weight.</td>
             <td>Post-election</td>
             <td><a href="https://www.ncsl.org/" target="_blank" rel="noopener noreferrer">ncsl.org</a></td>
-          </tr>
-          <tr>
-            <td>ProPublica Congress API</td>
-            <td>Federal legislative voting records on defined key votes.</td>
-            <td>Per vote</td>
-            <td><a href="https://www.propublica.org/datastore/api/propublica-congress-api" target="_blank" rel="noopener noreferrer">propublica.org/datastore</a></td>
-          </tr>
-          <tr>
-            <td>VoteSmart</td>
-            <td>State legislative voting records on defined key votes where available.</td>
-            <td>Per vote</td>
-            <td><a href="https://votesmart.org/" target="_blank" rel="noopener noreferrer">votesmart.org</a></td>
-          </tr>
-          <tr>
-            <td>OpenSecrets</td>
-            <td>Federal campaign finance — business to labor contribution ratios per incumbent.</td>
-            <td>Per election cycle</td>
-            <td><a href="https://www.opensecrets.org/" target="_blank" rel="noopener noreferrer">opensecrets.org</a></td>
-          </tr>
-          <tr>
-            <td>FollowTheMoney</td>
-            <td>State campaign finance — business to labor contribution ratios per incumbent.</td>
-            <td>Per election cycle</td>
-            <td><a href="https://www.followthemoney.org/" target="_blank" rel="noopener noreferrer">followthemoney.org</a></td>
           </tr>
           <tr>
             <td>North American Industry Classification System</td>
