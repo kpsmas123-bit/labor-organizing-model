@@ -687,7 +687,8 @@
       <div class="sidebar-label">LENS</div>
       <div class="lens-toggle">
         <button class="sidebar-lens-btn active" id="btn-national" onclick="setLens('national')">National</button>
-        <button class="sidebar-lens-btn" id="btn-state" onclick="setLens('state')">State</button>
+        <!-- State lens intentionally hidden pending state-lens rework (P1 miscalibration + state-uniform P2). Do not remove. -->
+        <button class="sidebar-lens-btn" id="btn-state" onclick="setLens('state')" style="display:none">State</button>
       </div>
       <div class="lens-description" id="lens-desc">Federal electoral tipping points + federal incumbent alignment</div>
     </div>
@@ -1510,6 +1511,8 @@ const LENS_DESCRIPTIONS = {
   state:    'State legislative chamber control + state incumbent alignment'
 };
 function setLens(lens) {
+  // State lens gated pending rework — ignore any 'state' request and stay national. State logic below left intact.
+  if (lens !== 'national') return;
   _currentLens = lens;
   document.getElementById('btn-national').classList.toggle('active', lens === 'national');
   document.getElementById('btn-state').classList.toggle('active', lens === 'state');
