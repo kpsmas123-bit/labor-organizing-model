@@ -656,8 +656,8 @@
         <span class="map-finding-label">Counties scored</span>
       </div>
       <div class="map-finding">
-        <span class="map-finding-num">36</span>
-        <span class="map-finding-label">Tier 1 counties</span>
+        <span class="map-finding-num" id="finding-tier1">21</span>
+        <span class="map-finding-label">Tier 1 counties (national)</span>
       </div>
       <div class="map-finding">
         <span class="map-finding-num">0</span>
@@ -1783,18 +1783,22 @@ function getMsaNarrative(msa) {
 async function loadData() {
   document.getElementById("loading-indicator").style.display = "block";
   setStatus("Loading county data…");
-  const localUrl = "../data/county_scores_v2_test.json";
+  const localUrl = "../data/county_scores.json";
   try {
     const resp = await fetch(localUrl);
     if (resp.ok) {
       const data = await resp.json();
       const raw = data.counties || data;
       allCounties = raw.filter(c => c.sls_capital !== null && c.sls_capital !== undefined);
+      // Hero headline: real national Tier-1 count (lens-independent, unfiltered)
+      const _t1nat = allCounties.filter(c => (c.quadrant_national || "").startsWith("tier1")).length;
+      const _t1el = document.getElementById("finding-tier1");
+      if (_t1el) _t1el.textContent = _t1nat;
       setStatus(`Loaded ${allCounties.length} scored counties`);
       document.getElementById("loading-indicator").style.display = "none";
     } else {
       allCounties = [];
-      setStatus("Could not load data/county_scores_v2_test.json — run pipeline/build_v2_scores_true.py first");
+      setStatus("Could not load data/county_scores.json — run pipeline/build_v2_canonical.py --full first");
       document.getElementById("loading-indicator").style.display = "none";
       return;
     }
@@ -2649,12 +2653,18 @@ function showDetail(county) {
   const panel = document.getElementById("detail-panel");
   panel.scrollTop = 0;
 
-  const q      = county.quadrant_national || county.quadrant || "tier4";
+  const lens   = _currentLens;
+  const q      = getLensQuadrant(county);
   const tn     = _tierNum(q);
   const slsCap = county.sls_capital;
   const slsComm= county.sls_community;
-  const p1     = county.p1_presidential;
-  const p2Raw  = county.federal_p2 ?? county.p2_alignment;
+  const p1     = lens === 'state'
+                   ? county.p1_state
+                   : (county.p1_national ?? county.p1_presidential);
+  const p2Raw  = lens === 'state'
+                   ? county.p2_state
+                   : (county.p2_national ?? county.federal_p2 ?? county.p2_alignment);
+  const p2Cov  = lens === 'state' ? county.state_p2_coverage : county.p2_coverage;
   const margin = county.margin_2024;
   const sw     = county.state_tipping_weight;
   const pop    = county.population;
@@ -2739,18 +2749,24 @@ function showDetail(county) {
     </div>
     <div class="card-score-hint">
       2024 margin: ${fmtMargin(margin)}&nbsp;pts
-      · State decisive: ${sw != null ? (sw * 100).toFixed(0) + "%" : "—"}
+      · ${lens === 'state'
+            ? `Chamber competitiveness: ${county.chamber_tipping_weight != null ? (county.chamber_tipping_weight * 100).toFixed(0) + "%" : "—"}`
+            : `State decisive: ${sw != null ? (sw * 100).toFixed(0) + "%" : "—"}`}
     </div>
 
     <div class="card-score-row">
-      <div class="card-score-label">Federal Alignment (P2)</div>
+      <div class="card-score-label">${lens === 'state' ? 'State Alignment (P2)' : 'Federal Alignment (P2)'}</div>
       <div class="card-bar-wrap">
         <div class="card-bar-fill card-bar-alignment"
              style="width:${p2Raw != null ? barW(p2Raw * 100, 100) : "0%"}"></div>
       </div>
       <div class="card-score-val">${fmtPct(p2Raw)}</div>
     </div>
-    <div class="card-score-hint">Incumbent alignment on 4 federal labor key votes</div>
+    <div class="card-score-hint">
+      ${lens === 'state'
+        ? `State legislature alignment · confidence: ${p2Cov || "—"}`
+        : `Incumbent alignment on 4 federal labor key votes${p2Cov ? ` · ${p2Cov}` : ""}`}
+    </div>
 
     <div class="card-more-toggle"
          onclick="this.nextElementSibling.classList.toggle('open');
@@ -2761,11 +2777,19 @@ function showDetail(county) {
     <div class="card-more-body">
       <div class="card-more-row">
         <span class="card-more-key">State electoral leverage (P1)</span>
-        <span>${county.state_p1 != null ? county.state_p1.toFixed(3) : "Data pending"}</span>
+        <span>${county.p1_state != null ? county.p1_state.toFixed(2) : "Data pending"}</span>
       </div>
       <div class="card-more-row">
         <span class="card-more-key">State alignment (P2)</span>
-        <span>${fmtPct(county.state_p2)}</span>
+        <span>${fmtPct(county.p2_state)}${county.state_p2_coverage ? ` (${county.state_p2_coverage})` : ""}</span>
+      </div>
+      <div class="card-more-row">
+        <span class="card-more-key">National electoral leverage (P1)</span>
+        <span>${county.p1_national != null ? county.p1_national.toFixed(2) : "Data pending"}</span>
+      </div>
+      <div class="card-more-row">
+        <span class="card-more-key">National alignment (P2)</span>
+        <span>${fmtPct(county.p2_national)}</span>
       </div>
       <div class="card-more-row">
         <span class="card-more-key">State lens tier</span>
