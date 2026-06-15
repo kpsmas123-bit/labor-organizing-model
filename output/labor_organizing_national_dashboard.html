@@ -823,11 +823,6 @@
             <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
           </div>
           <div class="legend-body">
-            <div class="seg-buttons" id="lens-btns" style="margin-bottom:8px;">
-              <div class="seg-btn lens-btn active" data-lens="default">Default</div>
-              <div class="seg-btn lens-btn" data-lens="community">Community</div>
-              <div class="seg-btn lens-btn" data-lens="capital">Capital</div>
-            </div>
             <div class="legend-title" id="legend-title">Intervention Type</div>
             <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
             <div id="legend-tiers"></div>
@@ -1639,6 +1634,46 @@ function _tierNum(q) {
 function _tierLabel(q) { return _TIER_LABELS[q] || q || "Unclassified"; }
 function _tierDesc(q)  { return _TIER_DESCS[q]  || ""; }
 
+function getTier4Narrative(county) {
+  const p2 = county.federal_p2 ?? county.p2_alignment ?? null;
+  const p1 = county.p1_presidential || 0;
+  const name = county.county_name || "This county";
+
+  if (p2 !== null && p2 >= 0.6 && p1 < 5) {
+    return `${name} is low priority terrain — not because organizing here lacks value, ` +
+           `but because the long-term work of building political alignment has already ` +
+           `succeeded. Labor's political infrastructure is strong here. Resources are ` +
+           `better deployed where that work remains undone.`;
+  }
+  if (p2 !== null && p2 < 0.4 && p1 < 5) {
+    return `${name} has a hostile incumbent and limited electoral leverage under current ` +
+           `conditions. Organizing here builds long-term worker power but is unlikely to ` +
+           `shift electoral outcomes in the near term. A long-term investment lens applies.`;
+  }
+  if (p1 < 5) {
+    return `${name} sits outside decisive electoral terrain. Organizing here builds ` +
+           `organizational density and worker power without near-term electoral leverage. ` +
+           `A long-term power-building frame applies.`;
+  }
+  return `${name} falls below current strategic thresholds. ` +
+         `Review state lens for legislative terrain context.`;
+}
+
+function getTier3Narrative(county) {
+  const stateTW = county.state_tipping_weight || 0;
+  const name = county.county_name || "This county";
+  const p1 = county.p1_presidential || 0;
+
+  if (stateTW >= 0.05) {
+    return `${name} is in decisive electoral terrain ` +
+           `(P1: ${p1.toFixed(1)}) but does not yet have the organizing ` +
+           `infrastructure to match its political importance. Building the base here ` +
+           `— hospitals, schools, public sector workers — is the long-term strategic task.`;
+  }
+  return `${name} has significant state legislative leverage but limited presidential ` +
+         `electoral weight. Check the State tab for chamber-level context.`;
+}
+
 function getCountyNarrative(county) {
   if (county.narrative) return county.narrative;
 
@@ -1657,8 +1692,7 @@ function getCountyNarrative(county) {
 
   // Tier 4 — neither leverage nor electoral
   if (!capitalHigh && !communityHigh && !p1High) {
-    return `${name} falls below current strategic thresholds on both ` +
-           `leverage dimensions and electoral geography.`;
+    return getTier4Narrative(county);
   }
 
   // High SLS + high P1 + hostile incumbent (Tier 1)
@@ -1707,10 +1741,7 @@ function getCountyNarrative(county) {
 
   // Low SLS + high P1 (Tier 3 electoral)
   if (p1High && !capitalHigh && !communityHigh) {
-    return `${name} is in decisive electoral terrain ` +
-           `(P1: ${p1.toFixed(1)}) but does not yet have the ` +
-           `organizing infrastructure to match its political importance. ` +
-           `Long-term investment here builds the base that doesn't exist yet.`;
+    return getTier3Narrative(county);
   }
 
   return `${name} is classified based on its combination of ` +
@@ -2021,17 +2052,7 @@ function updateLegend() {
 }
 
 
-document.querySelectorAll("#lens-btns .lens-btn").forEach(btn => {
-  btn.addEventListener("click", function() {
-    activeLens = this.dataset.lens;
-    document.querySelectorAll("#lens-btns .lens-btn").forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-    const labels = { default: "Default", community: "Community", capital: "Capital" };
-    document.getElementById("lens-badge").textContent = `Viewing: ${labels[activeLens]} lens`;
-    updateMapColors();
-    updateLegend();
-  });
-});
+// lens-btn legend toggles removed in v2.1 — use sidebar lens selector instead
 
 // ──────────────────────────────────────────────────────────────
 // Map
@@ -3471,7 +3492,15 @@ document.addEventListener('keydown', function(e) {
     </div>
     <div class="footer-center">
       <span class="footer-credit">
-        Built by Sam Kaplan-Pettus · UC Berkeley Political Science
+        Sam Kaplan-Pettus · UC Berkeley Political Science
+      </span>
+      <span class="footer-legal">
+        © 2026 Sam Kaplan-Pettus. Model and methodology licensed
+        under <a href="https://creativecommons.org/licenses/by/4.0/"
+        target="_blank" rel="noopener">CC BY 4.0</a>.
+        Data from BLS, Census Bureau, MIT Election Lab,
+        GovTrack, and Stanford DIME.
+        Scores are research estimates — not definitive strategic guidance.
       </span>
     </div>
     <div class="footer-right">

@@ -940,10 +940,10 @@ img, svg {
    ============================================================ */
 
 .map-figure {
-  max-width: 900px;
-  margin: var(--space-8) auto;
+  max-width: 100%;
+  margin: var(--space-8) 0;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   overflow: hidden;
   background: var(--color-bg);
 }
@@ -952,7 +952,7 @@ img, svg {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
 }
@@ -961,10 +961,12 @@ img, svg {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--color-text-muted);
+  letter-spacing: 0.03em;
 }
 
 .map-figure-number {
   color: var(--color-accent);
+  font-weight: 500;
   margin-right: var(--space-2);
 }
 
@@ -988,7 +990,8 @@ img, svg {
 }
 
 .map-figure-body {
-  height: 480px;
+  height: 520px;
+  background: var(--color-bg);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1002,6 +1005,8 @@ img, svg {
   color: var(--color-text-muted);
   background: var(--color-bg);
   border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Expanded state — full viewport, sidebar occupies left 320px */
@@ -1013,10 +1018,11 @@ img, svg {
   border-radius: 0;
   border: none;
   z-index: 500;
+  padding-top: var(--nav-height);
 }
 
 .map-figure.expanded .map-figure-body {
-  height: calc(100vh - 80px);
+  height: calc(100vh - var(--nav-height) - 80px);
 }
 
 /* Legend: hidden in paper mode, visible in expanded */
@@ -1482,11 +1488,33 @@ img, svg {
 }
 
 .footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  text-align: center;
+}
+
+.footer-credit {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--color-text-muted);
-  text-align: center;
 }
+
+.footer-legal {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  max-width: 560px;
+  line-height: 1.5;
+}
+
+.footer-legal a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+}
+
+.footer-legal a:hover { color: var(--color-accent); }
 
 .footer-right {
   display: flex;
