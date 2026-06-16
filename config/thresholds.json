@@ -31,6 +31,18 @@
     "_deprecated": "sls_high_low_boundary and pts_high_low_boundary removed — replaced by dual-dimension thresholds"
   },
 
+  "state_competitiveness": {
+    "plateau_edge": 3.0,
+    "zero_edge": 8.0,
+    "p1_high_state": 30.0,
+    "_added": "2026-06-15 (state-lens rebuild v2, Agent 1). SINGLE SOURCE for the state-lens competitiveness weighting. pipeline/rebuild_state_lens.py reads every parameter from this block — nothing in the script hardcodes these.",
+    "_comp_function": "Plateau-fade. comp(|margin|) = 1.0 for |margin| <= plateau_edge (toss-up zone, full weight); linear decay (zero_edge - |margin|)/(zero_edge - plateau_edge) for plateau_edge < |margin| < zero_edge; 0.0 for |margin| >= zero_edge. Continuous at plateau_edge (both pieces = 1.0). margin is a two-party margin in percentage points.",
+    "_formula": "P1_state = 100 * chamber_flip_proximity * comp(margin). Range 0..~98.",
+    "_edges_rationale": "Full competitiveness weight through ±3% two-party margin (toss-up), linear decay to zero at ±8% (lean edge). Basis: 538 Atlas of Redistricting treats D+5/R+5 as the competitive boundary, and Ballotpedia classifies 5–10% margins as 'mildly competitive'. Plateau adopted so the model does not draw distinctions finer than the data's reliability (vintage/proxy error) supports.",
+    "_p1_high_state_note": "Decision B — selectivity threshold for the state lens. Left at 30.0 pending Sam's pick from the 3-threshold selectivity report (state lens P1 is a DIFFERENT scale than national P1, so national p1_high_boundary=5.0 does not apply). This single number is the selectivity knob.",
+    "_no_synthetic_adjustment": "No swing buffer or synthetic margin adjustment is applied to any state. Stale sources (e.g. VA 2021 gubernatorial) are INCLUDED and flagged by vintage via p1_state_data_tier; they are not numerically discounted."
+  },
+
   "swing_states_presidential": {
     "states": ["AZ", "GA", "MI", "NV", "NC", "PA", "WI"],
     "_source": "task9_fast.py SWING_STATES",
