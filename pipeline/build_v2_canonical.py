@@ -87,13 +87,30 @@ def calc_sls_capital(county_sectors, sector_points, denominator):
     return round(min(100.0, raw / denominator), 2)
 
 
-def calc_sls_community(county_sectors, sector_points):
+def confidence_ramp(total_emp, ramp):
+    """
+    Soft employment-confidence ramp (DATA-RELIABILITY NOISE GATE, state-agnostic).
+    Returns a multiplier in [0, 1]: 1.0 at/above ramp_full_at, 0.0 at/below
+    ramp_zero_at, linear in between. Params are READ FROM CONFIG, not hardcoded.
+    """
+    full_at = ramp["ramp_full_at"]
+    zero_at = ramp["ramp_zero_at"]
+    if total_emp >= full_at:
+        return 1.0
+    if total_emp <= zero_at:
+        return 0.0
+    return (total_emp - zero_at) / (full_at - zero_at)
+
+
+def calc_sls_community(county_sectors, sector_points, ramp):
     total = sum(e["total_employment"] for e in county_sectors.values())
     if total == 0:
         return 0.0
     weighted = sum(sector_points[sid]["comm"] * (emp["total_employment"] / total)
                    for sid, emp in county_sectors.items() if sid in sector_points)
-    return round(min(100.0, weighted * 4), 2)
+    share_score = min(100.0, weighted * 4)               # existing share signal (unchanged)
+    # Option D: gate the share signal by a soft employment-confidence ramp.
+    return round(min(100.0, share_score * confidence_ramp(total, ramp)), 2)
 
 
 # ---------------------------------------------------------------- P1 (unchanged formula)
@@ -275,6 +292,7 @@ def main():
     existing = {c["fips"]: c for c in v2_existing["counties"]}
 
     denominator = weights["svs_normalization"]["denominator"]
+    sls_comm_ramp = thresholds["sls_community_confidence_ramp"]  # Option D noise gate (config-read)
     q = thresholds["quadrant"]
     T = {
         "sls_capital": q["sls_capital_high_boundary"],
@@ -298,7 +316,7 @@ def main():
             county_sectors = employment.get(fips, {})
 
             sls_capital = calc_sls_capital(county_sectors, sector_points, denominator)
-            sls_community = calc_sls_community(county_sectors, sector_points)
+            sls_community = calc_sls_community(county_sectors, sector_points, sls_comm_ramp)
 
             # --- P1: national (presidential) + state (chamber). BUG #1: default applied to both. ---
             pres_w = pres_tip.get(state_abbr, _PRES_DEFAULT_TIP)

@@ -220,22 +220,22 @@
       "p1_high_state": 30,
       "high_p1_counties": 356,
       "pct_of_map": 11.3,
-      "tier1": 50,
-      "tier3": 212
+      "tier1": 41,
+      "tier3": 229
     },
     {
       "p1_high_state": 60,
       "high_p1_counties": 252,
       "pct_of_map": 8.0,
-      "tier1": 36,
-      "tier3": 144
+      "tier1": 32,
+      "tier3": 154
     },
     {
       "p1_high_state": 90,
       "high_p1_counties": 73,
       "pct_of_map": 2.3,
-      "tier1": 12,
-      "tier3": 40
+      "tier1": 9,
+      "tier3": 46
     }
   ],
   "high_p1_curve": [

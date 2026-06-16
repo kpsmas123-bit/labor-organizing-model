@@ -18,6 +18,14 @@
     "_rationale": "Calibrated against actual score distribution (n=3,144). Superseded by quadrant system in v2.0."
   },
 
+  "sls_community_confidence_ramp": {
+    "ramp_full_at": 10000,
+    "ramp_zero_at": 2000,
+    "_added": "2026-06-16 (SLS-Community Option D rebuild). DATA-RELIABILITY NOISE GATE applied to the SLS-Community employment-share score. STATE-AGNOSTIC. Soft linear ramp, NOT a hard cliff.",
+    "_formula": "ramp = 1.0 for total_emp >= ramp_full_at; ramp = 0.0 for total_emp <= ramp_zero_at; ramp = (total_emp - ramp_zero_at) / (ramp_full_at - ramp_zero_at) in between. Final SLS-Community = round(min(100, share_score * ramp), 2).",
+    "_rationale": "The strategic-community SHARE signal (concentration of community-reach employment) becomes pure noise in tiny counties: a 53-worker county with one community-facing employer posts a maximal share. The ramp suppresses small-N artifacts without rewarding size — concentration (not magnitude) still determines the score above ramp_full_at, preserving Option D's orthogonality to size/Capital. ramp_zero_at=2000 / ramp_full_at=10000 chosen so counties below ~2k total covered employment (where a single employer dominates the share) score ~0, fading smoothly to full weight by 10k (the point the prior diagnostic identified where share stops being driven by a single establishment)."
+  },
+
   "quadrant": {
     "sls_capital_high_boundary": 2.5,
     "sls_community_high_boundary": 35,
