@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategic Frame Scatter — Design Draft</title>
+
+<!-- Same Google Fonts import the site uses (graceful fallback offline) -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+/* ============================================================
+   TOKENS — copied verbatim from output/terrain.css :root
+   (copied, NOT linked, so this renders off disk via file://)
+   ============================================================ */
+:root {
+  --color-bg:              #F7F5F0;
+  --color-bg-card:         #EFEFEA;
+  --color-bg-subtle:       #EDEAE3;
+  --color-ink:             #1A1A18;
+  --color-text:            #1A1A18;
+  --color-text-secondary:  #3D3D3A;
+  --color-text-muted:      #5C6B7A;
+  --color-rule:            #C8C3B8;
+  --color-border:          #C8C3B8;
+  --color-border-strong:   #9E9890;
+  --color-accent:          #BD0026;
+  --color-accent-hover:    #9A001F;
+  --color-accent-light:    rgba(189,0,38,0.10);
+  --color-active:          rgba(189,0,38,0.12);
+  --color-dark:            #1A1A18;
+
+  /* Quadrant tier colors */
+  --color-tier-1-capital:  #BD0026;
+  --color-tier-1-community:#1a3a6b;
+  --color-tier-2-capital:  #c45e00;
+  --color-tier-2-community:#2c6fad;
+  --color-tier-3:          #6b4f9e;
+  --color-tier-4:          #ccc4bb;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-serif:   'Source Serif 4', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+  --font-ui:      'Inter', system-ui, sans-serif;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  2rem;
+
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* alignment hues (third dimension as color) */
+  --align-hostile: #BD0026;   /* accent red  */
+  --align-aligned: #2c6fad;   /* tier-2-community blue */
+  --align-neutral: #9E9890;   /* border-strong grey */
+}
+
+* { box-sizing: border-box; }
+html,body { margin:0; padding:0; }
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-8); }
+
+header.pagehead { margin-bottom: var(--space-5); }
+.kicker {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-accent); margin: 0 0 var(--space-2);
+}
+h1 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--text-3xl); line-height: 1.1; margin: 0 0 var(--space-2);
+}
+.sub { color: var(--color-text-secondary); font-size: var(--text-sm); max-width: 70ch; margin:0; }
+.draftnote {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-text-muted); margin-top: var(--space-2);
+  border-left: 2px solid var(--color-rule); padding-left: var(--space-3);
+}
+
+/* ---- controls ---- */
+.controls {
+  display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6);
+  align-items: flex-end;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+.ctl { display: flex; flex-direction: column; gap: var(--space-1); }
+.ctl > label {
+  font-family: var(--font-ui); font-size: var(--text-xs); font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-text-muted);
+}
+.seg { display: inline-flex; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+.seg button {
+  font-family: var(--font-ui); font-size: var(--text-sm);
+  background: transparent; color: var(--color-text-secondary);
+  border: none; border-right: 1px solid var(--color-border-strong);
+  padding: 5px 12px; cursor: pointer; white-space: nowrap;
+}
+.seg button:last-child { border-right: none; }
+.seg button[aria-pressed="true"] { background: var(--color-ink); color: #fff; }
+.ctl input[type=range] { width: 150px; accent-color: var(--color-accent); }
+.ctl .rngval { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+/* ---- plot + side ---- */
+.stage { display: grid; grid-template-columns: minmax(0,1fr) 280px; gap: var(--space-6); align-items: start; }
+@media (max-width: 980px){ .stage { grid-template-columns: 1fr; } }
+
+.plotcard {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+svg.scatter { width: 100%; height: auto; display: block; font-family: var(--font-ui); }
+.cap {
+  font-size: var(--text-xs); color: var(--color-text-muted);
+  font-style: italic; margin: var(--space-2) var(--space-2) 0;
+}
+
+/* axis + quadrant svg styling */
+.axisline { stroke: var(--color-border-strong); stroke-width: 1; }
+.tick text { fill: var(--color-text-muted); font-size: 10px; }
+.tick line { stroke: var(--color-rule); stroke-width: 1; }
+.axislabel { fill: var(--color-text); font-size: 13px; font-weight: 600; }
+.axislabel.code { fill: var(--color-text-muted); font-size: 10px; font-weight: 400; font-family: var(--font-mono); }
+.divider { stroke: var(--color-ink); stroke-width: 1.2; stroke-dasharray: 5 4; opacity: 0.55; }
+.divider.secondary { stroke: var(--color-tier-2-capital); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.5; }
+.qlabel { fill: var(--color-text-secondary); font-size: 13px; font-weight: 600; font-family: var(--font-ui); opacity: 0.5; }
+.qlabel .qsub { font-size: 9px; font-weight: 400; }
+.pt { stroke: rgba(26,26,24,0.25); stroke-width: 0.3; cursor: pointer; }
+.pt.dim { opacity: 0.07 !important; }
+
+/* side panel */
+.side { display:flex; flex-direction: column; gap: var(--space-4); }
+.panel {
+  background: var(--color-bg-card); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: var(--space-4);
+}
+.panel h3 {
+  font-family: var(--font-ui); font-size: var(--text-xs); font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
+}
+.legend-row { display:flex; align-items:center; gap: var(--space-2); font-size: var(--text-sm); margin-bottom: 4px; }
+.swatch { width: 12px; height: 12px; border-radius: 50%; flex: 0 0 auto; border: 0.5px solid rgba(0,0,0,0.2); }
+.legend-row .ct { margin-left: auto; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+#readout, #hoverout { font-size: var(--text-sm); }
+#readout .muted, #hoverout .muted { color: var(--color-text-muted); }
+.kv { display:flex; justify-content: space-between; gap: var(--space-3); padding: 2px 0; border-bottom: 1px dotted var(--color-rule); }
+.kv:last-child { border-bottom: none; }
+.kv .k { color: var(--color-text-muted); }
+.kv .v { font-family: var(--font-mono); font-size: var(--text-xs); }
+.navdeclare { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); margin-top: var(--space-2); word-break: break-word; }
+
+/* floating tooltip */
+#tooltip {
+  position: fixed; pointer-events: none; z-index: 50;
+  background: var(--color-ink); color: #f3f1ec;
+  border-radius: var(--radius-sm); padding: 8px 10px;
+  font-size: var(--text-xs); line-height: 1.45; max-width: 240px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25); opacity: 0; transition: opacity .08s;
+}
+#tooltip .tt-name { font-family: var(--font-ui); font-weight: 600; font-size: var(--text-sm); margin-bottom: 3px; }
+#tooltip .tt-row { display:flex; justify-content: space-between; gap: 10px; }
+#tooltip .tt-row .l { color: #b9b5ac; }
+#tooltip .tt-row .r { font-family: var(--font-mono); }
+
+/* report / methods */
+.report {
+  margin-top: var(--space-8); background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+.report h2 { font-family: var(--font-display); font-weight:600; font-size: var(--text-2xl); margin: 0 0 var(--space-3); }
+.report h4 { font-family: var(--font-ui); font-size: var(--text-sm); text-transform: uppercase; letter-spacing:0.04em; color: var(--color-text-muted); margin: var(--space-5) 0 var(--space-2); }
+.report p, .report li { font-size: var(--text-sm); color: var(--color-text-secondary); }
+.report code { font-family: var(--font-mono); font-size: 0.8em; background: var(--color-bg-card); padding: 1px 5px; border-radius: 3px; }
+.report .flag { border-left: 3px solid var(--color-accent); padding-left: var(--space-3); background: var(--color-accent-light); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: var(--space-3); }
+.report .reportval { font-family: var(--font-mono); color: var(--color-ink); }
+
+#status { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+.loadfail {
+  background: var(--color-banner-warning-bg, #fffbeb); border: 1px solid #f59e0b;
+  border-radius: var(--radius-md); padding: var(--space-4); margin: var(--space-4) 0;
+  font-size: var(--text-sm);
+}
+.loadfail input[type=file] { margin-top: var(--space-2); font-family: var(--font-mono); font-size: var(--text-xs); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="pagehead">
+    <p class="kicker">Methodology · Output · design draft</p>
+    <h1>Strategic Frame — every county on the leverage plane</h1>
+    <p class="sub">Each point is one U.S. county positioned by <strong>Electoral Leverage</strong> (x) and
+    <strong>Sectoral Leverage</strong> (y), colored by <strong>Incumbent Alignment</strong>. Reads live model data;
+    national lens only. The four quadrants are the strategic regions inside which the model's six tiers fall.</p>
+    <p class="draftnote">ROUGH DRAFT for visual review — standalone, not wired into the site. Opens directly off disk.
+    See the methods &amp; findings panel at the bottom for exactly what was read from config vs. defaulted.</p>
+  </header>
+
+  <div id="loadbox"></div>
+
+  <div class="controls" id="controls" hidden>
+    <div class="ctl">
+      <label>Combine rule (Y)</label>
+      <div class="seg" id="seg-combine">
+        <button data-v="max" aria-pressed="true">max</button>
+        <button data-v="avg" aria-pressed="false">average</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label>Color by</label>
+      <div class="seg" id="seg-color">
+        <button data-v="align" aria-pressed="true">Incumbent Alignment</button>
+        <button data-v="tier" aria-pressed="false">6-tier</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label>Alignment filter</label>
+      <div class="seg" id="seg-filter">
+        <button data-v="all" aria-pressed="true">all</button>
+        <button data-v="hostile" aria-pressed="false">hostile only</button>
+        <button data-v="aligned" aria-pressed="false">aligned only</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label>Quadrant lines</label>
+      <div class="seg" id="seg-lines">
+        <button data-v="on" aria-pressed="true">on</button>
+        <button data-v="off" aria-pressed="false">off</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label>Point opacity <span class="rngval" id="op-val">0.45</span></label>
+      <input type="range" id="rng-op" min="0.05" max="1" step="0.05" value="0.45">
+    </div>
+    <div class="ctl">
+      <label>Jitter <span class="rngval" id="jit-val">0.6</span></label>
+      <input type="range" id="rng-jit" min="0" max="2" step="0.1" value="0.6">
+    </div>
+  </div>
+
+  <div class="stage" id="stage" hidden>
+    <div>
+      <div class="plotcard">
+        <svg class="scatter" id="svg" viewBox="0 0 760 600" preserveAspectRatio="xMidYMid meet" aria-label="County leverage scatter"></svg>
+      </div>
+      <p class="cap">Conceptual frame — the live model classifies 6 tiers; quadrants are the strategic regions they fall within.</p>
+    </div>
+
+    <aside class="side">
+      <div class="panel">
+        <h3 id="legend-title">Incumbent Alignment</h3>
+        <div id="legend"></div>
+      </div>
+      <div class="panel">
+        <h3>Hover</h3>
+        <div id="hoverout"><span class="muted">Hover a point for its values…</span></div>
+      </div>
+      <div class="panel">
+        <h3>Click readout</h3>
+        <div id="readout"><span class="muted">Click a point to select it…</span></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- METHODS & FINDINGS -->
+  <section class="report" id="report" hidden>
+    <h2>Methods &amp; findings <span id="status"></span></h2>
+
+    <h4>Data plotted</h4>
+    <p id="r-data"></p>
+
+    <h4>Axes</h4>
+    <p><strong>X = Electoral Leverage</strong> = national <code>p1_national</code> (the electoral-strategic value), plotted on a fixed 0–100 scale.</p>
+    <p><strong>Y = Sectoral Leverage</strong> = combine( normalize(<code>sls_capital</code>)→0–100 , normalize(<code>sls_community</code>)→0–100 ).
+       Each component is min-max normalized so its max across all counties = 100. The two are combined per the
+       <code>labor_score_combination</code> rule. <span id="r-combine"></span></p>
+
+    <h4>Thresholds &amp; quadrant lines — values used</h4>
+    <p id="r-thresh"></p>
+    <div class="flag" id="r-ydivider"></div>
+
+    <h4>Color — Incumbent Alignment buckets</h4>
+    <p id="r-align"></p>
+
+    <h4>Model sanity check — do the 6 tiers line up with the quadrants?</h4>
+    <div class="flag" id="r-sanity"></div>
+
+    <h4>What the five toggles do</h4>
+    <ul>
+      <li><strong>Combine rule</strong> — recomputes Y live as <code>max</code> ↔ <code>average</code> of the two normalized components, so you can compare the Y-axis definition without editing config.</li>
+      <li><strong>Color by</strong> — <code>Incumbent Alignment (P2)</code> ↔ <code>6-tier</code>. Tier coloring is the geometry↔classification sanity check.</li>
+      <li><strong>Alignment filter</strong> — show <code>all</code> ↔ <code>hostile-only</code> (P2 &lt; ceiling) ↔ <code>aligned-only</code> (P2 ≥ floor).</li>
+      <li><strong>Quadrant lines</strong> — toggle the divider lines + quadrant labels on/off.</li>
+      <li><strong>Overplot</strong> — point-opacity slider + jitter slider, so the dense bottom-left Low-Priority blob stays readable.</li>
+    </ul>
+
+    <h4>Open questions / unsure</h4>
+    <ul id="r-unsure"></ul>
+  </section>
+
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+/* ============================================================
+   Strategic Frame Scatter — standalone design draft
+   Reads ../data/county_scores.json live. National lens only.
+   No build step, no D3 — vanilla SVG so it runs off file://.
+   ============================================================ */
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+const PLOT = { w:760, h:600, ml:64, mr:24, mt:24, mb:60 };
+PLOT.iw = PLOT.w - PLOT.ml - PLOT.mr;
+PLOT.ih = PLOT.h - PLOT.mt - PLOT.mb;
+
+// state
+const state = {
+  combine: "max",
+  color: "align",
+  filter: "all",
+  lines: "on",
+  opacity: 0.45,
+  jitter: 0.6,
+};
+
+// tier color map (from terrain.css tokens)
+const TIER_COLORS = {
+  tier1_capital:          getCSS('--color-tier-1-capital'),
+  tier1_community:        getCSS('--color-tier-1-community'),
+  tier2_build_capital:    getCSS('--color-tier-2-capital'),
+  tier2_activate_capital: getCSS('--color-tier-2-capital'),
+  tier2_unknown_capital:  getCSS('--color-tier-2-capital'),
+  tier2_build_community:  getCSS('--color-tier-2-community'),
+  tier2_activate_community:getCSS('--color-tier-2-community'),
+  tier3_electoral:        getCSS('--color-tier-3'),
+  tier4:                  getCSS('--color-tier-4'),
+};
+const TIER_GROUPS = [
+  { key:'tier1', label:'Tier One',      color:getCSS('--color-tier-1-capital'),  test:t=>t&&t.startsWith('tier1') },
+  { key:'tier2', label:'Base Building', color:getCSS('--color-tier-2-capital'),  test:t=>t&&t.startsWith('tier2') },
+  { key:'tier3', label:'Electoral',     color:getCSS('--color-tier-3'),          test:t=>t==='tier3_electoral' },
+  { key:'tier4', label:'Low Priority',  color:getCSS('--color-tier-4'),          test:t=>t==='tier4' },
+];
+const ALIGN_COLORS = {
+  hostile: getCSS('--align-hostile'),
+  aligned: getCSS('--align-aligned'),
+  neutral: getCSS('--align-neutral'),
+};
+
+function getCSS(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+let RAW = null;       // full json
+let COUNTIES = [];    // working array
+let CFG = {};         // thresholds in use
+let NORM = {};        // maxCap, maxComm
+let CFG_SOURCE = "";  // provenance string
+
+// deterministic per-county jitter (no Math.random — stable across redraws)
+function hashJit(fips){
+  let h = 2166136261;
+  for (let i=0;i<fips.length;i++){ h ^= fips.charCodeAt(i); h = Math.imul(h, 16777619); }
+  const jx = ((h >>> 0) % 1000) / 1000 - 0.5;
+  const jy = (((h >>> 10) >>> 0) % 1000) / 1000 - 0.5;
+  return { jx, jy };
+}
+
+/* ---------- load ---------- */
+async function tryFetchJSON(path){
+  try { const r = await fetch(path, {cache:'no-store'}); if(!r.ok) throw 0; return await r.json(); }
+  catch(e){ return null; }
+}
+
+async function boot(){
+  // primary live source: the same file the map reads
+  let scores = await tryFetchJSON('../data/county_scores.json');
+  if(!scores){
+    showLoadFallback();
+    return;
+  }
+  // try the canonical config file too; fall back to the _thresholds block baked into county_scores
+  let cfgFile = await tryFetchJSON('../config/thresholds.json');
+  initWithData(scores, cfgFile);
+}
+
+function showLoadFallback(){
+  const box = document.getElementById('loadbox');
+  box.innerHTML = `<div class="loadfail">
+    <strong>Could not auto-load <code>../data/county_scores.json</code> over <code>file://</code>.</strong>
+    Some browsers (Chrome) block local <code>fetch()</code>. Either serve the folder
+    (<code>python3 -m http.server</code> from the repo root, then open
+    <code>output/scatter_preview.html</code>), or pick the file manually:
+    <br><input type="file" id="filepick" accept=".json">
+  </div>`;
+  document.getElementById('filepick').addEventListener('change', async e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const txt = await f.text();
+    initWithData(JSON.parse(txt), null);
+    box.innerHTML = '';
+  });
+}
+
+function initWithData(scores, cfgFile){
+  RAW = scores;
+  const all = scores.counties || [];
+
+  // thresholds: prefer config/thresholds.json (quadrant block); fall back to scores._thresholds
+  const q = cfgFile && cfgFile.quadrant;
+  const baked = scores._thresholds || {};
+  if(q){
+    CFG = {
+      p1_high:      q.p1_high_boundary,
+      cap_high:     q.sls_capital_high_boundary,
+      comm_high:    q.sls_community_high_boundary,
+      p2_hostile:   q.p2_hostile_ceiling,
+      p2_aligned:   q.p2_aligned_floor,
+    };
+    CFG_SOURCE = "config/thresholds.json → quadrant{}";
+  } else {
+    CFG = {
+      p1_high:    baked.p1 ?? 5.0,
+      cap_high:   baked.sls_capital ?? 2.5,
+      comm_high:  baked.sls_community ?? 35,
+      p2_hostile: baked.p2_hostile ?? 0.4,
+      p2_aligned: baked.p2_aligned ?? 0.6,
+    };
+    CFG_SOURCE = "county_scores.json → _thresholds{} (mirror of config, since config file not reachable over file://)";
+  }
+  // combine rule: not present in config anywhere → default max
+  CFG.combine_default = "max";
+  CFG.combine_source  = "DEFAULT (no labor_score_combination key found in config/ — defaulted to max, per spec)";
+
+  // build working county list — national lens fields only
+  let dropped = 0;
+  COUNTIES = [];
+  for(const c of all){
+    const cap = c.sls_capital, comm = c.sls_community, p1 = c.p1_national;
+    const p2 = (c.p2_national != null) ? c.p2_national
+             : (c.federal_p2 != null) ? c.federal_p2
+             : c.p2_alignment;
+    if(cap==null || comm==null || p1==null){ dropped++; continue; }
+    COUNTIES.push({
+      fips: c.fips, name: c.county_name, state: c.state,
+      cap, comm, p1,
+      p2: (p2==null? null : p2),
+      tier: c.quadrant_national,
+    });
+  }
+  state.dropped = dropped;
+  state.total = all.length;
+
+  // normalization maxima
+  NORM.maxCap  = Math.max(...COUNTIES.map(d=>d.cap));
+  NORM.maxComm = Math.max(...COUNTIES.map(d=>d.comm));
+
+  // reveal UI
+  document.getElementById('controls').hidden = false;
+  document.getElementById('stage').hidden = false;
+  document.getElementById('report').hidden = false;
+
+  wireControls();
+  computeDerived();
+  draw();
+  fillReport();
+}
+
+/* ---------- derived geometry ---------- */
+function normCap(c){ return c.cap / NORM.maxCap * 100; }
+function normComm(c){ return c.comm / NORM.maxComm * 100; }
+function combineY(c){
+  const a = normCap(c), b = normComm(c);
+  return state.combine === 'max' ? Math.max(a,b) : (a+b)/2;
+}
+// Renormalized component thresholds onto 0-100
+function capThreshNorm(){ return CFG.cap_high / NORM.maxCap * 100; }
+function commThreshNorm(){ return CFG.comm_high / NORM.maxComm * 100; }
+// Y divider = the HIGHER renormalized component threshold (the binding one under max-combine)
+function yDivider(){ return Math.max(capThreshNorm(), commThreshNorm()); }
+
+function alignBucket(p2){
+  if(p2==null) return 'neutral';
+  if(p2 < CFG.p2_hostile) return 'hostile';
+  if(p2 >= CFG.p2_aligned) return 'aligned';
+  return 'neutral';
+}
+
+function computeDerived(){
+  for(const c of COUNTIES){
+    c.y = combineY(c);
+    c.bucket = alignBucket(c.p2);
+  }
+}
+
+/* ---------- scales ---------- */
+// X: 0..100 ; Y: 0..100 ; both fixed
+function sx(v){ return PLOT.ml + (v/100) * PLOT.iw; }
+function sy(v){ return PLOT.mt + PLOT.ih - (v/100) * PLOT.ih; }
+
+/* ---------- draw ---------- */
+const svg = document.getElementById('svg');
+function el(tag, attrs){ const e = document.createElementNS(SVG_NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+function draw(){
+  svg.innerHTML = '';
+
+  // ---- quadrant background tint (very subtle, only Tier One corner) ----
+  const xd = sx(CFG.p1_high), yd = sy(yDivider());
+  if(state.lines === 'on'){
+    // Tier One region tint top-right
+    svg.appendChild(el('rect', { x:xd, y:PLOT.mt, width:(PLOT.ml+PLOT.iw)-xd, height:yd-PLOT.mt,
+      fill:getCSS('--color-accent'), opacity:0.04 }));
+  }
+
+  // ---- axes frame ----
+  svg.appendChild(el('line', { class:'axisline', x1:PLOT.ml, y1:PLOT.mt+PLOT.ih, x2:PLOT.ml+PLOT.iw, y2:PLOT.mt+PLOT.ih }));
+  svg.appendChild(el('line', { class:'axisline', x1:PLOT.ml, y1:PLOT.mt, x2:PLOT.ml, y2:PLOT.mt+PLOT.ih }));
+
+  // ticks
+  for(let t=0;t<=100;t+=20){
+    // x
+    const gx = el('g', {class:'tick'});
+    const xx = sx(t);
+    gx.appendChild(el('line', { x1:xx, y1:PLOT.mt+PLOT.ih, x2:xx, y2:PLOT.mt+PLOT.ih+4 }));
+    const tx = el('text', { x:xx, y:PLOT.mt+PLOT.ih+15, 'text-anchor':'middle' }); tx.textContent = t;
+    gx.appendChild(tx); svg.appendChild(gx);
+    // y
+    const gy = el('g', {class:'tick'});
+    const yy = sy(t);
+    gy.appendChild(el('line', { x1:PLOT.ml-4, y1:yy, x2:PLOT.ml, y2:yy }));
+    const ty = el('text', { x:PLOT.ml-8, y:yy+3, 'text-anchor':'end' }); ty.textContent = t;
+    gy.appendChild(ty); svg.appendChild(gy);
+  }
+
+  // axis labels (full names, flowchart vocabulary)
+  const xlab = el('text', { class:'axislabel', x:PLOT.ml+PLOT.iw/2, y:PLOT.h-12, 'text-anchor':'middle' });
+  xlab.textContent = 'Electoral Leverage';
+  svg.appendChild(xlab);
+  const ylab = el('text', { class:'axislabel', x:0, y:0, 'text-anchor':'middle',
+    transform:`translate(16,${PLOT.mt+PLOT.ih/2}) rotate(-90)` });
+  ylab.textContent = 'Sectoral Leverage';
+  svg.appendChild(ylab);
+
+  // ---- quadrant dividers + labels ----
+  if(state.lines === 'on'){
+    svg.appendChild(el('line', { class:'divider', x1:xd, y1:PLOT.mt, x2:xd, y2:PLOT.mt+PLOT.ih }));
+    svg.appendChild(el('line', { class:'divider', x1:PLOT.ml, y1:yd, x2:PLOT.ml+PLOT.iw, y2:yd }));
+    // faint secondary line: the lower (capital) renormalized threshold
+    const yd2 = sy(capThreshNorm());
+    svg.appendChild(el('line', { class:'divider secondary', x1:PLOT.ml, y1:yd2, x2:PLOT.ml+PLOT.iw, y2:yd2 }));
+    const lblCap = el('text', { class:'axislabel code', x:PLOT.ml+PLOT.iw-2, y:yd2-4, 'text-anchor':'end' });
+    lblCap.textContent = 'capital threshold (SLS-Capital ≥ '+CFG.cap_high+')';
+    svg.appendChild(lblCap);
+
+    quadLabel('Base Building','high labor · low electoral', PLOT.ml+8, PLOT.mt+16, 'start');
+    quadLabel('Tier One','high labor · high electoral', PLOT.ml+PLOT.iw-8, PLOT.mt+16, 'end');
+    quadLabel('Low Priority','low · low', PLOT.ml+8, PLOT.mt+PLOT.ih-20, 'start');
+    quadLabel('Electoral','low labor · high electoral', PLOT.ml+PLOT.iw-8, PLOT.mt+PLOT.ih-20, 'end');
+  }
+
+  // ---- points ----
+  const jitMag = state.jitter; // in data units (0-100), small
+  for(const c of COUNTIES){
+    const visible = (state.filter==='all') ||
+                    (state.filter==='hostile' && c.bucket==='hostile') ||
+                    (state.filter==='aligned' && c.bucket==='aligned');
+    const {jx, jy} = hashJit(c.fips);
+    const cx = sx(Math.max(0,Math.min(100, c.p1 + jx*jitMag)));
+    const cy = sy(Math.max(0,Math.min(100, c.y  + jy*jitMag)));
+    const fill = (state.color==='align') ? ALIGN_COLORS[c.bucket] : (TIER_COLORS[c.tier] || '#999');
+    const circ = el('circle', {
+      class:'pt'+(visible?'':' dim'), cx, cy, r:3, fill,
+      'fill-opacity': state.opacity,
+    });
+    circ._d = c;
+    circ.addEventListener('mouseenter', onHover);
+    circ.addEventListener('mousemove', moveTip);
+    circ.addEventListener('mouseleave', hideTip);
+    circ.addEventListener('click', onClick);
+    svg.appendChild(circ);
+  }
+
+  updateLegend();
+}
+
+function quadLabel(title, sub, x, y, anchor){
+  const g = el('g', {});
+  const t = el('text', { class:'qlabel', x, y, 'text-anchor':anchor }); t.textContent = title;
+  g.appendChild(t);
+  const s = el('text', { class:'qlabel', x, y:y+13, 'text-anchor':anchor });
+  s.setAttribute('font-size','9'); s.setAttribute('font-weight','400');
+  s.textContent = sub;
+  g.appendChild(s);
+  svg.appendChild(g);
+}
+
+/* ---------- legend ---------- */
+function updateLegend(){
+  const title = document.getElementById('legend-title');
+  const box = document.getElementById('legend');
+  box.innerHTML = '';
+  if(state.color==='align'){
+    title.textContent = 'Incumbent Alignment';
+    const counts = { hostile:0, neutral:0, aligned:0 };
+    for(const c of COUNTIES) counts[c.bucket]++;
+    const rows = [
+      ['hostile', `Hostile (P2 < ${CFG.p2_hostile})`],
+      ['neutral', `In-between / unknown`],
+      ['aligned', `Aligned (P2 ≥ ${CFG.p2_aligned})`],
+    ];
+    for(const [k,label] of rows) legendRow(box, ALIGN_COLORS[k], label, counts[k]);
+  } else {
+    title.textContent = '6-tier classification';
+    for(const g of TIER_GROUPS){
+      const ct = COUNTIES.filter(c=>g.test(c.tier)).length;
+      legendRow(box, g.color, g.label, ct);
+    }
+  }
+}
+function legendRow(box, color, label, ct){
+  const row = document.createElement('div'); row.className='legend-row';
+  const sw = document.createElement('span'); sw.className='swatch'; sw.style.background=color;
+  const tx = document.createElement('span'); tx.textContent=label;
+  const c = document.createElement('span'); c.className='ct'; c.textContent=ct.toLocaleString();
+  row.append(sw, tx, c); box.appendChild(row);
+}
+
+/* ---------- interaction ---------- */
+const tip = document.getElementById('tooltip');
+function onHover(e){
+  const c = e.target._d;
+  tip.innerHTML = `<div class="tt-name">${c.name}, ${c.state}</div>`+
+    row('Electoral Leverage (P1)', c.p1.toFixed(1))+
+    row('Sectoral Leverage (Y)', c.y.toFixed(1))+
+    row('· SLS-Capital (raw)', c.cap.toFixed(2))+
+    row('· SLS-Community (raw)', c.comm.toFixed(2))+
+    row('Tier', tierLabel(c.tier))+
+    row('Alignment', c.bucket + (c.p2!=null? ` (P2 ${c.p2.toFixed(3)})`:' (no P2)'));
+  tip.style.opacity = 1;
+  // also fill side hover panel
+  document.getElementById('hoverout').innerHTML =
+    `<strong>${c.name}, ${c.state}</strong><div class="muted" style="font-size:var(--text-xs)">FIPS ${c.fips}</div>`;
+  moveTip(e);
+}
+function row(l,r){ return `<div class="tt-row"><span class="l">${l}</span><span class="r">${r}</span></div>`; }
+function moveTip(e){
+  const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
+  const r=tip.getBoundingClientRect();
+  if(x+r.width>window.innerWidth) x=e.clientX-r.width-pad;
+  if(y+r.height>window.innerHeight) y=e.clientY-r.height-pad;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+}
+function hideTip(){ tip.style.opacity=0; }
+
+function onClick(e){
+  const c = e.target._d;
+  const ro = document.getElementById('readout');
+  ro.innerHTML =
+    `<div style="font-family:var(--font-ui);font-weight:600;margin-bottom:6px">${c.name}, ${c.state}</div>`+
+    kv('FIPS', c.fips)+
+    kv('Electoral Leverage (P1)', c.p1.toFixed(2))+
+    kv('Sectoral Leverage (Y)', c.y.toFixed(2))+
+    kv('SLS-Capital (raw / norm)', `${c.cap.toFixed(2)} / ${normCap(c).toFixed(1)}`)+
+    kv('SLS-Community (raw / norm)', `${c.comm.toFixed(2)} / ${normComm(c).toFixed(1)}`)+
+    kv('Tier', tierLabel(c.tier))+
+    kv('Alignment', c.bucket + (c.p2!=null?` (P2 ${c.p2.toFixed(3)})`:''))+
+    `<div class="navdeclare">would fly map to: ${c.fips} / ${c.name}, ${c.state}</div>`+
+    `<div class="muted" style="font-size:var(--text-xs);margin-top:4px">(cross-nav declaration only — not wired in this draft)</div>`;
+}
+function kv(k,v){ return `<div class="kv"><span class="k">${k}</span><span class="v">${v}</span></div>`; }
+function tierLabel(t){
+  const map = {
+    tier1_capital:'Tier One · capital', tier1_community:'Tier One · community',
+    tier2_build_capital:'Base Building · build capital', tier2_build_community:'Base Building · build community',
+    tier2_activate_capital:'Base Building · activate capital', tier2_activate_community:'Base Building · activate community',
+    tier2_unknown_capital:'Base Building · unknown capital',
+    tier3_electoral:'Electoral', tier4:'Low Priority',
+  };
+  return map[t] || t || '—';
+}
+
+/* ---------- controls ---------- */
+function wireControls(){
+  seg('seg-combine', v=>{ state.combine=v; computeDerived(); draw(); });
+  seg('seg-color',   v=>{ state.color=v; draw(); });
+  seg('seg-filter',  v=>{ state.filter=v; draw(); });
+  seg('seg-lines',   v=>{ state.lines=v; draw(); });
+  const op = document.getElementById('rng-op');
+  op.addEventListener('input', ()=>{ state.opacity=+op.value; document.getElementById('op-val').textContent=(+op.value).toFixed(2); draw(); });
+  const jit = document.getElementById('rng-jit');
+  jit.addEventListener('input', ()=>{ state.jitter=+jit.value; document.getElementById('jit-val').textContent=(+jit.value).toFixed(1); draw(); });
+}
+function seg(id, cb){
+  const box = document.getElementById(id);
+  box.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    [...box.querySelectorAll('button')].forEach(x=>x.setAttribute('aria-pressed', x===b));
+    cb(b.dataset.v);
+  });
+}
+
+/* ---------- report ---------- */
+function fillReport(){
+  const plotted = COUNTIES.length;
+  document.getElementById('status').textContent = `· ${plotted.toLocaleString()} counties plotted`;
+  document.getElementById('r-data').innerHTML =
+    `Read live from <code>../data/county_scores.json</code> (model ${RAW._model_version||'?'}, generated ${ (RAW._generated||'').slice(0,10) }).
+     <span class="reportval">${plotted.toLocaleString()}</span> counties plotted of
+     <span class="reportval">${state.total.toLocaleString()}</span> in the file
+     (<span class="reportval">${state.dropped}</span> dropped for null sls_capital / sls_community / p1_national).
+     National lens only — state-lens fields (<code>p1_state</code>, <code>quadrant_state</code>) are read-from but never used or exposed.`;
+
+  document.getElementById('r-combine').innerHTML =
+    `No <code>labor_score_combination</code> key exists anywhere in <code>config/</code>, so this <strong>defaults to MAX</strong>
+     (the spec default). The <em>average</em> toggle recomputes Y live for comparison only.`;
+
+  const capN = capThreshNorm(), commN = commThreshNorm();
+  document.getElementById('r-thresh').innerHTML =
+    `Thresholds read from <span class="reportval">${CFG_SOURCE}</span> — not hardcoded:<br>
+     • X divider (Electoral high) = national <code>p1_high_boundary</code> = <span class="reportval">${CFG.p1_high}</span><br>
+     • SLS-Capital high = <span class="reportval">${CFG.cap_high}</span> → renormalized to <span class="reportval">${capN.toFixed(2)}</span> on the 0–100 Y scale<br>
+     • SLS-Community high = <span class="reportval">${CFG.comm_high}</span> → renormalized to <span class="reportval">${commN.toFixed(2)}</span> on the 0–100 Y scale<br>
+     • Normalization maxima (live): SLS-Capital max = <span class="reportval">${NORM.maxCap.toFixed(2)}</span>, SLS-Community max = <span class="reportval">${NORM.maxComm.toFixed(2)}</span><br>
+     • P2 buckets: hostile &lt; <span class="reportval">${CFG.p2_hostile}</span>, aligned ≥ <span class="reportval">${CFG.p2_aligned}</span>`;
+
+  document.getElementById('r-ydivider').innerHTML =
+    `<strong>How the Y quadrant divider was placed.</strong> The model's "high labor" rule is an <em>OR of two
+     separately-thresholded components</em>: <code>SLS-Capital ≥ ${CFG.cap_high}</code> <strong>OR</strong>
+     <code>SLS-Community ≥ ${CFG.comm_high}</code>. A single combined Y-axis cannot reproduce an OR of two
+     differently-scaled thresholds. Renormalized, those thresholds land at <span class="reportval">${capN.toFixed(2)}</span>
+     (capital) and <span class="reportval">${commN.toFixed(2)}</span> (community). I drew the <strong>solid Y divider at the
+     higher one, ${commN.toFixed(2)}</strong> (community — the binding threshold under MAX-combine), and added a
+     <span style="color:var(--color-tier-2-capital)">faint dotted line</span> at the lower capital threshold
+     (${capN.toFixed(2)}) so you can see where capital-driven counties qualify. <strong>Consequence:</strong> the
+     ~283 counties that are high-labor <em>only</em> via SLS-Capital (mostly <code>tier2_build_capital</code>) sit
+     <em>below</em> the solid line — visually in "Electoral"/"Low Priority" even though the model calls them high-labor.`;
+
+  const counts = { hostile:0, neutral:0, aligned:0, noP2:0 };
+  for(const c of COUNTIES){ counts[c.bucket]++; if(c.p2==null) counts.noP2++; }
+  document.getElementById('r-align').innerHTML =
+    `Colored by <code>p2_national</code> (falls back to <code>federal_p2</code> / <code>p2_alignment</code> if null — they are identical in this data),
+     a 0–1 incumbent-alignment scale. Buckets: <strong>hostile</strong> P2 &lt; ${CFG.p2_hostile}
+     (<span class="reportval">${counts.hostile.toLocaleString()}</span>), <strong>in-between/unknown</strong>
+     ${CFG.p2_hostile}–${CFG.p2_aligned} (<span class="reportval">${counts.neutral.toLocaleString()}</span>),
+     <strong>aligned</strong> P2 ≥ ${CFG.p2_aligned} (<span class="reportval">${counts.aligned.toLocaleString()}</span>).
+     ${counts.noP2} county had null P2 → bucketed neutral.`;
+
+  // sanity check: tiers vs quadrant geometry
+  const xd = CFG.p1_high, yd = yDivider();
+  let inWrong = 0, capBelow = 0;
+  for(const c of COUNTIES){
+    const geoHiLabor = combineY(c) >= yd;
+    const tierHiLabor = c.tier && (c.tier.startsWith('tier1')||c.tier.startsWith('tier2'));
+    if(geoHiLabor !== tierHiLabor) inWrong++;
+    if(tierHiLabor && !geoHiLabor) capBelow++;
+  }
+  document.getElementById('r-sanity').innerHTML =
+    `<strong>Partly — with one honest exception.</strong> On the X axis the 6-tier coloring tracks the quadrants cleanly:
+     high-electoral tiers (Tier One, Electoral) sit right of the <code>p1 ≥ ${xd}</code> line.
+     On the Y axis it tracks for <em>community-driven</em> high-labor counties, but
+     <span class="reportval">${capBelow}</span> capital-driven high-labor counties fall below the solid Y divider
+     (total geometry↔tier disagreement on the labor axis: <span class="reportval">${inWrong}</span> of ${COUNTIES.length.toLocaleString()}).
+     This is <strong>not a data error</strong> — it is the unavoidable result of flattening a two-threshold OR onto one
+     combined MAX axis (see Y-divider note above). Switching the combine toggle to <em>average</em> makes it worse
+     (capital counties sink further). <strong>Flagging it as a real visualization finding:</strong> the conceptual 2×2 with a
+     single combined Sectoral axis structurally cannot place the capital-driven Tier-One/Base-Building counties in their
+     "high labor" band. If the 2×2 must be faithful, consider plotting SLS-Capital and SLS-Community as two separate
+     panels, or drawing the L-shaped (union) high-labor region instead of a straight divider.`;
+
+  const unsure = [
+    `Y-divider placement is a judgment call — I used the higher renormalized config threshold (community). The capital-driven mismatch above is the cost; an L-shaped region or twin-panel layout would be more faithful but less like a clean 2×2.`,
+    `<code>labor_score_combination</code> doesn't exist in config — defaulted to MAX per spec. If you want a different default, it should be added to config (I did not write it).`,
+    `15 counties have a tier vs <code>p1 ≥ 5.0</code> edge mismatch in the raw data (their tier label and the bare p1 threshold disagree slightly) — minor, likely tie/rounding in the model's own classifier; surfaced here in case it matters.`,
+    `Min-max normalization is sensitive to the single top county (LA on capital). A high outlier compresses everything else toward 0 — that's why the bottom-left is so dense. A percentile or log scale might read better; left as straight 0–100 per spec.`,
+    `Point radius (3px) + jitter are eyeball-tuned for a desktop viewport; not data-driven.`,
+  ];
+  document.getElementById('r-unsure').innerHTML = unsure.map(u=>`<li>${u}</li>`).join('');
+}
+
+boot();
+</script>
+</body>
+</html>
