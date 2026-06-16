@@ -2368,8 +2368,10 @@ async function loadCountyScores() {
     const res = await fetch('../data/county_scores.json');
     if (!res.ok) return;
     const data = await res.json();
-    if (!Array.isArray(data) || !data.length) return;
-    msaData = computeMsaData(data);
+    // county_scores.json is now the v2 canonical object {counties:[...]}, not a bare array.
+    const counties = Array.isArray(data) ? data : (data.counties || []);
+    if (!counties.length) return;
+    msaData = computeMsaData(counties);
     renderMsaList();
     if (state.path === 'rf' && state.rfToggle !== 'apprenticeships') {
       renderImpactGoals();
@@ -2384,7 +2386,7 @@ function computeMsaData(counties) {
     if (!name || name === 'Non-Metro') continue;
     if (!byMsa[name]) byMsa[name] = { name, counties: [], states: new Set() };
     byMsa[name].counties.push(c);
-    if (c.state_abbr) byMsa[name].states.add(c.state_abbr);
+    if (c.state) byMsa[name].states.add(c.state);
   }
   return Object.values(byMsa).map(m => {
     const scores = m.counties.map(c => c.organizing_opportunity_score || c.oos_score || 0).filter(s => s > 0);
@@ -2394,7 +2396,7 @@ function computeMsaData(counties) {
     const domType = Object.entries(typeCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || null;
     const stateArr = [...m.states];
     const isSwing = stateArr.some(s => SWING_STATES.has(s));
-    const infraScale = m.counties.reduce((a,c)=>a+(c.organized_scale||0),0);
+    const infraScale = m.counties.reduce((a,c)=>a+(c.organized_scale_score||0),0);
     return { name: m.name, states: stateArr, avgOos, domType, isSwing, infraScale, countyCount: m.counties.length };
   });
 }

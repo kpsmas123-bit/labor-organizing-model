@@ -1,4 +1,19 @@
 """
+!!! DEPRECATED — DEAD CODE. DO NOT USE AS THE RECIPE. !!!
+
+The canonical SLS implementation lives in pipeline/build_v2_canonical.py
+(calc_sls_capital / calc_sls_community), which is what actually produces
+data/county_scores.json. This module is NOT imported by the real build.
+
+This file is WRONG in two ways and is kept only for historical reference:
+  1. NORMALIZATION_DENOMINATOR = 100_000 here, but the calibrated value is
+     210_000 (config/weights.json svs_normalization.denominator).
+  2. score_sls_community below uses raw Σ(reach×emp)/denom. The real formula
+     is share-weighted: Σ(comm_reach × employment_share) × 4, capped 100.
+Trust config/weights.json + build_v2_canonical.py, not this file.
+
+--- original docstring follows ---
+
 Terrain v2.0 — Strategic Labor Score (SLS) scoring functions.
 
 SLS-Capital: measures how much leverage organized labor in a county has

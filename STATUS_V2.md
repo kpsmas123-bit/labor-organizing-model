@@ -4,11 +4,43 @@
 
 ---
 
-## Current Gate: Gate 7 — Regression validation before rename
+## Current Gate: Gate 7 — CANONICAL v2.0 BUILD COMPLETE (2026-06-14, branch `v2-build-real-p2-dual-lens`)
 
-Gate 6 display layer migration complete (2026-06-12).
-Map UI cleanup complete (2026-06-12).
-Next: validate map renders correctly, then rename county_scores_v2_test.json → county_scores.json.
+The upper half of v2.0 (real P2 + dual lens + 6-tier classification) is now wired in
+and `data/county_scores.json` is the canonical v2.0 file (v1 archived to
+`data/archive/county_scores_v1_2026-05-17.json`). Build script:
+`pipeline/build_v2_canonical.py --full`. **Awaiting Sam's PR review — do not merge.**
+
+### New canonical schema (per county)
+| field | meaning |
+|---|---|
+| `sls_capital`, `sls_community` | unchanged SLS scores (0–100) |
+| `p1_national`, `p2_national` | National lens: presidential tipping P1 + federal P2 (0–1) |
+| `p1_state`, `p2_state` | State lens: chamber-control P1 + state P2 (0–1) |
+| `p2_coverage` | federal P2 provenance (house_and_senate / …_statewide / senate_only / house_only / unknown) |
+| `state_p2_coverage` | state P2 provenance (cfscore_plus_imputed / no_state_legislature) |
+| `quadrant_national`, `quadrant_state` | 6-tier P2-driven classification per lens |
+| `state_tipping_weight`, `chamber_tipping_weight` | P1 inputs (presidential / averaged chamber) |
+| backward-compat aliases | `p1_presidential`, `p2_alignment`, `federal_p2`, `quadrant` (= national) |
+
+### Build facts
+- **3,143 counties, 0 errors.** CT standardized on NEW planning-region FIPS (091x0).
+- Federal P2 = `key_vote×0.60 + inverse_ideology×0.40` (from `federal_p2_combined.csv`,
+  district-overlap aggregated; Feinstein excluded). State P2 = DIME+imputed, state-uniform.
+- BUG #1 fixed (stored tipping weight now consistent with P1 for non-swing states, default 0.005).
+- P2 cut points added to `config/thresholds.json` (hostile <0.4, aligned ≥0.6).
+- Employment `_count` corrected 101,917 → 65,917.
+
+### Tier counts
+- **National:** Tier 1 = 21 (cap 7 / comm 14) · Tier 2 = 566 · Tier 3 = 59 · Tier 4 = 2,497.
+- **State:** Tier 1 = 141 (cap 98 / comm 41 / both 2) · Tier 2 = 446 · Tier 3 = 1,775 · Tier 4 = 781.
+- Counties clearing all three national thresholds (deploy_now_both equiv): **0** (empirical finding).
+
+### Open items for Sam (full detail in BUILD_PROGRESS.md → NEEDS SAM)
+1. State-lens P1 normalization scale (chamber weights vs presidential probabilities).
+2. State P2 source carries one blended coverage type, not the 3-tier split.
+3. DC/DE state-lens nulls (4 counties).
+4. jobs.html MSA panel needs `msa_name` (absent from schema) — field-name fixes done, panel still empty.
 
 ---
 
