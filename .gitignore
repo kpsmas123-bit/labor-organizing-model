@@ -11,3 +11,6 @@ config.json
 # Agent 2 state-leg ingest: large raw source downloads (re-downloadable)
 data/work_stateleg/*.zip
 data/work_stateleg/*.tab
+
+# Agent 5 state-returns backfill: large raw downloads (re-fetched by scripts/build_state_returns_backfill.py)
+data/work_state_returns/

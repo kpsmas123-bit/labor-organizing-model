@@ -1,0 +1,394 @@
+fips,state,district_ids,margin,competitive,p1_data_tier,margin_stale,source,vintage
+22001,LA,,-75.194,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22003,LA,,-68.571,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22005,LA,,-43.589,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22007,LA,,-39.914,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22009,LA,,-53.639,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22011,LA,,-70.475,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22013,LA,,-26.893,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22015,LA,,-61.532,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22017,LA,,-16.059,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22019,LA,,-40.199,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22021,LA,,-75.85,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22023,LA,,-79.229,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22025,LA,,-62.205,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22027,LA,,-38.554,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22029,LA,,-27.389,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22031,LA,,-44.681,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22033,LA,,-4.699,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22035,LA,,4.275,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22037,LA,,-20.179,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22039,LA,,-51.561,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22041,LA,,-60.816,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22043,LA,,-80.0,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22045,LA,,-53.79,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22047,LA,,-15.837,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22049,LA,,-61.138,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22051,LA,,-36.732,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22053,LA,,-67.346,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22055,LA,,-45.226,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22057,LA,,-70.626,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22059,LA,,-81.386,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22061,LA,,-42.691,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22063,LA,,-77.183,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22065,LA,,-18.96,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22067,LA,,-33.067,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22069,LA,,-35.369,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22071,LA,,51.53,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22073,LA,,-43.335,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22075,LA,,-54.84,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22077,LA,,-38.382,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22079,LA,,-49.728,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22081,LA,,-40.262,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22083,LA,,-52.272,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22085,LA,,-77.545,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22087,LA,,-52.11,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22089,LA,,-43.317,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22091,LA,,-7.44,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22093,LA,,-13.682,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22095,LA,,13.302,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22097,LA,,-29.189,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22099,LA,,-56.622,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22101,LA,,-42.273,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22103,LA,,-61.434,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22105,LA,,-49.634,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22107,LA,,-14.046,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22109,LA,,-63.484,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22111,LA,,-65.631,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22113,LA,,-74.581,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22115,LA,,-76.109,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22117,LA,,-48.411,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22119,LA,,-42.525,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22121,LA,,-28.146,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22123,LA,,-77.035,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22125,LA,,-34.286,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+22127,LA,,-62.143,False,gubernatorial,False,LA 2023 gubernatorial open primary (Oct 14); official LA SoS Excel Multi-Parish(Parish) sheet; margin=(sumDEM-sumREP)/total,2023
+28001,MS,,24.035,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28003,MS,,-46.445,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28005,MS,,-18.123,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28007,MS,,-2.128,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28009,MS,,-15.419,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28011,MS,,41.51,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28013,MS,,-26.583,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28015,MS,,-18.201,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28017,MS,,13.805,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28019,MS,,-28.526,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28021,MS,,73.912,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28023,MS,,-21.989,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28025,MS,,28.599,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28027,MS,,53.133,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28029,MS,,12.793,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28031,MS,,-14.0,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28033,MS,,-16.769,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28035,MS,,0.734,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28037,MS,,-19.074,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28039,MS,,-66.844,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28041,MS,,-46.249,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28043,MS,,7.393,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28045,MS,,-43.639,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28047,MS,,-13.724,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28049,MS,,59.195,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28051,MS,,70.196,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28053,MS,,54.286,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28055,MS,,8.625,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28057,MS,,-51.275,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28059,MS,,-25.366,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28061,MS,,13.302,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28063,MS,,77.0,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28065,MS,,30.037,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28067,MS,,-32.262,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28069,MS,,28.659,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28071,MS,,-4.205,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28073,MS,,-37.983,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28075,MS,,-12.227,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28077,MS,,-13.589,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28079,MS,,-10.012,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28081,MS,,-12.133,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28083,MS,,58.979,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28085,MS,,-26.804,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28087,MS,,7.082,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28089,MS,,-2.045,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28091,MS,,-22.237,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28093,MS,,2.445,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28095,MS,,-6.841,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28097,MS,,-0.523,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28099,MS,,-36.716,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28101,MS,,-28.673,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28103,MS,,62.954,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28105,MS,,14.077,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28107,MS,,3.527,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28109,MS,,-54.592,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28111,MS,,-38.19,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28113,MS,,11.628,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28115,MS,,-43.056,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28117,MS,,-33.242,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28119,MS,,42.918,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28121,MS,,-32.23,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28123,MS,,-3.389,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28125,MS,,52.097,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28127,MS,,-16.38,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28129,MS,,-38.751,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28131,MS,,-40.511,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28133,MS,,48.947,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28135,MS,,30.507,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28137,MS,,-24.109,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28139,MS,,-40.905,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28141,MS,,-48.234,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28143,MS,,50.356,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28145,MS,,-46.223,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28147,MS,,-7.698,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28149,MS,,8.246,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28151,MS,,51.221,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28153,MS,,-14.924,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28155,MS,,-44.728,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28157,MS,,33.835,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28159,MS,,1.323,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28161,MS,,0.982,True,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+28163,MS,,12.059,False,gubernatorial,False,MS 2023 gubernatorial (Reeves R def. Presley D); county-level via OpenElections 20231107__ms__general__county.csv,2023
+31001,NE,,-39.912,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31003,NE,,-71.918,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31005,NE,,-82.8,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31007,NE,,-77.778,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31009,NE,,-70.874,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31011,NE,,-62.832,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31013,NE,,-50.49,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31015,NE,,-70.796,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31017,NE,,-64.062,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31019,NE,,-45.405,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31021,NE,,-49.59,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31023,NE,,-61.93,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31025,NE,,-36.344,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31027,NE,,-68.42,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31029,NE,,-73.155,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31031,NE,,-68.339,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31033,NE,,-66.746,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31035,NE,,-64.084,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31037,NE,,-59.547,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31039,NE,,-64.798,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31041,NE,,-68.05,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31043,NE,,-44.18,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31045,NE,,-41.807,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31047,NE,,-57.954,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31049,NE,,-73.124,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31051,NE,,-57.853,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31053,NE,,-37.87,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31055,NE,,4.957,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31057,NE,,-75.459,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31059,NE,,-56.296,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31061,NE,,-68.483,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31063,NE,,-69.529,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31065,NE,,-68.317,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31067,NE,,-36.853,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31069,NE,,-70.134,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31071,NE,,-70.893,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31073,NE,,-65.202,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31075,NE,,-83.333,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31077,NE,,-54.789,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31079,NE,,-39.731,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31081,NE,,-57.479,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31083,NE,,-61.49,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31085,NE,,-80.711,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31087,NE,,-67.917,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31089,NE,,-67.654,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31091,NE,,-63.467,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31093,NE,,-57.451,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31095,NE,,-47.676,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31097,NE,,-36.419,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31099,NE,,-59.603,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31101,NE,,-64.462,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31103,NE,,-66.905,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31105,NE,,-71.685,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31107,NE,,-62.779,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31109,NE,,4.053,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31111,NE,,-53.889,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31113,NE,,-79.525,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31115,NE,,-61.062,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31117,NE,,-73.543,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31119,NE,,-60.283,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31121,NE,,-63.131,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31123,NE,,-65.614,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31125,NE,,-51.756,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31127,NE,,-46.187,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31129,NE,,-65.411,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31131,NE,,-40.141,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31133,NE,,-54.755,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31135,NE,,-70.35,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31137,NE,,-67.759,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31139,NE,,-75.207,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31141,NE,,-66.386,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31143,NE,,-64.777,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31145,NE,,-64.054,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31147,NE,,-41.097,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31149,NE,,-73.013,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31151,NE,,-31.687,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31153,NE,,-15.097,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31155,NE,,-46.863,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31157,NE,,-49.221,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31159,NE,,-49.778,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31161,NE,,-59.83,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31163,NE,,-52.0,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31165,NE,,-69.476,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31167,NE,,-65.951,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31169,NE,,-60.858,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31171,NE,,-74.214,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31173,NE,,-30.912,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31175,NE,,-62.762,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31177,NE,,-45.374,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31179,NE,,-50.115,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31181,NE,,-61.995,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31183,NE,,-53.258,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+31185,NE,,-56.548,False,gubernatorial,False,NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table,2022
+34001,NJ,,3.618,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34003,NJ,,10.961,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34005,NJ,,21.456,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34007,NJ,,36.771,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34009,NJ,,-16.605,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34011,NJ,,5.075,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34013,NJ,,54.291,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34015,NJ,,4.488,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34017,NJ,,50.586,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34019,NJ,,-4.525,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34021,NJ,,43.198,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34023,NJ,,25.987,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34025,NJ,,-7.899,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34027,NJ,,2.213,True,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34029,NJ,,-34.47,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34031,NJ,,16.155,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34033,NJ,,-15.046,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34035,NJ,,19.404,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34037,NJ,,-18.21,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34039,NJ,,34.987,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+34041,NJ,,-14.902,False,gubernatorial,False,NJ 2025 gubernatorial (Sherrill D def. Ciattarelli R); official NJ Div of Elections statewide results PDF county tallies,2025
+51001,VA,,-22.718,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51003,VA,,24.839,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51005,VA,,-49.548,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51007,VA,,-48.774,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51009,VA,,-42.565,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51011,VA,,-60.927,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51013,VA,,54.042,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51015,VA,,-56.422,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51017,VA,,-58.706,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51019,VA,,-58.627,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51021,VA,,-72.048,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51023,VA,,-52.999,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51025,VA,,4.684,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51027,VA,,-69.667,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51029,VA,,-27.174,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51031,VA,,-57.168,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51033,VA,,-15.521,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51035,VA,,-67.298,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51036,VA,,8.031,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51037,VA,,-41.014,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51041,VA,,-4.354,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51043,VA,,-25.64,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51045,VA,,-67.16,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51047,VA,,-33.516,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51049,VA,,-27.527,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51051,VA,,-60.914,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51053,VA,,-27.232,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51057,VA,,-14.95,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51059,VA,,30.414,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51061,VA,,-31.425,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51063,VA,,-40.371,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51065,VA,,-14.1,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51067,VA,,-50.101,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51069,VA,,-38.209,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51071,VA,,-57.559,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51073,VA,,-45.271,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51075,VA,,-32.126,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51077,VA,,-65.448,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51079,VA,,-35.682,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51081,VA,,5.662,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51083,VA,,-28.376,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51085,VA,,-36.936,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51087,VA,,18.471,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51089,VA,,-39.68,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51091,VA,,-49.424,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51093,VA,,-29.108,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51095,VA,,-5.517,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51097,VA,,-30.113,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51099,VA,,-37.09,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51101,VA,,-47.119,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51103,VA,,-17.742,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51105,VA,,-75.474,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51107,VA,,11.078,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51109,VA,,-32.615,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51111,VA,,-31.586,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51113,VA,,-40.844,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51115,VA,,-43.639,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51117,VA,,-31.96,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51119,VA,,-32.834,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51121,VA,,-5.141,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51125,VA,,-11.888,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51127,VA,,-42.516,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51131,VA,,-1.254,True,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51133,VA,,-28.468,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51135,VA,,-29.634,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51137,VA,,-33.017,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51139,VA,,-58.19,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51141,VA,,-64.802,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51143,VA,,-50.96,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51145,VA,,-54.126,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51147,VA,,-9.347,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51149,VA,,-30.033,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51153,VA,,14.812,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51155,VA,,-48.858,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51157,VA,,-19.469,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51159,VA,,-40.496,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51161,VA,,-31.993,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51163,VA,,-38.258,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51165,VA,,-51.2,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51167,VA,,-69.859,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51169,VA,,-74.173,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51171,VA,,-49.918,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51173,VA,,-65.498,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51175,VA,,-30.214,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51177,VA,,-20.361,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51179,VA,,-10.793,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51181,VA,,-0.339,True,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51183,VA,,1.366,True,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51185,VA,,-73.501,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51187,VA,,-44.319,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51191,VA,,-58.602,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51193,VA,,-21.562,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51195,VA,,-68.349,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51197,VA,,-64.116,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51199,VA,,-17.744,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51510,VA,,51.179,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51520,VA,,-47.231,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51530,VA,,-49.822,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51540,VA,,66.893,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51550,VA,,-5.64,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51570,VA,,-47.487,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51580,VA,,-34.523,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51590,VA,,7.502,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51595,VA,,19.869,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51600,VA,,28.19,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51610,VA,,54.056,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51620,VA,,13.828,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51630,VA,,21.018,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51640,VA,,-48.39,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51650,VA,,33.966,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51660,VA,,21.434,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51670,VA,,-0.159,True,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51678,VA,,24.735,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51680,VA,,-10.714,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51683,VA,,9.774,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51685,VA,,21.657,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51690,VA,,13.891,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51700,VA,,20.558,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51710,VA,,35.69,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51720,VA,,-45.387,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51730,VA,,71.377,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51735,VA,,-56.097,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51740,VA,,32.069,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51750,VA,,-9.227,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51760,VA,,57.668,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51770,VA,,16.444,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51775,VA,,-29.301,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51790,VA,,3.725,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51800,VA,,4.706,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51810,VA,,-8.02,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51820,VA,,-15.249,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51830,VA,,30.055,False,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
+51840,VA,,1.848,True,gubernatorial,False,"VA 2021 gubernatorial (Youngkin R def. McAuliffe D); official VA Dept of Elections precinct CSV aggregated to locality (2025 not cleanly machine-readable, see NEEDS SAM)",2021
