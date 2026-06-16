@@ -67,3 +67,15 @@ Agent 1's build replaces base rows by `fips` with overlay rows. All 393 overlay 
 
 ## Reproduce
 `python3 scripts/build_state_returns_backfill.py` — re-downloads all 5 sources into `data/work_state_returns/` (gitignored) and writes `data/processed/state_leg_competitiveness_backfill.csv`. Requires `openpyxl` + `pypdf`.
+
+## Build-time guards (persist on every re-run)
+
+**1. Validation — `validate()` runs BEFORE the CSV is written and fails loudly (`raise SystemExit(1)`, non-zero exit) so a bad re-run cannot silently overwrite a good file.** Hard checks (any failure aborts):
+- every county margin finite (no None/NaN) and within `[-100, +100]`; every `fips` is a canonical FIPS;
+- per-state county counts exact: VA 133, NJ 21, MS 82, LA 64, NE 93 (`EXPECTED_COUNTS`);
+- vote-weighted statewide aggregate reconciles to the verified certified margin within **±2 pts** (`EXPECTED_STATEWIDE` = VA −1.94, NJ +14.36, MS −3.42, LA −36.98, NE −23.24);
+- LA-specific (jungle-primary margin is coarse): distribution not degenerate — both signs present and spread ≥ 20 pts; logs LA min/median/max/spread for eyeball review.
+
+Soft check (warn, never fails): any county whose margin deviates from its state mean by > **45 pts** (`OUTLIER_THRESHOLD`) is logged `[outlier:review]`. On the current data these are all legitimate D strongholds (cities / Black-belt / tribal counties) vs R-rural — expected, not errors. Last run printed **VALIDATION: PASS**, and the fail path is unit-confirmed to exit 1.
+
+**2. VA 2025 swap readiness.** `ingest_va()` reads from a single constant `VA_ACTIVE_URL` (currently `VA_2021_URL`), with `VA_2025_URL` defined alongside and a 3-line swap checklist in the comment (URL → SPECS vintage → `EXPECTED_STATEWIDE['VA']`). `check_va_2025_availability()` probes the VA bulk-CSV repo's 2025 path on every build and logs whether it's live yet (currently non-200 → stays on 2021). VA stays on 2021 until 2025 is cleanly obtainable.

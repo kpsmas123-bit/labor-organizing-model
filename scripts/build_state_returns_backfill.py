@@ -102,9 +102,23 @@ def ingest_la(cmap):
         out.append((cmap["LA"][norm(r[0])], D, R, tot)); j += 1
     return out
 
+# --- VA source: SINGLE SWAP POINT --------------------------------------------
+# VA is on 2021 gubernatorial because the most-recent 2025 race is not yet cleanly
+# machine-readable (the live ENR API exposes no contest/candidate results, and VA's
+# official bulk-CSV repo lags — latest folder is 2023). check_va_2025_availability()
+# probes the 2025 file every build and logs whether it has appeared yet.
+#
+# TO UPGRADE TO 2025 once the file exists, change exactly THREE things:
+#   1. VA_ACTIVE_URL  -> VA_2025_URL   (below)
+#   2. SPECS["VA"]     vintage 2021 -> 2025  (and update the source string)
+#   3. EXPECTED_STATEWIDE["VA"] -> the 2025 certified D-R margin (~ +14.9)
+# Nothing else changes: precinct->locality aggregation and VA FIPS are year-agnostic.
+VA_2021_URL = "https://apps.elections.virginia.gov/SBE_CSV/ELECTIONS/ELECTIONRESULTS/2021/2021%20November%20General%20.csv"
+VA_2025_URL = "https://apps.elections.virginia.gov/SBE_CSV/ELECTIONS/ELECTIONRESULTS/2025/2025%20November%20General%20.csv"
+VA_ACTIVE_URL = VA_2021_URL  # <-- swap to VA_2025_URL when available (see note above)
+
 def ingest_va(cmap):
-    p = fetch("https://apps.elections.virginia.gov/SBE_CSV/ELECTIONS/ELECTIONRESULTS/2021/2021%20November%20General%20.csv",
-              os.path.join(WORK, "va_2021_general.csv"))
+    p = fetch(VA_ACTIVE_URL, os.path.join(WORK, "va_general.csv"))
     loc = defaultdict(lambda: defaultdict(int)); code = {}
     for r in csv.DictReader(open(p, encoding="utf-8-sig")):
         if r["OfficeTitle"] != "Governor": continue
@@ -163,18 +177,107 @@ SPECS = {
  "NE": (ingest_ne, "gubernatorial", 2022, "NE 2022 gubernatorial (Pillen R def. Blood D); official NE Board of State Canvassers canvass book county table"),
 }
 
+# ---------------------------- validation ------------------------------------
+# Expected per-state county counts (canonical FIPS universe for each state).
+EXPECTED_COUNTS = {"VA": 133, "NJ": 21, "MS": 82, "LA": 64, "NE": 93}
+# Vote-weighted statewide D-R margin (%), each verified against the published
+# certified statewide result at build time. A re-run must reconcile to within
+# STATEWIDE_TOL points of these, else the build FAILS (won't ship a bad CSV).
+#   VA 2021: Youngkin R+1.9   NJ 2025: Sherrill D+14.4   MS 2023: Reeves R+3.x
+#   LA 2023: Landry-led R blowout (jungle, party-summed)  NE 2022: Pillen R+23
+EXPECTED_STATEWIDE = {"VA": -1.94, "NJ": 14.36, "MS": -3.42, "LA": -36.98, "NE": -23.24}
+STATEWIDE_TOL = 2.0          # points; statewide reconciliation tolerance (hard fail)
+OUTLIER_THRESHOLD = 45.0     # points; county deviation from state mean -> warn (soft)
+LA_MIN_SPREAD = 20.0         # points; LA jungle-primary distribution must not be degenerate
+
+def check_va_2025_availability():
+    """Probe the VA bulk-CSV repo for a 2025 General file; log availability (never fails)."""
+    import urllib.error
+    if VA_ACTIVE_URL == VA_2025_URL:
+        print("[VA-2025 check] already running on the 2025 file."); return
+    try:
+        req = urllib.request.Request(VA_2025_URL, headers={"User-Agent": UA}, method="HEAD")
+        with urllib.request.urlopen(req, timeout=20) as r:
+            code = r.status
+    except urllib.error.HTTPError as e:
+        code = e.code
+    except Exception as e:
+        print(f"[VA-2025 check] could not reach VA repo ({e}); staying on 2021."); return
+    if code == 200:
+        print("[VA-2025 check] *** 2025 General CSV IS NOW AVAILABLE *** -> "
+              f"{VA_2025_URL}\n               Swap VA_ACTIVE_URL=VA_2025_URL, bump SPECS['VA'] "
+              "vintage->2025, and set EXPECTED_STATEWIDE['VA'] to the 2025 certified margin (~+14.9).")
+    else:
+        print(f"[VA-2025 check] 2025 General CSV not available yet (HTTP {code}); staying on 2021 gubernatorial.")
+
+def validate(details, cmap):
+    """Sanity-check the rebuilt data. Raises SystemExit(1) on any hard failure BEFORE the
+    CSV is written, so a bad re-run cannot silently ship. details: {st:[(fips,D,R,tot,margin)]}."""
+    import statistics
+    canon_fips = {f for st in cmap for f in cmap[st].values()}
+    failures = []
+    print("\n=== VALIDATION ===")
+    for st, recs in details.items():
+        # (a) county count
+        if len(recs) != EXPECTED_COUNTS[st]:
+            failures.append(f"{st}: county count {len(recs)} != expected {EXPECTED_COUNTS[st]}")
+        # (b) every margin finite & in [-100,100]; every fips canonical
+        for fips, D, R, tot, m in recs:
+            if m is None or m != m:                      # None or NaN
+                failures.append(f"{st} {fips}: margin is null/NaN")
+            elif not (-100.0 <= m <= 100.0):
+                failures.append(f"{st} {fips}: margin {m} outside [-100,+100]")
+            if fips not in canon_fips:
+                failures.append(f"{st} {fips}: not a canonical FIPS")
+        # (c) vote-weighted statewide reconciliation
+        D = sum(r[1] for r in recs); R = sum(r[2] for r in recs); T = sum(r[3] for r in recs)
+        agg = (D - R) / T * 100 if T else float("nan")
+        exp = EXPECTED_STATEWIDE[st]
+        if not (abs(agg - exp) <= STATEWIDE_TOL):
+            failures.append(f"{st}: statewide {agg:+.2f}% not within +/-{STATEWIDE_TOL} of expected {exp:+.2f}%")
+        else:
+            print(f"  {st}: {len(recs)} counties · statewide {agg:+.2f}% (exp {exp:+.2f}%, within +/-{STATEWIDE_TOL}) OK")
+    # (d) LA-specific: jungle-primary margin is coarse — assert distribution isn't degenerate
+    la = [r[4] for r in details["LA"]]
+    if len({1 if x > 0 else -1 for x in la}) < 2:
+        failures.append("LA: all parish margins share one sign (degenerate distribution)")
+    la_spread = max(la) - min(la)
+    if la_spread < LA_MIN_SPREAD:
+        failures.append(f"LA: margin spread {la_spread:.1f} < {LA_MIN_SPREAD} (degenerate)")
+    print(f"  LA distribution (jungle-primary, eyeball): min={min(la):+.1f} "
+          f"median={statistics.median(la):+.1f} max={max(la):+.1f} spread={la_spread:.1f}")
+    # (e) outlier flag (warn only): county margin far from its state mean -> manual review
+    for st, recs in details.items():
+        mean = statistics.fmean(r[4] for r in recs)
+        for fips, D, R, tot, m in recs:
+            if abs(m - mean) > OUTLIER_THRESHOLD:
+                print(f"  [outlier:review] {st} {fips}: margin {m:+.1f} deviates {m-mean:+.1f}pp "
+                      f"from {st} mean {mean:+.1f} (n={tot} votes)")
+    # summary
+    if failures:
+        print("\nVALIDATION: FAIL  (CSV not written)")
+        for f in failures:
+            print("  X", f)
+        raise SystemExit(1)
+    print("\nVALIDATION: PASS  — all hard checks green\n")
+
 def main():
     cmap = canon_map()
-    rows = []
+    check_va_2025_availability()
+    details = {}
     for st in ["VA", "NJ", "MS", "LA", "NE"]:
         fn, tier, vintage, src = SPECS[st]
-        data = fn(cmap)
-        for fips, D, R, tot in data:
-            m = margin(D, R, tot)
+        data = fn(cmap)                                   # [(fips, D, R, tot), ...]
+        details[st] = [(fips, D, R, tot, margin(D, R, tot)) for fips, D, R, tot in data]
+        print(f"{st}: {len(data)} counties upgraded")
+    validate(details, cmap)                               # raises on failure BEFORE writing
+    rows = []
+    for st in ["VA", "NJ", "MS", "LA", "NE"]:
+        _, tier, vintage, src = SPECS[st]
+        for fips, D, R, tot, m in details[st]:
             rows.append({"fips": fips, "state": st, "district_ids": "", "margin": m,
                          "competitive": abs(m) <= 3, "p1_data_tier": tier,
                          "margin_stale": False, "source": src, "vintage": vintage})
-        print(f"{st}: {len(data)} counties upgraded")
     rows.sort(key=lambda r: r["fips"])
     with open(OUT, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["fips","state","district_ids","margin","competitive","p1_data_tier","margin_stale","source","vintage"])
