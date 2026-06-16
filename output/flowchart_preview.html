@@ -195,10 +195,12 @@ h1 {
   --col-output: 1.5fr;
 }
 
-/* vertical divider rules between bands */
+/* vertical divider rules between bands.
+   top/height are set in JS so they stop at the stage bottom (the horizontal
+   rule) and never cross into the footnote zone below. */
 .divider {
   position: absolute;
-  top: 0; bottom: 0;
+  top: 0;
   width: 1px;
   background: var(--color-rule);
   z-index: 0;
@@ -251,12 +253,17 @@ h1 {
   box-shadow: 0 1px 6px rgba(26,26,24,0.12);
 }
 .node:active { transform: translateY(1px); }
-.node .nlabel { font-weight: 600; color: var(--color-ink); }
+/* --- unified label formatting rule ---
+   Title  : Inter, weight 600, primary ink (white on dark lens boxes)
+   Subtitle: Inter, weight 400, 10px, muted slate — ONE shared style
+   Alignment: flow nodes (input/intermediate/lens) left; quadrants centered */
+.node .nlabel { font-family: var(--font-ui); font-weight: 600; color: var(--color-ink); }
 .node .nmeta {
   display: block;
   margin-top: 3px;
-  font-size: 11px;
-  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  font-family: var(--font-ui);
   color: var(--color-text-muted);
 }
 
@@ -269,7 +276,7 @@ h1 {
   background: var(--color-ink);
   color: #fff;
   border-color: var(--color-ink);
-  text-align: center;
+  text-align: left;
 }
 .node.lens .nlabel { color: #fff; }
 .node.lens .nmeta  { color: rgba(255,255,255,0.7); }
@@ -286,7 +293,11 @@ h1 {
 }
 
 /* footnote variant text */
-.fn-marker { color: var(--color-accent); font-size: 10px; vertical-align: super; }
+.fn-marker { color: var(--color-accent); font-weight: 600; }
+/* footnote markers on the boxes they reference — shown only in footnoted mode */
+.fn-box-marker { color: var(--color-accent); font-weight: 600; font-size: 11px; margin-left: 3px; display: none; }
+.node.p2 .fn-box-marker { color: var(--color-accent); }
+.diagram.footnoted .fn-box-marker { display: inline; }
 .footnotes {
   margin-top: var(--space-4);
   padding-top: var(--space-3);
@@ -466,18 +477,18 @@ h1 {
       <!-- ===== INPUT COLUMN ===== -->
       <div class="col" id="col-input">
         <div class="node input" id="emp"      data-method-target="input-employment">
-          <span class="nlabel">county employment records</span></div>
+          <span class="nlabel">County Employment Records</span></div>
         <div class="node input" id="sector"   data-method-target="input-sector-score">
-          <span class="nlabel">sector strategic score</span></div>
+          <span class="nlabel">Sector Strategic Score</span></div>
         <div class="node input" id="elecdata" data-method-target="input-election-data">
-          <span class="nlabel">county-based election data</span></div>
+          <span class="nlabel">County-Based Election Data</span></div>
         <div class="node input" id="elecsig"  data-method-target="input-electoral-significance">
-          <span class="nlabel">electoral significance</span>
+          <span class="nlabel">Electoral Significance</span>
           <span class="nmeta">tipping / flip value</span></div>
         <div class="node input" id="fedvotes" data-method-target="input-federal-key-votes">
-          <span class="nlabel">federal key votes</span></div>
+          <span class="nlabel">Federal Key Votes</span></div>
         <div class="node input" id="ideology" data-method-target="input-ideology-score">
-          <span class="nlabel">ideology score</span></div>
+          <span class="nlabel">Ideology Score</span></div>
         <div class="node input" id="partyid"  data-method-target="input-party-id">
           <span class="nlabel">Party ID</span></div>
       </div>
@@ -487,39 +498,41 @@ h1 {
         <!-- intermediates -->
         <div class="subcol" id="col-inter">
           <div class="node sls" id="sls" data-method-target="sls-capital-community">
-            <span class="nlabel">SLS</span>
+            <span class="nlabel">Sectoral Leverage</span>
             <span class="nmeta">Capital + Community</span></div>
 
-          <!-- P1 — explicit variants -->
+          <!-- Electoral Leverage — explicit variants -->
           <div class="node p1 fork-explicit" id="p1-fed" data-method-target="p1-federal">
-            <span class="nlabel">P1 · federal</span></div>
+            <span class="nlabel">Electoral Leverage</span>
+            <span class="nmeta">federal</span></div>
           <div class="node p1 fork-explicit" id="p1-state" data-method-target="p1-state">
-            <span class="nlabel">P1 · state</span></div>
-          <!-- P1 — simple variant -->
+            <span class="nlabel">Electoral Leverage</span>
+            <span class="nmeta">state</span></div>
+          <!-- Electoral Leverage — simple variant -->
           <div class="node p1 fork-simple" id="p1" data-method-target="p1" hidden>
-            <span class="nlabel">P1</span></div>
+            <span class="nlabel">Electoral Leverage</span></div>
 
-          <!-- P2 — explicit variants -->
+          <!-- Incumbent Alignment — explicit variants -->
           <div class="node p2 fork-explicit" id="p2-fed" data-method-target="p2-federal">
-            <span class="nlabel">FEDERAL P2</span>
+            <span class="nlabel">Federal Incumbent Alignment<sup class="fn-box-marker">†</sup></span>
             <span class="nmeta p2-inline">fed = key votes + ideology</span></div>
           <div class="node p2 fork-explicit" id="p2-state" data-method-target="p2-state">
-            <span class="nlabel">STATE P2</span>
+            <span class="nlabel">State Incumbent Alignment<sup class="fn-box-marker">‡</sup></span>
             <span class="nmeta p2-inline">state = Party ID</span></div>
-          <!-- P2 — simple variant -->
+          <!-- Incumbent Alignment — simple variant -->
           <div class="node p2 fork-simple" id="p2" data-method-target="p2" hidden>
-            <span class="nlabel">P2</span>
+            <span class="nlabel">Incumbent Alignment<sup class="fn-box-marker">†‡</sup></span>
             <span class="nmeta p2-inline">fed = key votes + ideology · state = Party ID</span></div>
         </div>
 
         <!-- lenses -->
         <div class="subcol" id="col-lens">
           <div class="node lens" id="lens-fed" data-method-target="lens-federal">
-            <span class="nlabel">Fed level</span>
-            <span class="nmeta">SLS + P1 + P2 (fed)</span></div>
+            <span class="nlabel">Fed Level</span>
+            <span class="nmeta">Sectoral + Electoral + Alignment (fed)</span></div>
           <div class="node lens" id="lens-state" data-method-target="lens-state">
-            <span class="nlabel">State level</span>
-            <span class="nmeta">SLS + P1 + P2 (state)</span></div>
+            <span class="nlabel">State Level</span>
+            <span class="nmeta">Sectoral + Electoral + Alignment (state)</span></div>
         </div>
       </div>
 
@@ -549,8 +562,8 @@ h1 {
 
     <!-- footnotes (P2 footnoted mode) -->
     <div class="footnotes hidden" id="footnotes">
-      <p><span class="fn-marker">†</span> <b>Federal P2</b> = federal key votes + ideology score.</p>
-      <p><span class="fn-marker">‡</span> <b>State P2</b> = Party ID.</p>
+      <p><span class="fn-marker">†</span> Federal Incumbent Alignment = federal key votes + ideology score</p>
+      <p><span class="fn-marker">‡</span> State Incumbent Alignment = Party ID</p>
     </div>
   </div><!-- /diagram -->
 
@@ -591,6 +604,8 @@ function applyP2() {
   const footnoted = state.p2 === 'footnoted';
   document.querySelectorAll('.p2-inline').forEach(el => el.classList.toggle('hidden', footnoted));
   $('footnotes').classList.toggle('hidden', !footnoted);
+  // footnoted class reveals the † / ‡ markers on the boxes they reference
+  diagram.classList.toggle('footnoted', footnoted);
   draw();
 }
 
@@ -690,11 +705,16 @@ function draw() {
     });
     svg.innerHTML = d;
 
-    // position band dividers at column boundaries
+    // position band dividers at column boundaries, and size them to STOP at the
+    // stage bottom (the horizontal rule) so they never cross into the footnote zone
     const ci = $('col-input').getBoundingClientRect();
     const cm = $('col-inter').closest('.col-model').getBoundingClientRect();
-    $('div1').style.left = (ci.right - dr.left) + 'px';
-    $('div2').style.left = (cm.right - dr.left) + 'px';
+    const dividerHeight = c.bottom - dr.top;
+    [['div1', ci.right], ['div2', cm.right]].forEach(([id, x]) => {
+      const el = $(id);
+      el.style.left = (x - dr.left) + 'px';
+      el.style.height = dividerHeight + 'px';
+    });
   });
 }
 
@@ -704,7 +724,8 @@ function draw() {
 document.querySelectorAll('[data-method-target]').forEach(el => {
   el.addEventListener('click', () => {
     const target = el.getAttribute('data-method-target');
-    const label = (el.querySelector('.nlabel') || el.querySelector('.qname'))?.textContent.trim() || el.id;
+    const label = ((el.querySelector('.nlabel') || el.querySelector('.qname'))?.textContent || el.id)
+      .replace(/[†‡]/g, '').trim();
     const msg = `"${label}" would navigate to: #${target}`;
     $('readout').innerHTML = `would navigate to: <b>#${target}</b> &nbsp;·&nbsp; (${label})`;
     console.log('[methodology-nav]', msg, '| data-method-target =', target);
