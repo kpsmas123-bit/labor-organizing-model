@@ -7,3 +7,6 @@ logs/*.txt
 logs/*.json
 config.json
 .env
+
+# Agent 5 state-returns backfill: large raw downloads (re-fetched by scripts/build_state_returns_backfill.py)
+data/work_state_returns/
