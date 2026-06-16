@@ -16,9 +16,13 @@ and `data/county_scores.json` is the canonical v2.0 file (v1 archived to
 |---|---|
 | `sls_capital`, `sls_community` | unchanged SLS scores (0–100) |
 | `p1_national`, `p2_national` | National lens: presidential tipping P1 + federal P2 (0–1) |
-| `p1_state`, `p2_state` | State lens: chamber-control P1 + state P2 (0–1) |
+| `p1_state` | State lens P1 = `100 × chamber_flip_proximity × max(0,(8−\|margin\|)/8)`, range 0–~98 (REBUILT 2026-06-15) |
+| `p2_state` | State lens P2 = overlap-weighted Dem share of CURRENT state-leg roster (party proxy), 0–1 (REBUILT 2026-06-15) |
+| `p1_state_data_tier` | margin confidence: `district_actual` / `presidential` / `gubernatorial` (overlay) (NEW 2026-06-15) |
+| `state_noncomp_priority` | low-P1 alignment subdivision: `hostile` / `neutral` / `aligned` / null (NEW 2026-06-15) |
+| `margin_stale` | state-leg margin flagged stale (carried from competitiveness file) (NEW 2026-06-15) |
 | `p2_coverage` | federal P2 provenance (house_and_senate / …_statewide / senate_only / house_only / unknown) |
-| `state_p2_coverage` | state P2 provenance (cfscore_plus_imputed / no_state_legislature) |
+| `state_p2_coverage` | state P2 provenance: `party_proxy` / `party_proxy_state_uniform` (fallback) / `party_proxy_unavailable` (DC) (REBUILT 2026-06-15) |
 | `quadrant_national`, `quadrant_state` | 6-tier P2-driven classification per lens |
 | `state_tipping_weight`, `chamber_tipping_weight` | P1 inputs (presidential / averaged chamber) |
 | backward-compat aliases | `p1_presidential`, `p2_alignment`, `federal_p2`, `quadrant` (= national) |
@@ -33,8 +37,18 @@ and `data/county_scores.json` is the canonical v2.0 file (v1 archived to
 
 ### Tier counts
 - **National:** Tier 1 = 21 (cap 7 / comm 14) · Tier 2 = 566 · Tier 3 = 59 · Tier 4 = 2,497.
-- **State:** Tier 1 = 141 (cap 98 / comm 41 / both 2) · Tier 2 = 446 · Tier 3 = 1,775 · Tier 4 = 781.
+- **State (REBUILT 2026-06-15):** Tier 1 = 42 (cap 33 / comm 8 / both 1) · Tier 2 = 545 (build 461 / activate 60 / unknown 24) · Tier 3 = 163 · Tier 4 = 2,393. *(was Tier 1 = 141 · Tier 3 = 1,775 under the broken P1.)*
 - Counties clearing all three national thresholds (deploy_now_both equiv): **0** (empirical finding).
+
+### State-lens rebuild (2026-06-15, branch `state-lens-rebuild`) — STILL GATED, awaiting Sam
+- Replaced the broken state P1 (`presidential-scale 1/margin × chamber weight`, ~56% above threshold) with
+  **competitiveness × chamber-flip proximity**: `P1_state = 100 × tipping_weight[best-seat chamber] × max(0,(8−|margin|)/8)`.
+  Bounded, no `1/margin` blow-up. New threshold `p1_high_state = 30.0` in `config/thresholds.json`.
+- Replaced state-uniform P2 with **county-resolved party proxy**: overlap-weighted Dem share of the
+  current state-leg roster (`county_seat_detail.json` `current_party × share`). `state_p2_coverage = party_proxy`.
+- High-P1 share: **289 counties (9.2%)** vs ~56% before. Build script: `pipeline/rebuild_state_lens.py --write`.
+- National lens + SLS untouched (verified: 0 field diffs across all 3,143 counties).
+- **State lens remains HIDDEN** (Agent 3's gating untouched). Full detail: `STATE_LENS_REBUILD_PROGRESS.md`.
 
 ### Open items for Sam (full detail in BUILD_PROGRESS.md → NEEDS SAM)
 1. State-lens P1 normalization scale (chamber weights vs presidential probabilities).
