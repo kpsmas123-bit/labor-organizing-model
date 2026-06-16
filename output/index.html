@@ -15,6 +15,15 @@
        and define some of the same selectors (.legend, .tooltip, #detail-panel…).
        ============================================================ -->
   <style>
+    /* ---- Shared landing-screen column (page-scoped tokens; do not touch terrain.css).
+            One max-width + side padding used by every landing screen so they align. ---- */
+    :root { --screen-max: 1100px; --screen-pad: var(--space-8); }
+    .screen-inner { width: 100%; max-width: var(--screen-max); margin: 0 auto; padding-left: var(--screen-pad); padding-right: var(--screen-pad); }
+
+    /* Horizontal dividers BETWEEN landing screens — reuse the methodology hairline
+       (1px solid var(--color-border)). One line at each screen's bottom edge. */
+    #panel-cover, #panel-about, #map-section { border-bottom: 1px solid var(--color-border); }
+
     /* ---- Scroll-snap container: MANDATORY so one scroll moves one section.
             scroll-padding-top insets snap alignment by the fixed nav height so
             snapped sections sit BELOW the nav (fixes header overlap). The long
@@ -53,8 +62,10 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: var(--space-16) var(--space-8);
+      padding: var(--space-12) 0;
     }
+    /* Cover content shares the standard column + side padding (no longer squeezed). */
+    .cover-inner { width: 100%; max-width: var(--screen-max); margin: 0 auto; padding: 0 var(--screen-pad); }
     .cover-eyebrow {
       font-family: var(--font-mono); font-size: var(--text-xs);
       letter-spacing: 0.15em; text-transform: uppercase;
@@ -65,12 +76,12 @@
       font-size: clamp(2.5rem, 5vw, 4.5rem);
       font-weight: 500; color: var(--color-text);
       line-height: 1.05; letter-spacing: -0.02em;
-      max-width: 680px; margin: 0 auto var(--space-8) auto;
+      max-width: 800px; margin: 0 auto var(--space-8) auto;
     }
     .cover-rule { width: 48px; height: 3px; background: var(--color-accent); margin: 0 auto var(--space-6) auto; }
     .cover-abstract {
-      font-family: var(--font-body); font-size: var(--text-base);
-      color: var(--color-text-secondary); max-width: 520px;
+      font-family: var(--font-body); font-size: var(--text-lg);
+      color: var(--color-text-secondary); max-width: 640px;
       margin: 0 auto var(--space-10) auto; line-height: 1.75; text-align: center;
     }
     .cover-authors { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: 0.05em; text-align: center; margin-bottom: var(--space-1); }
@@ -85,11 +96,11 @@
 
     /* === ABOUT / ABSTRACT PANEL === */
     #panel-about {
-      display: grid; grid-template-columns: 1fr 280px; gap: 80px;
-      align-items: start; max-width: 900px; margin: 0 auto;
-      padding: 80px 40px; width: 100%; background: var(--color-bg);
+      display: grid; grid-template-columns: 1fr 280px; gap: var(--space-12);
+      align-items: center; max-width: var(--screen-max); margin: 0 auto;
+      padding: var(--space-10) var(--screen-pad); width: 100%; background: var(--color-bg);
     }
-    .about-main { max-width: 520px; }
+    .about-main { max-width: 560px; }
     .about-heading { font-family: var(--font-display); font-size: 2.5rem; font-weight: 500; color: var(--color-text); margin-bottom: 1.5rem; line-height: 1.15; }
     .about-body { font-family: var(--font-body); font-size: 1rem; color: var(--color-text-secondary); line-height: 1.75; margin-bottom: 1.25rem; }
     .about-nav { padding-top: 12px; }
@@ -113,7 +124,9 @@
     #map-section { background: var(--color-bg); }
 
     /* ── Map section: ONE-viewport two-column layout (cards LEFT, map RIGHT) ── */
-    .map-layout { height: 100%; display: grid; grid-template-columns: 360px 1fr; gap: var(--space-8); max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-8); }
+    /* Fixed one-viewport height so the map screen never overflows; the LEFT column
+       scrolls internally as the fallback if cards+key exceed it (no clipping). */
+    .map-layout { height: calc(100vh - var(--nav-height)); display: grid; grid-template-columns: 340px 1fr; gap: var(--space-8); max-width: var(--screen-max); margin: 0 auto; padding: var(--space-6) var(--screen-pad); }
     .map-left { min-width: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-4); }
     .map-right { min-width: 0; display: flex; flex-direction: column; }
     .map-paper-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 500; margin: 0 0 var(--space-1); color: var(--color-text); }
@@ -263,6 +276,11 @@
       .map-left { overflow: visible; }
       #map-section .map-figure-body { height: 60vh; }
     }
+    /* Short viewports: let the map screen reflow instead of cramping into a fixed height. */
+    @media (max-height: 700px) {
+      .map-layout { height: auto; }
+      #map-section .map-figure-body { height: 60vh; }
+    }
 
     /* ============================================================
        METHODOLOGY SECTION — scroll-spy rail + typed content blocks
@@ -366,20 +384,22 @@
          (Sam edits this copy freely — pure content, no logic.)
          ════════════════════════════════════════════════════════ -->
     <div class="paper-panel" id="panel-cover">
-      <div class="cover-eyebrow">Working Paper · v2.0 · June 2026</div>
-      <h1 class="cover-title">
-        Terrain: A National Labor Organizing<br>Strategic Model
-      </h1>
-      <div class="cover-rule"></div>
-      <p class="cover-abstract">
-        A county-level quantitative model of strategic organizing terrain
-        across all 3,143 U.S. counties. Grounded in Jane McAlevey's
-        whole-worker organizing framework, the model scores each county
-        on structural labor leverage and political terrain to identify
-        where organizing has outsized political and economic impact.
-      </p>
-      <div class="cover-authors">Sam Kaplan-Pettus</div>
-      <div class="cover-meta">UC Berkeley Political Science · laborterrain.org</div>
+      <div class="cover-inner">
+        <div class="cover-eyebrow">Working Paper · v2.0 · June 2026</div>
+        <h1 class="cover-title">
+          Terrain: A National Labor Organizing<br>Strategic Model
+        </h1>
+        <div class="cover-rule"></div>
+        <p class="cover-abstract">
+          A county-level quantitative model of strategic organizing terrain
+          across all 3,143 U.S. counties. Grounded in Jane McAlevey's
+          whole-worker organizing framework, the model scores each county
+          on structural labor leverage and political terrain to identify
+          where organizing has outsized political and economic impact.
+        </p>
+        <div class="cover-authors">Sam Kaplan-Pettus</div>
+        <div class="cover-meta">UC Berkeley Political Science · laborterrain.org</div>
+      </div>
       <div class="cover-scroll-hint">↓ scroll to explore</div>
     </div>
 
