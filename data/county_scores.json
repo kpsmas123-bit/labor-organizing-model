@@ -24,16 +24,16 @@
     "tier1_capital": 7
   },
   "_tier_counts_state": {
-    "tier4": 2344,
-    "tier2_build_capital": 173,
-    "tier3_electoral": 212,
-    "tier1_capital": 39,
+    "tier4": 2412,
+    "tier2_build_capital": 202,
+    "tier3_electoral": 144,
+    "tier1_capital": 30,
     "tier2_activate_community": 4,
-    "tier1_community": 10,
-    "tier2_build_community": 270,
-    "tier2_activate_capital": 64,
-    "tier2_unknown_community": 4,
-    "tier2_unknown_capital": 22,
+    "tier1_community": 5,
+    "tier2_build_community": 277,
+    "tier2_activate_capital": 49,
+    "tier2_unknown_community": 2,
+    "tier2_unknown_capital": 17,
     "tier1_capital_community": 1
   },
   "_note": "Terrain v2.0 canonical. Real federal + state P2, dual lens, 6-tier P2-driven classification.",
@@ -5700,7 +5700,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.08,
       "p2_alignment": 0.074,
       "federal_p2": 0.074,
@@ -5712,7 +5712,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "05121",
@@ -6096,7 +6096,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.27,
       "p2_alignment": 0.078,
       "federal_p2": 0.078,
@@ -6108,7 +6108,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "05145",
@@ -7185,7 +7185,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.67,
       "p2_alignment": 0.744,
       "federal_p2": 0.744,
@@ -7197,7 +7197,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "06061",
@@ -8835,7 +8835,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.18,
       "p2_alignment": 0.839,
       "federal_p2": 0.839,
@@ -8847,7 +8847,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "08043",
@@ -11112,7 +11112,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.05,
       "p2_alignment": 0.009,
       "federal_p2": 0.009,
@@ -11124,7 +11124,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12031",
@@ -11244,7 +11244,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.08,
       "p2_alignment": 0.006,
       "federal_p2": 0.006,
@@ -11256,7 +11256,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12039",
@@ -11277,7 +11277,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.12,
       "p2_alignment": 0.005,
       "federal_p2": 0.005,
@@ -11289,7 +11289,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "12041",
@@ -11376,7 +11376,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.07,
       "p2_alignment": 0.006,
       "federal_p2": 0.006,
@@ -11388,7 +11388,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12047",
@@ -11409,7 +11409,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier1_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 0.09,
       "p2_alignment": 0.006,
       "federal_p2": 0.006,
@@ -11421,7 +11421,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12049",
@@ -11706,7 +11706,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.19,
       "p2_alignment": 0.006,
       "federal_p2": 0.006,
@@ -11718,7 +11718,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "12067",
@@ -11739,7 +11739,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier1_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 0.05,
       "p2_alignment": 0.007,
       "federal_p2": 0.007,
@@ -11751,7 +11751,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12069",
@@ -11838,7 +11838,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.16,
       "p2_alignment": 0.007,
       "federal_p2": 0.007,
@@ -11850,7 +11850,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "12075",
@@ -11904,7 +11904,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier1_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 0.05,
       "p2_alignment": 0.008,
       "federal_p2": 0.008,
@@ -11916,7 +11916,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12079",
@@ -11937,7 +11937,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier2_unknown_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 0.12,
       "p2_alignment": 0.007,
       "federal_p2": 0.007,
@@ -11949,7 +11949,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "12081",
@@ -12663,7 +12663,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.06,
       "p2_alignment": 0.008,
       "federal_p2": 0.008,
@@ -12675,7 +12675,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12123",
@@ -12696,7 +12696,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.06,
       "p2_alignment": 0.01,
       "federal_p2": 0.01,
@@ -12708,7 +12708,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12125",
@@ -12795,7 +12795,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.08,
       "p2_alignment": 0.006,
       "federal_p2": 0.006,
@@ -12807,7 +12807,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "12131",
@@ -14841,7 +14841,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.72,
       "p2_alignment": 0.841,
       "federal_p2": 0.841,
@@ -14853,7 +14853,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "13123",
@@ -18174,7 +18174,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.08,
       "p2_alignment": 0.904,
       "federal_p2": 0.904,
@@ -18186,7 +18186,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "15007",
@@ -18339,7 +18339,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.07,
       "p2_alignment": 0.047,
       "federal_p2": 0.047,
@@ -18351,7 +18351,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "16007",
@@ -21573,7 +21573,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.37,
       "p2_alignment": 0.892,
       "federal_p2": 0.892,
@@ -21585,7 +21585,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "17115",
@@ -22068,7 +22068,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.38,
       "p2_alignment": 0.918,
       "federal_p2": 0.918,
@@ -22080,7 +22080,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "17145",
@@ -22662,7 +22662,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.07,
       "p2_alignment": 0.919,
       "federal_p2": 0.919,
@@ -22674,7 +22674,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "17181",
@@ -23058,7 +23058,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.04,
       "p2_alignment": 0.911,
       "federal_p2": 0.911,
@@ -23070,7 +23070,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "18001",
@@ -23652,7 +23652,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.11,
       "p2_alignment": 0.118,
       "federal_p2": 0.118,
@@ -23664,7 +23664,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "18037",
@@ -24114,7 +24114,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.08,
       "p2_alignment": 0.112,
       "federal_p2": 0.112,
@@ -24126,7 +24126,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "18065",
@@ -24543,7 +24543,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.32,
       "p2_alignment": 0.252,
       "federal_p2": 0.252,
@@ -24555,7 +24555,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "18091",
@@ -24576,7 +24576,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.13,
       "p2_alignment": 0.171,
       "federal_p2": 0.171,
@@ -24588,7 +24588,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "18093",
@@ -25170,7 +25170,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.17,
       "p2_alignment": 0.233,
       "federal_p2": 0.233,
@@ -25182,7 +25182,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "18129",
@@ -32034,7 +32034,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.0,
       "p2_alignment": 0.077,
       "federal_p2": 0.077,
@@ -32046,7 +32046,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "20163",
@@ -32826,7 +32826,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.07,
       "p2_alignment": 0.088,
       "federal_p2": 0.088,
@@ -32838,7 +32838,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "21001",
@@ -37347,7 +37347,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy_state_uniform",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.16,
       "p2_alignment": 0.119,
       "federal_p2": 0.119,
@@ -37359,7 +37359,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2023",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "22035",
@@ -39030,7 +39030,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.22,
       "p2_alignment": 0.383,
       "federal_p2": 0.383,
@@ -39042,7 +39042,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "23009",
@@ -39426,7 +39426,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.17,
       "p2_alignment": 0.441,
       "federal_p2": 0.441,
@@ -39438,7 +39438,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "24001",
@@ -42363,7 +42363,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 4.03,
       "p2_alignment": 0.788,
       "federal_p2": 0.788,
@@ -42375,7 +42375,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "26103",
@@ -42429,7 +42429,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 3.01,
       "p2_alignment": 0.79,
       "federal_p2": 0.79,
@@ -42441,7 +42441,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "26107",
@@ -42693,7 +42693,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier3_electoral",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 35.91,
       "p2_alignment": 0.795,
       "federal_p2": 0.795,
@@ -42705,7 +42705,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "26123",
@@ -42792,7 +42792,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 2.14,
       "p2_alignment": 0.788,
       "federal_p2": 0.788,
@@ -42804,7 +42804,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "26129",
@@ -43518,7 +43518,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.32,
       "p2_alignment": 0.906,
       "federal_p2": 0.906,
@@ -43530,7 +43530,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "27007",
@@ -43881,7 +43881,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier3_electoral",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 21.43,
       "p2_alignment": 0.907,
       "federal_p2": 0.907,
@@ -43893,7 +43893,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "27029",
@@ -44244,7 +44244,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.65,
       "p2_alignment": 0.691,
       "federal_p2": 0.691,
@@ -44256,7 +44256,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "27051",
@@ -45465,7 +45465,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.25,
       "p2_alignment": 0.92,
       "federal_p2": 0.92,
@@ -45477,7 +45477,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "27125",
@@ -45597,7 +45597,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 4.27,
       "p2_alignment": 0.915,
       "federal_p2": 0.915,
@@ -45609,7 +45609,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "27133",
@@ -45729,7 +45729,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 1.26,
       "p2_alignment": 0.913,
       "federal_p2": 0.913,
@@ -45741,7 +45741,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "27141",
@@ -49326,7 +49326,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.18,
       "p2_alignment": 0.29,
       "federal_p2": 0.29,
@@ -49338,7 +49338,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "29021",
@@ -52857,7 +52857,7 @@
       "p2_coverage": "senate_only",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier2_unknown_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 1.05,
       "p2_alignment": 0.054,
       "federal_p2": 0.054,
@@ -52869,7 +52869,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "30005",
@@ -53319,7 +53319,7 @@
       "p2_coverage": "senate_only",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_unknown_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.56,
       "p2_alignment": 0.054,
       "federal_p2": 0.054,
@@ -53331,7 +53331,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "30033",
@@ -53847,7 +53847,7 @@
       "p2_coverage": "senate_only",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.08,
       "p2_alignment": 0.054,
       "federal_p2": 0.054,
@@ -53859,7 +53859,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "30065",
@@ -55563,7 +55563,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy_state_uniform",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.18,
       "p2_alignment": 0.159,
       "federal_p2": 0.159,
@@ -55575,7 +55575,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "31057",
@@ -58797,7 +58797,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.48,
       "p2_alignment": 0.893,
       "federal_p2": 0.893,
@@ -58809,7 +58809,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2025",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "34013",
@@ -60414,7 +60414,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.07,
       "p2_alignment": 0.895,
       "federal_p2": 0.895,
@@ -60426,7 +60426,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "36003",
@@ -60744,7 +60744,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.12,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -60756,7 +60756,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "36023",
@@ -60843,7 +60843,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.33,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -60855,7 +60855,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "36029",
@@ -60876,7 +60876,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_unknown_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.18,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -60888,7 +60888,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "36031",
@@ -61041,7 +61041,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.11,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -61053,7 +61053,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "36041",
@@ -61701,7 +61701,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.13,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -61713,7 +61713,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "36081",
@@ -61767,7 +61767,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.31,
       "p2_alignment": 0.877,
       "federal_p2": 0.877,
@@ -61779,7 +61779,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "36085",
@@ -61899,7 +61899,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.98,
       "p2_alignment": 0.897,
       "federal_p2": 0.897,
@@ -61911,7 +61911,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "36093",
@@ -62229,7 +62229,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.1,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -62241,7 +62241,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "36113",
@@ -62262,7 +62262,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.42,
       "p2_alignment": 0.871,
       "federal_p2": 0.871,
@@ -62274,7 +62274,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "36115",
@@ -62295,7 +62295,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.08,
       "p2_alignment": 0.872,
       "federal_p2": 0.872,
@@ -62307,7 +62307,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "36117",
@@ -62361,7 +62361,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.07,
       "p2_alignment": 0.766,
       "federal_p2": 0.766,
@@ -62373,7 +62373,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "36121",
@@ -62691,7 +62691,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.14,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -62703,7 +62703,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "37017",
@@ -62922,7 +62922,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier1_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 0.35,
       "p2_alignment": 0.059,
       "federal_p2": 0.059,
@@ -62934,7 +62934,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "37031",
@@ -63285,7 +63285,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 1.33,
       "p2_alignment": 0.06,
       "federal_p2": 0.06,
@@ -63297,7 +63297,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "37053",
@@ -63318,7 +63318,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.37,
       "p2_alignment": 0.059,
       "federal_p2": 0.059,
@@ -63330,7 +63330,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "37055",
@@ -63549,7 +63549,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_unknown_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 1.36,
       "p2_alignment": 0.061,
       "federal_p2": 0.061,
@@ -63561,7 +63561,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "37069",
@@ -63648,7 +63648,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_community",
-      "quadrant_state": "tier1_community",
+      "quadrant_state": "tier2_build_community",
       "p1_presidential": 0.82,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -63660,7 +63660,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "37075",
@@ -63714,7 +63714,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.9,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -63726,7 +63726,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "37079",
@@ -63813,7 +63813,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.01,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -63825,7 +63825,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "37085",
@@ -63945,7 +63945,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.67,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -63957,7 +63957,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "37093",
@@ -64374,7 +64374,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.73,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -64386,7 +64386,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "37119",
@@ -64407,7 +64407,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.54,
       "p2_alignment": 0.275,
       "federal_p2": 0.275,
@@ -64419,7 +64419,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "37121",
@@ -64605,7 +64605,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.23,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -64617,7 +64617,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "37133",
@@ -65364,7 +65364,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.83,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -65376,7 +65376,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "37179",
@@ -65463,7 +65463,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.7,
       "p2_alignment": 0.333,
       "federal_p2": 0.333,
@@ -65475,7 +65475,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "37185",
@@ -65496,7 +65496,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.94,
       "p2_alignment": 0.297,
       "federal_p2": 0.297,
@@ -65508,7 +65508,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "37187",
@@ -68499,7 +68499,7 @@
       "p2_coverage": "house_only",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.24,
       "p2_alignment": 0.121,
       "federal_p2": 0.121,
@@ -68511,7 +68511,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "39063",
@@ -72195,7 +72195,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_unknown_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 1.06,
       "p2_alignment": 0.038,
       "federal_p2": 0.038,
@@ -72207,7 +72207,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "40111",
@@ -73383,7 +73383,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.05,
       "p2_alignment": 0.758,
       "federal_p2": 0.758,
@@ -73395,7 +73395,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "41029",
@@ -73713,7 +73713,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.89,
       "p2_alignment": 0.971,
       "federal_p2": 0.971,
@@ -73725,7 +73725,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "41049",
@@ -74010,7 +74010,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.31,
       "p2_alignment": 0.958,
       "federal_p2": 0.958,
@@ -74022,7 +74022,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "41067",
@@ -75330,7 +75330,7 @@
       "p2_coverage": "house_only",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 2.96,
       "p2_alignment": 0.118,
       "federal_p2": 0.118,
@@ -75342,7 +75342,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "42075",
@@ -76914,7 +76914,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.06,
       "p2_alignment": 0.204,
       "federal_p2": 0.204,
@@ -76926,7 +76926,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "45027",
@@ -77013,7 +77013,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.13,
       "p2_alignment": 0.204,
       "federal_p2": 0.204,
@@ -77025,7 +77025,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "45033",
@@ -77277,7 +77277,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.06,
       "p2_alignment": 0.204,
       "federal_p2": 0.204,
@@ -77289,7 +77289,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "45049",
@@ -77574,7 +77574,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.1,
       "p2_alignment": 0.204,
       "federal_p2": 0.204,
@@ -77586,7 +77586,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "45067",
@@ -79620,7 +79620,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier1_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.14,
       "p2_alignment": 0.087,
       "federal_p2": 0.087,
@@ -79632,7 +79632,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "46101",
@@ -80808,7 +80808,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.07,
       "p2_alignment": 0.026,
       "federal_p2": 0.026,
@@ -80820,7 +80820,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "47039",
@@ -93018,7 +93018,7 @@
       "p2_coverage": "senate_only",
       "state_p2_coverage": "party_proxy_state_uniform",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.34,
       "p2_alignment": 0.968,
       "federal_p2": 0.968,
@@ -93030,7 +93030,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "presidential:2024",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "50023",
@@ -94437,7 +94437,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.39,
       "p2_alignment": 0.555,
       "federal_p2": 0.555,
@@ -94449,7 +94449,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2021",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "51083",
@@ -94668,7 +94668,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.57,
       "p2_alignment": 0.841,
       "federal_p2": 0.841,
@@ -94680,7 +94680,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2021",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "51097",
@@ -95097,7 +95097,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.02,
       "p2_alignment": 0.845,
       "federal_p2": 0.845,
@@ -95109,7 +95109,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2021",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "51125",
@@ -96417,7 +96417,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.94,
       "p2_alignment": 0.861,
       "federal_p2": 0.861,
@@ -96429,7 +96429,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "gubernatorial:2021",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "51570",
@@ -97704,7 +97704,7 @@
       "p2_coverage": "house_and_senate_statewide",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_unknown_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.26,
       "p2_alignment": 0.844,
       "federal_p2": 0.844,
@@ -97716,7 +97716,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "neutral"
     },
     {
       "fips": "53013",
@@ -98067,7 +98067,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier2_build_capital",
-      "quadrant_state": "tier2_activate_capital",
+      "quadrant_state": "tier2_build_capital",
       "p1_presidential": 0.03,
       "p2_alignment": 0.91,
       "federal_p2": 0.91,
@@ -98079,7 +98079,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "53035",
@@ -98991,7 +98991,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.08,
       "p2_alignment": 0.107,
       "federal_p2": 0.107,
@@ -99003,7 +99003,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "54013",
@@ -100674,7 +100674,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier3_electoral",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 11.37,
       "p2_alignment": 0.493,
       "federal_p2": 0.493,
@@ -100686,7 +100686,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "55005",
@@ -100740,7 +100740,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 4.81,
       "p2_alignment": 0.49,
       "federal_p2": 0.49,
@@ -100752,7 +100752,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "55009",
@@ -101136,7 +101136,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier3_electoral",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 10.05,
       "p2_alignment": 0.491,
       "federal_p2": 0.491,
@@ -101148,7 +101148,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": true,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "55033",
@@ -101466,7 +101466,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 2.04,
       "p2_alignment": 0.496,
       "federal_p2": 0.496,
@@ -101478,7 +101478,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "55053",
@@ -102291,7 +102291,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 1.72,
       "p2_alignment": 0.491,
       "federal_p2": 0.491,
@@ -102303,7 +102303,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "55101",
@@ -102522,7 +102522,7 @@
       "p2_coverage": "house_and_senate",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 3.27,
       "p2_alignment": 0.491,
       "federal_p2": 0.491,
@@ -102534,7 +102534,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "hostile"
     },
     {
       "fips": "55115",
@@ -103644,7 +103644,7 @@
       "p2_coverage": "senate_only",
       "state_p2_coverage": "party_proxy",
       "quadrant_national": "tier4",
-      "quadrant_state": "tier3_electoral",
+      "quadrant_state": "tier4",
       "p1_presidential": 0.05,
       "p2_alignment": 0.044,
       "federal_p2": 0.044,
@@ -103656,7 +103656,7 @@
       "_model_version": "2.0",
       "p1_state_data_tier": "district_actual:2022",
       "margin_stale": false,
-      "state_noncomp_priority": null
+      "state_noncomp_priority": "aligned"
     },
     {
       "fips": "56041",
@@ -103761,19 +103761,19 @@
   "errors": [],
   "_state_lens_rebuild": {
     "version": "v2 plateau-fade",
-    "rebuilt": "2026-06-16T02:54:01.648105+00:00",
+    "rebuilt": "2026-06-16T03:51:48.126836+00:00",
     "formula": "P1_state=100*chamber_flip_proximity*comp(margin); comp: 1.0 for |m|<=plateau_edge, linear decay to 0 at zero_edge; P2_state=overlap-weighted Dem share of current state-leg roster",
     "plateau_edge": 3.0,
     "zero_edge": 8.0,
-    "p1_high_state": 30.0,
+    "p1_high_state": 60.0,
     "overlay_found": true,
     "overlay_row_count": 393,
     "p2_fallback_count": 194,
     "noncomp_subdivision": {
-      "hostile": 2375,
-      "aligned": 270,
-      "neutral": 142,
-      "null": 356
+      "hostile": 2432,
+      "aligned": 293,
+      "neutral": 166,
+      "null": 252
     },
     "national_sls_diffs": 0
   }

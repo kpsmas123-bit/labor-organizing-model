@@ -6,7 +6,18 @@ earlier `state-lens-rebuild` dress rehearsal (pre-backfill data + non-final line
 
 ---
 
-## ⬇ DECISION B — pick `p1_high_state` from these real numbers
+## ✅ DECISION B — FINALIZED: `p1_high_state = 60` (Sam, 2026-06-15)
+
+> "State-lens high-leverage threshold set at p1_high_state = 60, yielding ~8% of counties
+> (252) as high state-electoral-leverage (36 Tier 1, 144 Tier 3). Chosen to identify
+> genuinely chamber-pivotal terrain without diluting to 'any electoral opening'; reflects
+> that state legislative competition is structurally concentrated (only 412 of 3,143
+> counties carry nonzero state competitiveness). Not reverse-engineered to a target count."
+
+**Verified at 60:** high-P1 counties = **252**, state Tier 1 = **36**, state Tier 3 = **144**.
+National + SLS = **0 diffs** across all 3,143 counties. State lens remains **GATED**.
+
+## DECISION B — the selectivity table it was chosen from
 
 After computing P1_state for all 3,143 counties (412 with nonzero P1):
 
@@ -35,14 +46,12 @@ move. Full curve for context:
 | 80 | 143 |  4.5% |
 | 90 |  73 |  2.3% |
 
-`p1_high_state` is currently left at **30.0** in `config/thresholds.json`. Tell me the
-number you want and I'll set it in config and finalize. (This is the only selectivity
-knob; every tier count above moves with it.)
+`p1_high_state` is set to **60.0** in `config/thresholds.json` (the only selectivity knob).
 
-State tier counts at the current `p1_high_state = 30`:
-Tier 1 = 50 (cap 39 / comm 10 / both 1) · Tier 2 = 537 (build 443 / activate 68 /
-unknown 26) · Tier 3 = 212 · Tier 4 = 2,344.
-Low-P1 alignment subdivision: hostile 2,375 · neutral 142 · aligned 270.
+State tier counts at the finalized `p1_high_state = 60`:
+Tier 1 = 36 (cap 30 / comm 5 / both 1) · Tier 2 = 551 (build 479 / activate 53 /
+unknown 19) · Tier 3 = 144 · Tier 4 = 2,412.
+Low-P1 alignment subdivision: hostile 2,432 · neutral 166 · aligned 293.
 
 ---
 
@@ -107,7 +116,7 @@ hostile/neutral/aligned subdivision of the low-P1 band, DC+DE P1 floor (no chamb
 ## Files
 
 - `config/thresholds.json` — new `state_competitiveness` block (plateau_edge 3.0,
-  zero_edge 8.0, p1_high_state 30.0).
+  zero_edge 8.0, p1_high_state 60.0).
 - `pipeline/rebuild_state_lens.py` — plateau-fade comp, config-sourced params, vintage
   carry-through, 3-threshold selectivity report + full curve, all-county 0-diff guard.
 - `data/county_scores.json` — state-lens fields only (p1_state, p2_state,

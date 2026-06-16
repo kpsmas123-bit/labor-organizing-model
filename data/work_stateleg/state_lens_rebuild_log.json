@@ -2,7 +2,7 @@
   "version": "v2 (plateau-fade, post-backfill)",
   "plateau_edge": 3.0,
   "zero_edge": 8.0,
-  "p1_high_state": 30.0,
+  "p1_high_state": 60.0,
   "overlay_found": true,
   "overlay_row_count": 393,
   "comp_rows_not_in_canonical": [
