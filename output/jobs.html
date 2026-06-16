@@ -2371,7 +2371,13 @@ async function loadCountyScores() {
     // county_scores.json is now the v2 canonical object {counties:[...]}, not a bare array.
     const counties = Array.isArray(data) ? data : (data.counties || []);
     if (!counties.length) return;
-    msaData = computeMsaData(counties);
+    // v2 records carry no msa_name; reconstruct MSA grouping from msa_lookup.json (fips -> "MSA, ST").
+    let msaLookup = {};
+    try {
+      const lr = await fetch('../data/msa_lookup.json');
+      if (lr.ok) msaLookup = await lr.json();
+    } catch(e) { /* fall back to per-county msa_name if present */ }
+    msaData = computeMsaData(counties, msaLookup);
     renderMsaList();
     if (state.path === 'rf' && state.rfToggle !== 'apprenticeships') {
       renderImpactGoals();
@@ -2379,23 +2385,27 @@ async function loadCountyScores() {
   } catch(e) { /* skeleton state remains */ }
 }
 
-function computeMsaData(counties) {
+function computeMsaData(counties, msaLookup) {
+  msaLookup = msaLookup || {};
   const byMsa = {};
   for (const c of counties) {
-    const name = c.msa_name;
+    // v2 has no msa_name; resolve via msa_lookup.json (fips -> "MSA, ST"). Fall back to legacy c.msa_name.
+    const name = msaLookup[c.fips] || c.msa_name;
     if (!name || name === 'Non-Metro') continue;
     if (!byMsa[name]) byMsa[name] = { name, counties: [], states: new Set() };
     byMsa[name].counties.push(c);
     if (c.state) byMsa[name].states.add(c.state);
   }
   return Object.values(byMsa).map(m => {
-    const scores = m.counties.map(c => c.organizing_opportunity_score || c.oos_score || 0).filter(s => s > 0);
+    // v2 renamed the v1 OOS/intervention fields with a v1_ prefix; keep legacy names as fallback.
+    const scores = m.counties.map(c => c.v1_organizing_opportunity_score ?? c.organizing_opportunity_score ?? c.oos_score ?? 0).filter(s => s > 0);
     const avgOos = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
     const typeCounts = {};
-    m.counties.forEach(c => { const t = c.intervention_type; if (t) typeCounts[t] = (typeCounts[t]||0)+1; });
+    m.counties.forEach(c => { const t = c.v1_intervention_type || c.intervention_type; if (t) typeCounts[t] = (typeCounts[t]||0)+1; });
     const domType = Object.entries(typeCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || null;
     const stateArr = [...m.states];
     const isSwing = stateArr.some(s => SWING_STATES.has(s));
+    // organized_scale_score has no v2 equivalent — infraScale degrades to 0 (was only a minor sort tiebreaker). See NEEDS SAM.
     const infraScale = m.counties.reduce((a,c)=>a+(c.organized_scale_score||0),0);
     return { name: m.name, states: stateArr, avgOos, domType, isSwing, infraScale, countyCount: m.counties.length };
   });
