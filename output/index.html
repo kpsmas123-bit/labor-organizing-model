@@ -427,7 +427,199 @@
          SECTION 3 — MAP   (Phase B inserts the live map here)
          ════════════════════════════════════════════════════════ -->
     <section id="map-section">
-      <!-- MAP_SECTION_PLACEHOLDER -->
+
+      <!-- ── Map intro prose ── -->
+      <div class="map-paper-intro">
+        <div class="map-paper-inner">
+          <div class="section-number">§ 3</div>
+          <h2 class="map-paper-title">The Map</h2>
+          <p class="map-paper-lead">
+            The American labor movement was built through profound sacrifice,
+            skill, and strategy. Workers organized against hostile conditions
+            and won — because they built relationships, solidarity, and
+            collective power. We are once again in a moment that demands a
+            return to those fundamentals.
+          </p>
+          <p class="map-paper-body">
+            Every worker deserves a union. That right is not conditional on
+            strategic value. But to build a movement large enough to win in the
+            face of rising political hostility, we have to be strategic about
+            where we invest. Terrain is a tool for that prioritization.
+          </p>
+          <p class="map-paper-body">
+            The model scores every U.S. county on two independent dimensions:
+            how much structural power organized workers here would have
+            (Strategic Leverage Score), and how much organizing here translates
+            into political impact (Political Terrain Score). Each county is
+            classified into one of six strategic categories.
+          </p>
+          <div class="map-paper-findings">
+            <div class="map-finding">
+              <span class="map-finding-num">3,143</span>
+              <span class="map-finding-label">Counties scored</span>
+            </div>
+            <div class="map-finding">
+              <span class="map-finding-num" id="finding-tier1">21</span>
+              <span class="map-finding-label">Tier 1 counties (national)</span>
+            </div>
+            <div class="map-finding">
+              <span class="map-finding-num">0</span>
+              <span class="map-finding-label">Counties in both Capital + Community Tier 1</span>
+            </div>
+          </div>
+          <p class="map-paper-body">
+            The most significant finding: no county simultaneously has high
+            capital leverage, high community leverage, and decisive electoral
+            geography. The largest labor markets are concentrated in safe states.
+            The counties that decide elections are smaller — their workforces
+            dominated by hospitals, schools, and public transit. The conclusion
+            is empirical: community sectors in tipping counties are the strategic
+            frontier.
+          </p>
+          <a href="#methodology-section" class="map-paper-method-link">Read full methodology →</a>
+        </div>
+      </div>
+
+      <!-- ── How to read this map + static color key ── -->
+      <div class="map-howto">
+        <div class="map-howto-inner">
+          <h3 class="map-howto-title">How to read this map</h3>
+          <p class="map-howto-lead">
+            Each county (or metro area) is colored by its strategic terrain
+            category. Hover for a quick read; click any county to open its full
+            scorecard. Use the expand control on the figure for a full-screen
+            view with filters.
+          </p>
+          <!-- Color key — swatch colors mirror the map palette in terrain-map.js
+               (QUADRANT_COLORS). These are data-visualization colors, kept literal
+               so the key matches the rendered map exactly. -->
+          <div class="map-key">
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── The live map figure ── -->
+      <div id="map-figure-wrap">
+
+        <!-- Gated sidebar: hidden in paper mode; expandMap() reveals it in
+             full-screen. National lens forced; state lens toggle stays hidden. -->
+        <div id="sidebar" style="display:none">
+          <div class="sidebar-section">
+            <div class="sidebar-label">LENS</div>
+            <div class="lens-toggle">
+              <button class="sidebar-lens-btn active" id="btn-national" onclick="setLens('national')">National</button>
+              <!-- State lens intentionally hidden pending state-lens rework (P1 miscalibration + state-uniform P2). Do not remove. -->
+              <button class="sidebar-lens-btn" id="btn-state" onclick="setLens('state')" style="display:none">State</button>
+            </div>
+            <div class="lens-description" id="lens-desc">Federal electoral tipping points + federal incumbent alignment</div>
+          </div>
+
+          <hr class="divider">
+          <h2>Filters</h2>
+          <div class="filter-group">
+            <label>State</label>
+            <select id="filter-state"><option value="">All States</option></select>
+          </div>
+          <div class="filter-group">
+            <label class="toggle-btn"><input type="checkbox" id="filter-swing"> Swing States Only</label>
+          </div>
+
+          <hr class="divider">
+          <h2>Summary</h2>
+          <div id="summary-stats">
+            <div><span class="stat-label">Total counties: </span><span class="stat-total" id="stat-total">–</span></div>
+            <div><span class="stat-label">Tier 1: </span><span id="stat-tier1">–</span></div>
+            <div><span class="stat-label">Tier 2: </span><span id="stat-tier2">–</span></div>
+            <div><span class="stat-label">Tier 3 — Electoral: </span><span id="stat-tier3">–</span></div>
+            <div><span class="stat-label">Tier 4: </span><span id="stat-tier4">–</span></div>
+            <div><span class="stat-label">Visible: </span><span class="stat-total" id="stat-visible">–</span></div>
+          </div>
+
+          <hr class="divider">
+          <h2>Top 10 Counties</h2>
+          <div id="top10-list"></div>
+        </div>
+
+        <div id="mobile-filter-toggle" style="display:none" onclick="mobileToggleFilters()">
+          <span>Filters</span><span class="mft-arrow">▼</span>
+        </div>
+
+        <div class="map-figure" id="map-figure">
+          <div class="map-figure-header">
+            <div class="map-figure-caption">
+              <span class="map-figure-number">Fig. 1</span>
+              County-Level Strategic Terrain — United States, 2024
+            </div>
+            <button class="map-expand-btn" onclick="expandMap()" title="Expand to full screen">↗ Expand</button>
+          </div>
+          <div class="map-figure-body">
+            <div id="lens-badge">Viewing: National lens</div>
+            <svg id="map-svg"></svg>
+            <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
+              (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
+              target="_blank" rel="noopener noreferrer">Source: NPR — 2026 Senate Races to Watch</a>.</div>
+
+            <div id="detail-panel">
+              <button id="close-detail">×</button>
+              <!-- showDetail() / showMsaDetail() replace this panel's contents with
+                   the Info Card v2 (.card-*) markup on click. -->
+            </div>
+
+            <div class="legend" id="map-legend">
+              <div class="legend-header">
+                <span class="legend-label">Legend</span>
+                <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
+              </div>
+              <div class="legend-body">
+                <div class="legend-title" id="legend-title">Strategic Terrain</div>
+                <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
+                <div id="legend-tiers"></div>
+                <div style="margin-top:8px;border-top:1px solid var(--color-border);padding-top:6px;font-size:8.5px;color:var(--color-text-muted)">Model v2.0 · Data: 2024 · laborterrain.org</div>
+              </div>
+            </div>
+
+            <div class="tooltip" id="tooltip"></div>
+          </div><!-- /map-figure-body -->
+          <div class="map-figure-footer" style="padding: var(--space-2) var(--space-4); font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); border-top: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+            <span>Terrain v2.0 · 3,143 counties · laborterrain.org</span>
+          </div>
+        </div><!-- /map-figure -->
+
+        <div id="status-bar">
+          <span id="loading-indicator" style="display:none">Loading…</span>
+          <span id="status-msg">Ready</span>
+          <span id="data-timestamp"></span>
+        </div>
+      </div><!-- /map-figure-wrap -->
+
+      <!-- ── Top Tier-1 target cards (populated from config + data) ── -->
+      <div class="target-block">
+        <div class="target-inner">
+          <div class="target-col-head" style="margin-bottom:var(--space-2);">Top Tier 1 targets</div>
+          <p class="target-intro">
+            The model's highest-priority organizing terrain — structural leverage
+            in decisive geography with a hostile incumbent. Click any target to
+            fly the map there and open its scorecard.
+          </p>
+          <div class="target-columns">
+            <div>
+              <div class="target-col-head">Tier 1 — Capital · top 5 by SLS-Capital</div>
+              <div class="target-list" id="targets-capital"><div class="target-empty">Loading targets…</div></div>
+            </div>
+            <div>
+              <div class="target-col-head">Tier 1 — Community · top 5 by SLS-Community</div>
+              <div class="target-list" id="targets-community"><div class="target-empty">Loading targets…</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- ════════════════════════════════════════════════════════
@@ -960,8 +1152,107 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
   </footer>
 
   <!-- ============================================================
+       MAP ENGINE — D3 + the extracted live-map logic.
+       terrain-map.js carries ONLY the live map path (gated national lens).
+       ============================================================ -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/topojson.v3.min.js"></script>
+  <script src="terrain-map.js"></script>
+
+  <!-- ============================================================
+       CONTENT LAYER — top-target cards + map ↔ page glue.
+       Sam edits the TOP_TARGETS config block below to swap examples.
+       ============================================================ -->
+  <script>
+    // ===== TOP TIER-1 TARGET CONFIG — EDIT HERE =====
+    // Default: auto-derive top 5 Tier-1 Capital (by SLS-Capital) and top 5
+    // Tier-1 Community (by SLS-Community). To hand-pick, list county FIPS
+    // strings; a non-empty list WINS over auto-derivation for that column.
+    const TOP_TARGETS = {
+      capital:   [],   // e.g. ["06037", "48201"]
+      community: [],   // e.g. ["42027"]
+    };
+
+    (function () {
+      function isTier1(q) { q = q || ''; return q.indexOf('tier1') === 0 || q.indexOf('deploy_now') === 0; }
+      function isCapital(q) { q = q || ''; return q.indexOf('capital') > -1 || q.indexOf('both') > -1; }
+      function isCommunity(q) { q = q || ''; return q.indexOf('community') > -1 || q.indexOf('both') > -1; }
+      function quad(c) { return c.quadrant_national || c.quadrant || 'tier4'; }
+      function fmt(n) { return (n == null ? 0 : +n).toFixed(1); }
+      var DOT = { capital: '#BD0026', community: '#1a3a6b' }; // mirror QUADRANT_COLORS
+
+      function pick(counties, kind) {
+        var override = TOP_TARGETS[kind] || [];
+        if (override.length) {
+          var byFips = {};
+          counties.forEach(function (c) { byFips[String(c.fips)] = c; byFips[String(c.fips).padStart(5, '0')] = c; });
+          return override.map(function (f) { return byFips[String(f)] || byFips[String(f).padStart(5, '0')]; })
+                         .filter(Boolean).slice(0, 5);
+        }
+        var scoreField = kind === 'capital' ? 'sls_capital' : 'sls_community';
+        var typeMatch = kind === 'capital' ? isCapital : isCommunity;
+        var tier1 = counties.filter(function (c) { return isTier1(quad(c)) && typeMatch(quad(c)); })
+                            .sort(function (a, b) { return (b[scoreField] || 0) - (a[scoreField] || 0); });
+        var out = tier1.slice(0, 5);
+        if (out.length < 5) { // pad with highest-scoring of this leverage type so 5 cards always show
+          var pad = counties.slice().sort(function (a, b) { return (b[scoreField] || 0) - (a[scoreField] || 0); });
+          for (var i = 0; i < pad.length && out.length < 5; i++) { if (out.indexOf(pad[i]) === -1) out.push(pad[i]); }
+        }
+        return out;
+      }
+
+      function render(counties) {
+        if (!counties || !counties.length) return;
+        ['capital', 'community'].forEach(function (kind) {
+          var el = document.getElementById('targets-' + kind);
+          if (!el) return;
+          var list = pick(counties, kind);
+          if (!list.length) { el.innerHTML = '<div class="target-empty">No targets available.</div>'; return; }
+          var scoreField = kind === 'capital' ? 'sls_capital' : 'sls_community';
+          el.innerHTML = list.map(function (c, i) {
+            var fips = String(c.fips);
+            var place = (c.msa_name && c.msa_name !== 'Non-Metro') ? c.msa_name : 'Non-Metro';
+            return '<button class="target-card" data-fips="' + fips + '">'
+              + '<span class="target-rank">' + (i + 1) + '</span>'
+              + '<span class="target-dot" style="background:' + DOT[kind] + '"></span>'
+              + '<span class="target-body"><span class="target-name">' + (c.county_name || 'County') + ', ' + (c.state || '') + '</span>'
+              + '<span class="target-meta">' + place + '</span></span>'
+              + '<span class="target-score">' + fmt(c[scoreField]) + '</span></button>';
+          }).join('');
+        });
+      }
+
+      function onClick(e) {
+        var btn = e.target.closest && e.target.closest('.target-card');
+        if (!btn) return;
+        var fips = btn.dataset.fips;
+        var fig = document.getElementById('map-figure');
+        if (fig) fig.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(function () { if (window.TerrainMap) window.TerrainMap.flyToCounty(fips); }, 320);
+      }
+      var tc = document.getElementById('targets-capital');
+      var tm = document.getElementById('targets-community');
+      if (tc) tc.addEventListener('click', onClick);
+      if (tm) tm.addEventListener('click', onClick);
+
+      // Render when the map signals data is ready (or immediately if already loaded).
+      window.addEventListener('terrain-map-ready', function (e) { render(e.detail.counties); });
+      if (window.TerrainMap && window.TerrainMap.getCounties && window.TerrainMap.getCounties().length) {
+        render(window.TerrainMap.getCounties());
+      }
+
+      // §D — release scroll-snap while the user pans/zooms inside the map.
+      var scroller = document.getElementById('paper-scroll');
+      var mbody = document.querySelector('#map-figure .map-figure-body');
+      if (scroller && mbody) {
+        mbody.addEventListener('pointerdown', function () { scroller.style.scrollSnapType = 'none'; });
+        window.addEventListener('pointerup', function () { scroller.style.scrollSnapType = ''; });
+      }
+    })();
+  </script>
+
+  <!-- ============================================================
        PAGE BEHAVIOR — scroll-spy for the methodology rail.
-       (Map wiring is added in Phase B.)
        ============================================================ -->
   <script>
     // Methodology scroll-spy — scroll-listener based (robust across engines;
