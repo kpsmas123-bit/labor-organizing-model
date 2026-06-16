@@ -5,26 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terrain — Labor Organizing Strategic Model</title>
   <link rel="stylesheet" href="terrain.css">
+
+  <!-- ============================================================
+       PAGE-SCOPED STYLES
+       All rules below are token-driven (var(--…) from terrain.css) and
+       scoped to THIS document only — they deliberately live here, not in
+       terrain.css, so they cannot regress the legacy pages
+       (methodology.html, the dashboard, jobs.html) that share terrain.css
+       and define some of the same selectors (.legend, .tooltip, #detail-panel…).
+       ============================================================ -->
   <style>
-    /* Scroll snap container */
+    /* ---- Scroll-snap container: gentle 'proximity' so the cover/abstract
+            panels snap, but the tall interactive map + methodology scroll
+            freely (see §D handling in the script at the bottom). ---- */
     .paper-scroll {
       height: 100vh;
       overflow-y: scroll;
-      scroll-snap-type: y mandatory;
+      scroll-snap-type: y proximity;
       scroll-behavior: smooth;
       padding-top: var(--nav-height);
     }
-
     .paper-panel {
-      height: calc(100vh - var(--nav-height));
+      min-height: calc(100vh - var(--nav-height));
       scroll-snap-align: start;
       scroll-snap-stop: always;
       display: flex;
       flex-direction: column;
       position: relative;
-      overflow: hidden;
     }
-
     @media (prefers-reduced-motion: reduce) {
       .paper-scroll { scroll-behavior: auto; }
     }
@@ -32,259 +40,282 @@
     /* === COVER PANEL === */
     #panel-cover {
       background: var(--color-bg);
-      display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       padding: var(--space-16) var(--space-8);
-      min-height: calc(100vh - var(--nav-height));
     }
-
     .cover-eyebrow {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      margin-bottom: var(--space-6);
+      font-family: var(--font-mono); font-size: var(--text-xs);
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--color-accent); margin-bottom: var(--space-6);
     }
-
     .cover-title {
       font-family: var(--font-display);
       font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 500;
-      color: var(--color-text);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      max-width: 680px;
-      margin: 0 auto var(--space-8) auto;
+      font-weight: 500; color: var(--color-text);
+      line-height: 1.05; letter-spacing: -0.02em;
+      max-width: 680px; margin: 0 auto var(--space-8) auto;
     }
-
-    .cover-rule {
-      width: 48px;
-      height: 3px;
-      background: var(--color-accent);
-      margin: 0 auto var(--space-6) auto;
-    }
-
+    .cover-rule { width: 48px; height: 3px; background: var(--color-accent); margin: 0 auto var(--space-6) auto; }
     .cover-abstract {
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      color: var(--color-text-secondary);
-      max-width: 520px;
-      margin: 0 auto var(--space-10) auto;
-      line-height: 1.75;
-      text-align: center;
+      font-family: var(--font-body); font-size: var(--text-base);
+      color: var(--color-text-secondary); max-width: 520px;
+      margin: 0 auto var(--space-10) auto; line-height: 1.75; text-align: center;
     }
-
-    .cover-authors {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--color-text-muted);
-      letter-spacing: 0.05em;
-      text-align: center;
-      margin-bottom: var(--space-1);
-    }
-
-    .cover-meta {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--color-text-muted);
-      letter-spacing: 0.05em;
-      text-align: center;
-    }
-
+    .cover-authors { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: 0.05em; text-align: center; margin-bottom: var(--space-1); }
+    .cover-meta { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: 0.05em; text-align: center; }
     .cover-scroll-hint {
-      position: absolute;
-      bottom: var(--space-8);
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--color-text-muted);
+      position: absolute; bottom: var(--space-8); left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);
       animation: bounce-hint 2s ease-in-out infinite;
     }
+    @keyframes bounce-hint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+    @media (prefers-reduced-motion: reduce) { .cover-scroll-hint { animation: none; } }
 
-    @keyframes bounce-hint {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(4px); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .cover-scroll-hint { animation: none; }
-    }
-
-    /* === ABOUT PANEL === */
+    /* === ABOUT / ABSTRACT PANEL === */
     #panel-about {
-      display: grid;
-      grid-template-columns: 1fr 280px;
-      gap: 80px;
-      align-items: start;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 80px 40px;
-      min-height: calc(100vh - var(--nav-height, 72px));
-      width: 100%;
-      background: var(--color-bg);
-      overflow: auto;
+      display: grid; grid-template-columns: 1fr 280px; gap: 80px;
+      align-items: start; max-width: 900px; margin: 0 auto;
+      padding: 80px 40px; width: 100%; background: var(--color-bg);
     }
-
-    .about-main {
-      max-width: 520px;
-    }
-
-    .about-heading {
-      font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
-      font-size: 2.5rem;
-      font-weight: 500;
-      color: var(--color-text, #1A1A18);
-      margin-bottom: 1.5rem;
-      line-height: 1.15;
-    }
-
-    .about-body {
-      font-family: var(--font-body, 'Source Serif 4', Georgia, serif);
-      font-size: 1rem;
-      color: var(--color-text-secondary, #3D3D3A);
-      line-height: 1.75;
-      margin-bottom: 1.25rem;
-    }
-
-    .about-nav {
-      padding-top: 12px;
-    }
-
-    .about-nav-label {
-      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-text-muted, #5C6B7A);
-      margin-bottom: 1rem;
-    }
-
-    .about-link {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--color-border, #C8C3B8);
-      text-decoration: none;
-      color: var(--color-text, #1A1A18);
-      transition: color 0.15s;
-    }
-
-    .about-link:hover { color: var(--color-accent, #BD0026); }
-
-    .about-link-num {
-      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-      font-size: 0.7rem;
-      color: var(--color-text-muted, #5C6B7A);
-      min-width: 22px;
-    }
-
-    .about-link-title {
-      font-family: var(--font-body, 'Source Serif 4', Georgia, serif);
-      font-size: 1rem;
-      font-weight: 600;
-      display: block;
-    }
-
-    .about-link-desc {
-      font-family: var(--font-body, 'Source Serif 4', Georgia, serif);
-      font-size: 0.8rem;
-      color: var(--color-text-muted, #5C6B7A);
-      display: block;
-      margin-top: 2px;
-      line-height: 1.4;
-    }
-
-    /* === METHOD PREVIEW PANEL === */
-    #panel-method-preview {
-      background: var(--color-bg-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - var(--nav-height));
-    }
-
-    .method-preview-inner {
-      max-width: 680px;
-      width: 100%;
-      padding: var(--space-12) var(--space-8);
-    }
-
-    .method-preview-title {
-      font-family: var(--font-display);
-      font-size: var(--text-3xl);
-      font-weight: 500;
-      color: var(--color-text);
-      margin-bottom: var(--space-4);
-      line-height: 1.1;
-    }
-
-    .method-preview-lead {
-      font-family: var(--font-body);
-      font-size: var(--text-lg);
-      color: var(--color-text-secondary);
-      line-height: 1.65;
-      margin-bottom: var(--space-8);
-    }
-
-    .method-toc-preview {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      margin-bottom: var(--space-8);
-      border-top: 1px solid var(--color-border);
-    }
-
-    .method-toc-item {
-      display: flex;
-      align-items: baseline;
-      gap: var(--space-3);
-      padding: var(--space-3) var(--space-4) var(--space-3) 0;
-      border-bottom: 1px solid var(--color-border);
-      text-decoration: none;
-      color: var(--color-text);
-      transition: color 0.15s;
-    }
-
-    .method-toc-item:hover { color: var(--color-accent); }
-
-    .method-toc-num {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--color-text-muted);
-      min-width: 24px;
-    }
-
-    .method-toc-label {
-      font-family: var(--font-body);
-      font-size: var(--text-sm);
-      font-weight: 500;
-    }
-
-    .method-preview-cta {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--color-accent);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-    }
-
-    .method-preview-cta:hover { text-decoration: underline; }
+    .about-main { max-width: 520px; }
+    .about-heading { font-family: var(--font-display); font-size: 2.5rem; font-weight: 500; color: var(--color-text); margin-bottom: 1.5rem; line-height: 1.15; }
+    .about-body { font-family: var(--font-body); font-size: 1rem; color: var(--color-text-secondary); line-height: 1.75; margin-bottom: 1.25rem; }
+    .about-nav { padding-top: 12px; }
+    .about-nav-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 1rem; }
+    .about-link { display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--color-border); text-decoration: none; color: var(--color-text); transition: color 0.15s; }
+    .about-link:hover { color: var(--color-accent); }
+    .about-link-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-text-muted); min-width: 22px; }
+    .about-link-title { font-family: var(--font-body); font-size: 1rem; font-weight: 600; display: block; }
+    .about-link-desc { font-family: var(--font-body); font-size: 0.8rem; color: var(--color-text-muted); display: block; margin-top: 2px; line-height: 1.4; }
 
     @media (max-width: 768px) {
-      #panel-about {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        padding: 40px 20px;
-      }
+      #panel-about { grid-template-columns: 1fr; gap: 40px; padding: 40px 20px; }
       .cover-title { font-size: 2.5rem; }
       #panel-cover { padding: var(--space-8); }
       .cover-scroll-hint { left: var(--space-8); }
+    }
+
+    /* ============================================================
+       MAP SECTION
+       ============================================================ */
+    #map-section { background: var(--color-bg); }
+
+    .map-paper-intro { background: var(--color-bg); border-bottom: 1px solid var(--color-border); padding: var(--space-12) 0 var(--space-8); }
+    .map-paper-inner { max-width: var(--body-max-width); margin: 0 auto; padding: 0 var(--space-8); }
+    .map-paper-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 500; margin-bottom: var(--space-4); color: var(--color-text); }
+    .map-paper-lead { font-family: var(--font-body); font-size: var(--text-lg); color: var(--color-text-secondary); line-height: 1.7; margin-bottom: var(--space-5); }
+    .map-paper-body { font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text-secondary); line-height: 1.75; margin-bottom: var(--space-4); }
+    .map-paper-findings { display: flex; gap: var(--space-8); margin: var(--space-6) 0; padding: var(--space-6) 0; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); flex-wrap: wrap; }
+    .map-finding { display: flex; flex-direction: column; gap: var(--space-1); }
+    .map-finding-num { font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--color-accent); line-height: 1; }
+    .map-finding-label { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .map-paper-method-link { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); text-decoration: none; letter-spacing: 0.05em; cursor: pointer; }
+    .map-paper-method-link:hover { text-decoration: underline; }
+
+    /* How to read + static color key */
+    .map-howto { background: var(--color-bg); padding: var(--space-8) 0 var(--space-6); }
+    .map-howto-inner { max-width: var(--body-max-width); margin: 0 auto; padding: 0 var(--space-8); }
+    .map-howto-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 500; color: var(--color-text); margin-bottom: var(--space-2); }
+    .map-howto-lead { font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text-secondary); line-height: 1.7; margin-bottom: var(--space-6); }
+    .map-key { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3) var(--space-6); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: var(--space-4) 0; margin-bottom: var(--space-4); }
+    .map-key-item { display: flex; align-items: flex-start; gap: var(--space-3); }
+    .map-key-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
+    .map-key-label { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; color: var(--color-text); line-height: 1.2; }
+    .map-key-desc { font-family: var(--font-body); font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.45; }
+
+    /* Map figure wrapper that is NOT a snap target (scrolls freely) */
+    #map-figure-wrap { max-width: 1100px; margin: 0 auto; padding: 0 var(--space-8) var(--space-6); }
+
+    /* SVG paths */
+    #map-svg { flex: 1; min-height: 0; width: 100%; display: block; }
+    .msa-path { cursor: pointer; transition: opacity 0.08s; }
+    .msa-path:hover { opacity: 0.78; }
+    .nonmetro-path { cursor: pointer; transition: opacity 0.08s; }
+    .nonmetro-path:hover { opacity: 0.75; }
+    .map-selected { stroke: var(--color-ink) !important; stroke-width: 2.5 !important; stroke-opacity: 1 !important; }
+    .state-boundary { fill: none; stroke: var(--color-border-strong); stroke-width: 1.2; pointer-events: none; }
+
+    /* Tooltip */
+    .tooltip { position: absolute; background: var(--color-bg); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); font-family: var(--font-ui); font-size: var(--text-xs); pointer-events: none; opacity: 0; transition: opacity 0.08s; z-index: 200; white-space: nowrap; color: var(--color-text); box-shadow: var(--shadow-card-hover) !important; }
+    .tooltip strong { font-weight: 600; }
+    .tooltip .tt-opp { font-size: var(--text-sm); font-weight: 700; color: var(--color-accent); font-family: var(--font-display); }
+
+    /* In-map legend (hidden in paper mode by terrain.css #map-legend rule; shown when expanded) */
+    .legend { position: absolute; bottom: var(--space-4); left: var(--space-4); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3) var(--space-3); min-width: 200px; max-width: 230px; z-index: 30; }
+    .legend-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2); }
+    .legend-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); }
+    .legend-toggle { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; color: var(--color-text-muted); transform: rotate(-90deg); transition: color 0.2s, transform 0.3s ease; flex-shrink: 0; }
+    .legend-toggle:hover { color: var(--color-text); }
+    .legend.collapsed .legend-toggle { transform: rotate(90deg); }
+    .legend.collapsed .legend-body { display: none; }
+    .legend.collapsed .legend-header { margin-bottom: 0; }
+    .legend-title { font-size: 10px; font-weight: 600; color: var(--color-text); margin-bottom: var(--space-2); }
+    .legend-tier { display: flex; gap: 7px; align-items: flex-start; margin-bottom: 7px; }
+    .legend-tier:last-child { margin-bottom: 0; }
+    .legend-tier-swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
+    .legend-tier-label { font-size: 9.5px; font-weight: 700; color: var(--color-text); line-height: 1.2; }
+    .legend-tier-desc { font-size: 9px; color: var(--color-text-muted); line-height: 1.45; }
+    @media (max-width: 640px) { .legend { min-width: 0; max-width: 160px; } }
+
+    #lens-badge { position: absolute; top: var(--space-3); left: var(--space-3); z-index: 20; background: rgba(26,26,24,0.80); color: var(--color-bg); font-family: var(--font-mono); font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 20px; pointer-events: none; letter-spacing: 0.03em; }
+    #senate-banner { flex-shrink: 0; display: none; padding: var(--space-2) var(--space-4); background: var(--color-bg-subtle); border-top: 1px solid var(--color-border); font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.5; }
+    #senate-banner a { color: var(--color-accent); }
+
+    /* Detail / info panel (container only; inner markup uses .card-* below) */
+    #detail-panel { position: absolute; right: var(--space-4); top: var(--space-4); width: 290px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); display: none; z-index: 100; max-height: calc(100% - 32px); overflow-y: auto; box-shadow: var(--shadow-card-hover) !important; }
+    #close-detail { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--color-text-muted); cursor: pointer; font-size: 18px; line-height: 1; }
+    #close-detail:hover { color: var(--color-text); }
+    @media (max-width: 768px) { #detail-panel { width: calc(100vw - 24px); max-width: none; right: 12px; } }
+
+    /* Info Card v2.0 */
+    .card-tier-badge { display: inline-block; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; margin-bottom: var(--space-2); }
+    .card-tier-1 { background: var(--color-accent); color: #fff; }
+    .card-tier-2 { background: var(--color-bg-subtle); color: var(--color-text); border: 1px solid var(--color-border-strong); }
+    .card-tier-3 { background: var(--color-bg-subtle); color: var(--color-text-secondary); border: 1px solid var(--color-border); }
+    .card-tier-4 { background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); }
+    .card-icons-row { display: flex; gap: var(--space-3); margin-bottom: var(--space-3); }
+    .card-icon-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .card-icon-svg { width: 28px; height: 28px; color: var(--color-accent); }
+    .card-icon-svg svg { width: 100%; height: 100%; }
+    .card-icon-label { font-family: var(--font-mono); font-size: 9px; color: var(--color-text-muted); text-align: center; max-width: 42px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .card-score-row { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1); }
+    .card-score-label { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-secondary); width: 150px; flex-shrink: 0; }
+    .card-bar-wrap { flex: 1; height: 4px; background: var(--color-border); border-radius: 2px; overflow: hidden; }
+    .card-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+    .card-bar-capital { background: var(--color-accent); }
+    .card-bar-community { background: #1a3a6b; }
+    .card-bar-electoral { background: #6b4f9e; }
+    .card-bar-alignment { background: #2c6fad; }
+    .card-score-val { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text); width: 40px; text-align: right; flex-shrink: 0; }
+    .card-score-hint { font-size: 10px; color: var(--color-text-muted); padding-left: 158px; margin-bottom: var(--space-2); margin-top: -2px; }
+    .card-section-head { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); margin: var(--space-3) 0 var(--space-2); padding-bottom: var(--space-1); border-bottom: 1px solid var(--color-border); }
+    .card-narrative { font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; margin: var(--space-3) 0; padding: var(--space-3); background: var(--color-bg-subtle); border-left: 2px solid var(--color-border-strong); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .card-more-toggle { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); cursor: pointer; display: flex; align-items: center; gap: var(--space-1); margin-top: var(--space-3); user-select: none; }
+    .card-more-toggle:hover { color: var(--color-text); }
+    .card-more-body { display: none; margin-top: var(--space-2); }
+    .card-more-body.open { display: block; }
+    .card-more-row { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--color-text-muted); padding: var(--space-1) 0; border-bottom: 1px solid var(--color-border); }
+    .card-more-key { color: var(--color-text-secondary); }
+
+    /* Gated sidebar (hidden in paper mode; revealed as a fixed rail by expandMap) */
+    #sidebar { display: none; }
+    #sidebar .sidebar-section { margin-bottom: var(--space-4); }
+    .lens-toggle { display: flex; gap: 0; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: var(--space-2); }
+    .sidebar-lens-btn { flex: 1; padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; border: none; background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 0.15s, color 0.15s; }
+    .sidebar-lens-btn:hover { background: var(--color-bg-subtle); color: var(--color-text); }
+    .sidebar-lens-btn.active { background: var(--color-text); color: var(--color-bg); }
+    .lens-description { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.4; min-height: 32px; }
+    .sidebar-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+    #sidebar h2 { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+    .filter-group { margin-bottom: var(--space-4); }
+    .filter-group > label { display: block; font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: var(--space-1); }
+    .filter-group select { width: 100%; background: var(--color-bg); border: 1px solid var(--color-border); color: var(--color-text); border-radius: var(--radius-sm); padding: 6px 10px; font-size: var(--text-xs); font-family: var(--font-ui); }
+    .toggle-btn { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; font-size: var(--text-xs); color: var(--color-text); }
+    .toggle-btn input { accent-color: var(--color-accent); width: 14px; height: 14px; }
+    hr.divider { border: none; border-top: 1px solid var(--color-border); margin: var(--space-3) 0; }
+    #summary-stats { font-size: var(--text-xs); line-height: 1.9; color: var(--color-text-muted); }
+    #summary-stats .stat-total { color: var(--color-text); font-weight: 600; }
+    #top10-list .top10-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--color-border); cursor: pointer; font-size: var(--text-xs); }
+    #top10-list .top10-row:hover { color: var(--color-accent); }
+    #top10-list .top10-name { color: var(--color-text); }
+    #top10-list .top10-score { font-weight: 600; }
+    #mobile-filter-toggle { display: none; }
+    #status-bar { padding: var(--space-1) var(--space-4); font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+
+    /* Top Tier-1 target cards */
+    .target-block { background: var(--color-bg-subtle); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: var(--space-8) 0; }
+    .target-inner { max-width: 1100px; margin: 0 auto; padding: 0 var(--space-8); }
+    .target-intro { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-6); max-width: 600px; }
+    .target-columns { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+    .target-col-head { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-3); }
+    .target-list { display: flex; flex-direction: column; gap: var(--space-2); }
+    .target-card { display: flex; align-items: center; gap: var(--space-3); width: 100%; text-align: left; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); padding: var(--space-3) var(--space-4); cursor: pointer; font-family: var(--font-body); transition: border-color 0.15s, box-shadow 0.15s, transform 0.08s; }
+    .target-card:hover { border-color: var(--color-border-strong); box-shadow: var(--shadow-card-hover) !important; }
+    .target-card:active { transform: translateY(1px); }
+    .target-rank { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); min-width: 18px; }
+    .target-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .target-body { flex: 1; min-width: 0; }
+    .target-name { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); line-height: 1.2; }
+    .target-meta { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); margin-top: 2px; }
+    .target-score { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text); }
+    .target-empty { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); }
+    @media (max-width: 768px) { .target-columns { grid-template-columns: 1fr; gap: var(--space-6); } .map-key { grid-template-columns: 1fr; } }
+
+    /* ============================================================
+       METHODOLOGY SECTION — scroll-spy rail + typed content blocks
+       ============================================================ */
+    #methodology-section { background: var(--color-bg); padding: var(--space-12) 0 var(--space-16); }
+    .method-layout { display: grid; grid-template-columns: 220px 1fr; gap: var(--space-10); max-width: 1100px; margin: 0 auto; padding: 0 var(--space-8); }
+    .method-rail { position: sticky; top: calc(var(--nav-height) + var(--space-6)); align-self: start; }
+    .method-rail-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-3); }
+    .method-rail a { display: block; font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none; padding: var(--space-1) 0 var(--space-1) var(--space-3); border-left: 2px solid var(--color-border); transition: color 0.15s, border-color 0.15s; }
+    .method-rail a:hover { color: var(--color-text); text-decoration: none; }
+    .method-rail a.active { color: var(--color-accent); border-left-color: var(--color-accent); font-weight: 600; }
+    .method-body { min-width: 0; max-width: 680px; }
+    .method-h { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 500; color: var(--color-text); margin-bottom: var(--space-2); }
+    .method-intro { font-family: var(--font-body); font-size: var(--text-lg); color: var(--color-text-secondary); line-height: 1.7; margin-bottom: var(--space-6); }
+    .method-sub { scroll-margin-top: calc(var(--nav-height) + var(--space-4)); padding-top: var(--space-8); margin-top: var(--space-8); border-top: 1px solid var(--color-border); }
+    .method-sub:first-of-type { border-top: none; margin-top: 0; padding-top: var(--space-2); }
+    .method-sub-num { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); letter-spacing: 0.1em; text-transform: uppercase; }
+    .method-sub-h { font-family: var(--font-body); font-size: var(--text-xl); font-weight: 600; color: var(--color-text); margin: var(--space-1) 0 var(--space-4); }
+    .method-prose { font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text-secondary); line-height: 1.75; margin-bottom: var(--space-4); }
+    .method-prose strong { color: var(--color-text); }
+    .method-prose em { font-style: italic; }
+    .method-prose-h { font-family: var(--font-body); font-size: var(--text-base); font-weight: 600; color: var(--color-text); margin: var(--space-5) 0 var(--space-2); }
+
+    /* Expandable formula cards */
+    .formula-card { border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg-card); margin-bottom: var(--space-4); overflow: hidden; }
+    .formula-card > summary { list-style: none; cursor: pointer; padding: var(--space-4); display: block; user-select: none; }
+    .formula-card > summary::-webkit-details-marker { display: none; }
+    .formula-card-name { font-family: var(--font-body); font-size: var(--text-base); font-weight: 600; color: var(--color-text); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+    .formula-card-name::after { content: '▶'; font-size: 10px; color: var(--color-text-muted); transition: transform 0.2s; }
+    .formula-card[open] .formula-card-name::after { transform: rotate(90deg); }
+    .formula-card-expr { font-family: var(--font-mono); font-size: var(--text-sm); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-3); margin: var(--space-3) 0; color: var(--color-text); line-height: 1.7; white-space: pre-wrap; overflow-x: auto; }
+    .formula-card-gloss { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-2); line-height: 1.6; }
+    .formula-card-detail { padding: 0 var(--space-4) var(--space-4); border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
+    .formula-card-detail p { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.7; margin-bottom: var(--space-2); }
+
+    /* Citations */
+    .citation { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; border-left: 2px solid var(--color-border-strong); padding: var(--space-1) 0 var(--space-1) var(--space-3); margin-top: var(--space-3); }
+    .citation-review { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; border-left: 2px dashed var(--color-border-strong); padding: var(--space-1) 0 var(--space-1) var(--space-3); margin-top: var(--space-3); }
+    .citation-review::before { content: 'Citation under review'; display: block; color: var(--color-accent); letter-spacing: 0.06em; text-transform: uppercase; font-size: 9px; margin-bottom: 2px; }
+
+    /* Tables */
+    .method-table-wrap { overflow-x: auto; margin: var(--space-3) 0 var(--space-5); }
+    .method-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    .method-table th { background: var(--color-bg-subtle); padding: var(--space-2) var(--space-3); text-align: left; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-muted); border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+    .method-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary); vertical-align: top; }
+    .method-table td:first-child { color: var(--color-text); font-weight: 500; }
+    .method-table tr:last-child td { border-bottom: none; }
+    .method-table a { color: var(--color-accent); }
+
+    /* Toggle list (limitations) */
+    .toggle-item { border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg-card); margin-bottom: var(--space-2); overflow: hidden; }
+    .toggle-item > summary { list-style: none; cursor: pointer; user-select: none; padding: var(--space-3) var(--space-4); display: flex; gap: var(--space-3); align-items: baseline; }
+    .toggle-item > summary::-webkit-details-marker { display: none; }
+    .toggle-item-num { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); flex-shrink: 0; }
+    .toggle-item-title { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; color: var(--color-text); flex: 1; }
+    .toggle-item-title::after { content: '▶'; font-size: 9px; color: var(--color-text-muted); margin-left: var(--space-2); transition: transform 0.2s; }
+    .toggle-item[open] .toggle-item-title::after { transform: rotate(90deg); }
+    .toggle-item-detail { padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + 24px); font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.7; }
+    .toggle-item-detail p + p { margin-top: var(--space-2); }
+
+    .method-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-light); padding: var(--space-4); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: var(--space-5) 0; }
+    .method-callout p { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text); line-height: 1.7; margin: 0; }
+    .method-callout p + p { margin-top: var(--space-2); }
+
+    .lit-status { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+    .lit-status.ok { background: var(--color-bg-subtle); color: var(--color-text-secondary); }
+    .lit-status.review { background: var(--color-accent-light); color: var(--color-accent); }
+
+    @media (max-width: 900px) {
+      .method-layout { grid-template-columns: 1fr; gap: var(--space-6); }
+      .method-rail { position: static; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
+      .method-rail a { border-left: none; border-bottom: 2px solid transparent; padding: var(--space-1) 0; }
+      .method-rail a.active { border-left: none; border-bottom-color: var(--color-accent); }
+      .method-body { max-width: none; }
     }
   </style>
 </head>
@@ -292,13 +323,11 @@
 
   <!-- Persistent top navigation -->
   <nav class="terrain-topnav">
-    <a href="index.html" class="topnav-wordmark">
-      <span>T</span>errain
-    </a>
+    <a href="index.html" class="topnav-wordmark"><span>T</span>errain</a>
     <div class="topnav-links">
       <a href="index.html" class="topnav-link active" id="nav-home">Home</a>
-      <a href="labor_organizing_national_dashboard.html" class="topnav-link" id="nav-map">Map</a>
-      <a href="methodology.html" class="topnav-link" id="nav-methodology">Methodology</a>
+      <a href="#map-section" class="topnav-link" id="nav-map">Map</a>
+      <a href="#methodology-section" class="topnav-link" id="nav-methodology">Methodology</a>
       <a href="jobs.html" class="topnav-jobs">Jobs Board →</a>
     </div>
   </nav>
@@ -306,7 +335,10 @@
   <!-- Scroll-snap container -->
   <div class="paper-scroll" id="paper-scroll">
 
-    <!-- PANEL 1: COVER -->
+    <!-- ════════════════════════════════════════════════════════
+         PANEL 1 — COVER / ABSTRACT
+         (Sam edits this copy freely — pure content, no logic.)
+         ════════════════════════════════════════════════════════ -->
     <div class="paper-panel" id="panel-cover">
       <div class="cover-eyebrow">Working Paper · v2.0 · June 2026</div>
       <h1 class="cover-title">
@@ -321,15 +353,13 @@
         where organizing has outsized political and economic impact.
       </p>
       <div class="cover-authors">Sam Kaplan-Pettus</div>
-      <div class="cover-meta">
-        UC Berkeley Political Science · laborterrain.org
-      </div>
-      <div class="cover-scroll-hint">
-        ↓ scroll to explore
-      </div>
+      <div class="cover-meta">UC Berkeley Political Science · laborterrain.org</div>
+      <div class="cover-scroll-hint">↓ scroll to explore</div>
     </div>
 
-    <!-- PANEL 2: ABOUT -->
+    <!-- ════════════════════════════════════════════════════════
+         PANEL 2 — ABOUT / THEORY OF CHANGE
+         ════════════════════════════════════════════════════════ -->
     <div class="paper-panel" id="panel-about">
       <div class="about-main">
         <h2 class="about-heading">About This Project</h2>
@@ -362,126 +392,621 @@
 
       <div class="about-nav">
         <div class="about-nav-label">Explore</div>
-
-        <a href="labor_organizing_national_dashboard.html" class="about-link">
+        <a href="#map-section" class="about-link">
           <span class="about-link-num">01</span>
           <div>
             <div class="about-link-title">The Map</div>
-            <span class="about-link-desc">
-              All 3,143 counties scored and classified
-            </span>
+            <span class="about-link-desc">All 3,143 counties scored and classified</span>
           </div>
         </a>
-
-        <a href="methodology.html" class="about-link">
+        <a href="#methodology-section" class="about-link">
           <span class="about-link-num">02</span>
           <div>
             <div class="about-link-title">Methodology</div>
-            <span class="about-link-desc">
-              SLS formula, P1 + P2 scoring, data sources
-            </span>
+            <span class="about-link-desc">SLS formula, P1 + P2 scoring, data sources</span>
           </div>
         </a>
-
         <a href="jobs.html" class="about-link">
           <span class="about-link-num">03</span>
           <div>
             <div class="about-link-title">Jobs Board</div>
-            <span class="about-link-desc">
-              High-impact labor movement roles
-            </span>
+            <span class="about-link-desc">High-impact labor movement roles</span>
+          </div>
+        </a>
+        <a href="education.html" class="about-link">
+          <span class="about-link-num">04</span>
+          <div>
+            <div class="about-link-title">Education</div>
+            <span class="about-link-desc">Organizing concepts and background</span>
           </div>
         </a>
       </div>
     </div>
 
-    <!-- PANEL 3: METHODOLOGY PREVIEW -->
-    <div class="paper-panel" id="panel-method-preview">
-      <div class="method-preview-inner">
+    <!-- ════════════════════════════════════════════════════════
+         SECTION 3 — MAP   (Phase B inserts the live map here)
+         ════════════════════════════════════════════════════════ -->
+    <section id="map-section">
+      <!-- MAP_SECTION_PLACEHOLDER -->
+    </section>
 
-        <div class="section-number">§ 3</div>
-        <h2 class="method-preview-title">Methodology</h2>
+    <!-- ════════════════════════════════════════════════════════
+         SECTION 4 — METHODOLOGY
+         Scroll-spy left rail + collapse-not-hide typed content.
+         Every subsection is always in the DOM and reachable by scroll.
+         ════════════════════════════════════════════════════════ -->
+    <section id="methodology-section">
+      <div class="method-layout">
 
-        <p class="method-preview-lead">
-          How the model works, what it measures,
-          and where it falls short.
-        </p>
+        <!-- Scroll-spy rail -->
+        <aside class="method-rail" id="method-rail">
+          <div class="method-rail-label">Methodology</div>
+          <a href="#m-stakes" data-spy="m-stakes">The Stakes</a>
+          <a href="#m-assumptions" data-spy="m-assumptions">Core Assumptions</a>
+          <a href="#m-model" data-spy="m-model">What the Model Does</a>
+          <a href="#m-sls" data-spy="m-sls">Strategic Leverage Score</a>
+          <a href="#m-pts" data-spy="m-pts">Political Terrain Score</a>
+          <a href="#m-reading" data-spy="m-reading">Reading the Map</a>
+          <a href="#m-limitations" data-spy="m-limitations">Known Limitations</a>
+          <a href="#m-data" data-spy="m-data">Data Sources</a>
+          <a href="#m-literature" data-spy="m-literature">Theoretical Foundations</a>
+          <a href="#m-research" data-spy="m-research">Further Research</a>
+          <a href="#m-about" data-spy="m-about">About</a>
+        </aside>
 
-        <div class="method-toc-preview">
-          <a href="methodology.html#stakes" class="method-toc-item">
-            <span class="method-toc-num">01</span>
-            <span class="method-toc-label">The Stakes</span>
-          </a>
-          <a href="methodology.html#assumptions" class="method-toc-item">
-            <span class="method-toc-num">02</span>
-            <span class="method-toc-label">Core Assumptions</span>
-          </a>
-          <a href="methodology.html#sls" class="method-toc-item">
-            <span class="method-toc-num">03</span>
-            <span class="method-toc-label">Strategic Leverage Score</span>
-          </a>
-          <a href="methodology.html#pts" class="method-toc-item">
-            <span class="method-toc-num">04</span>
-            <span class="method-toc-label">Political Terrain Score</span>
-          </a>
-          <a href="methodology.html#map" class="method-toc-item">
-            <span class="method-toc-num">05</span>
-            <span class="method-toc-label">Reading the Map</span>
-          </a>
-          <a href="methodology.html#limitations" class="method-toc-item">
-            <span class="method-toc-num">06</span>
-            <span class="method-toc-label">Known Limitations</span>
-          </a>
-          <a href="methodology.html#data" class="method-toc-item">
-            <span class="method-toc-num">07</span>
-            <span class="method-toc-label">Data Sources</span>
-          </a>
-          <a href="methodology.html#literature" class="method-toc-item">
-            <span class="method-toc-num">08</span>
-            <span class="method-toc-label">Literature</span>
-          </a>
-        </div>
+        <div class="method-body">
+          <div class="section-number">§ 4</div>
+          <h2 class="method-h">Methodology</h2>
+          <p class="method-intro">
+            How the model works, what it measures, and where it falls short.
+            The skeleton is scannable in one scroll; every section expands to
+            full detail without anything being hidden behind a tab.
+          </p>
 
-        <a href="methodology.html" class="method-preview-cta">
-          Read full methodology →
-        </a>
+          <!-- ── The Stakes (conceptual prose) ── -->
+          <div class="method-sub" id="m-stakes">
+            <span class="method-sub-num">01 — Conceptual</span>
+            <h3 class="method-sub-h">The Stakes</h3>
+            <p class="method-prose">
+              The early 20th-century labor movement built power through profound
+              sacrifice, skill, and strategy — organizing against violent
+              suppression and winning anyway. After World War II, labor
+              established itself as a central force in American politics and the
+              Democratic coalition for a generation.
+            </p>
+            <p class="method-prose">
+              Since the 1970s, a sustained attack and the rise of a neoliberal
+              program pushed labor away from on-the-ground workplace organizing
+              and toward reliance on labor law, party relationships, and
+              campaign contributions. We are once again in a political
+              predicament that demands a return to the fundamentals of
+              organizing.
+            </p>
+            <div class="method-callout">
+              <p><strong>Theory of change.</strong> First: durable power is built
+              through well-placed, interpersonal, organized solidarity —
+              irrespective of institutional permission. Second: winning material
+              gains for workers in the workplace is the fastest and most
+              effective way to build a movement capable of addressing our broader
+              social and political needs. When workers organize, they win. When
+              workers win, we all win.</p>
+            </div>
+          </div>
 
-      </div>
-    </div>
+          <!-- ── Core Assumptions (conceptual prose) ── -->
+          <div class="method-sub" id="m-assumptions">
+            <span class="method-sub-num">02 — Conceptual</span>
+            <h3 class="method-sub-h">Core Assumptions</h3>
+            <p class="method-prose-h">1 — Organized workers have structural power</p>
+            <p class="method-prose">
+              The right to withhold labor cannot be fully legislated away.
+              Organized workers can act collectively even under hostile legal
+              conditions — and win. That power is real, not dependent on
+              institutional permission, and cannot be neutralized by money or
+              messaging alone.
+            </p>
+            <p class="method-prose-h">2 — Building that power requires deep organizing</p>
+            <p class="method-prose">
+              McAlevey distinguishes three forms of work: <strong>advocacy</strong>
+              directs resources at policymakers; <strong>mobilization</strong>
+              activates an existing base; <strong>organizing</strong> is the
+              long-term, relational work of bringing unengaged workers into a
+              campaign, training them, building worker-led structures, and
+              winning material gains. The movement has relied heavily on advocacy
+              and mobilization while under-investing in deep organizing.
+            </p>
+            <p class="method-prose-h">3 — Not all organizing produces equal political leverage</p>
+            <p class="method-prose">
+              Every worker in every county deserves a union; that right is not
+              conditional on predicted strategic value. But workers in key
+              sectors, demographics, and locations have an outsized political
+              impact. The model prioritizes the highest-impact campaigns first so
+              we can build a winning coalition.
+            </p>
+            <div class="citation">McAlevey, J. (2016). No Shortcuts: Organizing for Power in the New Gilded Age. Oxford University Press.</div>
+            <div class="citation">Silver, B. (2003). Forces of Labor: Workers' Movements and Globalization since 1870. Cambridge University Press.</div>
+          </div>
+
+          <!-- ── What the Model Does (conceptual prose) ── -->
+          <div class="method-sub" id="m-model">
+            <span class="method-sub-num">03 — Conceptual</span>
+            <h3 class="method-sub-h">What the Model Does</h3>
+            <p class="method-prose">
+              The model scores every U.S. county on two independent dimensions.
+              The <strong>Strategic Leverage Score (SLS)</strong> asks: how much
+              structural power would organized workers here have? It is computed
+              separately as SLS-Capital (crisis-creating potential against capital
+              flows — ports, logistics, energy, concentrated manufacturing) and
+              SLS-Community (relational crisis-creating potential within the
+              community — hospitals, schools, transit, home health).
+            </p>
+            <p class="method-prose">
+              The <strong>Political Terrain Score (PTS)</strong> asks: how much
+              does organizing here translate into political impact? It has two
+              sub-scores — P1 Electoral Leverage (how decisive is this county's
+              geography in consequential elections?) and P2 Incumbent Alignment
+              (how aligned are current elected officials with labor's legislative
+              agenda?).
+            </p>
+            <p class="method-prose">
+              Two lenses are available. The <strong>National lens</strong> uses
+              federal electoral tipping weights and federal incumbent alignment.
+              The <strong>State lens</strong> uses state legislative chamber
+              control and state incumbent alignment.
+            </p>
+            <p class="method-prose">
+              <strong>A note on AI.</strong> SLS scores are a deterministic
+              formula applied to BLS data — no AI. AI (Claude) generates the
+              narrative summaries in the county detail panel, which are labeled as
+              AI-generated. <strong>The model shows terrain. The user brings the
+              goal.</strong>
+            </p>
+          </div>
+
+          <!-- ── Strategic Leverage Score (formulas + table) ── -->
+          <div class="method-sub" id="m-sls">
+            <span class="method-sub-num">04 — Formulas</span>
+            <h3 class="method-sub-h">Strategic Leverage Score</h3>
+            <p class="method-prose">
+              Strategic leverage is the structural capacity of workers to disrupt
+              the conditions that matter to their employer or to the broader
+              political economy. Every sector is scored on a Sector Strategic
+              Value Score (SVS); the two county-level sub-scores combine those
+              sector scores with employment data.
+            </p>
+
+            <details class="formula-card">
+              <summary>
+                <span class="formula-card-name">Sector Strategic Value Score (SVS)</span>
+                <span class="formula-card-gloss">Per-sector rubric: how much structural leverage a sector carries, max 80 points.</span>
+              </summary>
+              <div class="formula-card-detail">
+                <div class="formula-card-expr">SVS = Capital Reach + Community Reach + Community-Facing Reach
+      + Non-Offshoreable + Dual-Crisis Bonus + Whole-Worker Bonus
+Maximum: 80 points</div>
+                <p>Four components plus two bonuses. Dual-Crisis bonus (+5) applies
+                when Capital Reach &gt; 0 and Community Reach &gt; 0; the
+                Whole-Worker bonus (+5) applies when Community Reach &gt; 0 and
+                Community-Facing Reach &gt; 0.</p>
+                <div class="method-table-wrap">
+                  <table class="method-table">
+                    <thead><tr><th>Variable</th><th>None</th><th>Local</th><th>State</th><th>National</th></tr></thead>
+                    <tbody>
+                      <tr><td>Capital Crisis-Creating Reach</td><td>0</td><td>10</td><td>15</td><td>25</td></tr>
+                      <tr><td>Community Crisis-Creating Reach</td><td>0</td><td>10</td><td>15</td><td>25</td></tr>
+                      <tr><td>Community-Facing Reach</td><td>0</td><td>5</td><td>10</td><td>15</td></tr>
+                      <tr><td>Non-Offshoreable</td><td>0</td><td>3</td><td>—</td><td>5</td></tr>
+                      <tr><td>Dual-Crisis Bonus</td><td>—</td><td>—</td><td>—</td><td>+5 if Cap&gt;0 &amp; Comm&gt;0</td></tr>
+                      <tr><td>Whole-Worker Bonus</td><td>—</td><td>—</td><td>—</td><td>+5 if Comm&gt;0 &amp; Facing&gt;0</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p>Sector scoring was conducted by human researchers based on best
+                judgment, case study review, and existing labor literature. All 42
+                sector codings are documented in the project repository and are
+                subject to review and challenge; future work will add cross-coding
+                by multiple independent experts.</p>
+                <div class="citation">Silver, B. (2003). Forces of Labor: Workers' Movements and Globalization since 1870. Cambridge University Press.</div>
+              </div>
+            </details>
+
+            <details class="formula-card">
+              <summary>
+                <span class="formula-card-name">SLS-Capital</span>
+                <span class="formula-card-gloss">Absolute crisis potential against capital flows — scale matters.</span>
+              </summary>
+              <div class="formula-card-detail">
+                <div class="formula-card-expr">SLS-Capital = Σ(cap_reach_score[sector] × employment[sector]) / 210,000
+[Calibrated to LA County's raw sum (17,673,345) → score 84.2]</div>
+                <p>Each sector's Capital Crisis Reach score is multiplied by the raw
+                number of workers in that sector in that county, then summed. The
+                210,000 normalization benchmark places Los Angeles County (the
+                national maximum) at 84.2 on a 0–100 scale. Counties with major
+                port, logistics, or energy workforces score highest.</p>
+                <div class="citation-review">Womack, J. (2005). Working the Machine — technically strategic positions.</div>
+                <div class="citation">Silver, B. (2003). Forces of Labor. Cambridge University Press — workplace bargaining power and spatial fixes.</div>
+              </div>
+            </details>
+
+            <details class="formula-card">
+              <summary>
+                <span class="formula-card-name">SLS-Community</span>
+                <span class="formula-card-gloss">Relative crisis potential within the community — share matters.</span>
+              </summary>
+              <div class="formula-card-detail">
+                <div class="formula-card-expr">SLS-Community = Σ(comm_reach_score[sector] × (employment[sector] / total_employment)) × 4</div>
+                <p>Each sector's Community Crisis Reach score is multiplied by that
+                sector's share of the county's total workforce, then summed. A
+                hospital employing 40% of a rural county's workforce is
+                structurally central in a way the same hospital cannot be at 2% of
+                a large metro. The ×4 normalization scales to 0–100. Counties with
+                concentrated healthcare, education, or public transit workforces
+                score highest.</p>
+                <div class="citation">McAlevey, J. (2016). No Shortcuts. Oxford University Press — whole-worker organizing.</div>
+                <div class="citation-review">Fox-Hodess, K. (2023). On social contingency in dockworker organizing.</div>
+              </div>
+            </details>
+
+            <p class="method-prose-h">Why two scores rather than one</p>
+            <p class="method-prose">
+              Collapsing these into a single number would obscure a distinction
+              that matters strategically. A county can score high on SLS-Capital
+              and low on SLS-Community — a logistics hub in a large metro — or the
+              reverse, such as a rural county where the hospital is the dominant
+              employer. Those are different types of terrain requiring different
+              organizing approaches. The model keeps them separate so users can
+              see both dimensions independently.
+            </p>
+          </div>
+
+          <!-- ── Political Terrain Score (formulas + table) ── -->
+          <div class="method-sub" id="m-pts">
+            <span class="method-sub-num">05 — Formulas</span>
+            <h3 class="method-sub-h">Political Terrain Score</h3>
+            <p class="method-prose">
+              Political terrain answers: how much does organizing in this county
+              change the political environment? Two components are measured
+              independently.
+            </p>
+
+            <details class="formula-card">
+              <summary>
+                <span class="formula-card-name">P1 — Electoral Leverage</span>
+                <span class="formula-card-gloss">How decisive is this county's geography in consequential elections?</span>
+              </summary>
+              <div class="formula-card-detail">
+                <div class="formula-card-expr">P1 = state_tipping_weight × (1 / abs(county_margin))
+
+Example — PA tipping weight 0.28, Centre County margin +2.83:
+P1 = 0.28 × (1 / 2.83) = 35.3</div>
+                <p>State tipping weight is the probability that this state is the
+                decisive state in the relevant election (Pennsylvania = 0.28,
+                Georgia = 0.09, California = 0.005). County margin is the absolute
+                D–R margin in the most recent relevant election; tight margins
+                produce high P1 even in lower-tipping-weight states. Under the
+                National lens P1 uses presidential weights; under the State lens it
+                uses state legislative chamber tipping weights.</p>
+                <p>The distribution is extremely right-skewed: 75% of counties have
+                P1 &lt; 0.28, and the top 3% are the genuinely decisive
+                geographies. This is a simplified proxy for a full two-stage
+                empirical Banzhaf power index, an upgrade planned for a future
+                version.</p>
+                <div class="citation">Banzhaf, J.F. (1968). One Man, 3.312 Votes. Villanova Law Review 13(2).</div>
+                <div class="citation-review">Kolerman (2024). On the indirect community channels of newly organized workers' electoral effects.</div>
+              </div>
+            </details>
+
+            <details class="formula-card">
+              <summary>
+                <span class="formula-card-name">P2 — Incumbent Alignment</span>
+                <span class="formula-card-gloss">How aligned are current elected officials with labor's legislative agenda?</span>
+              </summary>
+              <div class="formula-card-detail">
+                <div class="formula-card-expr">P2 = key_vote_score × 0.60 + inverse_ideology_score × 0.40</div>
+                <p>The key-vote component (60%) scores each legislator on 4 federal
+                key votes relevant to labor organizing rights; all roll-call
+                numbers are verified against House Clerk XML and Senate.gov
+                records. The ideology component (40%) uses legislative-behavior
+                ideology scores from bill sponsorship and cosponsorship patterns
+                (GovTrack, 119th Congress), normalized so progressive = high
+                signal. County P2 aggregates legislator scores weighted by
+                district-county overlap.</p>
+                <div class="method-table-wrap">
+                  <table class="method-table">
+                    <thead><tr><th>Vote</th><th>Chamber / Roll Call</th><th>Date</th></tr></thead>
+                    <tbody>
+                      <tr><td>PRO Act</td><td>House Roll Call 70</td><td>March 9, 2021</td></tr>
+                      <tr><td>Sanders $15 Minimum Wage Amendment</td><td>Senate Roll Call 74</td><td>March 5, 2021</td></tr>
+                      <tr><td>Abruzzo NLRB General Counsel Confirmation</td><td>Senate Roll Call 273</td><td>July 21, 2021</td></tr>
+                      <tr><td>National Apprenticeship Act</td><td>House Roll Call 31</td><td>February 5, 2021</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p>Coverage: Federal P2 — 533 legislators scored, 3,142 counties
+                with alignment data. State P2 — in progress, using DIME CFscores
+                (Stanford) for current state legislators where available. Low P2 +
+                high SLS + high P1 identifies the highest-value organizing targets:
+                leverage, decisive geography, and a hostile incumbent.</p>
+                <p><strong>Sources considered and rejected:</strong> AFL-CIO
+                legislative scorecards (they encode the institutional AFL-CIO's
+                strategic priorities) and labor PAC contributions as a positive
+                signal (they reflect existing labor leadership targeting — the
+                status quo this model complements and occasionally challenges).</p>
+                <div class="citation">Harvard Center for Labor and a Just Economy (2024). The Varied Voice of Labor. clje.law.harvard.edu</div>
+              </div>
+            </details>
+          </div>
+
+          <!-- ── Reading the Map (tier definitions table + finding callout) ── -->
+          <div class="method-sub" id="m-reading">
+            <span class="method-sub-num">06 — Classification</span>
+            <h3 class="method-sub-h">Reading the Map</h3>
+            <p class="method-prose">
+              The model classifies every county into one of six categories based
+              on the combination of SLS, P1, and P2. The classification answers
+              two questions at once: how much organizing leverage exists here, and
+              what strategic posture does the political terrain require?
+            </p>
+            <div class="method-table-wrap">
+              <table class="method-table">
+                <thead><tr><th>Tier</th><th>Condition</th><th>Strategic posture</th></tr></thead>
+                <tbody>
+                  <tr><td>Tier 1 — Transform</td><td>High SLS + High P1 + Low P2 (hostile incumbent)</td><td>Highest priority. Build worker power and hold a misaligned incumbent accountable simultaneously. Split into Capital and Community.</td></tr>
+                  <tr><td>Tier 2 — Activate</td><td>High SLS + High P1 + High P2 (aligned incumbent)</td><td>Mobilize and protect — turn out members, defend gains. Split into Capital and Community.</td></tr>
+                  <tr><td>Tier 3 — Electoral Terrain</td><td>Low SLS + High P1</td><td>Decisive geography without an organizing base at scale. Long-term investment — build the worker organization that isn't there yet.</td></tr>
+                  <tr><td>Tier 4 — Lower Priority</td><td>Neither SLS nor P1 threshold met</td><td>Not a current priority under finite resources. Every worker still deserves representation.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="method-callout">
+              <p><strong>Critical finding: no county is Tier 1 in both
+              dimensions.</strong> Across all 3,143 counties, none simultaneously
+              cleared all three thresholds (SLS-Capital ≥ 2.5, SLS-Community ≥ 35,
+              P1 ≥ 5). The largest labor markets sit in states that don't decide
+              elections; the counties that do are smaller, with workforces
+              dominated by community-facing sectors.</p>
+              <p>This is not a modeling failure — it is an empirical description of
+              American political and economic geography, and it confirms
+              McAlevey's sectoral argument independently: to organize where it
+              matters electorally, organize hospitals and schools in Pennsylvania,
+              Michigan, and Wisconsin — not ports and logistics hubs in
+              California.</p>
+            </div>
+            <p class="method-prose">
+              The scores are independent by design. The model does not combine
+              them into a single ranking, because doing so would require imposing a
+              weighting between structural leverage and political terrain — a
+              decision that depends on the user's theory of change, not on the
+              data. The model surfaces both dimensions and leaves that judgment
+              where it belongs.
+            </p>
+          </div>
+
+          <!-- ── Known Limitations (toggle list) ── -->
+          <div class="method-sub" id="m-limitations">
+            <span class="method-sub-num">07 — Limitations</span>
+            <h3 class="method-sub-h">Known Limitations</h3>
+            <p class="method-prose">
+              These are not disclaimers. They are specifications of where the data
+              ends and organizer judgment must begin.
+            </p>
+
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">1</span><span class="toggle-item-title">Public sector employment is understated</span></summary>
+              <div class="toggle-item-detail"><p>SLS scores use Census Bureau County Business Patterns data, which excludes government employees. Counties where government employment is dominant — state capitals, large military installations, Washington D.C. — have understated SLS scores. QCEW government data has been ingested separately; full integration is in progress.</p></div>
+            </details>
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">2</span><span class="toggle-item-title">Sector coding involves human judgment</span></summary>
+              <div class="toggle-item-detail"><p>The 42 sector scores were assigned by human researchers based on best judgment, case study review, and existing labor literature. NAICS classifications do not always map cleanly onto how workers experience their industries, and sector scores are static.</p><p>Most significantly, the model does not yet distinguish between latent structural leverage and current active organizing capacity. A utility worker has enormous latent leverage even where current organizing density is low. The model scores structural position but cannot yet see the gap between what a sector could do and what it is currently capable of doing. Future work will add cross-coding by multiple independent experts.</p></div>
+            </details>
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">3</span><span class="toggle-item-title">Electoral sub-scores use presidential margins as the primary proxy</span></summary>
+              <div class="toggle-item-detail"><p>The current P1 formula uses presidential electoral margins as the primary proxy for congressional and state legislative district competitiveness. True district-level margins require separate ingestion of district-level results, which is in progress. Counties spanning multiple competitive districts may be under- or over-scored.</p></div>
+            </details>
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">4</span><span class="toggle-item-title">Key vote and campaign finance data coverage is uneven</span></summary>
+              <div class="toggle-item-detail"><p>P2 depends on data sources with uneven coverage across states. VoteSmart and ProPublica cover federal legislators comprehensively but state legislative coverage varies; FollowTheMoney covers state campaign finance broadly but reporting requirements differ by state. The model flags coverage level for each county — full, partial, or unknown.</p></div>
+            </details>
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">5</span><span class="toggle-item-title">Associational and community power are absent</span></summary>
+              <div class="toggle-item-detail"><p>The model has no signal for existing community infrastructure — labor councils, interfaith coalitions, tenant organizations, mutual aid networks — or the organizational readiness of a community to support a campaign. No public dataset captures these reliably at national scale. This is the gap most likely to be filled by organizer judgment rather than future data work.</p></div>
+            </details>
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">6</span><span class="toggle-item-title">Electoral proxies imperfectly measure labor political alignment</span></summary>
+              <div class="toggle-item-detail"><p>The electoral leverage calculations rely in part on the two-party competitive margin framework — historically strong but becoming a less reliable proxy for labor alignment. The model attempts to address this through P2 (demonstrated legislative behavior rather than party label), but the underlying P1 calculation still depends on competitive-margin data. Future versions will seek alignment measures less dependent on the two-party frame.</p></div>
+            </details>
+            <details class="toggle-item">
+              <summary><span class="toggle-item-num">7</span><span class="toggle-item-title">P2 incumbent alignment coverage is uneven</span></summary>
+              <div class="toggle-item-detail"><p>Federal P2 is complete for all 533 current federal legislators across 3,142 counties. State P2 uses DIME CFscores (Stanford, 1979–2024) matched to current state legislators via Open States; data is most reliable for 2010–2020, with sparse 2022–2024 state coverage, flagged as <code>coverage_type = cfscore_only</code>.</p></div>
+            </details>
+          </div>
+
+          <!-- ── Data Sources (table) ── -->
+          <div class="method-sub" id="m-data">
+            <span class="method-sub-num">08 — Data Sources</span>
+            <h3 class="method-sub-h">Data Sources</h3>
+            <div class="method-table-wrap">
+              <table class="method-table">
+                <thead><tr><th>Source</th><th>What it powers</th><th>Vintage</th></tr></thead>
+                <tbody>
+                  <tr><td>U.S. Census Bureau — County Business Patterns</td><td>Private sector employment by NAICS. Primary input to SLS.</td><td>Annual</td></tr>
+                  <tr><td>BLS Quarterly Census of Employment and Wages</td><td>Public sector employment by NAICS. Supplements CBP.</td><td>Quarterly</td></tr>
+                  <tr><td>MIT Election Data and Science Lab</td><td>County-level 2024 presidential margins. Powers electoral leverage.</td><td>2024</td></tr>
+                  <tr><td>U.S. Census Bureau — District Relationship Files</td><td>Congressional + state legislative district to county mapping.</td><td>Decennial</td></tr>
+                  <tr><td>National Conference of State Legislatures</td><td>State legislative chamber seat counts. Powers chamber tipping weight.</td><td>Post-election</td></tr>
+                  <tr><td>ProPublica Congress API</td><td>Federal voting records on defined key votes.</td><td>Per vote</td></tr>
+                  <tr><td>VoteSmart</td><td>State legislative voting records where available.</td><td>Per vote</td></tr>
+                  <tr><td>OpenSecrets</td><td>Federal campaign finance — business-to-labor contribution ratios.</td><td>Per cycle</td></tr>
+                  <tr><td>FollowTheMoney</td><td>State campaign finance — business-to-labor contribution ratios.</td><td>Per cycle</td></tr>
+                  <tr><td>NAICS</td><td>Sector definitions and industry codes.</td><td>Current</td></tr>
+                  <tr><td>Congress.gov API</td><td>Federal voting records, verified against House Clerk + Senate.gov XML.</td><td>Per vote</td></tr>
+                  <tr><td>GovTrack Bulk Data</td><td>Federal legislator ideology from sponsorship patterns. 119th Congress.</td><td>Per Congress</td></tr>
+                  <tr><td>Open States API</td><td>Current state legislators matched to DIME CFscores. 50 states + DC.</td><td>Ongoing</td></tr>
+                  <tr><td>DIME (Stanford)</td><td>Candidate ideology (CFscores). 850M+ contribution records, 1979–2024.</td><td>2024</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── Theoretical Foundations (literature table; pending → review) ── -->
+          <div class="method-sub" id="m-literature">
+            <span class="method-sub-num">09 — Literature</span>
+            <h3 class="method-sub-h">Theoretical Foundations</h3>
+            <p class="method-prose">
+              The works below ground the model. Citations marked
+              <span class="lit-status review">under review</span> are part of an
+              ongoing manual citation pass and are not yet finalized.
+            </p>
+            <div class="method-table-wrap">
+              <table class="method-table">
+                <thead><tr><th>Author</th><th>Year</th><th>Work</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>McAlevey, J.</td><td>2016</td><td>No Shortcuts: Organizing for Power in the New Gilded Age</td><td><span class="lit-status ok">complete</span></td></tr>
+                  <tr><td>Silver, B.</td><td>2003</td><td>Forces of Labor: Workers' Movements and Globalization since 1870</td><td><span class="lit-status ok">complete</span></td></tr>
+                  <tr><td>Wright, E.O.</td><td>2000</td><td>Working-Class Power, Capitalist-Class Interests, and Class Compromise</td><td><span class="lit-status review">under review</span></td></tr>
+                  <tr><td>Womack, J.</td><td>2005</td><td>Working the Machine: The Logic of Industrial Technology and Labor Power</td><td><span class="lit-status review">under review</span></td></tr>
+                  <tr><td>Fox-Hodess, K.</td><td>2023</td><td>Comparative analysis of dockworker organizing</td><td><span class="lit-status review">under review</span></td></tr>
+                  <tr><td>Feigenbaum, Hertel-Fernandez &amp; Williamson</td><td>2018</td><td>From the Bargaining Table to the Ballot Box (NBER WP 24259)</td><td><span class="lit-status ok">complete</span></td></tr>
+                  <tr><td>Kolerman</td><td>2024</td><td>Regression Discontinuity Aggregation — unionization &amp; commuting-zone vote</td><td><span class="lit-status review">under review</span></td></tr>
+                  <tr><td>Leighley, J. &amp; Nagler, J.</td><td>2007</td><td>Unions, Voter Turnout, and Class Bias in the U.S. Electorate</td><td><span class="lit-status ok">complete</span></td></tr>
+                  <tr><td>Rosenfeld, J.</td><td>2014</td><td>What Unions No Longer Do</td><td><span class="lit-status ok">complete</span></td></tr>
+                  <tr><td>Banzhaf, J.F.</td><td>1968</td><td>One Man, 3.312 Votes (Villanova Law Review 13(2))</td><td><span class="lit-status ok">complete</span></td></tr>
+                  <tr><td>Lalisse, M.</td><td>2022</td><td>Measuring the Impact of Campaign Finance on Congressional Voting</td><td><span class="lit-status review">under review</span></td></tr>
+                  <tr><td>Harvard CLJE</td><td>2024</td><td>The Varied Voice of Labor</td><td><span class="lit-status ok">complete</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── Further Research (conceptual prose) ── -->
+          <div class="method-sub" id="m-research">
+            <span class="method-sub-num">10 — Roadmap</span>
+            <h3 class="method-sub-h">Further Research and Future Updates</h3>
+            <p class="method-prose">Seven near-term priorities shape the model's roadmap:</p>
+            <p class="method-prose">
+              <strong>1. Regression validation against known campaigns.</strong>
+              Test predictive validity against a sample of known organizing
+              campaigns and use the results to update weights and thresholds.
+              <strong>2. Latent vs. active capacity.</strong> Add a dimension
+              distinguishing latent structural potential from active organizing
+              capacity, drawing on NLRB petitions, strike history, and density.
+              <strong>3. Intervention type classification.</strong> A third layer
+              classifying counties by the kind of intervention the terrain calls
+              for. <strong>4. Full two-stage electoral leverage.</strong>
+              Implement a full empirical Banzhaf power index.
+              <strong>5. Expanded political alignment coverage.</strong>
+              Standardize key-vote and campaign-finance coverage across states.
+              <strong>6. Cross-coding of sector scores.</strong> Independent
+              expert review to strengthen inter-rater reliability.
+              <strong>7. Non-partisan alignment measurement.</strong> Develop
+              alignment measures less dependent on the two-party frame.
+            </p>
+          </div>
+
+          <!-- ── About (conceptual prose) ── -->
+          <div class="method-sub" id="m-about">
+            <span class="method-sub-num">11 — About</span>
+            <h3 class="method-sub-h">About This Project</h3>
+            <p class="method-prose">
+              Terrain was created by
+              <a href="https://www.linkedin.com/in/samkaplanpettus" target="_blank" rel="noopener">Sam Kaplan-Pettus</a>,
+              an independent researcher and political organizer with a degree in
+              Political Science from UC Berkeley, to surface where labor and
+              political power-building intersect across every U.S. county.
+            </p>
+            <p class="method-prose">
+              The project is open to collaboration, peer review, and proposals. If
+              you are a researcher, organizer, or data scientist interested in
+              contributing, reach out via GitHub or email.
+            </p>
+            <p class="method-prose">
+              <a href="mailto:sam.kp@berkeley.edu">sam.kp@berkeley.edu</a> ·
+              <a href="https://www.linkedin.com/in/samkaplanpettus" target="_blank" rel="noopener">LinkedIn ↗</a> ·
+              <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">GitHub ↗</a>
+            </p>
+          </div>
+
+        </div><!-- /method-body -->
+      </div><!-- /method-layout -->
+    </section>
 
   </div><!-- end paper-scroll -->
 
-<footer class="terrain-footer">
-  <div class="footer-inner">
-    <div class="footer-left">
-      <span class="footer-wordmark"><span>T</span>errain</span>
-      <span class="footer-meta">
-        v2.0 · Open source ·
-        <a href="https://github.com/kpsmas123-bit/labor-organizing-model"
-           target="_blank" rel="noopener">GitHub</a>
-      </span>
+  <footer class="terrain-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-wordmark"><span>T</span>errain</span>
+        <span class="footer-meta">
+          v2.0 · Open source ·
+          <a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">GitHub</a>
+        </span>
+      </div>
+      <div class="footer-center">
+        <span class="footer-credit">Sam Kaplan-Pettus · UC Berkeley Political Science</span>
+        <span class="footer-legal">
+          © 2026 Sam Kaplan-Pettus. Model and methodology licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+          Data from BLS, Census Bureau, MIT Election Lab, GovTrack, and Stanford DIME.
+          Scores are research estimates — not definitive strategic guidance.
+        </span>
+      </div>
+      <div class="footer-right">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="#map-section" class="footer-link">Map</a>
+        <a href="#methodology-section" class="footer-link">Methodology</a>
+        <a href="jobs.html" class="footer-link">Jobs Board</a>
+      </div>
     </div>
-    <div class="footer-center">
-      <span class="footer-credit">
-        Sam Kaplan-Pettus · UC Berkeley Political Science
-      </span>
-      <span class="footer-legal">
-        © 2026 Sam Kaplan-Pettus. Model and methodology licensed
-        under <a href="https://creativecommons.org/licenses/by/4.0/"
-        target="_blank" rel="noopener">CC BY 4.0</a>.
-        Data from BLS, Census Bureau, MIT Election Lab,
-        GovTrack, and Stanford DIME.
-        Scores are research estimates — not definitive strategic guidance.
-      </span>
-    </div>
-    <div class="footer-right">
-      <a href="index.html" class="footer-link">Home</a>
-      <a href="labor_organizing_national_dashboard.html" class="footer-link">Map</a>
-      <a href="methodology.html" class="footer-link">Methodology</a>
-      <a href="jobs.html" class="footer-link">Jobs Board</a>
-    </div>
-  </div>
-</footer>
+  </footer>
+
+  <!-- ============================================================
+       PAGE BEHAVIOR — scroll-spy for the methodology rail.
+       (Map wiring is added in Phase B.)
+       ============================================================ -->
+  <script>
+    // Methodology scroll-spy — scroll-listener based (robust across engines;
+    // IntersectionObserver with a scroll-container root is unreliable here).
+    (function () {
+      var scroller = document.getElementById('paper-scroll');
+      var rail = document.getElementById('method-rail');
+      if (!scroller || !rail) return;
+      var links = {};
+      rail.querySelectorAll('a[data-spy]').forEach(function (a) { links[a.dataset.spy] = a; });
+      var subs = Array.prototype.slice.call(document.querySelectorAll('.method-sub'));
+      if (!subs.length) return;
+      var LINE = 140; // px below the scroller's top edge that defines "current"
+      var lastId = null, scheduled = false;
+
+      function setActive(id) {
+        if (id === lastId) return;
+        lastId = id;
+        Object.keys(links).forEach(function (k) { links[k].classList.toggle('active', k === id); });
+      }
+
+      function update() {
+        scheduled = false;
+        var scTop = scroller.getBoundingClientRect().top;
+        var current = null;
+        for (var i = 0; i < subs.length; i++) {
+          var top = subs[i].getBoundingClientRect().top - scTop;
+          if (top - LINE <= 0) current = subs[i].id; else break;
+        }
+        // Before the methodology block scrolls into view, nothing is current.
+        if (current) setActive(current);
+        else { lastId = null; Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); }); }
+      }
+
+      // Throttle without rAF (rAF is paused when the tab is backgrounded).
+      function onScroll() {
+        if (scheduled) return;
+        scheduled = true;
+        setTimeout(update, 60);
+      }
+      scroller.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      update();
+    })();
+  </script>
 
 </body>
 </html>
