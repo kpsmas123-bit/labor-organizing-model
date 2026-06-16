@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terrain Pipeline — Flowchart Preview (DRAFT)</title>
+<!-- Google Fonts: same families as terrain.css (degrade gracefully if offline) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+/* ============================================================
+   TOKENS — copied verbatim from output/terrain.css :root
+   (copied, NOT linked, so this draft opens standalone via file://)
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --color-bg:              #F7F5F0;
+  --color-bg-card:         #EFEFEA;
+  --color-bg-subtle:       #EDEAE3;
+  --color-ink:             #1A1A18;
+  --color-text:            #1A1A18;
+  --color-text-secondary:  #3D3D3A;
+  --color-text-muted:      #5C6B7A;
+  --color-rule:            #C8C3B8;
+  --color-border:          #C8C3B8;
+  --color-border-strong:   #9E9890;
+  --color-accent:          #BD0026;
+  --color-accent-hover:    #9A001F;
+  --color-accent-light:    rgba(189,0,38,0.10);
+  --color-active:          rgba(189,0,38,0.12);
+  --color-dark:            #1A1A18;
+
+  --color-tier-1-capital:  #BD0026;
+  --color-tier-1-community:#1a3a6b;
+  --color-tier-2-capital:  #c45e00;
+  --color-tier-2-community:#2c6fad;
+  --color-tier-3:          #6b4f9e;
+  --color-tier-4:          #ccc4bb;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+  --font-ui:      'Inter', system-ui, sans-serif;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-8) var(--space-5);
+}
+
+/* --- Draft banner / header --- */
+.draft-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  margin-bottom: var(--space-3);
+}
+h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  margin: 0 0 var(--space-1);
+}
+.sub {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
+}
+
+/* ============================================================
+   TOGGLE BAR
+   ============================================================ */
+.toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  padding: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-3);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.toggle-group > label {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.seg button {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  padding: 5px 12px;
+  border: none;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.seg button + button { border-left: 1px solid var(--color-border-strong); }
+.seg button[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: #fff;
+}
+
+/* ============================================================
+   DIAGRAM
+   ============================================================ */
+.diagram {
+  position: relative;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5) var(--space-4);
+}
+
+/* band header row */
+.bands {
+  display: grid;
+  grid-template-columns: var(--col-input) var(--col-model) var(--col-output);
+  margin-bottom: var(--space-4);
+}
+.band-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding-bottom: var(--space-2);
+}
+
+/* main grid: INPUT | MODEL(intermediates + lenses) | OUTPUT */
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--col-input) var(--col-model) var(--col-output);
+  align-items: stretch;
+  z-index: 1;
+}
+:root {
+  --col-input: 1fr;
+  --col-model: 2.1fr;
+  --col-output: 1.5fr;
+}
+
+/* vertical divider rules between bands */
+.divider {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: var(--color-rule);
+  z-index: 0;
+}
+
+/* columns */
+.col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap-y);
+  padding: 0 var(--gap-x);
+}
+.col-model {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-x);
+  align-items: center;
+}
+.subcol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap-y);
+}
+
+/* spacing variants */
+.diagram.roomy   { --gap-y: 13px; --gap-x: 22px; }
+.diagram.compact { --gap-y: 8px;  --gap-x: 12px; }
+
+/* ============================================================
+   NODES (clickable boxes)
+   ============================================================ */
+.node {
+  position: relative;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: 1.25;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: box-shadow .12s, border-color .12s, transform .12s;
+  z-index: 2;
+}
+.diagram.compact .node { padding: 7px 10px; font-size: var(--text-xs); }
+.node:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 1px 6px rgba(26,26,24,0.12);
+}
+.node:active { transform: translateY(1px); }
+.node .nlabel { font-weight: 600; color: var(--color-ink); }
+.node .nmeta {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+/* node accents */
+.node.input     { background: var(--color-bg); }
+.node.sls       { border-color: var(--color-tier-1-capital); border-left: 4px solid var(--color-tier-1-capital); }
+.node.p1        { border-color: var(--color-tier-2-community); border-left: 4px solid var(--color-tier-2-community); }
+.node.p2        { border-color: var(--color-tier-3); border-left: 4px solid var(--color-tier-3); }
+.node.lens {
+  background: var(--color-ink);
+  color: #fff;
+  border-color: var(--color-ink);
+  text-align: center;
+}
+.node.lens .nlabel { color: #fff; }
+.node.lens .nmeta  { color: rgba(255,255,255,0.7); }
+
+/* group caption above intermediate sub-columns */
+.subcol .grp-cap {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+/* footnote variant text */
+.fn-marker { color: var(--color-accent); font-size: 10px; vertical-align: super; }
+.footnotes {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-rule);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.footnotes p { margin: 2px 0; }
+.footnotes.hidden { display: none; }
+.nmeta.hidden { display: none; }
+
+/* ============================================================
+   OUTPUT 2x2 FRAME
+   ============================================================ */
+.frame-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--gap-x);
+}
+.frame {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 6px;
+  aspect-ratio: 1.18 / 1;
+  padding-left: 26px;
+  padding-bottom: 24px;
+}
+.quad {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  background: var(--color-bg-card);
+  transition: box-shadow .12s, border-color .12s;
+  z-index: 2;
+}
+.quad:hover { border-color: var(--color-accent); box-shadow: 0 1px 6px rgba(26,26,24,0.12); }
+.quad .qname { font-family: var(--font-ui); font-weight: 600; font-size: var(--text-sm); }
+.quad .qdesc { font-family: var(--font-ui); font-size: 10px; color: var(--color-text-muted); margin-top: 2px; }
+.quad.tier-one     { background: rgba(189,0,38,0.10);  border-color: var(--color-tier-1-capital); }
+.quad.base         { background: rgba(26,58,107,0.08);  border-color: var(--color-tier-1-community); }
+.quad.electoral    { background: rgba(44,111,173,0.08); border-color: var(--color-tier-2-community); }
+.quad.low          { background: var(--color-bg-subtle); }
+
+/* axes */
+.axis-y, .axis-x {
+  position: absolute;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+.axis-y {
+  left: 0; top: 0; bottom: 24px;
+  width: 18px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.axis-x {
+  left: 26px; right: 0; bottom: 0;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.frame-cap {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin-top: var(--space-3);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   SVG CONNECTOR OVERLAY
+   ============================================================ */
+.connectors {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.connectors path {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+  opacity: 0.9;
+}
+
+/* ============================================================
+   READOUT
+   ============================================================ */
+.readout {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-card);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  min-height: 1.4em;
+}
+.readout b { color: var(--color-accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="draft-tag">Rough draft · not wired into site</span>
+  <h1>Terrain Pipeline — Input → Model → Output</h1>
+  <p class="sub">Standalone design preview for the methodology section. Every box is a placeholder click target declaring its intended methodology anchor.</p>
+
+  <!-- ============ TOGGLES ============ -->
+  <div class="toggles">
+    <div class="toggle-group">
+      <label>P2 labels</label>
+      <div class="seg" id="tg-p2">
+        <button data-val="inline"    aria-pressed="true">inline</button>
+        <button data-val="footnoted" aria-pressed="false">footnoted</button>
+      </div>
+    </div>
+    <div class="toggle-group">
+      <label>P1 / P2 fork</label>
+      <div class="seg" id="tg-fork">
+        <button data-val="explicit" aria-pressed="true">explicit</button>
+        <button data-val="simple"   aria-pressed="false">simple</button>
+      </div>
+    </div>
+    <div class="toggle-group">
+      <label>Connectors</label>
+      <div class="seg" id="tg-conn">
+        <button data-val="orthogonal" aria-pressed="true">orthogonal</button>
+        <button data-val="curved"     aria-pressed="false">curved</button>
+      </div>
+    </div>
+    <div class="toggle-group">
+      <label>Spacing</label>
+      <div class="seg" id="tg-space">
+        <button data-val="roomy"   aria-pressed="true">roomy</button>
+        <button data-val="compact" aria-pressed="false">compact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DIAGRAM ============ -->
+  <div class="diagram roomy" id="diagram">
+
+    <div class="bands">
+      <div class="band-label">Input</div>
+      <div class="band-label">Model</div>
+      <div class="band-label">Output</div>
+    </div>
+
+    <svg class="connectors" id="svg" preserveAspectRatio="none"></svg>
+    <div class="divider" id="div1"></div>
+    <div class="divider" id="div2"></div>
+
+    <div class="stage" id="stage">
+
+      <!-- ===== INPUT COLUMN ===== -->
+      <div class="col" id="col-input">
+        <div class="node input" id="emp"      data-method-target="input-employment">
+          <span class="nlabel">county employment records</span></div>
+        <div class="node input" id="sector"   data-method-target="input-sector-score">
+          <span class="nlabel">sector strategic score</span></div>
+        <div class="node input" id="elecdata" data-method-target="input-election-data">
+          <span class="nlabel">county-based election data</span></div>
+        <div class="node input" id="elecsig"  data-method-target="input-electoral-significance">
+          <span class="nlabel">electoral significance</span>
+          <span class="nmeta">tipping / flip value</span></div>
+        <div class="node input" id="fedvotes" data-method-target="input-federal-key-votes">
+          <span class="nlabel">federal key votes</span></div>
+        <div class="node input" id="ideology" data-method-target="input-ideology-score">
+          <span class="nlabel">ideology score</span></div>
+        <div class="node input" id="partyid"  data-method-target="input-party-id">
+          <span class="nlabel">Party ID</span></div>
+      </div>
+
+      <!-- ===== MODEL BAND (intermediates + lenses) ===== -->
+      <div class="col-model">
+        <!-- intermediates -->
+        <div class="subcol" id="col-inter">
+          <div class="node sls" id="sls" data-method-target="sls-capital-community">
+            <span class="nlabel">SLS</span>
+            <span class="nmeta">Capital + Community</span></div>
+
+          <!-- P1 — explicit variants -->
+          <div class="node p1 fork-explicit" id="p1-fed" data-method-target="p1-federal">
+            <span class="nlabel">P1 · federal</span></div>
+          <div class="node p1 fork-explicit" id="p1-state" data-method-target="p1-state">
+            <span class="nlabel">P1 · state</span></div>
+          <!-- P1 — simple variant -->
+          <div class="node p1 fork-simple" id="p1" data-method-target="p1" hidden>
+            <span class="nlabel">P1</span></div>
+
+          <!-- P2 — explicit variants -->
+          <div class="node p2 fork-explicit" id="p2-fed" data-method-target="p2-federal">
+            <span class="nlabel">FEDERAL P2</span>
+            <span class="nmeta p2-inline">fed = key votes + ideology</span></div>
+          <div class="node p2 fork-explicit" id="p2-state" data-method-target="p2-state">
+            <span class="nlabel">STATE P2</span>
+            <span class="nmeta p2-inline">state = Party ID</span></div>
+          <!-- P2 — simple variant -->
+          <div class="node p2 fork-simple" id="p2" data-method-target="p2" hidden>
+            <span class="nlabel">P2</span>
+            <span class="nmeta p2-inline">fed = key votes + ideology · state = Party ID</span></div>
+        </div>
+
+        <!-- lenses -->
+        <div class="subcol" id="col-lens">
+          <div class="node lens" id="lens-fed" data-method-target="lens-federal">
+            <span class="nlabel">Fed level</span>
+            <span class="nmeta">SLS + P1 + P2 (fed)</span></div>
+          <div class="node lens" id="lens-state" data-method-target="lens-state">
+            <span class="nlabel">State level</span>
+            <span class="nmeta">SLS + P1 + P2 (state)</span></div>
+        </div>
+      </div>
+
+      <!-- ===== OUTPUT BAND ===== -->
+      <div class="frame-wrap">
+        <div class="frame" id="frame">
+          <div class="axis-y">labor strategic value →</div>
+          <div class="axis-x">electoral strategic value (margin / flipping value) →</div>
+
+          <div class="quad base"      id="q-base" data-method-target="base-building">
+            <span class="qname">Base Building</span>
+            <span class="qdesc">high labor · low electoral</span></div>
+          <div class="quad tier-one"  id="q-tier1" data-method-target="tier-one">
+            <span class="qname">Tier One</span>
+            <span class="qdesc">high labor · high electoral</span></div>
+          <div class="quad low"       id="q-low" data-method-target="low-priority">
+            <span class="qname">Low Priority</span>
+            <span class="qdesc">low · low</span></div>
+          <div class="quad electoral" id="q-elec" data-method-target="electoral">
+            <span class="qname">Electoral</span>
+            <span class="qdesc">low labor · high electoral</span></div>
+        </div>
+        <p class="frame-cap">Conceptual strategic frame — the live model classifies 6 tiers. See full methodology.</p>
+      </div>
+
+    </div><!-- /stage -->
+
+    <!-- footnotes (P2 footnoted mode) -->
+    <div class="footnotes hidden" id="footnotes">
+      <p><span class="fn-marker">†</span> <b>Federal P2</b> = federal key votes + ideology score.</p>
+      <p><span class="fn-marker">‡</span> <b>State P2</b> = Party ID.</p>
+    </div>
+  </div><!-- /diagram -->
+
+  <div class="readout" id="readout">Click any box — its intended methodology anchor will appear here.</div>
+</div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = { p2: 'inline', fork: 'explicit', conn: 'orthogonal', space: 'roomy' };
+const $ = (id) => document.getElementById(id);
+const diagram = $('diagram');
+
+/* ============================================================
+   TOGGLE WIRING
+   ============================================================ */
+function wireToggle(groupId, key, after) {
+  const grp = $(groupId);
+  grp.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      grp.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      state[key] = btn.dataset.val;
+      after();
+    });
+  });
+}
+wireToggle('tg-p2',    'p2',    applyP2);
+wireToggle('tg-fork',  'fork',  applyFork);
+wireToggle('tg-conn',  'conn',  draw);
+wireToggle('tg-space', 'space', applySpace);
+
+/* ============================================================
+   APPLY FUNCTIONS
+   ============================================================ */
+function applyP2() {
+  const footnoted = state.p2 === 'footnoted';
+  document.querySelectorAll('.p2-inline').forEach(el => el.classList.toggle('hidden', footnoted));
+  $('footnotes').classList.toggle('hidden', !footnoted);
+  draw();
+}
+
+function applyFork() {
+  const explicit = state.fork === 'explicit';
+  document.querySelectorAll('.fork-explicit').forEach(el => el.hidden = !explicit);
+  document.querySelectorAll('.fork-simple').forEach(el => el.hidden = explicit);
+  draw();
+}
+
+function applySpace() {
+  diagram.classList.toggle('roomy', state.space === 'roomy');
+  diagram.classList.toggle('compact', state.space === 'compact');
+  draw();
+}
+
+/* ============================================================
+   CONNECTOR DRAWING
+   ============================================================ */
+function edge(el, side) {
+  const c = $('stage').getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  const y = r.top - c.top + r.height / 2;
+  const x = side === 'right' ? (r.right - c.left) : (r.left - c.left);
+  return { x, y };
+}
+
+function pathStr(a, b) {
+  if (state.conn === 'curved') {
+    const dx = Math.max(40, (b.x - a.x) * 0.5);
+    return `M ${a.x} ${a.y} C ${a.x + dx} ${a.y}, ${b.x - dx} ${b.y}, ${b.x} ${b.y}`;
+  }
+  // orthogonal with rounded right-angles
+  const mx = (a.x + b.x) / 2;
+  const r = Math.min(10, Math.abs(b.y - a.y) / 2, Math.abs(mx - a.x));
+  if (r < 2 || Math.abs(a.y - b.y) < 1) return `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
+  const dir = b.y > a.y ? 1 : -1;
+  return `M ${a.x} ${a.y}`
+       + ` L ${mx - r} ${a.y}`
+       + ` Q ${mx} ${a.y} ${mx} ${a.y + dir * r}`
+       + ` L ${mx} ${b.y - dir * r}`
+       + ` Q ${mx} ${b.y} ${mx + r} ${b.y}`
+       + ` L ${b.x} ${b.y}`;
+}
+
+function connections() {
+  const c = [];
+  const add = (from, to) => { if ($(from) && $(to) && !$(from).hidden && !$(to).hidden) c.push([from, to]); };
+
+  // inputs -> SLS
+  add('emp', 'sls'); add('sector', 'sls');
+
+  if (state.fork === 'explicit') {
+    // inputs -> P1 variants
+    ['p1-fed', 'p1-state'].forEach(t => { add('elecdata', t); add('elecsig', t); });
+    // inputs -> P2 variants
+    add('fedvotes', 'p2-fed'); add('ideology', 'p2-fed');
+    add('partyid', 'p2-state');
+    // intermediates -> lenses
+    add('sls', 'lens-fed'); add('sls', 'lens-state');
+    add('p1-fed', 'lens-fed'); add('p1-state', 'lens-state');
+    add('p2-fed', 'lens-fed'); add('p2-state', 'lens-state');
+  } else {
+    // simple: single P1 / P2
+    add('elecdata', 'p1'); add('elecsig', 'p1');
+    add('fedvotes', 'p2'); add('ideology', 'p2'); add('partyid', 'p2');
+    // single intermediates feed BOTH lenses (downstream fed/state split)
+    ['sls', 'p1', 'p2'].forEach(s => { add(s, 'lens-fed'); add(s, 'lens-state'); });
+  }
+
+  // lenses -> output frame
+  add('lens-fed', 'frame'); add('lens-state', 'frame');
+  return c;
+}
+
+function draw() {
+  // wait a frame so layout reflects toggle changes
+  requestAnimationFrame(() => {
+    const svg = $('svg');
+    const stage = $('stage');
+    const c = stage.getBoundingClientRect();
+    svg.setAttribute('viewBox', `0 0 ${c.width} ${c.height}`);
+    svg.setAttribute('width', c.width);
+    svg.setAttribute('height', c.height);
+    // position svg over the stage region
+    const dr = diagram.getBoundingClientRect();
+    svg.style.left = (c.left - dr.left) + 'px';
+    svg.style.top  = (c.top  - dr.top)  + 'px';
+    svg.style.width = c.width + 'px';
+    svg.style.height = c.height + 'px';
+
+    let d = '';
+    connections().forEach(([from, to]) => {
+      const a = edge($(from), 'right');
+      const b = edge($(to), 'left');
+      d += `<path d="${pathStr(a, b)}"/>`;
+    });
+    svg.innerHTML = d;
+
+    // position band dividers at column boundaries
+    const ci = $('col-input').getBoundingClientRect();
+    const cm = $('col-inter').closest('.col-model').getBoundingClientRect();
+    $('div1').style.left = (ci.right - dr.left) + 'px';
+    $('div2').style.left = (cm.right - dr.left) + 'px';
+  });
+}
+
+/* ============================================================
+   CLICK TARGETS — declare intended methodology anchor
+   ============================================================ */
+document.querySelectorAll('[data-method-target]').forEach(el => {
+  el.addEventListener('click', () => {
+    const target = el.getAttribute('data-method-target');
+    const label = (el.querySelector('.nlabel') || el.querySelector('.qname'))?.textContent.trim() || el.id;
+    const msg = `"${label}" would navigate to: #${target}`;
+    $('readout').innerHTML = `would navigate to: <b>#${target}</b> &nbsp;·&nbsp; (${label})`;
+    console.log('[methodology-nav]', msg, '| data-method-target =', target);
+  });
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+window.addEventListener('resize', draw);
+window.addEventListener('load', () => { applyP2(); applyFork(); applySpace(); draw(); });
+applyP2(); applyFork(); applySpace(); draw();
+</script>
+</body>
+</html>
