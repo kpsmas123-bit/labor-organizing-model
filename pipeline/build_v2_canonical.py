@@ -261,6 +261,54 @@ def classify(sls_capital, sls_community, p1, p2, T):
     return f"tier2_unknown_{dim}"                       # Tier 2 — Unknown (neutral)
 
 
+def classify_national(sls_capital, sls_community, p1, state_tipping_weight, T):
+    """
+    NATIONAL-lens classifier (whole-worker reframe, 2026-06-16). The two leverage
+    types reach Tier 1 by DIFFERENT rules, and P2 is REMOVED from BOTH national
+    pathways (decisiveness compounds regardless of incumbent posture):
+
+      * National Capital Tier-1   = capital_high AND p1_high (p1_national >= the
+        existing 5.0 gate). Decisiveness kept; no P2.
+      * National Community Tier-1 = community_high AND the state is electorally
+        DECISIVE at the top level, GRADED by the continuous presidential
+        decisiveness signal state_tipping_weight:
+            swing  (stw >= stw_high)               -> Tier 1 community
+            lean   (stw_moderate <= stw < stw_high) -> Tier 2 community (build/activate)
+            locked (stw < stw_moderate)            -> lower tiers
+        No P2, no county-level p1 (community's electoral value is statewide).
+
+    Everything that does not clear Tier 1 falls through the existing
+    tier2/tier3/tier4 cascade using the SAME label strings as the shared classifier.
+    P2-driven sublabels (activate/unknown) do not appear on the national lens by
+    construction, since national no longer reads P2.
+    """
+    capital_high = sls_capital >= T["sls_capital"]
+    community_high = sls_community >= T["sls_community"]
+    p1_high = (p1 is not None) and (p1 >= T["p1"])
+    stw = state_tipping_weight
+    swing = (stw is not None) and (stw >= T["stw_high"])
+    lean = (stw is not None) and (T["stw_moderate"] <= stw < T["stw_high"])
+
+    # --- Tier 1: two pathways, NO P2 ---
+    cap_t1 = capital_high and p1_high
+    comm_t1 = community_high and swing
+    if cap_t1 and comm_t1:
+        return "tier1_capital_community"
+    if cap_t1:
+        return "tier1_capital"
+    if comm_t1:
+        return "tier1_community"
+
+    # --- Tier 2 (did not clear Tier 1) — preserve existing labels ---
+    if capital_high:                       # capital_high but p1 not high -> Build
+        return "tier2_build_capital"
+    if community_high and lean:            # community_high + moderate decisiveness -> Build/Activate
+        return "tier2_build_community"
+
+    # community_high but locked, or no high SLS -> lower tiers
+    return "tier3_electoral" if p1_high else "tier4"
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -300,6 +348,9 @@ def main():
         "p1": q["p1_high_boundary"],
         "p2_hostile": q["p2_hostile_ceiling"],
         "p2_aligned": q["p2_aligned_floor"],
+        # national community Tier-1 grading by presidential state-decisiveness
+        "stw_high": q["state_tipping_swing_floor"],
+        "stw_moderate": q["state_tipping_lean_floor"],
     }
     sector_points = build_sector_points(sectors, weights)
 
@@ -332,7 +383,8 @@ def main():
             else:
                 p2_state, state_p2_cov = None, "no_state_legislature"
 
-            quadrant_national = classify(sls_capital, sls_community, p1_national, p2_national, T)
+            quadrant_national = classify_national(sls_capital, sls_community,
+                                                  p1_national, pres_w, T)
             quadrant_state = classify(sls_capital, sls_community, p1_state, p2_state, T)
 
             results.append({
