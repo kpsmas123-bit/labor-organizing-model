@@ -472,55 +472,77 @@
     <!-- ════════════════════════════════════════════════════════
          SECTION 3 — MAP   (Phase B inserts the live map here)
          ════════════════════════════════════════════════════════ -->
-    <section id="map-section" class="snap-section">
-      <div class="map-layout">
+    <!-- ════════════════════════════════════════════════════════
+         EXPLORE THE RESULTS — scoped chrome (map + scatter side by side).
+         Token-driven; #map-section id kept so existing #map-section .map-figure
+         sizing rules still apply to the relocated map. Invents no new tokens.
+         ════════════════════════════════════════════════════════ -->
+    <style>
+      #map-section.results-section { height: auto; scroll-snap-stop: normal; }
+      .results-inner { max-width: var(--screen-max); margin: 0 auto; padding: var(--space-8) var(--screen-pad); display: flex; flex-direction: column; gap: var(--space-6); }
+      .results-head { display: flex; flex-direction: column; gap: var(--space-2); }
+      .results-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); }
+      .results-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 500; color: var(--color-text); margin: 0; }
+      .results-lead { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; max-width: 72ch; margin: 0; }
+      .results-panels { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: stretch; }
+      .results-panel { display: flex; flex-direction: column; min-width: 0; gap: var(--space-2); }
+      .results-panel-title { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-rule); min-height: 28px; }
+      .results-panel-body { position: relative; height: clamp(440px, 60vh, 660px); display: flex; flex-direction: column; min-height: 0; }
+      /* scatter */
+      .scatter-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 4px 6px 18px 20px; }
+      .scatter-plot { position: relative; aspect-ratio: 1 / 1; height: 100%; max-width: 100%; max-height: 100%; }
+      #scatter-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+      .scatter-frame { fill: none; stroke: var(--color-border); stroke-width: 0.5; }
+      .scatter-grid { stroke: var(--color-rule); stroke-width: 0.5; stroke-dasharray: 1.2 2.4; stroke-linecap: round; }
+      .scatter-dot { cursor: pointer; transition: r 120ms ease, fill-opacity 120ms ease; }
+      .scatter-dot:hover { r: 1.7; fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.3; }
+      .scatter-axis { position: absolute; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: lowercase; color: var(--color-text-muted); white-space: nowrap; pointer-events: none; }
+      .scatter-axis-y { left: -0.4rem; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
+      .scatter-axis-x { bottom: -1.2rem; left: 50%; transform: translateX(-50%); }
+      .results-fullscreen-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-accent); background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
+      .results-fullscreen-btn:hover { border-color: var(--color-accent); }
+      .results-fullscreen-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      .results-key { border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
+      .results-targets { border-top: 1px solid var(--color-border); padding-top: var(--space-4); }
+      .results-targets .target-row { flex-direction: row; flex-wrap: wrap; }
+      .results-howto { margin: 0; }
+      .results-howto > summary { list-style: none; }
+      .results-commentary { margin-top: var(--space-2); }
+      @media (max-width: 900px) {
+        .results-panels { grid-template-columns: 1fr; }
+        .results-panel-body { height: 62vh; }
+      }
+      @media (prefers-reduced-motion: reduce) { .scatter-dot { transition: none; } .scatter-dot:hover { r: 0.85; } }
+    </style>
 
-        <!-- ════ LEFT COLUMN: framing + mixed Tier-1 target cards + color key ════ -->
-        <aside class="map-left">
-          <div>
-            <div class="section-number">§ 3</div>
-            <h2 class="map-paper-title">The Map</h2>
-          </div>
-          <p class="map-left-lead">
+    <!-- ════════════════════════════════════════════════════════
+         SECTION 3 — EXPLORE THE RESULTS (results-before-process)
+         Left: the live county MAP, relocated here verbatim (markup + IDs + behavior
+         preserved; national-lens + state-lens gating unchanged). Right: a NEW
+         percentile-indexed SCATTER. Both open the SAME shared county card via
+         window.TerrainMap.showDetail.
+         ════════════════════════════════════════════════════════ -->
+    <section id="map-section" class="snap-section results-section">
+      <div class="results-inner">
+        <header class="results-head">
+          <div class="results-kicker">Where the counties land</div>
+          <h2 class="results-title">Explore the Results</h2>
+          <p class="results-lead">
             Every U.S. county scored on structural labor leverage and political
             terrain, classified into six strategic categories. Click a target to
             fly there; <strong>Awaken</strong> the map to explore it directly, or
             <strong>Expand</strong> for full screen.
           </p>
+          <!-- TODO(prose): optional results-level intro / how the two views relate.
+               Leave for the narrative pass — do not write here. -->
+        </header>
 
-          <!-- TOP TARGET CARDS — single mixed Tier-1 list, data-generated -->
-          <div>
-            <div class="target-head">Top Tier-1 targets</div>
-            <p class="target-caption">
-              Double-leverage counties first, then alternating the next-highest
-              Capital and Community Tier-1 counties — each ranked on its own SLS
-              scale, since Capital and Community SLS are different ranges.
-            </p>
-            <div class="target-row" id="targets-list"><div class="target-empty">Loading targets…</div></div>
-          </div>
+        <div class="results-panels">
 
-          <details class="map-key-details">
-            <summary>Color key</summary>
-            <!-- Swatch colors mirror terrain-map.js QUADRANT_COLORS (data-viz colors,
-                 kept literal so the key matches the rendered map exactly). -->
-            <div class="map-key">
-              <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
-              <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
-              <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
-              <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
-              <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
-              <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
-            </div>
-          </details>
-
-          <a href="#methodology-section" class="map-paper-method-link">Read full methodology →</a>
-        </aside>
-
-        <!-- ════ RIGHT COLUMN: the live map figure (FROZEN by default) ════ -->
-        <div class="map-right">
-
-        <!-- Gated sidebar: hidden in paper mode; expandMap() reveals it in
-             full-screen. National lens forced; state lens toggle stays hidden. -->
+          <!-- ░░░░ LEFT — Geographic view : relocated live map (verbatim below) ░░░░ -->
+          <section class="results-panel results-panel-map" aria-labelledby="results-title-map">
+            <div class="results-panel-title" id="results-title-map">Geographic view</div>
+            <div class="results-panel-body map-right">
         <div id="sidebar" style="display:none">
           <div class="sidebar-section">
             <div class="sidebar-label">LENS</div>
@@ -613,8 +635,88 @@
           <span id="data-timestamp"></span>
         </div>
 
-        </div><!-- /map-right -->
-      </div><!-- /map-layout -->
+            </div><!-- /results-panel-body (map) -->
+          </section>
+
+          <!-- ░░░░ RIGHT — Distribution view : NEW percentile scatter ░░░░ -->
+          <section class="results-panel results-panel-scatter" aria-labelledby="results-title-scatter">
+            <div class="results-panel-title" id="results-title-scatter">
+              <span>Distribution view</span>
+              <button class="results-fullscreen-btn" id="scatter-fullscreen-btn" type="button"
+                      title="Open the full-screen explorer (coming soon)">⤢ Explore the plot — full screen</button>
+            </div>
+            <div class="results-panel-body">
+              <!--
+                v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
+                capital(raw) vs community(share) measure different things; a single Y may
+                blur ~283 capital-driven counties. Revisit twin-plots/encoding later.
+
+                TODO(full-screen explorer — SEPARATE PASS): #scatter-fullscreen-btn is a
+                STUB that only fires a placeholder toast. Intended feature: a full-screen
+                scatter with filter/highlight controls — swing-state highlight, by-state,
+                by-tier / by-priority knobs, light-up matching data points. Not built here.
+              -->
+              <div class="scatter-wrap" id="scatter-wrap">
+                <div class="scatter-plot">
+                  <svg id="scatter-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+                       role="img" aria-label="All counties plotted by electoral leverage on the x axis and labor leverage on the y axis, both percentile-indexed 0 to 100, colored by tier">
+                    <line class="scatter-grid" x1="50" y1="4" x2="50" y2="96"></line>
+                    <line class="scatter-grid" x1="4" y1="50" x2="96" y2="50"></line>
+                    <rect class="scatter-frame" x="4" y="4" width="92" height="92"></rect>
+                    <g id="scatter-dots"></g>
+                  </svg>
+                  <span class="scatter-axis scatter-axis-y">labor leverage →</span>
+                  <span class="scatter-axis scatter-axis-x">electoral leverage →</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div><!-- /results-panels -->
+
+        <!-- shared tier legend — both the map and the scatter use this palette -->
+        <details class="map-key-details results-key">
+          <summary>Color key</summary>
+          <div class="map-key">
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
+          </div>
+        </details>
+
+        <!-- How to read this — collapsed by default; TODO slot for the narrative pass -->
+        <details class="toggle-item results-howto">
+          <summary><span class="toggle-item-title">How to read this</span></summary>
+          <div class="toggle-item-detail">
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — how to read</span>
+              <p>Explain the two views (geographic map vs percentile distribution), the
+              indexed axes, and the tiers. To be written in the narrative pass — not here.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Top Tier-1 targets (kept; wired to the map's fly-to via the content layer) -->
+        <div class="results-targets">
+          <div class="target-head">Top Tier-1 targets</div>
+          <p class="target-caption">
+            Double-leverage counties first, then alternating the next-highest
+            Capital and Community Tier-1 counties — each ranked on its own SLS
+            scale, since Capital and Community SLS are different ranges.
+          </p>
+          <div class="target-row" id="targets-list"><div class="target-empty">Loading targets…</div></div>
+        </div>
+
+        <!-- Commentary — TODO slot for the user's observations -->
+        <div class="method-todo results-commentary">
+          <span class="method-todo-tag">TODO — commentary</span>
+          <p>Observations on where the counties land — your notes go here in the
+          narrative pass.</p>
+        </div>
+
+      </div><!-- /results-inner -->
     </section>
 
     <!-- ════════════════════════════════════════════════════════
@@ -1929,6 +2031,104 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
     // the diagram lives inside a scroll container that may lay out late — nudge once more
     setTimeout(schedule, 300);
     schedule();
+  })();
+  </script>
+
+  <!-- ============================================================
+       DISTRIBUTION SCATTER — percentile-indexed, tier-colored, shared card.
+       Reads the SAME live county data as the map (window.TerrainMap.getCounties /
+       the terrain-map-ready event). A point click opens the SAME shared county
+       info card via window.TerrainMap.showDetail(county). No data/scoring touched.
+       ============================================================ -->
+  <script>
+  (function () {
+    var svg = document.getElementById('scatter-svg');
+    var dotsG = document.getElementById('scatter-dots');
+    if (!svg || !dotsG) return;
+
+    var INSET = 4, SPAN = 92; // viewBox plot area runs 4..96
+
+    // tier number from a quadrant string (mirrors terrain-map.js _tierNum).
+    function tierNum(q) {
+      if (!q) return 4;
+      if (q.indexOf('tier1') === 0 || q.indexOf('deploy_now') === 0) return 1;
+      if (q.indexOf('tier2') === 0 || q.indexOf('primary_target') === 0) return 2;
+      if (q.indexOf('tier3') === 0 || q === 'power_building') return 3;
+      return 4;
+    }
+    // tier palette — identical hexes to the shared Color key / map QUADRANT_COLORS.
+    function tierColor(q) {
+      q = q || 'tier4';
+      var tn = tierNum(q), comm = /community/.test(q), cap = /capital/.test(q);
+      if (tn === 1) return (comm && !cap) ? '#1a3a6b' : '#BD0026';
+      if (tn === 2) return (comm && !cap) ? '#4A7FB5' : '#E8736B';
+      if (tn === 3) return '#7B6B9E';
+      return '#E0DBD3';
+    }
+    // percentile rank (0..100) of each value by position in the sorted order.
+    function pctRanks(vals) {
+      var idx = vals.map(function (v, i) { return [v, i]; })
+                    .sort(function (a, b) { return a[0] - b[0]; });
+      var n = vals.length, out = new Array(n);
+      for (var r = 0; r < n; r++) out[idx[r][1]] = n > 1 ? (r / (n - 1)) * 100 : 50;
+      return out;
+    }
+
+    var byFips = {};
+    function render(counties) {
+      if (!counties || !counties.length) return;
+      var valid = counties.filter(function (c) {
+        return c.sls_capital != null && (c.p1_national != null || c.p1_presidential != null);
+      });
+      if (!valid.length) return;
+      var elec = valid.map(function (c) { return (c.p1_national != null ? c.p1_national : c.p1_presidential) || 0; });
+      var capV = valid.map(function (c) { return c.sls_capital || 0; });
+      var commV = valid.map(function (c) { return c.sls_community || 0; });
+      var eP = pctRanks(elec), capP = pctRanks(capV), commP = pctRanks(commV);
+      var html = ''; byFips = {};
+      for (var i = 0; i < valid.length; i++) {
+        var c = valid[i];
+        // v1 single Y: labor-leverage percentile = max(capital pct, community pct).
+        // (See the "v1 INDEXED AXES" note in the scatter markup for the known blur.)
+        var laborP = Math.max(capP[i], commP[i]);
+        var x = INSET + eP[i] / 100 * SPAN;
+        var y = INSET + (100 - laborP) / 100 * SPAN; // invert so high labor is near the top
+        var q = c.quadrant_national || c.quadrant || 'tier4';
+        var fips = String(c.fips);
+        byFips[fips] = c;
+        html += '<circle class="scatter-dot" cx="' + x.toFixed(2) + '" cy="' + y.toFixed(2)
+              + '" r="0.85" fill="' + tierColor(q) + '" fill-opacity="0.72" data-fips="' + fips + '"></circle>';
+      }
+      dotsG.innerHTML = html;
+    }
+
+    // click any point -> the SAME shared county card the map uses
+    svg.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      var f = t.getAttribute('data-fips');
+      if (!f) return;
+      var c = byFips[f];
+      if (c && window.TerrainMap && window.TerrainMap.showDetail) window.TerrainMap.showDetail(c);
+    });
+
+    window.addEventListener('terrain-map-ready', function (e) { render(e.detail.counties); });
+    if (window.TerrainMap && window.TerrainMap.getCounties && window.TerrainMap.getCounties().length) {
+      render(window.TerrainMap.getCounties());
+    }
+
+    // "Explore the plot — full screen" — STUB only (real explorer is a separate pass).
+    var fsBtn = document.getElementById('scatter-fullscreen-btn');
+    var toastEl = document.getElementById('imo-toast');
+    var toastTimer = null;
+    function toast(msg) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2400);
+    }
+    if (fsBtn) fsBtn.addEventListener('click', function () { toast('Full-screen explorer coming'); });
   })();
   </script>
 
