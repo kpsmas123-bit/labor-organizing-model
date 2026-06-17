@@ -18,16 +18,29 @@
     "_rationale": "Calibrated against actual score distribution (n=3,144). Superseded by quadrant system in v2.0."
   },
 
+  "sls_community_confidence_ramp": {
+    "ramp_full_at": 10000,
+    "ramp_zero_at": 2000,
+    "_added": "2026-06-16 (SLS-Community Option D rebuild). DATA-RELIABILITY NOISE GATE applied to the SLS-Community employment-share score. STATE-AGNOSTIC. Soft linear ramp, NOT a hard cliff.",
+    "_formula": "ramp = 1.0 for total_emp >= ramp_full_at; ramp = 0.0 for total_emp <= ramp_zero_at; ramp = (total_emp - ramp_zero_at) / (ramp_full_at - ramp_zero_at) in between. Final SLS-Community = round(min(100, share_score * ramp), 2).",
+    "_rationale": "The strategic-community SHARE signal (concentration of community-reach employment) becomes pure noise in tiny counties: a 53-worker county with one community-facing employer posts a maximal share. The ramp suppresses small-N artifacts without rewarding size — concentration (not magnitude) still determines the score above ramp_full_at, preserving Option D's orthogonality to size/Capital. ramp_zero_at=2000 / ramp_full_at=10000 chosen so counties below ~2k total covered employment (where a single employer dominates the share) score ~0, fading smoothly to full weight by 10k (the point the prior diagnostic identified where share stops being driven by a single establishment)."
+  },
+
   "quadrant": {
     "sls_capital_high_boundary": 2.5,
-    "sls_community_high_boundary": 35,
+    "sls_community_high_boundary": 25,
     "p1_high_boundary": 5.0,
     "p2_hostile_ceiling": 0.4,
     "p2_aligned_floor": 0.6,
-    "_p2_note": "Added 2026-06-14 for v2.0 dual-lens 6-tier classification. P2 < p2_hostile_ceiling = hostile incumbent (Transform). P2 >= p2_aligned_floor = aligned incumbent (Activate). Between = neutral/Unknown. P2 on 0-1 scale, identical for national and state lenses.",
+    "state_tipping_swing_floor": 0.05,
+    "state_tipping_lean_floor": 0.01,
+    "_p2_note": "Added 2026-06-14 for v2.0 dual-lens 6-tier classification. P2 < p2_hostile_ceiling = hostile incumbent (Transform). P2 >= p2_aligned_floor = aligned incumbent (Activate). Between = neutral/Unknown. P2 on 0-1 scale. NOTE: P2 is REMOVED from BOTH national Tier-1 pathways (2026-06-16 two-pathway rebuild); P2 is now only used on the STATE lens.",
+    "_community_boundary_note": "sls_community_high_boundary recalibrated 35 -> 25 on 2026-06-16 for the post-ramp (Option D) SLS-Community scale, restoring ~top-decile selectivity. Single-sourced here; read by both the classifier and the state-lens rebuild.",
+    "_state_tipping_note": "Added 2026-06-16 for the national Community Tier-1 grading by presidential state-decisiveness (field: state_tipping_weight, the 538 tipping-point probability that also feeds p1_national). swing: state_tipping_weight >= state_tipping_swing_floor (0.05) -> Tier 1 community; lean: state_tipping_lean_floor (0.01) <= stw < swing_floor -> Tier 2 community (build/activate); locked: stw < lean_floor (the 0.005 default) -> lower tiers. CONFIRMED by Sam 2026-06-16 (Option 1).",
+    "_state_tipping_audit": "National Community Tier-1 gated to swing states via state_tipping_weight >= 0.05 (538 swing-7: PA, MI, WI, AZ, GA, NV, NC); lean states (>=0.01: MN, NH, VA, FL, TX, OH) form the Tier-2 community grading band; cuts placed on natural distribution gaps. LIMITATION: state_tipping_weight encodes 2024 PRESIDENTIAL electoral-college decisiveness, not 2026 midterm (Senate/Gov/House) competitiveness — a cycle-specific electoral input is a future enhancement.",
     "_calibrated": "2026-06-12",
     "_source": "Agent D true scoring run — approved by Sam 2026-06-12",
-    "_rationale": "sls_capital>=2.5 captures top ~10% of counties (~320), regional hubs and above. sls_community>=35 captures top ~10% by community crisis reach. p1_high>=5 from Gate 5 calibration. Replaces placeholder midpoint (50/50) with data-driven thresholds.",
+    "_rationale": "sls_capital>=2.5 captures top ~10% of counties (~320), regional hubs and above. sls_community>=25 captures ~top-decile by community crisis reach on the post-ramp scale. p1_high>=5 from Gate 5 calibration. Replaces placeholder midpoint (50/50) with data-driven thresholds.",
     "_deprecated": "sls_high_low_boundary and pts_high_low_boundary removed — replaced by dual-dimension thresholds"
   },
 

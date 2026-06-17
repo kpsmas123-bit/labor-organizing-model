@@ -87,13 +87,30 @@ def calc_sls_capital(county_sectors, sector_points, denominator):
     return round(min(100.0, raw / denominator), 2)
 
 
-def calc_sls_community(county_sectors, sector_points):
+def confidence_ramp(total_emp, ramp):
+    """
+    Soft employment-confidence ramp (DATA-RELIABILITY NOISE GATE, state-agnostic).
+    Returns a multiplier in [0, 1]: 1.0 at/above ramp_full_at, 0.0 at/below
+    ramp_zero_at, linear in between. Params are READ FROM CONFIG, not hardcoded.
+    """
+    full_at = ramp["ramp_full_at"]
+    zero_at = ramp["ramp_zero_at"]
+    if total_emp >= full_at:
+        return 1.0
+    if total_emp <= zero_at:
+        return 0.0
+    return (total_emp - zero_at) / (full_at - zero_at)
+
+
+def calc_sls_community(county_sectors, sector_points, ramp):
     total = sum(e["total_employment"] for e in county_sectors.values())
     if total == 0:
         return 0.0
     weighted = sum(sector_points[sid]["comm"] * (emp["total_employment"] / total)
                    for sid, emp in county_sectors.items() if sid in sector_points)
-    return round(min(100.0, weighted * 4), 2)
+    share_score = min(100.0, weighted * 4)               # existing share signal (unchanged)
+    # Option D: gate the share signal by a soft employment-confidence ramp.
+    return round(min(100.0, share_score * confidence_ramp(total, ramp)), 2)
 
 
 # ---------------------------------------------------------------- P1 (unchanged formula)
@@ -244,6 +261,54 @@ def classify(sls_capital, sls_community, p1, p2, T):
     return f"tier2_unknown_{dim}"                       # Tier 2 — Unknown (neutral)
 
 
+def classify_national(sls_capital, sls_community, p1, state_tipping_weight, T):
+    """
+    NATIONAL-lens classifier (whole-worker reframe, 2026-06-16). The two leverage
+    types reach Tier 1 by DIFFERENT rules, and P2 is REMOVED from BOTH national
+    pathways (decisiveness compounds regardless of incumbent posture):
+
+      * National Capital Tier-1   = capital_high AND p1_high (p1_national >= the
+        existing 5.0 gate). Decisiveness kept; no P2.
+      * National Community Tier-1 = community_high AND the state is electorally
+        DECISIVE at the top level, GRADED by the continuous presidential
+        decisiveness signal state_tipping_weight:
+            swing  (stw >= stw_high)               -> Tier 1 community
+            lean   (stw_moderate <= stw < stw_high) -> Tier 2 community (build/activate)
+            locked (stw < stw_moderate)            -> lower tiers
+        No P2, no county-level p1 (community's electoral value is statewide).
+
+    Everything that does not clear Tier 1 falls through the existing
+    tier2/tier3/tier4 cascade using the SAME label strings as the shared classifier.
+    P2-driven sublabels (activate/unknown) do not appear on the national lens by
+    construction, since national no longer reads P2.
+    """
+    capital_high = sls_capital >= T["sls_capital"]
+    community_high = sls_community >= T["sls_community"]
+    p1_high = (p1 is not None) and (p1 >= T["p1"])
+    stw = state_tipping_weight
+    swing = (stw is not None) and (stw >= T["stw_high"])
+    lean = (stw is not None) and (T["stw_moderate"] <= stw < T["stw_high"])
+
+    # --- Tier 1: two pathways, NO P2 ---
+    cap_t1 = capital_high and p1_high
+    comm_t1 = community_high and swing
+    if cap_t1 and comm_t1:
+        return "tier1_capital_community"
+    if cap_t1:
+        return "tier1_capital"
+    if comm_t1:
+        return "tier1_community"
+
+    # --- Tier 2 (did not clear Tier 1) — preserve existing labels ---
+    if capital_high:                       # capital_high but p1 not high -> Build
+        return "tier2_build_capital"
+    if community_high and lean:            # community_high + moderate decisiveness -> Build/Activate
+        return "tier2_build_community"
+
+    # community_high but locked, or no high SLS -> lower tiers
+    return "tier3_electoral" if p1_high else "tier4"
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -275,6 +340,7 @@ def main():
     existing = {c["fips"]: c for c in v2_existing["counties"]}
 
     denominator = weights["svs_normalization"]["denominator"]
+    sls_comm_ramp = thresholds["sls_community_confidence_ramp"]  # Option D noise gate (config-read)
     q = thresholds["quadrant"]
     T = {
         "sls_capital": q["sls_capital_high_boundary"],
@@ -282,6 +348,9 @@ def main():
         "p1": q["p1_high_boundary"],
         "p2_hostile": q["p2_hostile_ceiling"],
         "p2_aligned": q["p2_aligned_floor"],
+        # national community Tier-1 grading by presidential state-decisiveness
+        "stw_high": q["state_tipping_swing_floor"],
+        "stw_moderate": q["state_tipping_lean_floor"],
     }
     sector_points = build_sector_points(sectors, weights)
 
@@ -298,7 +367,7 @@ def main():
             county_sectors = employment.get(fips, {})
 
             sls_capital = calc_sls_capital(county_sectors, sector_points, denominator)
-            sls_community = calc_sls_community(county_sectors, sector_points)
+            sls_community = calc_sls_community(county_sectors, sector_points, sls_comm_ramp)
 
             # --- P1: national (presidential) + state (chamber). BUG #1: default applied to both. ---
             pres_w = pres_tip.get(state_abbr, _PRES_DEFAULT_TIP)
@@ -314,7 +383,8 @@ def main():
             else:
                 p2_state, state_p2_cov = None, "no_state_legislature"
 
-            quadrant_national = classify(sls_capital, sls_community, p1_national, p2_national, T)
+            quadrant_national = classify_national(sls_capital, sls_community,
+                                                  p1_national, pres_w, T)
             quadrant_state = classify(sls_capital, sls_community, p1_state, p2_state, T)
 
             results.append({
