@@ -648,7 +648,12 @@
       /* ==================================================================
          FLOWCHART TOC — ported from output/imo_preview.html, scoped to .imo-diagram
          ================================================================== */
-      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; width: 100%; margin: var(--space-6) 0 var(--space-8); padding: var(--space-6) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 58vh; text-align: center; }
+      /* Hero panel: reserve a full viewport-height (minus the sticky nav) so the
+         flex column has slack ABOVE its content to center into. 58vh collapsed to
+         content height (≈720px > 58vh) which pinned the diagram to the top. The
+         min-height is a floor — on short viewports the panel just grows to content,
+         so nothing clips and the connector recompute is unaffected. */
+      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; box-sizing: border-box; width: 100%; margin: 0 0 var(--space-6); padding: var(--space-8) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height)); text-align: center; }
       .imo-diagram .imo-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
       .imo-diagram .imo-dtitle { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
       .imo-diagram .imo-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 54ch; margin: 0 auto var(--space-6); line-height: 1.6; }
@@ -727,6 +732,7 @@
         <!-- Scroll-spy rail -->
         <aside class="method-rail" id="method-rail">
           <div class="method-rail-label">Methodology</div>
+          <a href="#imo-diagram" data-spy="imo-diagram">Flowchart</a>
           <a href="#m-stakes" data-spy="m-stakes">The Stakes</a>
           <a href="#m-assumptions" data-spy="m-assumptions">Core Assumptions</a>
           <a href="#m-model" data-spy="m-model">What the Model Does</a>
@@ -751,100 +757,6 @@
         <div class="method-body">
           <div class="section-number">§ 4</div>
           <h2 class="method-h">Methodology</h2>
-
-          <!-- ── The Stakes (conceptual prose) ── -->
-          <div class="method-sub" id="m-stakes">
-            <span class="method-sub-num">01 — Conceptual</span>
-            <h3 class="method-sub-h">The Stakes</h3>
-            <p class="method-prose">
-              The early 20th-century labor movement built power through profound
-              sacrifice, skill, and strategy — organizing against violent
-              suppression and winning anyway. After World War II, labor
-              established itself as a central force in American politics and the
-              Democratic coalition for a generation.
-            </p>
-            <p class="method-prose">
-              Since the 1970s, a sustained attack and the rise of a neoliberal
-              program pushed labor away from on-the-ground workplace organizing
-              and toward reliance on labor law, party relationships, and
-              campaign contributions. We are once again in a political
-              predicament that demands a return to the fundamentals of
-              organizing.
-            </p>
-            <div class="method-callout">
-              <p><strong>Theory of change.</strong> First: durable power is built
-              through well-placed, interpersonal, organized solidarity —
-              irrespective of institutional permission. Second: winning material
-              gains for workers in the workplace is the fastest and most
-              effective way to build a movement capable of addressing our broader
-              social and political needs. When workers organize, they win. When
-              workers win, we all win.</p>
-            </div>
-          </div>
-
-          <!-- ── Core Assumptions (conceptual prose) ── -->
-          <div class="method-sub" id="m-assumptions">
-            <span class="method-sub-num">02 — Conceptual</span>
-            <h3 class="method-sub-h">Core Assumptions</h3>
-            <p class="method-prose-h">1 — Organized workers have structural power</p>
-            <p class="method-prose">
-              The right to withhold labor cannot be fully legislated away.
-              Organized workers can act collectively even under hostile legal
-              conditions — and win. That power is real, not dependent on
-              institutional permission, and cannot be neutralized by money or
-              messaging alone.
-            </p>
-            <p class="method-prose-h">2 — Building that power requires deep organizing</p>
-            <p class="method-prose">
-              McAlevey distinguishes three forms of work: <strong>advocacy</strong>
-              directs resources at policymakers; <strong>mobilization</strong>
-              activates an existing base; <strong>organizing</strong> is the
-              long-term, relational work of bringing unengaged workers into a
-              campaign, training them, building worker-led structures, and
-              winning material gains. The movement has relied heavily on advocacy
-              and mobilization while under-investing in deep organizing.
-            </p>
-            <p class="method-prose-h">3 — Not all organizing produces equal political leverage</p>
-            <p class="method-prose">
-              Every worker in every county deserves a union; that right is not
-              conditional on predicted strategic value. But workers in key
-              sectors, demographics, and locations have an outsized political
-              impact. The model prioritizes the highest-impact campaigns first so
-              we can build a winning coalition.
-            </p>
-            <div class="citation">McAlevey, J. (2016). No Shortcuts: Organizing for Power in the New Gilded Age. Oxford University Press.</div>
-            <div class="citation">Silver, B. (2003). Forces of Labor: Workers' Movements and Globalization since 1870. Cambridge University Press.</div>
-          </div>
-
-          <!-- ── What the Model Does (conceptual prose) ── -->
-          <div class="method-sub" id="m-model">
-            <span class="method-sub-num">03 — Conceptual</span>
-            <h3 class="method-sub-h">What the Model Does</h3>
-            <p class="method-prose">
-              The model scores every U.S. county on two independent dimensions.
-              The <strong>Strategic Leverage Score (SLS)</strong> asks: how much
-              structural power would organized workers here have? It is computed
-              separately as SLS-Capital (crisis-creating potential against capital
-              flows — ports, logistics, energy, concentrated manufacturing) and
-              SLS-Community (relational crisis-creating potential within the
-              community — hospitals, schools, transit, home health).
-            </p>
-            <p class="method-prose">
-              The <strong>Political Terrain Score (PTS)</strong> asks: how much
-              does organizing here translate into political impact? It has two
-              sub-scores — P1 Electoral Leverage (how decisive is this county's
-              geography in consequential elections?) and P2 Incumbent Alignment
-              (how aligned are current elected officials with labor's legislative
-              agenda?).
-            </p>
-            <p class="method-prose">
-              Two lenses are available. The <strong>National lens</strong> uses
-              federal electoral tipping weights and federal incumbent alignment.
-              The <strong>State lens</strong> uses state legislative chamber
-              control and state incumbent alignment.
-              <strong>The model shows terrain. The user brings the goal.</strong>
-            </p>
-          </div>
 
           <!-- ═══════════════════════════════════════════════════════════════
                FLOWCHART · TABLE OF CONTENTS
@@ -974,6 +886,107 @@
               </div>
             </div>
           </div><!-- /imo-diagram -->
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               PART · THEORY — why the model exists (framing prose, moved verbatim)
+               ═══════════════════════════════════════════════════════════════ -->
+          <div class="method-part" id="part-theory">Theory
+            <span class="method-part-sub">why this model exists</span>
+          </div>
+
+          <!-- ── The Stakes (conceptual prose) ── -->
+          <div class="method-sub" id="m-stakes">
+            <span class="method-sub-num">01 — Theory</span>
+            <h3 class="method-sub-h">The Stakes</h3>
+            <p class="method-prose">
+              The early 20th-century labor movement built power through profound
+              sacrifice, skill, and strategy — organizing against violent
+              suppression and winning anyway. After World War II, labor
+              established itself as a central force in American politics and the
+              Democratic coalition for a generation.
+            </p>
+            <p class="method-prose">
+              Since the 1970s, a sustained attack and the rise of a neoliberal
+              program pushed labor away from on-the-ground workplace organizing
+              and toward reliance on labor law, party relationships, and
+              campaign contributions. We are once again in a political
+              predicament that demands a return to the fundamentals of
+              organizing.
+            </p>
+            <div class="method-callout">
+              <p><strong>Theory of change.</strong> First: durable power is built
+              through well-placed, interpersonal, organized solidarity —
+              irrespective of institutional permission. Second: winning material
+              gains for workers in the workplace is the fastest and most
+              effective way to build a movement capable of addressing our broader
+              social and political needs. When workers organize, they win. When
+              workers win, we all win.</p>
+            </div>
+          </div>
+
+          <!-- ── Core Assumptions (conceptual prose) ── -->
+          <div class="method-sub" id="m-assumptions">
+            <span class="method-sub-num">02 — Theory</span>
+            <h3 class="method-sub-h">Core Assumptions</h3>
+            <p class="method-prose-h">1 — Organized workers have structural power</p>
+            <p class="method-prose">
+              The right to withhold labor cannot be fully legislated away.
+              Organized workers can act collectively even under hostile legal
+              conditions — and win. That power is real, not dependent on
+              institutional permission, and cannot be neutralized by money or
+              messaging alone.
+            </p>
+            <p class="method-prose-h">2 — Building that power requires deep organizing</p>
+            <p class="method-prose">
+              McAlevey distinguishes three forms of work: <strong>advocacy</strong>
+              directs resources at policymakers; <strong>mobilization</strong>
+              activates an existing base; <strong>organizing</strong> is the
+              long-term, relational work of bringing unengaged workers into a
+              campaign, training them, building worker-led structures, and
+              winning material gains. The movement has relied heavily on advocacy
+              and mobilization while under-investing in deep organizing.
+            </p>
+            <p class="method-prose-h">3 — Not all organizing produces equal political leverage</p>
+            <p class="method-prose">
+              Every worker in every county deserves a union; that right is not
+              conditional on predicted strategic value. But workers in key
+              sectors, demographics, and locations have an outsized political
+              impact. The model prioritizes the highest-impact campaigns first so
+              we can build a winning coalition.
+            </p>
+            <div class="citation">McAlevey, J. (2016). No Shortcuts: Organizing for Power in the New Gilded Age. Oxford University Press.</div>
+            <div class="citation">Silver, B. (2003). Forces of Labor: Workers' Movements and Globalization since 1870. Cambridge University Press.</div>
+          </div>
+
+          <!-- ── What the Model Does (conceptual prose) ── -->
+          <div class="method-sub" id="m-model">
+            <span class="method-sub-num">03 — Theory</span>
+            <h3 class="method-sub-h">What the Model Does</h3>
+            <p class="method-prose">
+              The model scores every U.S. county on two independent dimensions.
+              The <strong>Strategic Leverage Score (SLS)</strong> asks: how much
+              structural power would organized workers here have? It is computed
+              separately as SLS-Capital (crisis-creating potential against capital
+              flows — ports, logistics, energy, concentrated manufacturing) and
+              SLS-Community (relational crisis-creating potential within the
+              community — hospitals, schools, transit, home health).
+            </p>
+            <p class="method-prose">
+              The <strong>Political Terrain Score (PTS)</strong> asks: how much
+              does organizing here translate into political impact? It has two
+              sub-scores — P1 Electoral Leverage (how decisive is this county's
+              geography in consequential elections?) and P2 Incumbent Alignment
+              (how aligned are current elected officials with labor's legislative
+              agenda?).
+            </p>
+            <p class="method-prose">
+              Two lenses are available. The <strong>National lens</strong> uses
+              federal electoral tipping weights and federal incumbent alignment.
+              The <strong>State lens</strong> uses state legislative chamber
+              control and state incumbent alignment.
+              <strong>The model shows terrain. The user brings the goal.</strong>
+            </p>
+          </div>
 
           <!-- ═══════════════════════════════════════════════════════════════
                PART · INPUT — one section per group. Each hosts the diagram's
