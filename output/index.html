@@ -622,6 +622,105 @@
          Scroll-spy left rail + collapse-not-hide typed content.
          Every subsection is always in the DOM and reachable by scroll.
          ════════════════════════════════════════════════════════ -->
+
+    <!-- ════════════════════════════════════════════════════════
+         METHODOLOGY-REORG · scoped chrome
+         Part dividers (.method-part), TODO slots (.method-todo), sub-anchors
+         (.method-anchor) and the ported flowchart (.imo-diagram). Every selector
+         here is page-scoped (token-driven or under .imo-diagram) so it cannot
+         regress the legacy methodology.html / dashboard pages that share terrain.css.
+         The flowchart markup + connector script are ported verbatim from
+         output/imo_preview.html (branch imo-preview); only sizing was tuned to fit
+         the 680px methodology column and the box-clicks were wired to real anchors.
+         ════════════════════════════════════════════════════════ -->
+    <style>
+      /* ---- new structural chrome ---- */
+      .method-part { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); letter-spacing: 0.02em; color: var(--color-accent); margin: var(--space-10) 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: 2px solid var(--color-accent); scroll-margin-top: calc(var(--nav-height) + var(--space-4)); }
+      .method-part .method-part-sub { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-text-muted); margin-top: var(--space-1); font-weight: 400; }
+      /* sub-anchors that let per-box diagram links land inside a per-group section */
+      .method-anchor { display: block; height: 0; visibility: hidden; scroll-margin-top: calc(var(--nav-height) + var(--space-6)); }
+      /* clearly-marked placeholder for prose the user writes in the next pass */
+      .method-todo { border: 1.5px dashed var(--color-accent); background: var(--color-accent-light); border-radius: var(--radius-md); padding: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
+      .method-todo-tag { display: inline-block; font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-2); }
+      .method-todo p { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 var(--space-2); }
+      .method-todo p:last-child { margin-bottom: 0; }
+
+      /* ==================================================================
+         FLOWCHART TOC — ported from output/imo_preview.html, scoped to .imo-diagram
+         ================================================================== */
+      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; width: 100%; margin: var(--space-6) 0 var(--space-8); padding: var(--space-6) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 58vh; text-align: center; }
+      .imo-diagram .imo-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+      .imo-diagram .imo-dtitle { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
+      .imo-diagram .imo-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 54ch; margin: 0 auto var(--space-6); line-height: 1.6; }
+      .imo-diagram .diagram-shell { position: relative; width: 100%; }
+      .imo-diagram .diagram-grid { position: relative; display: grid; grid-template-columns: minmax(104px,1fr) minmax(116px,1fr) minmax(92px,0.82fr) minmax(188px,1.22fr); column-gap: clamp(24px,4.5vw,68px); row-gap: clamp(22px,3.5vw,40px); align-items: start; text-align: left; }
+      .imo-diagram .col-head { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; color: var(--color-text); padding-bottom: 0.5rem; margin-bottom: 0.3rem; border-bottom: 1px solid var(--color-rule); }
+      .imo-diagram .col-head-sub { display: block; font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.2rem; font-weight: 400; }
+      .imo-diagram .head-input { grid-column: 1/2; grid-row: 1; }
+      .imo-diagram .head-model { grid-column: 2/4; grid-row: 1; }
+      .imo-diagram .head-output { grid-column: 4/5; grid-row: 1; }
+      .imo-diagram .input-group { grid-column: 1/2; display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+      .imo-diagram .input-group.g-a { grid-row: 2; }
+      .imo-diagram .input-group.g-b { grid-row: 3; }
+      .imo-diagram .input-group.g-c { grid-row: 4; }
+      .imo-diagram .factor-cell { grid-column: 2/3; display: flex; align-items: center; }
+      .imo-diagram .factor-cell.g-a { grid-row: 2; }
+      .imo-diagram .factor-cell.g-b { grid-row: 3; }
+      .imo-diagram .factor-cell.g-c { grid-row: 4; }
+      .imo-diagram .lens-stack { grid-column: 3/4; grid-row: 2/5; display: flex; flex-direction: column; justify-content: center; gap: clamp(36px,6vh,72px); }
+      .imo-diagram .output-cell { grid-column: 4/5; grid-row: 2/5; display: flex; align-items: center; justify-content: center; }
+      .imo-diagram .node { position: relative; z-index: 2; display: block; width: 100%; text-align: left; font: inherit; cursor: pointer; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.6rem 0.7rem; color: var(--color-text); transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease, background 140ms ease; }
+      .imo-diagram .node:hover { transform: translateY(-2px); border-color: var(--color-accent); box-shadow: 0 3px 12px rgba(189,0,38,0.10); background: #fff; }
+      .imo-diagram .node:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      .imo-diagram .node--input { background: transparent; border: 1.5px dashed var(--color-border-strong); border-radius: 5px; padding: 0.5rem 0.65rem; }
+      .imo-diagram .node--input:hover { background: rgba(189,0,38,0.04); border-color: var(--color-accent); }
+      .imo-diagram .node--input .node-label { font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.3; color: var(--color-text-secondary); }
+      .imo-diagram .node--factor { border: 1.5px solid var(--color-border-strong); border-left: 3px solid var(--color-accent); padding: 0.7rem 0.8rem; }
+      .imo-diagram .node--factor .node-label { font-family: var(--font-body); font-weight: 600; font-size: 0.92rem; line-height: 1.2; }
+      .imo-diagram .node--factor .node-sub { display: block; font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 0.04em; color: var(--color-text-muted); margin-top: 0.25rem; }
+      .imo-diagram .node--lens { text-align: center; border: 1.5px solid var(--color-ink); background: var(--color-ink); color: var(--color-bg); padding: 0.75rem 0.5rem; }
+      .imo-diagram .node--lens .node-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+      .imo-diagram .node--lens:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+      .imo-diagram .quadrant-wrap { position: relative; width: 100%; max-width: 300px; }
+      .imo-diagram .axis-y, .imo-diagram .axis-x { position: absolute; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: lowercase; color: var(--color-text-muted); white-space: nowrap; }
+      .imo-diagram .axis-y { left: -1.5rem; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
+      .imo-diagram .axis-x { bottom: -1.4rem; left: 50%; transform: translateX(-50%); }
+      .imo-diagram .quadrant { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3px; aspect-ratio: 1/1; background: var(--color-border); border: 1px solid var(--color-border-strong); padding: 3px; border-radius: 6px; }
+      .imo-diagram .quad-cell { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 0.55rem 0.6rem; cursor: pointer; border: none; font: inherit; text-align: left; color: #fff; border-radius: 3px; transition: filter 140ms ease, transform 140ms ease; min-height: 0; }
+      .imo-diagram .quad-cell:hover { filter: brightness(1.08) saturate(1.05); transform: scale(0.985); }
+      .imo-diagram .quad-cell:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
+      .imo-diagram .quad-cell .quad-name { font-family: var(--font-body); font-weight: 600; font-size: 0.84rem; line-height: 1.1; }
+      .imo-diagram .quad-cell .quad-tag { font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.85; margin-bottom: 0.15rem; }
+      .imo-diagram .quad-base { background: var(--color-tier-1-community); }
+      .imo-diagram .quad-tierone { background: var(--color-tier-1-capital); }
+      .imo-diagram .quad-lowprior { background: var(--color-tier-4); color: var(--color-text); }
+      .imo-diagram .quad-elect { background: var(--color-tier-2-capital); }
+      .imo-diagram .quad-lowprior .quad-tag { color: var(--color-text-muted); opacity: 1; }
+      .imo-diagram .connector-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+      .imo-diagram .connector-layer path { fill: none; stroke: var(--diag-stroke); stroke-width: 1.4; }
+      .imo-diagram .connector-layer .divider { stroke: var(--color-rule); stroke-width: 1.2; stroke-dasharray: 1 6; stroke-linecap: round; }
+      /* toast — reused for the still-stubbed scatter links */
+      .imo-toast { position: fixed; left: 50%; bottom: 2rem; transform: translate(-50%, 1.5rem); background: var(--color-ink); color: var(--color-bg); font-family: var(--font-mono); font-size: 0.78rem; padding: 0.6rem 1rem; border-radius: 6px; border-left: 3px solid var(--color-accent); opacity: 0; pointer-events: none; transition: opacity 180ms ease, transform 180ms ease; z-index: 999; max-width: 80vw; }
+      .imo-toast.show { opacity: 1; transform: translate(-50%, 0); }
+      /* terrain.css resets ALL <button> to transparent via
+         button:not(.pill):not(.lens-btn):not(.seg-btn):not(.rail-item) (specificity 0,4,1),
+         which would beat .imo-diagram .node--lens / .quad-* (0,2,0) and blank out the
+         lens boxes + the colored quadrant cells. Re-assert the diagram fills with an
+         id-scoped block (specificity 1,x,x) so they win without !important. */
+      #methodology-section .imo-diagram .node { background: var(--color-bg-card); }
+      #methodology-section .imo-diagram .node:hover { background: #fff; }
+      #methodology-section .imo-diagram .node--input { background: transparent; }
+      #methodology-section .imo-diagram .node--input:hover { background: rgba(189,0,38,0.04); }
+      #methodology-section .imo-diagram .node--lens { background: var(--color-ink); }
+      #methodology-section .imo-diagram .node--lens:hover { background: var(--color-accent); }
+      #methodology-section .imo-diagram .quad-base { background: var(--color-tier-1-community); }
+      #methodology-section .imo-diagram .quad-tierone { background: var(--color-tier-1-capital); }
+      #methodology-section .imo-diagram .quad-lowprior { background: var(--color-tier-4); }
+      #methodology-section .imo-diagram .quad-elect { background: var(--color-tier-2-capital); }
+      @media (prefers-reduced-motion: reduce) { .imo-diagram *, .imo-diagram *::before, .imo-diagram *::after { transition: none !important; } .imo-diagram .node:hover { transform: none; } }
+      @media (max-width: 760px) { .imo-diagram .diagram-grid { column-gap: 22px; row-gap: 22px; } .imo-diagram .connector-layer { display: none; } }
+    </style>
+
     <section id="methodology-section">
       <div class="method-layout">
 
@@ -631,9 +730,17 @@
           <a href="#m-stakes" data-spy="m-stakes">The Stakes</a>
           <a href="#m-assumptions" data-spy="m-assumptions">Core Assumptions</a>
           <a href="#m-model" data-spy="m-model">What the Model Does</a>
-          <a href="#m-sls" data-spy="m-sls">Strategic Leverage Score</a>
-          <a href="#m-pts" data-spy="m-pts">Political Terrain Score</a>
-          <a href="#m-reading" data-spy="m-reading">Reading the Map</a>
+          <a href="#input-sectoral" data-spy="input-sectoral">Inputs: Sectoral</a>
+          <a href="#input-electoral" data-spy="input-electoral">Inputs: Electoral</a>
+          <a href="#input-alignment" data-spy="input-alignment">Inputs: Alignment</a>
+          <a href="#factor-sectoral-leverage" data-spy="factor-sectoral-leverage">Sectoral Leverage</a>
+          <a href="#factor-electoral-leverage" data-spy="factor-electoral-leverage">Electoral Leverage</a>
+          <a href="#factor-incumbent-alignment" data-spy="factor-incumbent-alignment">Incumbent Alignment</a>
+          <a href="#lens-federal" data-spy="lens-federal">Federal lens</a>
+          <a href="#lens-state" data-spy="lens-state">State lens</a>
+          <a href="#output-2x2" data-spy="output-2x2">The 2×2</a>
+          <a href="#output-tiers" data-spy="output-tiers">Tiers &amp; the two pathways</a>
+          <a href="#output-scatter" data-spy="output-scatter">Scatter</a>
           <a href="#m-limitations" data-spy="m-limitations">Known Limitations</a>
           <a href="#m-data" data-spy="m-data">Data Sources</a>
           <a href="#m-literature" data-spy="m-literature">Theoretical Foundations</a>
@@ -739,10 +846,209 @@
             </p>
           </div>
 
-          <!-- ── Strategic Leverage Score (formulas + table) ── -->
-          <div class="method-sub" id="m-sls">
-            <span class="method-sub-num">04 — Formulas</span>
-            <h3 class="method-sub-h">Strategic Leverage Score</h3>
+          <!-- ═══════════════════════════════════════════════════════════════
+               FLOWCHART · TABLE OF CONTENTS
+               Ported verbatim from output/imo_preview.html (branch imo-preview).
+               Box clicks smooth-scroll to the real section anchors below; the
+               quadrant clicks remain a stub (scatter view not built — see script).
+               ═══════════════════════════════════════════════════════════════ -->
+          <div class="imo-diagram" id="imo-diagram">
+            <p class="imo-kicker">The model, end to end</p>
+            <h3 class="imo-dtitle">How the model reads a county</h3>
+            <p class="imo-lede">
+              Raw inputs feed three leverage factors; the factors are read through
+              two lenses; the lenses place each county on a strategic map.
+              <strong>Click any box to jump to its section.</strong>
+            </p>
+
+            <div class="diagram-shell">
+              <!-- SVG sits UNDER the boxes; endpoints are computed from box rects -->
+              <svg class="connector-layer" id="connectors" aria-hidden="true">
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+                          markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0.5,1 L9,5 L0.5,9" fill="none"
+                          stroke="var(--diag-stroke-strong)" stroke-width="1.4"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </marker>
+                </defs>
+              </svg>
+
+              <div class="diagram-grid" id="grid">
+                <!-- ---------- column headers ---------- -->
+                <div class="col-head head-input">Input
+                  <span class="col-head-sub">what we measure</span>
+                </div>
+                <div class="col-head head-model">Model
+                  <span class="col-head-sub">factors → lenses</span>
+                </div>
+                <div class="col-head head-output">Output
+                  <span class="col-head-sub">strategic map</span>
+                </div>
+
+                <!-- ---------- INPUT groups ---------- -->
+                <div class="input-group g-a">
+                  <button class="node node--input" data-node="in-county-emp">
+                    <span class="node-label">County employment</span>
+                  </button>
+                  <button class="node node--input" data-node="in-sector-score">
+                    <span class="node-label">Sector strategic score</span>
+                  </button>
+                </div>
+
+                <div class="input-group g-b">
+                  <button class="node node--input" data-node="in-vote-margin">
+                    <span class="node-label">Vote margin</span>
+                  </button>
+                  <button class="node node--input" data-node="in-state-decisive">
+                    <span class="node-label">State decisiveness</span>
+                  </button>
+                </div>
+
+                <div class="input-group g-c">
+                  <button class="node node--input" data-node="in-key-votes">
+                    <span class="node-label">Key votes</span>
+                  </button>
+                  <button class="node node--input" data-node="in-ideology">
+                    <span class="node-label">Ideology score</span>
+                  </button>
+                  <button class="node node--input" data-node="in-party-id">
+                    <span class="node-label">Party ID</span>
+                  </button>
+                </div>
+
+                <!-- ---------- MODEL factors ---------- -->
+                <div class="factor-cell g-a">
+                  <button class="node node--factor" data-node="f-sectoral">
+                    <span class="node-label">Sectoral Leverage</span>
+                    <span class="node-sub">capital + community</span>
+                  </button>
+                </div>
+                <div class="factor-cell g-b">
+                  <button class="node node--factor" data-node="f-electoral">
+                    <span class="node-label">Electoral Leverage</span>
+                  </button>
+                </div>
+                <div class="factor-cell g-c">
+                  <button class="node node--factor" data-node="f-incumbent">
+                    <span class="node-label">Incumbent Alignment</span>
+                    <span class="node-sub">federal votes / state party</span>
+                  </button>
+                </div>
+
+                <!-- ---------- MODEL lenses ---------- -->
+                <div class="lens-stack">
+                  <button class="node node--lens" data-node="l-federal">
+                    <span class="node-label">Federal lens</span>
+                  </button>
+                  <button class="node node--lens" data-node="l-state">
+                    <span class="node-label">State lens</span>
+                  </button>
+                </div>
+
+                <!-- ---------- OUTPUT quadrant ---------- -->
+                <div class="output-cell">
+                  <div class="quadrant-wrap">
+                    <span class="axis-y">labor leverage →</span>
+                    <span class="axis-x">electoral leverage →</span>
+                    <div class="quadrant" id="quadrant">
+                      <button class="quad-cell quad-base" data-quad="base building">
+                        <span class="quad-tag">low elec · high labor</span>
+                        <span class="quad-name">base building</span>
+                      </button>
+                      <button class="quad-cell quad-tierone" data-quad="tier one">
+                        <span class="quad-tag">high · high</span>
+                        <span class="quad-name">tier one</span>
+                      </button>
+                      <button class="quad-cell quad-lowprior" data-quad="low prior">
+                        <span class="quad-tag">low · low</span>
+                        <span class="quad-name">low prior</span>
+                      </button>
+                      <button class="quad-cell quad-elect" data-quad="electoral">
+                        <span class="quad-tag">high elec · low labor</span>
+                        <span class="quad-name">electoral</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /imo-diagram -->
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               PART · INPUT — one section per group. Each hosts the diagram's
+               per-box anchor ids as .method-anchor sub-anchors so every input
+               box-link resolves. (Diagram = 7 per-box anchors; skeleton = 3
+               per-group sections — see report.)
+               ═══════════════════════════════════════════════════════════════ -->
+          <div class="method-part" id="part-input">Input
+            <span class="method-part-sub">what we measure</span>
+          </div>
+
+          <!-- ── Inputs: Sectoral — County employment + Sector strategic score ── -->
+          <div class="method-sub" id="input-sectoral">
+            <span class="method-anchor" id="input-county-employment"></span>
+            <span class="method-anchor" id="input-sector-strategic-score"></span>
+            <span class="method-sub-num">04 — Input</span>
+            <h3 class="method-sub-h">Inputs: Sectoral</h3>
+            <!-- TODO(prose): describe the two sectoral inputs — County employment
+                 and the Sector strategic score (the per-sector SVS rubric, which
+                 currently lives under "Sectoral Leverage" below, may be relocated
+                 here in the prose pass). Structure-only: left as a marked slot. -->
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — input prose</span>
+              <p>Covers <strong>County employment</strong> and the
+              <strong>Sector strategic score</strong>. Prose to be written in the
+              narrative pass.</p>
+            </div>
+          </div>
+
+          <!-- ── Inputs: Electoral — Vote margin + State decisiveness ── -->
+          <div class="method-sub" id="input-electoral">
+            <span class="method-anchor" id="input-vote-margin"></span>
+            <span class="method-anchor" id="input-state-decisiveness"></span>
+            <span class="method-sub-num">05 — Input</span>
+            <h3 class="method-sub-h">Inputs: Electoral</h3>
+            <!-- TODO(prose): describe Vote margin + State decisiveness (currently
+                 explained inline in the P1 formula card under "Electoral Leverage"). -->
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — input prose</span>
+              <p>Covers <strong>Vote margin</strong> and
+              <strong>State decisiveness</strong>. Prose to be written in the
+              narrative pass.</p>
+            </div>
+          </div>
+
+          <!-- ── Inputs: Alignment — Key votes + Ideology score + Party ID ── -->
+          <div class="method-sub" id="input-alignment">
+            <span class="method-anchor" id="input-key-votes"></span>
+            <span class="method-anchor" id="input-ideology-score"></span>
+            <span class="method-anchor" id="input-party-id"></span>
+            <span class="method-sub-num">06 — Input</span>
+            <h3 class="method-sub-h">Inputs: Alignment</h3>
+            <!-- TODO(prose): describe Key votes + Ideology score + Party ID
+                 (currently explained inline in the P2 formula card under
+                 "Incumbent Alignment"). -->
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — input prose</span>
+              <p>Covers <strong>Key votes</strong>, <strong>Ideology score</strong>,
+              and <strong>Party ID</strong>. Prose to be written in the narrative
+              pass.</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               PART · MODEL — factors then lenses
+               ═══════════════════════════════════════════════════════════════ -->
+          <div class="method-part" id="part-model">Model
+            <span class="method-part-sub">factors → lenses</span>
+          </div>
+
+          <!-- ── Sectoral Leverage (was "Strategic Leverage Score" / m-sls;
+               splits into Capital + Community — moved verbatim) ── -->
+          <div class="method-sub" id="factor-sectoral-leverage">
+            <span class="method-sub-num">07 — Model · Factor</span>
+            <h3 class="method-sub-h">Sectoral Leverage</h3>
             <p class="method-prose">
               Strategic leverage is the structural capacity of workers to disrupt
               the conditions that matter to their employer or to the broader
@@ -835,10 +1141,13 @@ Maximum: 80 points</div>
             </p>
           </div>
 
-          <!-- ── Political Terrain Score (formulas + table) ── -->
-          <div class="method-sub" id="m-pts">
-            <span class="method-sub-num">05 — Formulas</span>
-            <h3 class="method-sub-h">Political Terrain Score</h3>
+          <!-- ── Electoral Leverage (was P1, from "Political Terrain Score" / m-pts).
+               m-pts described the I→M→O pipeline (P1 Electoral Leverage + P2 Incumbent
+               Alignment), so it was split across these two MODEL factor sections rather
+               than treated as back matter. Intro paragraph kept here verbatim. ── -->
+          <div class="method-sub" id="factor-electoral-leverage">
+            <span class="method-sub-num">08 — Model · Factor</span>
+            <h3 class="method-sub-h">Electoral Leverage</h3>
             <p class="method-prose">
               Political terrain answers: how much does organizing in this county
               change the political environment? Two components are measured
@@ -871,6 +1180,12 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
                 <div class="citation-review">Kolerman (2024). On the indirect community channels of newly organized workers' electoral effects.</div>
               </div>
             </details>
+          </div><!-- /factor-electoral-leverage -->
+
+          <!-- ── Incumbent Alignment (was P2, from "Political Terrain Score" / m-pts) ── -->
+          <div class="method-sub" id="factor-incumbent-alignment">
+            <span class="method-sub-num">09 — Model · Factor</span>
+            <h3 class="method-sub-h">Incumbent Alignment</h3>
 
             <details class="formula-card">
               <summary>
@@ -911,12 +1226,44 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
                 <div class="citation">Harvard Center for Labor and a Just Economy (2024). The Varied Voice of Labor. clje.law.harvard.edu</div>
               </div>
             </details>
+          </div><!-- /factor-incumbent-alignment -->
+
+          <!-- ── Federal lens — TODO STUB. No existing standalone prose to move (the
+               lens framing lives in "What the Model Does" front matter); the user's
+               prose pass writes this. ── -->
+          <div class="method-sub" id="lens-federal">
+            <span class="method-sub-num">10 — Model · Lens</span>
+            <h3 class="method-sub-h">Federal lens</h3>
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — lens prose</span>
+              <p>Federal lens: federal electoral tipping weights + federal incumbent
+              alignment. Prose to be written in the narrative pass.</p>
+            </div>
           </div>
 
-          <!-- ── Reading the Map (tier definitions table + finding callout) ── -->
-          <div class="method-sub" id="m-reading">
-            <span class="method-sub-num">06 — Classification</span>
-            <h3 class="method-sub-h">Reading the Map</h3>
+          <!-- ── State lens — TODO STUB ── -->
+          <div class="method-sub" id="lens-state">
+            <span class="method-sub-num">11 — Model · Lens</span>
+            <h3 class="method-sub-h">State lens</h3>
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — lens prose</span>
+              <p>State lens: state legislative chamber control + state incumbent
+              alignment. Prose to be written in the narrative pass.</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               PART · OUTPUT — the 2×2, the two pathways, the scatter
+               ═══════════════════════════════════════════════════════════════ -->
+          <div class="method-part" id="part-output">Output
+            <span class="method-part-sub">strategic map</span>
+          </div>
+
+          <!-- ── The 2×2 (was "Reading the Map" / m-reading — tier table + finding
+               callout, moved verbatim) ── -->
+          <div class="method-sub" id="output-2x2">
+            <span class="method-sub-num">12 — Output</span>
+            <h3 class="method-sub-h">The 2×2</h3>
             <p class="method-prose">
               The model classifies every county into one of six categories based
               on the combination of SLS, P1, and P2. The classification answers
@@ -958,9 +1305,37 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
             </p>
           </div>
 
+          <!-- ── Tiers & the two pathways — TODO STUB. This is where the user's
+               dual-track narrative goes. Intentionally left empty (structure only). ── -->
+          <div class="method-sub" id="output-tiers">
+            <span class="method-sub-num">13 — Output</span>
+            <h3 class="method-sub-h">Tiers &amp; the two pathways</h3>
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — dual-track narrative</span>
+              <p>The two-pathway explanation (Capital / Community tiers and how a
+              county travels them) is the user's next pass. Left intentionally empty.</p>
+            </div>
+          </div>
+
+          <!-- ── Scatter — TODO STUB. The scatter view is not built yet; the diagram's
+               quadrant clicks remain a stub pointing here / to a toast. ── -->
+          <div class="method-sub" id="output-scatter">
+            <span class="method-sub-num">14 — Output</span>
+            <h3 class="method-sub-h">Scatter</h3>
+            <div class="method-todo">
+              <span class="method-todo-tag">TODO — scatter view</span>
+              <p>The scatter view is not built yet. Placeholder only; the flowchart's
+              quadrant clicks stay stubbed until it exists.</p>
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════════════════════════
+               BACK MATTER — references & framing, kept in place, unchanged prose
+               ═══════════════════════════════════════════════════════════════ -->
+
           <!-- ── Known Limitations (toggle list) ── -->
           <div class="method-sub" id="m-limitations">
-            <span class="method-sub-num">07 — Limitations</span>
+            <span class="method-sub-num">15 — Limitations</span>
             <h3 class="method-sub-h">Known Limitations</h3>
             <p class="method-prose">
               These are not disclaimers. They are specifications of where the data
@@ -999,7 +1374,7 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
 
           <!-- ── Data Sources (table) ── -->
           <div class="method-sub" id="m-data">
-            <span class="method-sub-num">08 — Data Sources</span>
+            <span class="method-sub-num">16 — Data Sources</span>
             <h3 class="method-sub-h">Data Sources</h3>
             <div class="method-table-wrap">
               <table class="method-table">
@@ -1026,7 +1401,7 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
 
           <!-- ── Theoretical Foundations (literature table; pending → review) ── -->
           <div class="method-sub" id="m-literature">
-            <span class="method-sub-num">09 — Literature</span>
+            <span class="method-sub-num">17 — Literature</span>
             <h3 class="method-sub-h">Theoretical Foundations</h3>
             <p class="method-prose">
               The works below ground the model. Citations marked
@@ -1056,7 +1431,7 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
 
           <!-- ── Further Research (conceptual prose) ── -->
           <div class="method-sub" id="m-research">
-            <span class="method-sub-num">10 — Roadmap</span>
+            <span class="method-sub-num">18 — Roadmap</span>
             <h3 class="method-sub-h">Further Research and Future Updates</h3>
             <p class="method-prose">Seven near-term priorities shape the model's roadmap:</p>
             <p class="method-prose">
@@ -1081,7 +1456,7 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
 
           <!-- ── About (conceptual prose) ── -->
           <div class="method-sub" id="m-about">
-            <span class="method-sub-num">11 — About</span>
+            <span class="method-sub-num">19 — About</span>
             <h3 class="method-sub-h">About This Project</h3>
             <p class="method-prose">
               Terrain was created by
@@ -1322,6 +1697,222 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
       window.addEventListener('resize', onScroll);
       update();
     })();
+  </script>
+
+  <!-- toast for the still-stubbed scatter (quadrant) links -->
+  <div class="imo-toast" id="imo-toast" role="status" aria-live="polite"></div>
+
+  <!-- ============================================================
+       FLOWCHART TOC — connector routing + box→section wiring.
+       Ported from output/imo_preview.html (branch imo-preview). All DOM
+       lookups are scoped to #imo-diagram. Box clicks smooth-scroll to the
+       real in-page anchors (METHODOLOGY_ANCHORS); quadrant clicks remain a
+       stub (SCATTER_TARGETS) until the scatter view is built.
+       ============================================================ -->
+  <script>
+  (function () {
+    var root = document.getElementById('imo-diagram');
+    if (!root) return;
+
+    /* Box → real in-page anchor id (matches the diagram's METHODOLOGY_ANCHORS;
+       diagram ids are the source of truth). Input boxes land on .method-anchor
+       sub-anchors inside their per-group section. */
+    var METHODOLOGY_ANCHORS = {
+      'in-county-emp':     'input-county-employment',
+      'in-sector-score':   'input-sector-strategic-score',
+      'in-vote-margin':    'input-vote-margin',
+      'in-state-decisive': 'input-state-decisiveness',
+      'in-key-votes':      'input-key-votes',
+      'in-ideology':       'input-ideology-score',
+      'in-party-id':       'input-party-id',
+      'f-sectoral':        'factor-sectoral-leverage',
+      'f-electoral':       'factor-electoral-leverage',
+      'f-incumbent':       'factor-incumbent-alignment',
+      'l-federal':         'lens-federal',
+      'l-state':           'lens-state'
+    };
+
+    /* Quadrant → scatter view. STILL STUBBED — scatter not built yet. */
+    var SCATTER_TARGETS = {
+      'base building': 'scatter?quadrant=base-building',
+      'tier one':      'scatter?quadrant=tier-one',
+      'low prior':     'scatter?quadrant=low-prior',
+      'electoral':     'scatter?quadrant=electoral'
+    };
+
+    /* ---- box clicks → smooth-scroll to the real section anchor ----
+       The page's #paper-scroll uses CSS scroll-behavior:smooth, which (in this
+       layout) swallows programmatic scrollIntoView / scrollTo. Direct scrollTop
+       DOES work once behavior is momentarily forced to auto, so we animate it by
+       hand. This also lets us land on the hidden .method-anchor sub-anchors. */
+    function scrollToAnchor(id) {
+      var target = document.getElementById(id);
+      var sc = document.getElementById('paper-scroll');
+      if (!target) return;
+      if (history.replaceState) history.replaceState(null, '', '#' + id);
+      var prefersReduced = window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!sc || sc.scrollHeight <= sc.clientHeight) {
+        target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+        return;
+      }
+      var dest = sc.scrollTop + target.getBoundingClientRect().top - sc.getBoundingClientRect().top - 90;
+      dest = Math.max(0, Math.min(dest, sc.scrollHeight - sc.clientHeight));
+      var prev = sc.style.scrollBehavior;
+      sc.style.scrollBehavior = 'auto';   // direct scrollTop is ignored while smooth
+      if (prefersReduced) {
+        sc.scrollTop = dest;
+        sc.style.scrollBehavior = prev;
+        return;
+      }
+      var start = sc.scrollTop, delta = dest - start;
+      var dur = Math.min(620, Math.max(260, Math.abs(delta) * 0.5));
+      var t0 = (window.performance && performance.now) ? performance.now() : Date.now();
+      // setTimeout, not requestAnimationFrame: rAF is throttled when the tab is
+      // backgrounded (the scroll-spy below avoids it for the same reason).
+      function step() {
+        var now = (window.performance && performance.now) ? performance.now() : Date.now();
+        var p = Math.min(1, (now - t0) / dur);
+        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; // easeInOutQuad
+        sc.scrollTop = start + delta * e;
+        if (p < 1) setTimeout(step, 16);
+        else sc.style.scrollBehavior = prev;
+      }
+      step();
+    }
+    root.querySelectorAll('.node').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var id = METHODOLOGY_ANCHORS[el.dataset.node];
+        if (id) scrollToAnchor(id);
+      });
+    });
+
+    /* ---- quadrant clicks → stub toast (scatter not built) ---- */
+    var toastEl = document.getElementById('imo-toast');
+    var toastTimer = null;
+    function toast(msg) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2400);
+    }
+    root.querySelectorAll('.quad-cell').forEach(function (el) {
+      el.addEventListener('click', function () {
+        // TODO(scatter): open SCATTER_TARGETS[q] when the scatter view exists.
+        toast('Scatter view coming soon · ' + el.dataset.quad);
+      });
+    });
+
+    /* ====================================================================
+       CONNECTOR ROUTING (verbatim from imo_preview, scoped to #imo-diagram)
+       ==================================================================== */
+    var svg = root.querySelector('#connectors');
+    var shell = svg.parentElement;
+
+    var LINKS = [
+      { sources: ['in-county-emp', 'in-sector-score'],           targets: ['f-sectoral'] },
+      { sources: ['in-vote-margin', 'in-state-decisive'],        targets: ['f-electoral'] },
+      { sources: ['in-key-votes', 'in-ideology', 'in-party-id'], targets: ['f-incumbent'] },
+      { sources: ['f-sectoral', 'f-electoral', 'f-incumbent'],   targets: ['l-federal', 'l-state'], busFrac: 0.42 },
+      { sources: ['l-federal', 'l-state'],                       targets: ['__quadrant__'], busFrac: 0.5 }
+    ];
+
+    var SVGNS = 'http://www.w3.org/2000/svg';
+
+    function rectOf(id) {
+      var el;
+      if (id === '__quadrant__') el = root.querySelector('#quadrant');
+      else el = root.querySelector('[data-node="' + id + '"]');
+      if (!el) return null;
+      var r = el.getBoundingClientRect();
+      var base = shell.getBoundingClientRect();
+      return {
+        left:   r.left   - base.left,
+        right:  r.right  - base.left,
+        top:    r.top    - base.top,
+        bottom: r.bottom - base.top,
+        cy:     r.top - base.top + r.height / 2
+      };
+    }
+
+    function line(d, opts) {
+      opts = opts || {};
+      var p = document.createElementNS(SVGNS, 'path');
+      p.setAttribute('d', d);
+      if (opts.arrow) p.setAttribute('marker-end', 'url(#arrow)');
+      if (opts.cls)   p.setAttribute('class', opts.cls);
+      svg.appendChild(p);
+    }
+
+    var R = 7;
+
+    function elbow(x1, y1, busX, y2, x2, arrow) {
+      var dir = y2 >= y1 ? 1 : -1;
+      var r1 = Math.min(R, Math.abs(busX - x1), Math.abs(y2 - y1) / 2 || R);
+      var r2 = Math.min(R, Math.abs(x2 - busX), Math.abs(y2 - y1) / 2 || R);
+      var d = 'M ' + x1 + ' ' + y1 + ' ';
+      if (Math.abs(y2 - y1) < 0.5) {
+        d += 'L ' + x2 + ' ' + y2;
+      } else {
+        d += 'H ' + (busX - r1) + ' ';
+        d += 'Q ' + busX + ' ' + y1 + ' ' + busX + ' ' + (y1 + dir * r1) + ' ';
+        d += 'V ' + (y2 - dir * r2) + ' ';
+        d += 'Q ' + busX + ' ' + y2 + ' ' + (busX + r2) + ' ' + y2 + ' ';
+        d += 'H ' + x2;
+      }
+      line(d, { arrow: arrow });
+    }
+
+    function drawConnectors() {
+      // clear previous paths (keep <defs>)
+      Array.prototype.slice.call(svg.querySelectorAll('path')).forEach(function (n) {
+        if (!n.closest('defs')) n.remove();
+      });
+
+      var inEmp = rectOf('in-county-emp');
+      var fSect = rectOf('f-sectoral');
+      var lFed  = rectOf('l-federal');
+      var quad  = rectOf('__quadrant__');
+      var full  = shell.getBoundingClientRect();
+      var h = full.height;
+      if (inEmp && fSect) {
+        var dx1 = (inEmp.right + fSect.left) / 2;
+        line('M ' + dx1 + ' 4 V ' + (h - 4), { cls: 'divider' });
+      }
+      if (lFed && quad) {
+        var dx2 = (lFed.right + quad.left) / 2;
+        line('M ' + dx2 + ' 4 V ' + (h - 4), { cls: 'divider' });
+      }
+
+      LINKS.forEach(function (link) {
+        var src = link.sources.map(rectOf).filter(Boolean);
+        var tgt = link.targets.map(rectOf).filter(Boolean);
+        if (!src.length || !tgt.length) return;
+
+        var srcRight = Math.max.apply(null, src.map(function (r) { return r.right; }));
+        var tgtLeft  = Math.min.apply(null, tgt.map(function (r) { return r.left; }));
+        var frac = (link.busFrac == null) ? 0.5 : link.busFrac;
+        var busX = srcRight + (tgtLeft - srcRight) * frac;
+
+        var ys = src.map(function (r) { return r.cy; }).concat(tgt.map(function (r) { return r.cy; }));
+        var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+
+        if (maxY - minY > 0.5) line('M ' + busX + ' ' + minY + ' V ' + maxY);
+
+        src.forEach(function (r) { elbow(r.right, r.cy, busX, r.cy, busX, false); });
+        tgt.forEach(function (r) { elbow(busX, r.cy, busX, r.cy, r.left, true); });
+      });
+    }
+
+    function schedule() { requestAnimationFrame(function () { requestAnimationFrame(drawConnectors); }); }
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+    // the diagram lives inside a scroll container that may lay out late — nudge once more
+    setTimeout(schedule, 300);
+    schedule();
+  })();
   </script>
 
 </body>
