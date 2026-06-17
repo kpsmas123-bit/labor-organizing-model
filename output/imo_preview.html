@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terrain · Input → Model → Output</title>
+
+<!-- Reuse the site's typography. terrain.css already @imports these; we import
+     directly here so this preview is self-contained and can be opened on its own. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ------------------------------------------------------------------
+   TOKENS — pulled verbatim from output/terrain.css so the preview
+   matches the live site exactly. Do not invent new tokens here.
+   ------------------------------------------------------------------ */
+:root {
+  --color-bg:             #F7F5F0;
+  --color-bg-card:        #EFEFEA;
+  --color-ink:            #1A1A18;
+  --color-text:           #1A1A18;
+  --color-text-secondary: #3D3D3A;
+  --color-text-muted:     #5C6B7A;
+  --color-rule:           #C8C3B8;
+  --color-border:         #C8C3B8;
+  --color-border-strong:  #9E9890;
+  --color-accent:         #BD0026;   /* Terrain Red */
+  --color-accent-hover:   #9A001F;
+
+  /* tier palette (from terrain.css) */
+  --color-tier-1-capital:   #BD0026;
+  --color-tier-1-community: #1a3a6b;
+  --color-tier-2-capital:   #c45e00;
+  --color-tier-2-community: #2c6fad;
+  --color-tier-3:           #6b4f9e;
+  --color-tier-4:           #ccc4bb;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+
+  /* diagram geometry — single source of truth */
+  --diag-stroke:        #9E9890;
+  --diag-stroke-strong: #6f6a62;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ---- page frame ---- */
+.diagram-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 3rem) 5rem;
+}
+
+.diagram-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 0.6rem;
+}
+.diagram-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin-bottom: 0.5rem;
+}
+.diagram-lede {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+}
+.diagram-rule {
+  height: 3px;
+  background: var(--color-accent);
+  width: 64px;
+  margin: 1.4rem 0 2.8rem;
+}
+
+/* ==================================================================
+   DIAGRAM GRID
+   columns:  INPUT | FACTORS | LENSES | OUTPUT
+   ( MODEL header spans FACTORS + LENSES )
+   The input + factor columns share three rows — one per group —
+   so each factor box vertically centres on the group that feeds it.
+   ================================================================== */
+.diagram-shell {
+  position: relative;
+}
+
+.diagram-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    minmax(150px, 1fr)   /* input   */
+    minmax(150px, 1fr)   /* factors */
+    minmax(128px, 0.9fr) /* lenses  */
+    minmax(280px, 1.3fr);/* output  */
+  grid-template-rows: auto;
+  grid-auto-rows: auto;
+  column-gap: clamp(56px, 7vw, 104px);
+  row-gap: clamp(28px, 4vw, 48px);
+  align-items: start;
+}
+
+/* column headers */
+.col-head {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.5rem;
+  letter-spacing: 0.01em;
+  color: var(--color-text);
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-rule);
+}
+.col-head .col-head-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+.head-input  { grid-column: 1 / 2; grid-row: 1; }
+.head-model  { grid-column: 2 / 4; grid-row: 1; }
+.head-output { grid-column: 4 / 5; grid-row: 1; }
+
+/* input column cells — one per group, holds the dashed boxes */
+.input-group {
+  grid-column: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+.input-group.g-a { grid-row: 2; }
+.input-group.g-b { grid-row: 3; }
+.input-group.g-c { grid-row: 4; }
+
+/* factor cells — one per group, vertically centred against the group */
+.factor-cell {
+  grid-column: 2 / 3;
+  display: flex;
+  align-items: center;
+}
+.factor-cell.g-a { grid-row: 2; }
+.factor-cell.g-b { grid-row: 3; }
+.factor-cell.g-c { grid-row: 4; }
+
+/* lens column — spans all three rows, centred */
+.lens-stack {
+  grid-column: 3 / 4;
+  grid-row: 2 / 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(48px, 8vh, 96px);
+}
+
+/* output column — spans all three rows, centred */
+.output-cell {
+  grid-column: 4 / 5;
+  grid-row: 2 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------------
+   BOXES
+   ------------------------------------------------------------------ */
+.node {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.7rem 0.85rem;
+  color: var(--color-text);
+  transition: transform 140ms ease, border-color 140ms ease,
+              box-shadow 140ms ease, background 140ms ease;
+}
+.node:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+  box-shadow: 0 3px 12px rgba(189,0,38,0.10);
+  background: #fff;
+}
+.node:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* dashed input boxes */
+.node--input {
+  background: transparent;
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: 5px;
+  padding: 0.55rem 0.75rem;
+}
+.node--input:hover {
+  background: rgba(189,0,38,0.04);
+  border-style: dashed;
+  border-color: var(--color-accent);
+}
+.node--input .node-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  color: var(--color-text-secondary);
+}
+
+/* solid factor boxes */
+.node--factor {
+  border: 1.5px solid var(--color-border-strong);
+  border-left: 3px solid var(--color-accent);
+  padding: 0.8rem 0.9rem;
+}
+.node--factor .node-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+.node--factor .node-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-top: 0.28rem;
+}
+
+/* lens boxes */
+.node--lens {
+  text-align: center;
+  border: 1.5px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-bg);
+  padding: 0.85rem 0.6rem;
+}
+.node--lens .node-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.node--lens:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------
+   OUTPUT — 2×2 quadrant
+   ------------------------------------------------------------------ */
+.quadrant-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+}
+/* axis labels */
+.axis-y, .axis-x {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.axis-y {
+  left: -1.65rem;
+  top: 50%;
+  transform: rotate(-90deg) translateX(50%);
+  transform-origin: left center;
+}
+.axis-x {
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.quadrant {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+  aspect-ratio: 1 / 1;
+  background: var(--color-border);
+  border: 1px solid var(--color-border-strong);
+  padding: 3px;
+  border-radius: 6px;
+}
+.quad-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0.6rem 0.65rem;
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  text-align: left;
+  color: #fff;
+  border-radius: 3px;
+  transition: filter 140ms ease, transform 140ms ease;
+  min-height: 0;
+}
+.quad-cell:hover { filter: brightness(1.08) saturate(1.05); transform: scale(0.985); }
+.quad-cell:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
+.quad-cell .quad-name {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.1;
+}
+.quad-cell .quad-tag {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 0.15rem;
+}
+/* tier palette mapping */
+.quad-base     { background: var(--color-tier-1-community); } /* top-left  */
+.quad-tierone  { background: var(--color-tier-1-capital);  } /* top-right */
+.quad-lowprior { background: var(--color-tier-4); color: var(--color-text); } /* bottom-left */
+.quad-elect    { background: var(--color-tier-2-capital);  } /* bottom-right */
+.quad-lowprior .quad-tag { color: var(--color-text-muted); opacity: 1; }
+
+/* ------------------------------------------------------------------
+   SVG connector overlay
+   ------------------------------------------------------------------ */
+.connector-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+.connector-layer path { fill: none; stroke: var(--diag-stroke); stroke-width: 1.4; }
+.connector-layer .divider {
+  stroke: var(--color-rule);
+  stroke-width: 1.2;
+  stroke-dasharray: 1 6;
+  stroke-linecap: round;
+}
+
+/* ------------------------------------------------------------------
+   TOAST  (placeholder for future methodology / scatter links)
+   ------------------------------------------------------------------ */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  transform: translate(-50%, 1.5rem);
+  background: var(--color-ink);
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border-left: 3px solid var(--color-accent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  z-index: 999;
+  max-width: 80vw;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.diagram-foot {
+  margin-top: 3.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  .node:hover { transform: none; }
+}
+
+/* small screens — let columns wrap to readable widths, connectors hide */
+@media (max-width: 760px) {
+  .diagram-grid { column-gap: 36px; row-gap: 28px; }
+  .connector-layer { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="diagram-page">
+  <p class="diagram-kicker">Terrain · Methodology</p>
+  <h1 class="diagram-title">How the model reads a county</h1>
+  <p class="diagram-lede">
+    Raw inputs feed three leverage factors; the factors are read through two
+    lenses; the lenses place each county on a strategic map.
+  </p>
+  <div class="diagram-rule" aria-hidden="true"></div>
+
+  <div class="diagram-shell">
+    <!-- SVG sits UNDER the boxes; endpoints are computed from box rects -->
+    <svg class="connector-layer" id="connectors" aria-hidden="true">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+                markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0.5,1 L9,5 L0.5,9" fill="none"
+                stroke="var(--diag-stroke-strong)" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <div class="diagram-grid" id="grid">
+      <!-- ---------- column headers ---------- -->
+      <div class="col-head head-input">Input
+        <span class="col-head-sub">what we measure</span>
+      </div>
+      <div class="col-head head-model">Model
+        <span class="col-head-sub">factors → lenses</span>
+      </div>
+      <div class="col-head head-output">Output
+        <span class="col-head-sub">strategic map</span>
+      </div>
+
+      <!-- ---------- INPUT groups ---------- -->
+      <div class="input-group g-a">
+        <button class="node node--input" data-node="in-county-emp">
+          <span class="node-label">County employment</span>
+        </button>
+        <button class="node node--input" data-node="in-sector-score">
+          <span class="node-label">Sector strategic score</span>
+        </button>
+      </div>
+
+      <div class="input-group g-b">
+        <button class="node node--input" data-node="in-vote-margin">
+          <span class="node-label">Vote margin</span>
+        </button>
+        <button class="node node--input" data-node="in-state-decisive">
+          <span class="node-label">State decisiveness</span>
+        </button>
+      </div>
+
+      <div class="input-group g-c">
+        <button class="node node--input" data-node="in-key-votes">
+          <span class="node-label">Key votes</span>
+        </button>
+        <button class="node node--input" data-node="in-ideology">
+          <span class="node-label">Ideology score</span>
+        </button>
+        <button class="node node--input" data-node="in-party-id">
+          <span class="node-label">Party ID</span>
+        </button>
+      </div>
+
+      <!-- ---------- MODEL factors ---------- -->
+      <div class="factor-cell g-a">
+        <button class="node node--factor" data-node="f-sectoral">
+          <span class="node-label">Sectoral Leverage</span>
+          <span class="node-sub">capital + community</span>
+        </button>
+      </div>
+      <div class="factor-cell g-b">
+        <button class="node node--factor" data-node="f-electoral">
+          <span class="node-label">Electoral Leverage</span>
+        </button>
+      </div>
+      <div class="factor-cell g-c">
+        <button class="node node--factor" data-node="f-incumbent">
+          <span class="node-label">Incumbent Alignment</span>
+          <span class="node-sub">federal votes / state party</span>
+        </button>
+      </div>
+
+      <!-- ---------- MODEL lenses ---------- -->
+      <div class="lens-stack">
+        <button class="node node--lens" data-node="l-federal">
+          <span class="node-label">Federal lens</span>
+        </button>
+        <button class="node node--lens" data-node="l-state">
+          <span class="node-label">State lens</span>
+        </button>
+      </div>
+
+      <!-- ---------- OUTPUT quadrant ---------- -->
+      <div class="output-cell">
+        <div class="quadrant-wrap">
+          <span class="axis-y">labor leverage →</span>
+          <span class="axis-x">electoral leverage →</span>
+          <div class="quadrant" id="quadrant">
+            <button class="quad-cell quad-base" data-quad="base building">
+              <span class="quad-tag">low elec · high labor</span>
+              <span class="quad-name">base building</span>
+            </button>
+            <button class="quad-cell quad-tierone" data-quad="tier one">
+              <span class="quad-tag">high · high</span>
+              <span class="quad-name">tier one</span>
+            </button>
+            <button class="quad-cell quad-lowprior" data-quad="low prior">
+              <span class="quad-tag">low · low</span>
+              <span class="quad-name">low prior</span>
+            </button>
+            <button class="quad-cell quad-elect" data-quad="electoral">
+              <span class="quad-tag">high elec · low labor</span>
+              <span class="quad-name">electoral</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="diagram-foot">
+    Preview · click any box to see where it will link. Nothing here is wired to a
+    live page yet.
+  </p>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ====================================================================
+   BOX → METHODOLOGY ANCHOR MAP   ← WIRE REAL ANCHORS HERE LATER
+   --------------------------------------------------------------------
+   TODO(methodology): replace the placeholder strings below with the real
+   in-page anchors (e.g. 'methodology.html#sectoral-leverage') once the
+   methodology page sections exist. Quadrants will instead deep-link into
+   the scatter plot — see SCATTER_TARGETS.
+   ==================================================================== */
+const METHODOLOGY_ANCHORS = {
+  'in-county-emp':    '#input-county-employment',
+  'in-sector-score':  '#input-sector-strategic-score',
+  'in-vote-margin':   '#input-vote-margin',
+  'in-state-decisive':'#input-state-decisiveness',
+  'in-key-votes':     '#input-key-votes',
+  'in-ideology':      '#input-ideology-score',
+  'in-party-id':      '#input-party-id',
+  'f-sectoral':       '#factor-sectoral-leverage',
+  'f-electoral':      '#factor-electoral-leverage',
+  'f-incumbent':      '#factor-incumbent-alignment',
+  'l-federal':        '#lens-federal',
+  'l-state':          '#lens-state',
+};
+
+/* Quadrant → scatter-plot view. TODO(scatter): wire to the live scatter. */
+const SCATTER_TARGETS = {
+  'base building': 'scatter?quadrant=base-building',
+  'tier one':      'scatter?quadrant=tier-one',
+  'low prior':     'scatter?quadrant=low-prior',
+  'electoral':     'scatter?quadrant=electoral',
+};
+
+/* ---- placeholder toast ---- */
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2400);
+}
+
+document.querySelectorAll('.node').forEach(el => {
+  el.addEventListener('click', () => {
+    const id = el.dataset.node;
+    // TODO: navigate to METHODOLOGY_ANCHORS[id] when the page exists.
+    toast('→ methodology: ' + (METHODOLOGY_ANCHORS[id] || id));
+  });
+});
+document.querySelectorAll('.quad-cell').forEach(el => {
+  el.addEventListener('click', () => {
+    const q = el.dataset.quad;
+    // TODO: open the scatter plot at SCATTER_TARGETS[q].
+    toast('→ scatter: ' + q);
+  });
+});
+
+/* ====================================================================
+   CONNECTOR ROUTING
+   Generic orthogonal "bus" router: a set of source boxes feed a shared
+   vertical bus, which then fans into a set of target boxes. Endpoints
+   are read from each box's getBoundingClientRect() so lines always meet
+   the box edges, and everything is recomputed on resize / font load.
+   ==================================================================== */
+const svg = document.getElementById('connectors');
+const shell = svg.parentElement;
+
+// each link: sources merge into a bus, bus fans to targets
+const LINKS = [
+  { sources: ['in-county-emp', 'in-sector-score'],            targets: ['f-sectoral'] },
+  { sources: ['in-vote-margin', 'in-state-decisive'],         targets: ['f-electoral'] },
+  { sources: ['in-key-votes', 'in-ideology', 'in-party-id'],  targets: ['f-incumbent'] },
+  { sources: ['f-sectoral', 'f-electoral', 'f-incumbent'],    targets: ['l-federal', 'l-state'], busFrac: 0.42 },
+  { sources: ['l-federal', 'l-state'],                        targets: ['__quadrant__'], busFrac: 0.5 },
+];
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+function rectOf(id) {
+  let el;
+  if (id === '__quadrant__') el = document.getElementById('quadrant');
+  else el = document.querySelector(`[data-node="${id}"]`);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  const base = shell.getBoundingClientRect();
+  return {
+    left:   r.left   - base.left,
+    right:  r.right  - base.left,
+    top:    r.top    - base.top,
+    bottom: r.bottom - base.top,
+    cy:     r.top - base.top + r.height / 2,
+  };
+}
+
+function line(d, opts = {}) {
+  const p = document.createElementNS(SVGNS, 'path');
+  p.setAttribute('d', d);
+  if (opts.arrow) p.setAttribute('marker-end', 'url(#arrow)');
+  if (opts.cls)   p.setAttribute('class', opts.cls);
+  svg.appendChild(p);
+}
+
+const R = 7; // corner radius for rounded elbows
+
+// horizontal-then-vertical-then-horizontal elbow with rounded corners,
+// routed through a shared vertical bus at x = busX.
+function elbow(x1, y1, busX, y2, x2, arrow) {
+  // direction of the vertical leg
+  const dir = y2 >= y1 ? 1 : -1;
+  // guard tiny segments so the radius never overshoots
+  const r1 = Math.min(R, Math.abs(busX - x1), Math.abs(y2 - y1) / 2 || R);
+  const r2 = Math.min(R, Math.abs(x2 - busX), Math.abs(y2 - y1) / 2 || R);
+  let d = `M ${x1} ${y1} `;
+  if (Math.abs(y2 - y1) < 0.5) {
+    // straight shot
+    d += `L ${x2} ${y2}`;
+  } else {
+    d += `H ${busX - r1} `;
+    d += `Q ${busX} ${y1} ${busX} ${y1 + dir * r1} `;
+    d += `V ${y2 - dir * r2} `;
+    d += `Q ${busX} ${y2} ${busX + r2} ${y2} `;
+    d += `H ${x2}`;
+  }
+  line(d, { arrow });
+}
+
+function drawConnectors() {
+  // clear previous paths (keep <defs>)
+  [...svg.querySelectorAll('path:not(defs path), .divider')].forEach(n => {
+    if (n.closest('defs')) return;
+    n.remove();
+  });
+  [...svg.querySelectorAll('path')].forEach(n => { if (!n.closest('defs')) n.remove(); });
+
+  // --- dotted column dividers (INPUT|MODEL, MODEL|OUTPUT) ---
+  const inEmp = rectOf('in-county-emp');
+  const fSect = rectOf('f-sectoral');
+  const lFed  = rectOf('l-federal');
+  const quad  = rectOf('__quadrant__');
+  const full  = shell.getBoundingClientRect();
+  const h = full.height;
+  if (inEmp && fSect) {
+    const dx = (inEmp.right + fSect.left) / 2;
+    line(`M ${dx} 4 V ${h - 4}`, { cls: 'divider' });
+  }
+  if (lFed && quad) {
+    const dx = (lFed.right + quad.left) / 2;
+    line(`M ${dx} 4 V ${h - 4}`, { cls: 'divider' });
+  }
+
+  // --- bus links ---
+  LINKS.forEach(link => {
+    const src = link.sources.map(rectOf).filter(Boolean);
+    const tgt = link.targets.map(rectOf).filter(Boolean);
+    if (!src.length || !tgt.length) return;
+
+    const srcRight = Math.max(...src.map(r => r.right));
+    const tgtLeft  = Math.min(...tgt.map(r => r.left));
+    const frac = link.busFrac ?? 0.5;
+    const busX = srcRight + (tgtLeft - srcRight) * frac;
+
+    // collect Y span the bus must cover
+    const ys = [...src.map(r => r.cy), ...tgt.map(r => r.cy)];
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+
+    // vertical bus
+    if (maxY - minY > 0.5) {
+      line(`M ${busX} ${minY} V ${maxY}`);
+    }
+
+    // source stubs INTO the bus (no arrow)
+    src.forEach(r => {
+      elbow(r.right, r.cy, busX, r.cy, busX, false);
+    });
+    // bus OUT to each target (arrow at target)
+    tgt.forEach(r => {
+      elbow(busX, r.cy, busX, r.cy, r.left, true);
+    });
+  });
+}
+
+// recompute after layout settles, on resize, and once fonts load
+function schedule() { requestAnimationFrame(() => requestAnimationFrame(drawConnectors)); }
+window.addEventListener('resize', schedule);
+window.addEventListener('load', schedule);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+schedule();
+</script>
+</body>
+</html>
