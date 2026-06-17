@@ -493,8 +493,14 @@
       #scatter-svg { width: 100%; height: 100%; display: block; overflow: visible; }
       .scatter-frame { fill: none; stroke: var(--color-border); stroke-width: 0.5; }
       .scatter-grid { stroke: var(--color-rule); stroke-width: 0.5; stroke-dasharray: 1.2 2.4; stroke-linecap: round; }
-      .scatter-dot { cursor: pointer; transition: r 120ms ease, fill-opacity 120ms ease; }
+      .scatter-dot { cursor: pointer; transition: r 140ms ease, fill-opacity 140ms ease, opacity 140ms ease; }
       .scatter-dot:hover { r: 1.7; fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.3; }
+      /* HIGHLIGHT (not filter): when a highlight is active the whole cloud dims; the
+         matching subset gets .hot (re-appended on top) to stay full-color + larger. */
+      #scatter-dots.dimmed .scatter-dot { opacity: 0.10; }
+      #scatter-dots .scatter-dot.hot { opacity: 1; r: 1.5; fill-opacity: 0.95; }
+      #scatter-dots .scatter-dot.found { opacity: 1; r: 2.6; fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.5; }
+      .scatter-found-label { font-family: var(--font-mono); font-size: 2.4px; fill: var(--color-ink); paint-order: stroke; stroke: var(--color-bg); stroke-width: 0.8px; pointer-events: none; }
       .scatter-axis { position: absolute; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: lowercase; color: var(--color-text-muted); white-space: nowrap; pointer-events: none; }
       .scatter-axis-y { left: -0.4rem; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
       .scatter-axis-x { bottom: -1.2rem; left: 50%; transform: translateX(-50%); }
@@ -512,6 +518,45 @@
         .results-panel-body { height: 62vh; }
       }
       @media (prefers-reduced-motion: reduce) { .scatter-dot { transition: none; } .scatter-dot:hover { r: 0.85; } }
+
+      /* ===== SCATTER FULL-SCREEN EXPLORER (mirrors the map's expanded pattern) ===== */
+      .scatter-stage { position: relative; display: flex; width: 100%; height: 100%; min-height: 0; }
+      .scatter-stage > .scatter-wrap { flex: 1; min-width: 0; }
+      .scatter-controls { display: none; }
+      /* expanded: fixed full-screen, controls rail + large plot */
+      /* sit below the fixed nav (z-index 1000) so the controls header + close button
+         clear it, and the page wordmark stays visible — like the map's expanded view. */
+      .scatter-stage.fs { position: fixed; top: var(--nav-height); left: 0; right: 0; bottom: 0; z-index: 600; background: var(--color-bg); }
+      .scatter-stage.fs .scatter-controls {
+        display: flex; flex-direction: column; gap: var(--space-4);
+        width: clamp(264px, 24vw, 340px); flex: 0 0 auto; height: 100%;
+        padding: var(--space-6); overflow-y: auto;
+        background: var(--color-bg-card); border-right: 1px solid var(--color-border);
+      }
+      .scatter-stage.fs .scatter-wrap { padding: clamp(20px, 3.5vw, 56px) clamp(28px, 4vw, 72px); }
+      .scatter-controls-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+      .scatter-controls-title { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); }
+      .scatter-close-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-muted); background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+      .scatter-close-btn:hover { color: var(--color-accent); border-color: var(--color-accent); }
+      .scatter-ctl { display: flex; flex-direction: column; gap: var(--space-2); }
+      .scatter-ctl > label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); }
+      .scatter-ctl select, .scatter-ctl input { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-2); width: 100%; }
+      .scatter-ctl select:focus-visible, .scatter-ctl input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+      .scatter-seg { display: flex; gap: var(--space-2); }
+      .scatter-seg .scatter-toggle { flex: 1; }
+      .scatter-toggle, .scatter-reset { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-2); cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s; text-align: center; }
+      .scatter-toggle:hover, .scatter-reset:hover { border-color: var(--color-accent); }
+      .scatter-toggle[aria-pressed="true"], .scatter-toggle.active { background: var(--color-ink); color: var(--color-bg); border-color: var(--color-ink); }
+      .scatter-toggle:focus-visible, .scatter-reset:focus-visible, .scatter-close-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      .scatter-reset { margin-top: var(--space-1); color: var(--color-accent); }
+      .scatter-controls-foot { margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--color-border); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--color-text-muted); }
+      /* the shared county card must float ABOVE the full-screen scatter overlay */
+      body.scatter-fs-open #detail-panel { position: fixed; z-index: 700; top: calc(var(--nav-height) + var(--space-3)); right: var(--space-5); max-height: calc(100vh - var(--nav-height) - 2 * var(--space-5)); }
+      @media (max-width: 720px) {
+        .scatter-stage.fs { flex-direction: column; }
+        .scatter-stage.fs .scatter-controls { width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; align-items: flex-end; border-right: none; border-bottom: 1px solid var(--color-border); }
+        .scatter-stage.fs .scatter-controls-head { width: 100%; }
+      }
     </style>
 
     <!-- ════════════════════════════════════════════════════════
@@ -642,30 +687,70 @@
             <div class="results-panel-title" id="results-title-scatter">
               <span>Distribution view</span>
               <button class="results-fullscreen-btn" id="scatter-fullscreen-btn" type="button"
-                      title="Open the full-screen explorer (coming soon)">⤢ Explore the plot — full screen</button>
+                      title="Open the full-screen explorer">⤢ Explore the plot — full screen</button>
             </div>
             <div class="results-panel-body">
               <!--
                 v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
                 capital(raw) vs community(share) measure different things; a single Y may
                 blur ~283 capital-driven counties. Revisit twin-plots/encoding later.
-
-                TODO(full-screen explorer — SEPARATE PASS): #scatter-fullscreen-btn is a
-                STUB that only fires a placeholder toast. Intended feature: a full-screen
-                scatter with filter/highlight controls — swing-state highlight, by-state,
-                by-tier / by-priority knobs, light-up matching data points. Not built here.
               -->
-              <div class="scatter-wrap" id="scatter-wrap">
-                <div class="scatter-plot">
-                  <svg id="scatter-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
-                       role="img" aria-label="All counties plotted by electoral leverage on the x axis and labor leverage on the y axis, both percentile-indexed 0 to 100, colored by tier">
-                    <line class="scatter-grid" x1="50" y1="4" x2="50" y2="96"></line>
-                    <line class="scatter-grid" x1="4" y1="50" x2="96" y2="50"></line>
-                    <rect class="scatter-frame" x="4" y="4" width="92" height="92"></rect>
-                    <g id="scatter-dots"></g>
-                  </svg>
-                  <span class="scatter-axis scatter-axis-y">labor leverage →</span>
-                  <span class="scatter-axis scatter-axis-x">electoral leverage →</span>
+              <!-- .scatter-stage goes position:fixed full-screen when .fs is toggled (mirrors
+                   the map's expanded pattern). The SAME #scatter-svg / dots are reused at both
+                   sizes; the controls rail is hidden inline and shown only in full screen. -->
+              <div class="scatter-stage" id="scatter-stage">
+                <aside class="scatter-controls" id="scatter-controls" aria-label="Highlight controls">
+                  <div class="scatter-controls-head">
+                    <span class="scatter-controls-title">Highlight</span>
+                    <button class="scatter-close-btn" id="scatter-close-btn" type="button" title="Close (Esc)">✕ Close</button>
+                  </div>
+                  <div class="scatter-ctl">
+                    <label for="hl-state">By state</label>
+                    <select id="hl-state"><option value="">— all states —</option></select>
+                  </div>
+                  <div class="scatter-ctl">
+                    <label>Swing battlegrounds</label>
+                    <button class="scatter-toggle" id="hl-swing" type="button" aria-pressed="false">Swing-7 (PA MI WI AZ GA NV NC)</button>
+                  </div>
+                  <div class="scatter-ctl">
+                    <label for="hl-tier">By tier <span style="text-transform:none;letter-spacing:0">(national lens)</span></label>
+                    <select id="hl-tier">
+                      <option value="">— all tiers —</option>
+                      <option value="1">Tier 1 — Transform</option>
+                      <option value="2">Tier 2 — Activate</option>
+                      <option value="3">Tier 3 — Electoral</option>
+                      <option value="4">Tier 4 — Lower priority</option>
+                    </select>
+                  </div>
+                  <div class="scatter-ctl">
+                    <label>By leverage type</label>
+                    <div class="scatter-seg">
+                      <button class="scatter-toggle" id="hl-type-capital" type="button" aria-pressed="false">Capital-driven</button>
+                      <button class="scatter-toggle" id="hl-type-community" type="button" aria-pressed="false">Community-driven</button>
+                    </div>
+                  </div>
+                  <div class="scatter-ctl">
+                    <label for="hl-search">Find a county</label>
+                    <input id="hl-search" type="text" list="hl-county-list" placeholder="County, ST" autocomplete="off">
+                    <datalist id="hl-county-list"></datalist>
+                  </div>
+                  <button class="scatter-reset" id="hl-reset" type="button">↺ Show all</button>
+                  <div class="scatter-controls-foot"><span id="hl-status">All counties</span></div>
+                </aside>
+
+                <div class="scatter-wrap" id="scatter-wrap">
+                  <div class="scatter-plot">
+                    <svg id="scatter-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+                         role="img" aria-label="All counties plotted by electoral leverage on the x axis and labor leverage on the y axis, both percentile-indexed 0 to 100, colored by tier">
+                      <line class="scatter-grid" x1="50" y1="4" x2="50" y2="96"></line>
+                      <line class="scatter-grid" x1="4" y1="50" x2="96" y2="50"></line>
+                      <rect class="scatter-frame" x="4" y="4" width="92" height="92"></rect>
+                      <g id="scatter-dots"></g>
+                      <g id="scatter-found-layer"></g>
+                    </svg>
+                    <span class="scatter-axis scatter-axis-y">labor leverage →</span>
+                    <span class="scatter-axis scatter-axis-x">electoral leverage →</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2043,7 +2128,9 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
   (function () {
     var svg = document.getElementById('scatter-svg');
     var dotsG = document.getElementById('scatter-dots');
-    if (!svg || !dotsG) return;
+    var foundLayer = document.getElementById('scatter-found-layer');
+    var stage = document.getElementById('scatter-stage');
+    if (!svg || !dotsG || !stage) return;
 
     var INSET = 4, SPAN = 92; // viewBox plot area runs 4..96
 
@@ -2073,7 +2160,13 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
       return out;
     }
 
+    // Swing-7 battlegrounds. The data also carries a per-county `swing_state` flag;
+    // TODO(config): source this set from config rather than this literal list.
+    var SWING7 = { PA:1, MI:1, WI:1, AZ:1, GA:1, NV:1, NC:1 };
+
     var byFips = {};
+    var DOTS = []; // [{el, fips, state, tier, type, swing, name}] — drives the highlight engine
+
     function render(counties) {
       if (!counties || !counties.length) return;
       var valid = counties.filter(function (c) {
@@ -2084,7 +2177,7 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
       var capV = valid.map(function (c) { return c.sls_capital || 0; });
       var commV = valid.map(function (c) { return c.sls_community || 0; });
       var eP = pctRanks(elec), capP = pctRanks(capV), commP = pctRanks(commV);
-      var html = ''; byFips = {};
+      var html = ''; byFips = {}; var meta = [];
       for (var i = 0; i < valid.length; i++) {
         var c = valid[i];
         // v1 single Y: labor-leverage percentile = max(capital pct, community pct).
@@ -2094,11 +2187,19 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
         var y = INSET + (100 - laborP) / 100 * SPAN; // invert so high labor is near the top
         var q = c.quadrant_national || c.quadrant || 'tier4';
         var fips = String(c.fips);
+        var st = c.state || '';
+        // leverage type = whichever leverage dominates this county (by its own percentile)
+        var type = capP[i] >= commP[i] ? 'capital' : 'community';
         byFips[fips] = c;
+        meta.push({ fips: fips, state: st, tier: tierNum(q), type: type, swing: SWING7[st] ? 1 : 0, name: c.county_name || 'County' });
         html += '<circle class="scatter-dot" cx="' + x.toFixed(2) + '" cy="' + y.toFixed(2)
               + '" r="0.85" fill="' + tierColor(q) + '" fill-opacity="0.72" data-fips="' + fips + '"></circle>';
       }
       dotsG.innerHTML = html;
+      DOTS = [];
+      var circles = dotsG.children;
+      for (var k = 0; k < meta.length; k++) { meta[k].el = circles[k]; DOTS.push(meta[k]); }
+      buildControlOptions();
     }
 
     // click any point -> the SAME shared county card the map uses
@@ -2116,18 +2217,149 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
       render(window.TerrainMap.getCounties());
     }
 
-    // "Explore the plot — full screen" — STUB only (real explorer is a separate pass).
-    var fsBtn = document.getElementById('scatter-fullscreen-btn');
-    var toastEl = document.getElementById('imo-toast');
-    var toastTimer = null;
-    function toast(msg) {
-      if (!toastEl) return;
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 2400);
+    // ===================================================================
+    // HIGHLIGHT ENGINE — highlight, never filter. A highlight dims the whole
+    // cloud (#scatter-dots.dimmed) and re-appends the matching subset with .hot
+    // (full color, larger, on top). Highlights are MUTUALLY EXCLUSIVE (one at a
+    // time); "Show all" resets. Nothing is ever removed from the plot.
+    // ===================================================================
+    var statusEl  = document.getElementById('hl-status');
+    var hlState   = document.getElementById('hl-state');
+    var hlSwing   = document.getElementById('hl-swing');
+    var hlTier    = document.getElementById('hl-tier');
+    var hlTypeCap = document.getElementById('hl-type-capital');
+    var hlTypeComm= document.getElementById('hl-type-community');
+    var hlSearch  = document.getElementById('hl-search');
+    var hlReset   = document.getElementById('hl-reset');
+    var countyList= document.getElementById('hl-county-list');
+    var searchIndex = {}; // 'name, st' (lower) -> fips
+
+    function setStatus(t) { if (statusEl) statusEl.textContent = t; }
+    function clearFound() {
+      if (foundLayer) foundLayer.innerHTML = '';
+      var f = dotsG.querySelectorAll('.scatter-dot.found');
+      for (var i = 0; i < f.length; i++) f[i].classList.remove('found');
     }
-    if (fsBtn) fsBtn.addEventListener('click', function () { toast('Full-screen explorer coming'); });
+    function clearHot() {
+      var h = dotsG.querySelectorAll('.scatter-dot.hot');
+      for (var i = 0; i < h.length; i++) h[i].classList.remove('hot');
+    }
+    function applyHighlight(pred, label) {
+      clearFound(); clearHot();
+      if (!pred) { dotsG.classList.remove('dimmed'); setStatus('All counties'); return 0; }
+      dotsG.classList.add('dimmed');
+      var frag = document.createDocumentFragment(), n = 0;
+      for (var i = 0; i < DOTS.length; i++) {
+        if (pred(DOTS[i])) { DOTS[i].el.classList.add('hot'); frag.appendChild(DOTS[i].el); n++; }
+      }
+      dotsG.appendChild(frag); // hot subset moves to top
+      setStatus(label + ' · ' + n.toLocaleString() + (n === 1 ? ' county' : ' counties'));
+      return n;
+    }
+    function clearControlsUI(except) {
+      [hlState, hlTier].forEach(function (s) { if (s && s !== except) s.value = ''; });
+      [hlSwing, hlTypeCap, hlTypeComm].forEach(function (b) { if (b && b !== except) { b.setAttribute('aria-pressed', 'false'); b.classList.remove('active'); } });
+      if (hlSearch && hlSearch !== except) hlSearch.value = '';
+    }
+    function pressToggle(btn, on) { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.classList.toggle('active', on); }
+
+    function buildControlOptions() {
+      if (hlState) {
+        var states = []; var seen = {};
+        DOTS.forEach(function (d) { if (d.state && !seen[d.state]) { seen[d.state] = 1; states.push(d.state); } });
+        states.sort();
+        hlState.innerHTML = '<option value="">— all states —</option>' +
+          states.map(function (s) { return '<option value="' + s + '">' + s + '</option>'; }).join('');
+      }
+      searchIndex = {}; var opts = '';
+      DOTS.forEach(function (d) {
+        var label = d.name + ', ' + d.state;
+        searchIndex[label.toLowerCase()] = d.fips;
+        opts += '<option value="' + label.replace(/"/g, '&quot;') + '"></option>';
+      });
+      if (countyList) countyList.innerHTML = opts;
+    }
+
+    function markFound(fips) {
+      var d = null;
+      for (var i = 0; i < DOTS.length; i++) { if (DOTS[i].fips === fips) { d = DOTS[i]; break; } }
+      if (!d) return;
+      d.el.classList.add('found');
+      d.el.classList.remove('hot');
+      if (foundLayer) {
+        var cx = parseFloat(d.el.getAttribute('cx')), cy = parseFloat(d.el.getAttribute('cy'));
+        var atEnd = cx > 68;
+        var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('class', 'scatter-found-label');
+        t.setAttribute('x', (cx + (atEnd ? -3 : 3)).toFixed(2));
+        t.setAttribute('y', (cy - 3).toFixed(2));
+        t.setAttribute('text-anchor', atEnd ? 'end' : 'start');
+        t.textContent = d.name + ', ' + d.state;
+        foundLayer.appendChild(t);
+      }
+    }
+
+    if (hlState) hlState.addEventListener('change', function () {
+      clearControlsUI(hlState);
+      var v = hlState.value;
+      if (!v) { applyHighlight(null); return; }
+      applyHighlight(function (d) { return d.state === v; }, 'State: ' + v);
+    });
+    if (hlSwing) hlSwing.addEventListener('click', function () {
+      var on = hlSwing.getAttribute('aria-pressed') !== 'true';
+      clearControlsUI(hlSwing); pressToggle(hlSwing, on);
+      if (on) applyHighlight(function (d) { return d.swing; }, 'Swing-7'); else applyHighlight(null);
+    });
+    if (hlTier) hlTier.addEventListener('change', function () {
+      clearControlsUI(hlTier);
+      var v = hlTier.value;
+      if (!v) { applyHighlight(null); return; }
+      var t = +v;
+      applyHighlight(function (d) { return d.tier === t; }, 'Tier ' + t);
+    });
+    function typeHandler(btn, type, label) {
+      return function () {
+        var on = btn.getAttribute('aria-pressed') !== 'true';
+        clearControlsUI(btn); pressToggle(btn, on);
+        if (on) applyHighlight(function (d) { return d.type === type; }, label); else applyHighlight(null);
+      };
+    }
+    if (hlTypeCap)  hlTypeCap.addEventListener('click', typeHandler(hlTypeCap, 'capital', 'Capital-driven'));
+    if (hlTypeComm) hlTypeComm.addEventListener('click', typeHandler(hlTypeComm, 'community', 'Community-driven'));
+    if (hlSearch) hlSearch.addEventListener('change', function () {
+      var key = (hlSearch.value || '').trim().toLowerCase();
+      var fips = searchIndex[key];
+      clearControlsUI(hlSearch);
+      if (!fips) { applyHighlight(null); if (hlSearch.value) setStatus('No match'); return; }
+      applyHighlight(function (d) { return d.fips === fips; }, 'County');
+      markFound(fips);
+    });
+    if (hlReset) hlReset.addEventListener('click', function () { clearControlsUI(); applyHighlight(null); });
+
+    // ===================================================================
+    // FULL-SCREEN — mirrors the map's expanded pattern (fixed overlay, Esc to
+    // close, focus handling). Reuses the SAME #scatter-svg + dots at a larger size.
+    // ===================================================================
+    var fsBtn   = document.getElementById('scatter-fullscreen-btn');
+    var closeBtn= document.getElementById('scatter-close-btn');
+    var paper   = document.getElementById('paper-scroll');
+    function openFS() {
+      stage.classList.add('fs');
+      document.body.classList.add('scatter-fs-open');
+      if (paper) paper.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+    }
+    function closeFS() {
+      stage.classList.remove('fs');
+      document.body.classList.remove('scatter-fs-open');
+      if (paper) paper.style.overflow = '';
+      if (fsBtn) fsBtn.focus();
+    }
+    if (fsBtn) fsBtn.addEventListener('click', openFS);
+    if (closeBtn) closeBtn.addEventListener('click', closeFS);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && stage.classList.contains('fs')) closeFS();
+    });
   })();
   </script>
 
