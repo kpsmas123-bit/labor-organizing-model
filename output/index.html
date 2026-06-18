@@ -1192,16 +1192,9 @@
             <span class="method-anchor" id="input-sector-strategic-score"></span>
             <span class="method-sub-num">04 — Input</span>
             <h3 class="method-sub-h">Inputs: Sectoral</h3>
-            <!-- TODO(prose): describe the two sectoral inputs — County employment
-                 and the Sector strategic score (the per-sector SVS rubric, which
-                 currently lives under "Sectoral Leverage" below, may be relocated
-                 here in the prose pass). Structure-only: left as a marked slot. -->
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — input prose</span>
-              <p>Covers <strong>County employment</strong> and the
-              <strong>Sector strategic score</strong>. Prose to be written in the
-              narrative pass.</p>
-            </div>
+            <!-- BODY is data-driven: rendered from METHODOLOGY_SECTIONS["input-sectoral"]
+                 in output/methodology-content.js. Edit prose there, not here. -->
+            <div class="method-render" data-section="input-sectoral"></div>
           </div>
 
           <!-- ── Inputs: Electoral — Vote margin + State decisiveness ── -->
@@ -1210,14 +1203,8 @@
             <span class="method-anchor" id="input-state-decisiveness"></span>
             <span class="method-sub-num">05 — Input</span>
             <h3 class="method-sub-h">Inputs: Electoral</h3>
-            <!-- TODO(prose): describe Vote margin + State decisiveness (currently
-                 explained inline in the P1 formula card under "Electoral Leverage"). -->
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — input prose</span>
-              <p>Covers <strong>Vote margin</strong> and
-              <strong>State decisiveness</strong>. Prose to be written in the
-              narrative pass.</p>
-            </div>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["input-electoral"]. -->
+            <div class="method-render" data-section="input-electoral"></div>
           </div>
 
           <!-- ── Inputs: Alignment — Key votes + Ideology score + Party ID ── -->
@@ -1227,15 +1214,8 @@
             <span class="method-anchor" id="input-party-id"></span>
             <span class="method-sub-num">06 — Input</span>
             <h3 class="method-sub-h">Inputs: Alignment</h3>
-            <!-- TODO(prose): describe Key votes + Ideology score + Party ID
-                 (currently explained inline in the P2 formula card under
-                 "Incumbent Alignment"). -->
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — input prose</span>
-              <p>Covers <strong>Key votes</strong>, <strong>Ideology score</strong>,
-              and <strong>Party ID</strong>. Prose to be written in the narrative
-              pass.</p>
-            </div>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["input-alignment"]. -->
+            <div class="method-render" data-section="input-alignment"></div>
           </div>
 
           <!-- ═══════════════════════════════════════════════════════════════
@@ -1250,96 +1230,9 @@
           <div class="method-sub" id="factor-sectoral-leverage">
             <span class="method-sub-num">07 — Model · Factor</span>
             <h3 class="method-sub-h">Sectoral Leverage</h3>
-            <p class="method-prose">
-              Strategic leverage is the structural capacity of workers to disrupt
-              the conditions that matter to their employer or to the broader
-              political economy. Every sector is scored on a Sector Strategic
-              Value Score (SVS); the two county-level sub-scores combine those
-              sector scores with employment data.
-            </p>
-
-            <details class="formula-card">
-              <summary>
-                <span class="formula-card-name">Sector Strategic Value Score (SVS)</span>
-                <span class="formula-card-gloss">Per-sector rubric: how much structural leverage a sector carries, max 80 points.</span>
-              </summary>
-              <div class="formula-card-detail">
-                <div class="formula-card-expr">SVS = Capital Reach + Community Reach + Community-Facing Reach
-      + Non-Offshoreable + Dual-Crisis Bonus + Whole-Worker Bonus
-Maximum: 80 points</div>
-                <p>Four components plus two bonuses. Dual-Crisis bonus (+5) applies
-                when Capital Reach &gt; 0 and Community Reach &gt; 0; the
-                Whole-Worker bonus (+5) applies when Community Reach &gt; 0 and
-                Community-Facing Reach &gt; 0.</p>
-                <div class="method-table-wrap">
-                  <table class="method-table">
-                    <thead><tr><th>Variable</th><th>None</th><th>Local</th><th>State</th><th>National</th></tr></thead>
-                    <tbody>
-                      <tr><td>Capital Crisis-Creating Reach</td><td>0</td><td>10</td><td>15</td><td>25</td></tr>
-                      <tr><td>Community Crisis-Creating Reach</td><td>0</td><td>10</td><td>15</td><td>25</td></tr>
-                      <tr><td>Community-Facing Reach</td><td>0</td><td>5</td><td>10</td><td>15</td></tr>
-                      <tr><td>Non-Offshoreable</td><td>0</td><td>3</td><td>—</td><td>5</td></tr>
-                      <tr><td>Dual-Crisis Bonus</td><td>—</td><td>—</td><td>—</td><td>+5 if Cap&gt;0 &amp; Comm&gt;0</td></tr>
-                      <tr><td>Whole-Worker Bonus</td><td>—</td><td>—</td><td>—</td><td>+5 if Comm&gt;0 &amp; Facing&gt;0</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p>Sector scoring was conducted by human researchers based on best
-                judgment, case study review, and existing labor literature. All 42
-                sector codings are documented in the project repository and are
-                subject to review and challenge; future work will add cross-coding
-                by multiple independent experts.</p>
-                <div class="citation">Silver, B. (2003). Forces of Labor: Workers' Movements and Globalization since 1870. Cambridge University Press.</div>
-              </div>
-            </details>
-
-            <details class="formula-card">
-              <summary>
-                <span class="formula-card-name">SLS-Capital</span>
-                <span class="formula-card-gloss">Absolute crisis potential against capital flows — scale matters.</span>
-              </summary>
-              <div class="formula-card-detail">
-                <div class="formula-card-expr">SLS-Capital = Σ(cap_reach_score[sector] × employment[sector]) / 210,000
-[Calibrated to LA County's raw sum (17,673,345) → score 84.2]</div>
-                <p>Each sector's Capital Crisis Reach score is multiplied by the raw
-                number of workers in that sector in that county, then summed. The
-                210,000 normalization benchmark places Los Angeles County (the
-                national maximum) at 84.2 on a 0–100 scale. Counties with major
-                port, logistics, or energy workforces score highest.</p>
-                <div class="citation-review">Womack, J. (2005). Working the Machine — technically strategic positions.</div>
-                <div class="citation">Silver, B. (2003). Forces of Labor. Cambridge University Press — workplace bargaining power and spatial fixes.</div>
-              </div>
-            </details>
-
-            <details class="formula-card">
-              <summary>
-                <span class="formula-card-name">SLS-Community</span>
-                <span class="formula-card-gloss">Relative crisis potential within the community — share matters.</span>
-              </summary>
-              <div class="formula-card-detail">
-                <div class="formula-card-expr">SLS-Community = Σ(comm_reach_score[sector] × (employment[sector] / total_employment)) × 4</div>
-                <p>Each sector's Community Crisis Reach score is multiplied by that
-                sector's share of the county's total workforce, then summed. A
-                hospital employing 40% of a rural county's workforce is
-                structurally central in a way the same hospital cannot be at 2% of
-                a large metro. The ×4 normalization scales to 0–100. Counties with
-                concentrated healthcare, education, or public transit workforces
-                score highest.</p>
-                <div class="citation">McAlevey, J. (2016). No Shortcuts. Oxford University Press — whole-worker organizing.</div>
-                <div class="citation-review">Fox-Hodess, K. (2023). On social contingency in dockworker organizing.</div>
-              </div>
-            </details>
-
-            <p class="method-prose-h">Why two scores rather than one</p>
-            <p class="method-prose">
-              Collapsing these into a single number would obscure a distinction
-              that matters strategically. A county can score high on SLS-Capital
-              and low on SLS-Community — a logistics hub in a large metro — or the
-              reverse, such as a rural county where the hospital is the dominant
-              employer. Those are different types of terrain requiring different
-              organizing approaches. The model keeps them separate so users can
-              see both dimensions independently.
-            </p>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["factor-sectoral-leverage"]
+                 (status: migrated — existing prose re-homed, not yet rewritten). -->
+            <div class="method-render" data-section="factor-sectoral-leverage"></div>
           </div>
 
           <!-- ── Electoral Leverage (was P1, from "Political Terrain Score" / m-pts).
@@ -1349,84 +1242,20 @@ Maximum: 80 points</div>
           <div class="method-sub" id="factor-electoral-leverage">
             <span class="method-sub-num">08 — Model · Factor</span>
             <h3 class="method-sub-h">Electoral Leverage</h3>
-            <p class="method-prose">
-              Political terrain answers: how much does organizing in this county
-              change the political environment? Two components are measured
-              independently.
-            </p>
-
-            <details class="formula-card">
-              <summary>
-                <span class="formula-card-name">P1 — Electoral Leverage</span>
-                <span class="formula-card-gloss">How decisive is this county's geography in consequential elections?</span>
-              </summary>
-              <div class="formula-card-detail">
-                <div class="formula-card-expr">P1 = state_tipping_weight × (1 / abs(county_margin))
-
-Example — PA tipping weight 0.28, Centre County margin +2.83:
-P1 = 0.28 × (1 / 2.83) = 35.3</div>
-                <p>State tipping weight is the probability that this state is the
-                decisive state in the relevant election (Pennsylvania = 0.28,
-                Georgia = 0.09, California = 0.005). County margin is the absolute
-                D–R margin in the most recent relevant election; tight margins
-                produce high P1 even in lower-tipping-weight states. Under the
-                National lens P1 uses presidential weights; under the State lens it
-                uses state legislative chamber tipping weights.</p>
-                <p>The distribution is extremely right-skewed: 75% of counties have
-                P1 &lt; 0.28, and the top 3% are the genuinely decisive
-                geographies. This is a simplified proxy for a full two-stage
-                empirical Banzhaf power index, an upgrade planned for a future
-                version.</p>
-                <div class="citation">Banzhaf, J.F. (1968). One Man, 3.312 Votes. Villanova Law Review 13(2).</div>
-                <div class="citation-review">Kolerman (2024). On the indirect community channels of newly organized workers' electoral effects.</div>
-              </div>
-            </details>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["factor-electoral-leverage"]
+                 (status: populated — the worked locked-template example; constants
+                 NORM/min_margin/default_tip/p1_high/plateau_edge/zero_edge/p1_high_state
+                 all resolve from model_spec.json). -->
+            <div class="method-render" data-section="factor-electoral-leverage"></div>
           </div><!-- /factor-electoral-leverage -->
 
           <!-- ── Incumbent Alignment (was P2, from "Political Terrain Score" / m-pts) ── -->
           <div class="method-sub" id="factor-incumbent-alignment">
             <span class="method-sub-num">09 — Model · Factor</span>
             <h3 class="method-sub-h">Incumbent Alignment</h3>
-
-            <details class="formula-card">
-              <summary>
-                <span class="formula-card-name">P2 — Incumbent Alignment</span>
-                <span class="formula-card-gloss">How aligned are current elected officials with labor's legislative agenda?</span>
-              </summary>
-              <div class="formula-card-detail">
-                <div class="formula-card-expr">P2 = key_vote_score × 0.60 + inverse_ideology_score × 0.40</div>
-                <p>The key-vote component (60%) scores each legislator on 4 federal
-                key votes relevant to labor organizing rights; all roll-call
-                numbers are verified against House Clerk XML and Senate.gov
-                records. The ideology component (40%) uses legislative-behavior
-                ideology scores from bill sponsorship and cosponsorship patterns
-                (GovTrack, 119th Congress), normalized so progressive = high
-                signal. County P2 aggregates legislator scores weighted by
-                district-county overlap.</p>
-                <div class="method-table-wrap">
-                  <table class="method-table">
-                    <thead><tr><th>Vote</th><th>Chamber / Roll Call</th><th>Date</th></tr></thead>
-                    <tbody>
-                      <tr><td>PRO Act</td><td>House Roll Call 70</td><td>March 9, 2021</td></tr>
-                      <tr><td>Sanders $15 Minimum Wage Amendment</td><td>Senate Roll Call 74</td><td>March 5, 2021</td></tr>
-                      <tr><td>Abruzzo NLRB General Counsel Confirmation</td><td>Senate Roll Call 273</td><td>July 21, 2021</td></tr>
-                      <tr><td>National Apprenticeship Act</td><td>House Roll Call 31</td><td>February 5, 2021</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p>Coverage: Federal P2 — 533 legislators scored, 3,142 counties
-                with alignment data. State P2 — in progress, using DIME CFscores
-                (Stanford) for current state legislators where available. Low P2 +
-                high SLS + high P1 identifies the highest-value organizing targets:
-                leverage, decisive geography, and a hostile incumbent.</p>
-                <p><strong>Sources considered and rejected:</strong> AFL-CIO
-                legislative scorecards (they encode the institutional AFL-CIO's
-                strategic priorities) and labor PAC contributions as a positive
-                signal (they reflect existing labor leadership targeting — the
-                status quo this model complements and occasionally challenges).</p>
-                <div class="citation">Harvard Center for Labor and a Just Economy (2024). The Varied Voice of Labor. clje.law.harvard.edu</div>
-              </div>
-            </details>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["factor-incumbent-alignment"]
+                 (status: migrated — existing prose re-homed, not yet rewritten). -->
+            <div class="method-render" data-section="factor-incumbent-alignment"></div>
           </div><!-- /factor-incumbent-alignment -->
 
           <!-- ── Federal lens — TODO STUB. No existing standalone prose to move (the
@@ -1435,22 +1264,16 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
           <div class="method-sub" id="lens-federal">
             <span class="method-sub-num">10 — Model · Lens</span>
             <h3 class="method-sub-h">Federal lens</h3>
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — lens prose</span>
-              <p>Federal lens: federal electoral tipping weights + federal incumbent
-              alignment. Prose to be written in the narrative pass.</p>
-            </div>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["lens-federal"] (stub). -->
+            <div class="method-render" data-section="lens-federal"></div>
           </div>
 
           <!-- ── State lens — TODO STUB ── -->
           <div class="method-sub" id="lens-state">
             <span class="method-sub-num">11 — Model · Lens</span>
             <h3 class="method-sub-h">State lens</h3>
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — lens prose</span>
-              <p>State lens: state legislative chamber control + state incumbent
-              alignment. Prose to be written in the narrative pass.</p>
-            </div>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["lens-state"] (stub). -->
+            <div class="method-render" data-section="lens-state"></div>
           </div>
 
           <!-- ═══════════════════════════════════════════════════════════════
@@ -1465,45 +1288,9 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
           <div class="method-sub" id="output-2x2">
             <span class="method-sub-num">12 — Output</span>
             <h3 class="method-sub-h">The 2×2</h3>
-            <p class="method-prose">
-              The model classifies every county into one of six categories based
-              on the combination of SLS, P1, and P2. The classification answers
-              two questions at once: how much organizing leverage exists here, and
-              what strategic posture does the political terrain require?
-            </p>
-            <div class="method-table-wrap">
-              <table class="method-table">
-                <thead><tr><th>Tier</th><th>Condition</th><th>Strategic posture</th></tr></thead>
-                <tbody>
-                  <tr><td>Tier 1 — Transform</td><td>High SLS + High P1 + Low P2 (hostile incumbent)</td><td>Highest priority. Build worker power and hold a misaligned incumbent accountable simultaneously. Split into Capital and Community.</td></tr>
-                  <tr><td>Tier 2 — Activate</td><td>High SLS + High P1 + High P2 (aligned incumbent)</td><td>Mobilize and protect — turn out members, defend gains. Split into Capital and Community.</td></tr>
-                  <tr><td>Tier 3 — Electoral Terrain</td><td>Low SLS + High P1</td><td>Decisive geography without an organizing base at scale. Long-term investment — build the worker organization that isn't there yet.</td></tr>
-                  <tr><td>Tier 4 — Lower Priority</td><td>Neither SLS nor P1 threshold met</td><td>Not a current priority under finite resources. Every worker still deserves representation.</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="method-callout">
-              <p><strong>Critical finding: no county is Tier 1 in both
-              dimensions.</strong> Across all 3,143 counties, none simultaneously
-              cleared all three thresholds (SLS-Capital ≥ 2.5, SLS-Community ≥ 35,
-              P1 ≥ 5). The largest labor markets sit in states that don't decide
-              elections; the counties that do are smaller, with workforces
-              dominated by community-facing sectors.</p>
-              <p>This is not a modeling failure — it is an empirical description of
-              American political and economic geography, and it confirms
-              McAlevey's sectoral argument independently: to organize where it
-              matters electorally, organize hospitals and schools in Pennsylvania,
-              Michigan, and Wisconsin — not ports and logistics hubs in
-              California.</p>
-            </div>
-            <p class="method-prose">
-              The scores are independent by design. The model does not combine
-              them into a single ranking, because doing so would require imposing a
-              weighting between structural leverage and political terrain — a
-              decision that depends on the user's theory of change, not on the
-              data. The model surfaces both dimensions and leaves that judgment
-              where it belongs.
-            </p>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-2x2"]
+                 (status: migrated — existing prose re-homed, not yet rewritten). -->
+            <div class="method-render" data-section="output-2x2"></div>
           </div>
 
           <!-- ── Tiers & the two pathways — TODO STUB. This is where the user's
@@ -1511,11 +1298,8 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
           <div class="method-sub" id="output-tiers">
             <span class="method-sub-num">13 — Output</span>
             <h3 class="method-sub-h">Tiers &amp; the two pathways</h3>
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — dual-track narrative</span>
-              <p>The two-pathway explanation (Capital / Community tiers and how a
-              county travels them) is the user's next pass. Left intentionally empty.</p>
-            </div>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-tiers"] (stub). -->
+            <div class="method-render" data-section="output-tiers"></div>
           </div>
 
           <!-- ── Scatter — TODO STUB. The scatter view is not built yet; the diagram's
@@ -1523,11 +1307,8 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
           <div class="method-sub" id="output-scatter">
             <span class="method-sub-num">14 — Output</span>
             <h3 class="method-sub-h">Scatter</h3>
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — scatter view</span>
-              <p>The scatter view is not built yet. Placeholder only; the flowchart's
-              quadrant clicks stay stubbed until it exists.</p>
-            </div>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-scatter"] (stub). -->
+            <div class="method-render" data-section="output-scatter"></div>
           </div>
 
           <!-- ═══════════════════════════════════════════════════════════════
@@ -1721,6 +1502,15 @@ P1 = 0.28 × (1 / 2.83) = 35.3</div>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://d3js.org/topojson.v3.min.js"></script>
   <script src="terrain-map.js"></script>
+
+  <!-- ============================================================
+       METHODOLOGY CONTENT — data-driven section architecture (A + C).
+       Renders the factor/variable section bodies from METHODOLOGY_SECTIONS
+       data objects through one template; resolves every cited constant from
+       model_spec.json. Edit prose in the data objects, numbers at their real
+       source + re-run pipeline/emit_model_spec.py. See the file header.
+       ============================================================ -->
+  <script src="methodology-content.js"></script>
 
   <!-- ============================================================
        CONTENT LAYER — top-target cards + map ↔ page glue.
