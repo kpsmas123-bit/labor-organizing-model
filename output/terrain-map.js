@@ -1357,7 +1357,7 @@ function updateTop10() {
   const container = document.getElementById("top10-list");
   container.innerHTML = top.map((c, i) => {
     const scoreColor = tierColor(getLensQuadrant(c));
-    return `<div class="top10-row" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')}); zoomToCounty('${c.fips}')">
+    return `<div class="top10-row" data-fips="${c.fips}" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')}); zoomToCounty('${c.fips}')">
       <span class="top10-name">${i+1}. ${c.county_name}, ${c.state}</span>
       <span class="top10-score" style="color:${scoreColor}">${(c.sls_capital || 0).toFixed(2)}</span>
     </div>`;

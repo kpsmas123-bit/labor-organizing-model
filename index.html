@@ -685,6 +685,24 @@
       .rail-toggle-row input { accent-color: var(--color-accent); width: 14px; height: 14px; }
 
       /* ===================================================================
+         PHASE 5 — click readout: "why here" + methodology jump-links, appended
+         to the shared county card. State lens shows the flip/protect/assess chip.
+         =================================================================== */
+      #why-here { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--color-border); }
+      #why-here .wh-head { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+      #why-here .wh-strategy { display: inline-block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 3px 9px; border-radius: 20px; margin-bottom: var(--space-2); }
+      #why-here .wh-strategy.flip { background: var(--color-accent); color: #fff; }
+      #why-here .wh-strategy.protect { background: #1a3a6b; color: #fff; }
+      #why-here .wh-strategy.assess { background: var(--color-bg-subtle); color: var(--color-text); border: 1px solid var(--color-border-strong); }
+      #why-here .wh-strategy-note { font-size: var(--text-xs); color: var(--color-text-secondary); line-height: 1.5; margin-bottom: var(--space-2); }
+      #why-here .wh-links { display: flex; flex-direction: column; gap: 4px; }
+      #why-here .wh-link { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text); background: none; border: none; border-bottom: 1px solid var(--color-border); padding: 5px 0; cursor: pointer; text-align: left; width: 100%; font-family: var(--font-body); }
+      #why-here .wh-link:hover { color: var(--color-accent); }
+      #why-here .wh-link .wh-val { font-family: var(--font-mono); color: var(--color-text-muted); }
+      #why-here .wh-link::after { content: '↗'; font-family: var(--font-mono); color: var(--color-accent); font-size: 10px; }
+      #why-here .wh-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+      /* ===================================================================
          PHASE 3 — minimal TEXT lens toggles (quiet inline text, not buttons).
          Scoped under #explorer-rail (an id) so the active state wins WITHOUT
          !important — id (1,2,0) outranks terrain.css's generic
@@ -1928,6 +1946,8 @@
         if (id) scrollToAnchor(id);
       });
     });
+    // expose for the explorer click-readout's methodology jump-links (Phase 5)
+    window.terrainScrollToAnchor = scrollToAnchor;
 
     /* ---- quadrant clicks → stub toast (scatter not built) ---- */
     var toastEl = document.getElementById('imo-toast');
@@ -2571,6 +2591,74 @@
     mapSvg.addEventListener('mouseleave', clearLink);
     scatterSvg.addEventListener('mouseover', function (e) { var f = fipsFromTarget(e.target, '.scatter-dot'); if (f) linkHover(f); });
     scatterSvg.addEventListener('mouseleave', clearLink);
+  })();
+  </script>
+
+  <!-- ============================================================
+       CLICK READOUT (Phase 5) — clicking a county anywhere (map dot, scatter
+       dot, or top-list row) opens the shared county card (via showDetail), to
+       which we append a "why here" block: lens-aware P2 / state strategy plus
+       methodology jump-links to the exact factor sections. Display-only —
+       reuses showDetail's data + the existing methodology anchors.
+       ============================================================ -->
+  <script>
+  (function () {
+    var STRAT = {
+      flip:    { label: 'Flip',    note: 'Competitive chamber seat — organizing here can flip control.' },
+      protect: { label: 'Protect', note: 'Aligned incumbent in a competitive seat — organizing defends the majority.' },
+      assess:  { label: 'Assess',  note: 'Mixed signals — warrants district-level assessment.' }
+    };
+    var idx = null;
+    function county(fips) {
+      if (!window.TerrainMap || !window.TerrainMap.getCounties) return null;
+      if (!idx) { idx = {}; window.TerrainMap.getCounties().forEach(function (c) { var f = String(c.fips); idx[f] = c; idx[f.padStart(5, '0')] = c; }); }
+      return idx[fips] || idx[String(fips).padStart(5, '0')] || null;
+    }
+    function f1(v) { return v != null ? (+v).toFixed(1) : '—'; }
+
+    function appendWhyHere(c) {
+      var panel = document.getElementById('detail-panel');
+      if (!panel || getComputedStyle(panel).display === 'none') return;
+      if (panel.querySelector('#why-here')) return;          // already appended for this render
+      var lens = (window.TerrainMap && window.TerrainMap.getLens) ? window.TerrainMap.getLens() : 'national';
+      var p1 = lens === 'state' ? c.p1_state : (c.p1_national != null ? c.p1_national : c.p1_presidential);
+      var p2 = lens === 'state' ? c.p2_state : (c.p2_national != null ? c.p2_national : (c.federal_p2 != null ? c.federal_p2 : c.p2_alignment));
+      var lensAnchor = lens === 'state' ? 'lens-state' : 'lens-federal';
+      var lensLabel  = lens === 'state' ? 'State lens' : 'National lens';
+
+      var strat = (lens === 'state' && c.state_strategy && STRAT[c.state_strategy]) ? STRAT[c.state_strategy] : null;
+      var html = '<div class="wh-head">Why here — methodology</div>';
+      if (strat) {
+        html += '<span class="wh-strategy ' + c.state_strategy + '">' + strat.label + ' (state strategy)</span>'
+              + '<div class="wh-strategy-note">' + strat.note + '</div>';
+      }
+      html += '<div class="wh-links">'
+        + '<button class="wh-link" data-anchor="factor-sectoral-leverage">Sectoral leverage <span class="wh-val">Cap ' + f1(c.sls_capital) + ' · Comm ' + f1(c.sls_community) + '</span></button>'
+        + '<button class="wh-link" data-anchor="factor-electoral-leverage">Electoral leverage (P1) <span class="wh-val">' + f1(p1) + '</span></button>'
+        + '<button class="wh-link" data-anchor="factor-incumbent-alignment">Incumbent alignment (P2) <span class="wh-val">' + f1(p2) + '</span></button>'
+        + '<button class="wh-link" data-anchor="' + lensAnchor + '">Lens <span class="wh-val">' + lensLabel + '</span></button>'
+        + '</div>';
+
+      var div = document.createElement('div');
+      div.id = 'why-here';
+      div.innerHTML = html;
+      panel.appendChild(div);
+      div.querySelectorAll('.wh-link[data-anchor]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (window.terrainScrollToAnchor) window.terrainScrollToAnchor(b.getAttribute('data-anchor'));
+        });
+      });
+    }
+
+    // Bubble-phase: the existing showDetail handlers fire in the target phase (on the
+    // path / svg / row), so by the time this runs the card is rendered — we just append.
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest && e.target.closest('.county-path, .scatter-dot, #top10-list .top10-row');
+      if (!el) return;
+      var fips = el.getAttribute('data-fips');
+      var c = fips ? county(fips) : null;
+      if (c) setTimeout(function () { appendWhyHere(c); }, 0);
+    }, false);
   })();
   </script>
 
