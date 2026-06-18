@@ -1148,9 +1148,14 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 </head>
 <body>
 
-<div class="jobs-topnav">
-  <a href="index.html" class="back-to-terrain">← Terrain</a>
-</div>
+<nav class="terrain-topnav">
+  <a href="../index.html" class="topnav-wordmark"><span>T</span>errain</a>
+  <div class="topnav-links">
+    <a href="../index.html" class="topnav-link" id="nav-home">Home</a>
+    <a href="education.html" class="topnav-link" id="nav-learn">Learn</a>
+    <a href="jobs.html" class="topnav-jobs active" id="nav-jobs">Jobs</a>
+  </div>
+</nav>
 
 <!-- BETA BANNER -->
 <div id="beta-banner">
@@ -1622,7 +1627,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
           color: var(--color-text-muted);">Terrain data</span><br>
         Job rankings use county-level organizing opportunity scores
         from the Terrain model.
-        <a href="labor_organizing_national_dashboard.html?view=map"
+        <a href="../index.html#map-section"
            style="color: var(--color-accent);">Explore the map →</a>
       </div>
 
@@ -1703,7 +1708,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 
       <!-- Footer -->
       <div class="tp-footer-strip">
-        Based on Jane McAlevey's whole-worker organizing model. <a href="./methodology.html">Full methodology →</a>
+        Based on Jane McAlevey's whole-worker organizing model. <a href="../index.html#methodology-section">Full methodology →</a>
       </div>
 
       </div><!-- /terrain-guide -->
@@ -1722,7 +1727,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
     <ul class="terrain-footer__links">
       <li><a href="https://github.com/kpsmas123-bit/labor-organizing-model" target="_blank" rel="noopener">GitHub ↗</a></li>
-      <li><a href="./methodology.html">Methodology</a></li>
+      <li><a href="../index.html#methodology-section">Methodology</a></li>
     </ul>
   </div>
 </footer>
@@ -3500,7 +3505,7 @@ function updateLookForContent() {
     });
     blocks.push({
       eyebrow: 'Place matters: match county type to role type',
-      text: `Terrain scores counties by organizing opportunity type. <strong>Type A counties</strong> (low union density) are best for new organizing and salting. <strong>Type B counties</strong> (existing unions, low political engagement) have leverage for electoral and mobilization roles. <strong>Type C counties</strong> (high density, politically active) are where coordinated campaigns and strike support carry the most weight. <a href="./labor_organizing_national_dashboard.html?view=map" style="color:var(--color-accent)">Explore the map →</a>`
+      text: `Terrain scores counties by organizing opportunity type. <strong>Type A counties</strong> (low union density) are best for new organizing and salting. <strong>Type B counties</strong> (existing unions, low political engagement) have leverage for electoral and mobilization roles. <strong>Type C counties</strong> (high density, politically active) are where coordinated campaigns and strike support carry the most weight. <a href="../index.html#map-section" style="color:var(--color-accent)">Explore the map →</a>`
     });
     blocks.push({
       eyebrow: 'Lens matters: what kind of power are you building?',
@@ -3552,7 +3557,7 @@ function updateLookForContent() {
     });
     blocks.push({
       eyebrow: 'County type shapes your strategy',
-      text: `<strong>Type A counties</strong> (low union density) give you room to build from scratch with fewer existing structures to navigate. <strong>Type B counties</strong> have organized power that isn't fully active — better for connecting workplace campaigns to political leverage. Check the Terrain map before deciding where to land. <a href="./labor_organizing_national_dashboard.html?view=map" style="color:var(--color-accent)">Explore the map →</a>`,
+      text: `<strong>Type A counties</strong> (low union density) give you room to build from scratch with fewer existing structures to navigate. <strong>Type B counties</strong> have organized power that isn't fully active — better for connecting workplace campaigns to political leverage. Check the Terrain map before deciding where to land. <a href="../index.html#map-section" style="color:var(--color-accent)">Explore the map →</a>`,
       source: `McAlevey, <em>No Shortcuts</em> (Oxford, 2016)`
     });
     blocks.push({
@@ -3807,7 +3812,7 @@ function showJobDetail(job) {
           <span class="jdp-svs-score">${Math.round(job.svs_score)}</span>
           <span style="font-size:12px;color:#8A7E75">/ 100</span>
         </div>
-        <div style="margin-top:5px"><a href="../output/methodology.html" style="font-family:var(--font-mono);font-size:10px;color:#9A8E85;letter-spacing:0.05em">Methodology ↗</a></div>
+        <div style="margin-top:5px"><a href="../index.html#methodology-section" style="font-family:var(--font-mono);font-size:10px;color:#9A8E85;letter-spacing:0.05em">Methodology ↗</a></div>
       </div>`
     : '';
 

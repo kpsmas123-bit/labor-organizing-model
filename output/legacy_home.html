@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terrain — Maps the organizing landscape</title>
+  <link rel="stylesheet" href="output/terrain.css">
+  <style>
+    /* ── Page-level layout ── */
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    /* ── Hero ── */
+    .terrain-nav {
+      height: 72px;
+    }
+
+    .hero {
+      padding: var(--space-10) 0 var(--space-6);
+      max-width: 100%;
+    }
+
+    .hero__eyebrow {
+      margin-bottom: var(--space-5);
+    }
+
+    .hero__headline {
+      font-family: var(--font-serif);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--color-text);
+      margin-bottom: var(--space-6);
+      max-width: 820px;
+    }
+
+    .hero__line {
+      display: block;
+    }
+
+    .hero__line + .hero__line {
+      margin-top: 0.175em;
+    }
+
+    .hero__subhead {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+      max-width: 100%;
+    }
+
+    .hero__subhead--note {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* ── Cards ── */
+    .cards-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      margin-bottom: var(--space-12);
+    }
+
+    .entry-card {
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-8);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .entry-card:hover {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .entry-card__icon {
+      width: 20px;
+      height: 20px;
+      margin-bottom: var(--space-5);
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    .entry-card__label {
+      margin-bottom: var(--space-3);
+    }
+
+    .entry-card__heading {
+      font-family: var(--font-serif);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--color-text);
+      line-height: 1.25;
+      margin-bottom: var(--space-4);
+    }
+
+    .entry-card__body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: var(--space-6);
+    }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: var(--space-10);
+      margin-bottom: var(--space-12);
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* ── Method note ── */
+    .method-note {
+      max-width: 760px;
+      margin: 0 auto var(--space-16);
+      text-align: center;
+    }
+
+    .method-note__text {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    .method-note__text a {
+      color: var(--color-text-muted);
+      text-decoration: underline;
+    }
+
+    .method-note__text a:hover {
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Footer ── */
+    .terrain-footer {
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-6) 0;
+    }
+
+    .terrain-footer__inner {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+    }
+
+    .terrain-footer__copy {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .terrain-footer__links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      list-style: none;
+    }
+
+    .terrain-footer__links a {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      text-decoration: none;
+    }
+
+    .terrain-footer__links a:hover {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      main {
+        padding: 0 var(--space-4);
+      }
+
+      .hero {
+        padding: var(--space-10) 0 var(--space-8);
+      }
+
+      .cards-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-row {
+        gap: var(--space-8);
+      }
+
+      .method-note {
+        margin-bottom: var(--space-10);
+      }
+
+      .terrain-footer__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+        padding: 0 var(--space-4);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav class="terrain-nav" role="navigation" aria-label="Main navigation">
+    <div class="terrain-nav__inner">
+      <a class="terrain-nav__brand" href="index.html">TERRAIN</a>
+
+      <ul class="terrain-nav__links">
+        <li><a href="output/labor_organizing_national_dashboard.html">Map</a></li>
+        <li><a href="output/jobs.html">Jobs</a></li>
+        <li><a href="output/education.html">Learn</a></li>
+        <li><a href="output/methodology.html">Method</a></li>
+      </ul>
+
+      <button class="terrain-nav__hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <div class="terrain-nav__drawer" id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
+      <ul>
+        <li><a href="output/labor_organizing_national_dashboard.html">Map</a></li>
+        <li><a href="output/jobs.html">Jobs</a></li>
+        <li><a href="output/education.html">Learn</a></li>
+        <li><a href="output/methodology.html">Method</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <main>
+
+      <!-- ── Hero ── -->
+      <section class="hero">
+        <h1 class="hero__headline">
+          <span class="hero__line">When workers organize, they win.</span>
+          <span class="hero__line">When workers win, we all&nbsp;win.</span>
+        </h1>
+        <p class="hero__subhead">That is not a slogan. It is the most consistent finding in the history of political change in this country. Deeply organized workers have moved elections, shifted policy, and changed the terms of power in ways that no amount of money or messaging can replicate.... or stop.</p>
+        <p class="hero__subhead" style="margin-top: var(--space-4);">But we have to be honest about where we are. <u>Fascists and billionaires are rigging elections.</u> Redistricting, voter suppression, and unlimited dark money are making every electoral path harder. In that environment, we cannot afford to organize slowly, randomly, or without strategy.</p>
+        <p class="hero__subhead" style="margin-top: var(--space-4);">Every worker deserves a union. The hospital worker, the farm worker, the software engineer: democracy in the workplace is not conditional on strategic value. But if we want to transform this country fast enough to matter, we have to be honest. Not all sectors in all places are equally capable of creating the kind of crisis that forces real political change. That means prioritizing.</p>
+        <p class="hero__subhead" style="margin-top: var(--space-4);">Terrain is our attempt to help with that prioritization.</p>
+
+        <div class="terrain-two-tools" style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--color-border);">
+          <p style="font-family: var(--font-serif); font-size: clamp(20px, 2.5vw, 28px); font-weight: 700; color: var(--color-text); letter-spacing: 0; margin-bottom: 1.25rem; line-height: 1.2;">Two tools. One model.</p>
+          <p class="hero__subhead"><strong>The Map.</strong> A county-level terrain analysis of all 3,144 U.S. counties, scored on organizing opportunity, sector strategy, strike capacity, and electoral alignment. Start with a goal. Let the terrain tell you where to build.</p>
+          <p class="hero__subhead" style="margin-top: var(--space-4);"><strong>The Jobs Board.</strong> Labor movement jobs matched to high-opportunity terrain. Find roles where your work is most likely to matter.</p>
+        </div>
+      </section>
+
+      <!-- ── Entry Cards ── -->
+      <section aria-label="Products">
+        <div class="cards-row">
+
+          <!-- Card 1: The Map -->
+          <a class="terrain-card clickable featured entry-card" href="output/labor_organizing_national_dashboard.html">
+            <svg class="entry-card__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="7" height="7" rx="1"/>
+              <rect x="11" y="2" width="7" height="7" rx="1"/>
+              <rect x="2" y="11" width="7" height="7" rx="1"/>
+              <rect x="11" y="11" width="7" height="7" rx="1"/>
+            </svg>
+            <span class="section-label entry-card__label">The Map</span>
+            <h2 class="entry-card__heading">Explore the Terrain</h2>
+            <p class="entry-card__body">See where organizing opportunity is highest across all 3,144 US counties — what kind of intervention each place needs, and how electoral and economic factors shape the landscape.</p>
+            <span class="btn-primary" aria-label="Explore the Map">Explore the Map →</span>
+          </a>
+
+          <!-- Card 2: Jobs Board -->
+          <a class="terrain-card clickable entry-card" href="output/jobs.html">
+            <svg class="entry-card__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="8" cy="6" r="3"/>
+              <path d="M2 18c0-3.3 2.7-6 6-6"/>
+              <path d="M14 13l3 3-3 3"/>
+            </svg>
+            <span class="section-label entry-card__label">Jobs &amp; Pathways</span>
+            <h2 class="entry-card__heading">Find Your Role</h2>
+            <p class="entry-card__body">Answer a few questions about your situation. Get matched to union jobs and organizing roles ranked by strategic terrain data.</p>
+            <span class="btn-primary" aria-label="Find Your Role">Find Your Role →</span>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- ── Stats Row ── -->
+      <section class="stats-row" aria-label="At a glance">
+        <div class="stat-block">
+          <span class="stat-block__number">3,144</span>
+          <span class="stat-block__label">Counties scored</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-block__number">36</span>
+          <span class="stat-block__label">Sectors analyzed</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-block__number">411</span>
+          <span class="stat-block__label">Jobs listed</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-block__number">100%</span>
+          <span class="stat-block__label">Public data</span>
+        </div>
+      </section>
+
+      <!-- ── Method Note ── -->
+      <div class="method-note">
+        <p class="method-note__text">
+          Terrain aggregates dispersed labor and political data, interprets it through open-source and peer-reviewable social science prioritization models, and surfaces insights into how labor and political organizing can work together. This is a constantly evolving project — we invite you to follow our methodology as we continue to grow.
+          <a href="output/methodology.html">Read the methodology →</a>
+        </p>
+      </div>
+
+    </main>
+
+    <!-- ── Footer ── -->
+    <footer class="terrain-footer">
+      <div class="terrain-footer__inner">
+        <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
+        <ul class="terrain-footer__links">
+          <li><a href="output/methodology.html">Methodology</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const btn = document.querySelector('.terrain-nav__hamburger');
+      const drawer = document.querySelector('.terrain-nav__drawer');
+      if (!btn || !drawer) return;
+
+      btn.addEventListener('click', function () {
+        const open = drawer.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!drawer.contains(e.target) && !btn.contains(e.target)) {
+          drawer.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
