@@ -66,6 +66,20 @@
       "short_label": "SLS-Community share\u21920\u2013100 multiplier. B1: LIFTED FROM HARDCODE (was the \u00d74 literal) to config and recalibrated to 1.875 for the full-composite-SVS scale (post-ramp max ~57).",
       "config_key": "svs_normalization.community_multiplier"
     },
+    "ramp_full_at": {
+      "value": 10000,
+      "display": "10000",
+      "source_file": "config/thresholds.json",
+      "short_label": "SLS-Community confidence ramp: full weight (\u00d71.0) at/above this total covered employment (the share signal is trustworthy here)",
+      "config_key": "sls_community_confidence_ramp.ramp_full_at"
+    },
+    "ramp_zero_at": {
+      "value": 2000,
+      "display": "2000",
+      "source_file": "config/thresholds.json",
+      "short_label": "SLS-Community confidence ramp: zero weight (\u00d70) at/below this total covered employment (share is single-employer noise below here)",
+      "config_key": "sls_community_confidence_ramp.ramp_zero_at"
+    },
     "sls_capital_high_boundary": {
       "value": 2.0,
       "display": "2",

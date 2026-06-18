@@ -167,6 +167,20 @@ def build_catalog():
             "×4 literal) to config and recalibrated to 1.875 for the full-composite-SVS "
             "scale (post-ramp max ~57).",
         ),
+        "ramp_full_at": entry(
+            thresholds["sls_community_confidence_ramp"]["ramp_full_at"],
+            "config/thresholds.json",
+            "sls_community_confidence_ramp.ramp_full_at",
+            "SLS-Community confidence ramp: full weight (×1.0) at/above this total "
+            "covered employment (the share signal is trustworthy here)",
+        ),
+        "ramp_zero_at": entry(
+            thresholds["sls_community_confidence_ramp"]["ramp_zero_at"],
+            "config/thresholds.json",
+            "sls_community_confidence_ramp.ramp_zero_at",
+            "SLS-Community confidence ramp: zero weight (×0) at/below this total "
+            "covered employment (share is single-employer noise below here)",
+        ),
         # Quadrant / classification boundaries
         "sls_capital_high_boundary": entry(
             quad["sls_capital_high_boundary"], "config/thresholds.json",

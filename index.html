@@ -139,7 +139,7 @@
     .map-key-details > summary::-webkit-details-marker { display: none; }
     .map-key-details > summary::after { content: ' ▸'; }
     .map-key-details[open] > summary::after { content: ' ▾'; }
-    .map-key { display: grid; grid-template-columns: 1fr; gap: var(--space-2); margin-top: var(--space-3); }
+    .map-key { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-5); margin: 0; }
     .map-key-item { display: flex; align-items: flex-start; gap: var(--space-2); }
     .map-key-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
     .map-key-label { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; color: var(--color-text); line-height: 1.2; }
@@ -418,7 +418,7 @@
           <span style="border-bottom: 2px solid var(--color-accent);
                        padding-bottom: 1px;">
             <strong style="color: var(--color-text);">When workers organize, they win.</strong>
-            When workers win, we all win.
+            <strong style="color: var(--color-text);">When workers win, we all win.</strong>
           </span>
         </p>
         <p class="about-body">
@@ -460,7 +460,7 @@
         <a href="output/education.html" class="about-link">
           <span class="about-link-num">04</span>
           <div>
-            <div class="about-link-title">Education</div>
+            <div class="about-link-title">Learn</div>
             <span class="about-link-desc">Organizing concepts and background</span>
           </div>
         </a>
@@ -478,16 +478,16 @@
     <style>
       #map-section.results-section { height: auto; scroll-snap-stop: normal; }
       .results-inner { max-width: var(--screen-max); margin: 0 auto; padding: var(--space-8) var(--screen-pad); display: flex; flex-direction: column; gap: var(--space-6); }
-      .results-head { display: flex; flex-direction: column; gap: var(--space-2); }
+      .results-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2); }
       .results-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); }
       .results-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 500; color: var(--color-text); margin: 0; }
       .results-lead { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; max-width: 72ch; margin: 0; }
       .results-panels { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: stretch; }
       .results-panel { display: flex; flex-direction: column; min-width: 0; gap: var(--space-2); }
-      .results-panel-title { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-rule); min-height: 28px; }
+      .results-panel-title { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text); text-align: center; padding-bottom: var(--space-2); border-bottom: 2px solid var(--color-accent); min-height: 28px; }
       .results-panel-body { position: relative; height: clamp(440px, 60vh, 660px); display: flex; flex-direction: column; min-height: 0; }
       /* scatter */
-      .scatter-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 4px 6px 18px 20px; }
+      .scatter-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 48px 18px 32px 34px; }
       .scatter-plot { position: relative; aspect-ratio: 1 / 1; height: 100%; max-width: 100%; max-height: 100%; }
       #scatter-svg { width: 100%; height: 100%; display: block; overflow: visible; }
       .scatter-frame { fill: none; stroke: var(--color-border); stroke-width: 0.5; }
@@ -503,10 +503,26 @@
       .scatter-axis { position: absolute; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: lowercase; color: var(--color-text-muted); white-space: nowrap; pointer-events: none; }
       .scatter-axis-y { left: -0.4rem; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
       .scatter-axis-x { bottom: -1.2rem; left: 50%; transform: translateX(-50%); }
+      /* hide the map status/footer line — clutter below the framed map box (alignment cleanup) */
+      #status-bar { display: none; }
+      /* expanded-map gated sidebar starts below the fixed nav (was clipped under it) */
+      #sidebar { top: var(--nav-height) !important; }
+      /* scatter lens badge — mirrors the map's #lens-badge (top-left of the panel) */
+      .scatter-lens-badge { position: absolute; top: var(--space-3); left: var(--space-3); z-index: 6; background: rgba(26,26,24,0.80); color: var(--color-bg); font-family: var(--font-mono); font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 20px; pointer-events: none; letter-spacing: 0.03em; }
       .results-fullscreen-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-accent); background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
       .results-fullscreen-btn:hover { border-color: var(--color-accent); }
       .results-fullscreen-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-      .results-key { border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
+      .results-key { padding: 0 0 var(--space-2); margin: 0 auto; max-width: 1000px; }
+      .map-key-item { max-width: 320px; }
+      /* matched, framed preview boxes + single corner expand arrow */
+      #map-section .map-figure { border-radius: var(--radius-lg, 12px); }
+      .results-panel-scatter .results-panel-body { border: 1px solid var(--color-border); border-radius: var(--radius-lg, 12px); background: var(--color-bg); }
+      #map-section .panel-expand-btn { position: absolute; top: var(--space-3); right: var(--space-3); z-index: 6; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); background: var(--color-bg); border: 1px solid var(--color-accent); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+      #map-section .panel-expand-btn:hover { background: var(--color-accent); color: #fff; }
+      #map-section .panel-expand-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      /* the map expand button also carries .map-expand-btn (so expandMap() can flip its label); re-assert the accent look over terrain.css's !important muted rule */
+      #map-section .panel-expand-btn.map-expand-btn { font-family: var(--font-mono) !important; font-size: 10px !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--color-accent) !important; background: var(--color-bg) !important; border: 1px solid var(--color-accent) !important; padding: var(--space-1) var(--space-2) !important; border-radius: var(--radius-sm) !important; }
+      #map-section .panel-expand-btn.map-expand-btn:hover { color: #fff !important; background: var(--color-accent) !important; border-color: var(--color-accent) !important; }
       .results-targets { border-top: 1px solid var(--color-border); padding-top: var(--space-4); }
       .results-targets .target-row { flex-direction: row; flex-wrap: wrap; }
       .results-howto { margin: 0; }
@@ -570,21 +586,27 @@
         <header class="results-head">
           <div class="results-kicker">Where the counties land</div>
           <h2 class="results-title">Explore the Results</h2>
-          <p class="results-lead">
-            Every U.S. county scored on structural labor leverage and political
-            terrain, classified into six strategic categories. Click a target to
-            fly there; <strong>Awaken</strong> the map to explore it directly, or
-            <strong>Expand</strong> for full screen.
-          </p>
           <!-- TODO(prose): optional results-level intro / how the two views relate.
                Leave for the narrative pass — do not write here. -->
         </header>
+
+        <!-- shared tier legend — one row above both panels (map + scatter share this palette) -->
+        <div class="results-key">
+          <div class="map-key">
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
+          </div>
+        </div>
 
         <div class="results-panels">
 
           <!-- ░░░░ LEFT — Geographic view : relocated live map (verbatim below) ░░░░ -->
           <section class="results-panel results-panel-map" aria-labelledby="results-title-map">
-            <div class="results-panel-title" id="results-title-map">Geographic view</div>
+            <div class="results-panel-title" id="results-title-map">Map view</div>
             <div class="results-panel-body map-right">
         <div id="sidebar" style="display:none">
           <div class="sidebar-section">
@@ -628,16 +650,7 @@
         </div>
 
         <div class="map-figure frozen" id="map-figure">
-          <div class="map-figure-header">
-            <div class="map-figure-caption">
-              <span class="map-figure-number">Fig. 1</span>
-              County-Level Strategic Terrain — United States, 2024
-            </div>
-            <div class="map-fig-controls">
-              <button class="map-awaken-btn" id="awaken-btn" onclick="toggleAwaken()" aria-pressed="false" title="Make the map directly interactive">▶ Awaken map</button>
-              <button class="map-expand-btn" onclick="expandMap()" title="Expand to full screen">↗ Expand</button>
-            </div>
-          </div>
+          <button class="panel-expand-btn map-expand-btn" onclick="expandMap()" title="Expand to full screen" aria-label="Expand map to full screen">↗ Expand</button>
           <div class="map-figure-body">
             <div id="lens-badge">Viewing: National lens</div>
             <div id="awaken-hint">Awakened — scroll zooms the map. Click “Freeze” to scroll the page again.</div>
@@ -667,9 +680,6 @@
 
             <div class="tooltip" id="tooltip"></div>
           </div><!-- /map-figure-body -->
-          <div class="map-figure-footer" style="padding: var(--space-2) var(--space-4); font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); border-top: 1px solid var(--color-border); display: flex; justify-content: space-between;">
-            <span>Terrain v2.0 · 3,143 counties · laborterrain.org</span>
-          </div>
         </div><!-- /map-figure -->
 
         <div id="status-bar">
@@ -683,12 +693,11 @@
 
           <!-- ░░░░ RIGHT — Distribution view : NEW percentile scatter ░░░░ -->
           <section class="results-panel results-panel-scatter" aria-labelledby="results-title-scatter">
-            <div class="results-panel-title" id="results-title-scatter">
-              <span>Distribution view</span>
-              <button class="results-fullscreen-btn" id="scatter-fullscreen-btn" type="button"
-                      title="Open the full-screen explorer">⤢ Explore the plot — full screen</button>
-            </div>
+            <div class="results-panel-title" id="results-title-scatter">Distribution view</div>
             <div class="results-panel-body">
+              <div class="scatter-lens-badge">Viewing: National lens</div>
+              <button class="panel-expand-btn" id="scatter-fullscreen-btn" type="button"
+                      title="Open the full-screen explorer" aria-label="Open the full-screen scatter explorer">↗ Expand</button>
               <!--
                 v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
                 capital(raw) vs community(share) measure different things; a single Y may
@@ -756,49 +765,6 @@
           </section>
         </div><!-- /results-panels -->
 
-        <!-- shared tier legend — both the map and the scatter use this palette -->
-        <details class="map-key-details results-key">
-          <summary>Color key</summary>
-          <div class="map-key">
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
-          </div>
-        </details>
-
-        <!-- How to read this — collapsed by default; TODO slot for the narrative pass -->
-        <details class="toggle-item results-howto">
-          <summary><span class="toggle-item-title">How to read this</span></summary>
-          <div class="toggle-item-detail">
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — how to read</span>
-              <p>Explain the two views (geographic map vs percentile distribution), the
-              indexed axes, and the tiers. To be written in the narrative pass — not here.</p>
-            </div>
-          </div>
-        </details>
-
-        <!-- Top Tier-1 targets (kept; wired to the map's fly-to via the content layer) -->
-        <div class="results-targets">
-          <div class="target-head">Top Tier-1 targets</div>
-          <p class="target-caption">
-            Double-leverage counties first, then alternating the next-highest
-            Capital and Community Tier-1 counties — each ranked on its own SLS
-            scale, since Capital and Community SLS are different ranges.
-          </p>
-          <div class="target-row" id="targets-list"><div class="target-empty">Loading targets…</div></div>
-        </div>
-
-        <!-- Commentary — TODO slot for the user's observations -->
-        <div class="method-todo results-commentary">
-          <span class="method-todo-tag">TODO — commentary</span>
-          <p>Observations on where the counties land — your notes go here in the
-          narrative pass.</p>
-        </div>
-
       </div><!-- /results-inner -->
     </section>
 
@@ -838,10 +804,12 @@
          content height (≈720px > 58vh) which pinned the diagram to the top. The
          min-height is a floor — on short viewports the panel just grows to content,
          so nothing clips and the connector recompute is unaffected. */
-      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; box-sizing: border-box; width: 100%; margin: 0 0 var(--space-6); padding: var(--space-8) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height)); text-align: center; }
-      .imo-diagram .imo-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
-      .imo-diagram .imo-dtitle { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
-      .imo-diagram .imo-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 54ch; margin: 0 auto var(--space-6); line-height: 1.6; }
+      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; box-sizing: border-box; width: 100%; margin: 0 0 var(--space-6); padding: var(--space-2) 0 var(--space-6); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+      .method-hero { text-align: center; max-width: var(--screen-max, 1100px); margin: 0 auto; padding: var(--space-10) var(--space-8) var(--space-4); }
+      .method-hero .method-h { margin: 0 auto var(--space-3); }
+      .imo-diagram .imo-kicker, .method-hero .imo-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+      .imo-diagram .imo-dtitle, .method-hero .imo-dtitle { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
+      .imo-diagram .imo-lede, .method-hero .imo-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 60ch; margin: 0 auto var(--space-2); line-height: 1.6; }
       .imo-diagram .diagram-shell { position: relative; width: 100%; }
       .imo-diagram .diagram-grid { position: relative; display: grid; grid-template-columns: minmax(104px,1fr) minmax(116px,1fr) minmax(92px,0.82fr) minmax(188px,1.22fr); column-gap: clamp(24px,4.5vw,68px); row-gap: clamp(22px,3.5vw,40px); align-items: start; text-align: left; }
       .imo-diagram .col-head { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; color: var(--color-text); padding-bottom: 0.5rem; margin-bottom: 0.3rem; border-bottom: 1px solid var(--color-rule); }
@@ -916,6 +884,16 @@
     </style>
 
     <section id="methodology-section">
+      <header class="method-hero">
+        <h2 class="method-h">Methodology</h2>
+        <p class="imo-kicker">The model, end to end</p>
+        <h3 class="imo-dtitle">How the model reads a county</h3>
+        <p class="imo-lede">
+          Raw inputs feed three leverage factors; the factors are read through
+          two lenses; the lenses place each county on a strategic map.
+          <strong>Click any box to jump to its section.</strong>
+        </p>
+      </header>
       <div class="method-layout">
 
         <!-- Scroll-spy rail -->
@@ -935,6 +913,7 @@
           <a href="#lens-state" data-spy="lens-state">State lens</a>
           <a href="#output-2x2" data-spy="output-2x2">The 2×2</a>
           <a href="#output-tiers" data-spy="output-tiers">Tiers &amp; the two pathways</a>
+          <a href="#output-map" data-spy="output-map">Map</a>
           <a href="#output-scatter" data-spy="output-scatter">Scatter</a>
           <a href="#m-limitations" data-spy="m-limitations">Known Limitations</a>
           <a href="#m-data" data-spy="m-data">Data Sources</a>
@@ -944,8 +923,6 @@
         </aside>
 
         <div class="method-body">
-          <div class="section-number">§ 4</div>
-          <h2 class="method-h">Methodology</h2>
 
           <!-- ═══════════════════════════════════════════════════════════════
                FLOWCHART · TABLE OF CONTENTS
@@ -954,14 +931,6 @@
                quadrant clicks remain a stub (scatter view not built — see script).
                ═══════════════════════════════════════════════════════════════ -->
           <div class="imo-diagram" id="imo-diagram">
-            <p class="imo-kicker">The model, end to end</p>
-            <h3 class="imo-dtitle">How the model reads a county</h3>
-            <p class="imo-lede">
-              Raw inputs feed three leverage factors; the factors are read through
-              two lenses; the lenses place each county on a strategic map.
-              <strong>Click any box to jump to its section.</strong>
-            </p>
-
             <div class="diagram-shell">
               <!-- SVG sits UNDER the boxes; endpoints are computed from box rects -->
               <svg class="connector-layer" id="connectors" aria-hidden="true">
@@ -1303,12 +1272,19 @@
             <div class="method-render" data-section="output-tiers"></div>
           </div>
 
-          <!-- ── Scatter — TODO STUB. The scatter view is not built yet; the diagram's
-               quadrant clicks remain a stub pointing here / to a toast. ── -->
-          <div class="method-sub" id="output-scatter">
+          <!-- ── Map — per-county choropleth of the national-lens tiers. ── -->
+          <div class="method-sub" id="output-map">
             <span class="method-sub-num">14 — Output</span>
+            <h3 class="method-sub-h">Map</h3>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-map"]. -->
+            <div class="method-render" data-section="output-map"></div>
+          </div>
+
+          <!-- ── Scatter — every county on the two leverage axes, colored by tier. ── -->
+          <div class="method-sub" id="output-scatter">
+            <span class="method-sub-num">15 — Output</span>
             <h3 class="method-sub-h">Scatter</h3>
-            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-scatter"] (stub). -->
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-scatter"]. -->
             <div class="method-render" data-section="output-scatter"></div>
           </div>
 
@@ -1318,7 +1294,7 @@
 
           <!-- ── Known Limitations (toggle list) ── -->
           <div class="method-sub" id="m-limitations">
-            <span class="method-sub-num">15 — Limitations</span>
+            <span class="method-sub-num">16 — Limitations</span>
             <h3 class="method-sub-h">Known Limitations</h3>
             <p class="method-prose">
               These are not disclaimers. They are specifications of where the data
@@ -1338,8 +1314,8 @@
               <div class="toggle-item-detail"><p>The current P1 formula uses presidential electoral margins as the primary proxy for congressional and state legislative district competitiveness. True district-level margins require separate ingestion of district-level results, which is in progress. Counties spanning multiple competitive districts may be under- or over-scored.</p></div>
             </details>
             <details class="toggle-item">
-              <summary><span class="toggle-item-num">4</span><span class="toggle-item-title">Key vote and campaign finance data coverage is uneven</span></summary>
-              <div class="toggle-item-detail"><p>P2 depends on data sources with uneven coverage across states. VoteSmart and ProPublica cover federal legislators comprehensively but state legislative coverage varies; FollowTheMoney covers state campaign finance broadly but reporting requirements differ by state. The model flags coverage level for each county — full, partial, or unknown.</p></div>
+              <summary><span class="toggle-item-num">4</span><span class="toggle-item-title">Key vote data coverage is uneven</span></summary>
+              <div class="toggle-item-detail"><p>P2 depends on data sources with uneven coverage across states. Federal key votes and ideology cover federal legislators comprehensively, but about half the roster has no non-zero key-vote score and falls back to ideology alone; state legislative alignment uses party composition (Open States) where seat-level voting records aren't available. The model flags coverage level for each county — full, partial, or unknown.</p></div>
             </details>
             <details class="toggle-item">
               <summary><span class="toggle-item-num">5</span><span class="toggle-item-title">Associational and community power are absent</span></summary>
@@ -1351,13 +1327,13 @@
             </details>
             <details class="toggle-item">
               <summary><span class="toggle-item-num">7</span><span class="toggle-item-title">P2 incumbent alignment coverage is uneven</span></summary>
-              <div class="toggle-item-detail"><p>Federal P2 is complete for all 533 current federal legislators across 3,142 counties. State P2 uses DIME CFscores (Stanford, 1979–2024) matched to current state legislators via Open States; data is most reliable for 2010–2020, with sparse 2022–2024 state coverage, flagged as <code>coverage_type = cfscore_only</code>.</p></div>
+              <div class="toggle-item-detail"><p>Federal P2 is complete for all 533 current federal legislators across 3,142 counties. State P2 is a different measure — the partisan composition of each county's state-legislative seats (Σ Democratic seat-share / Σ all-party share, from Open States rosters), used because seat-level labor voting records aren't uniformly available at the state level; it carries no key votes and no CFscores, and is flagged as <code>coverage_type = party_proxy</code> (with <code>party_proxy_state_uniform</code> / <code>party_proxy_unavailable</code> fallbacks).</p></div>
             </details>
           </div>
 
           <!-- ── Data Sources (table) ── -->
           <div class="method-sub" id="m-data">
-            <span class="method-sub-num">16 — Data Sources</span>
+            <span class="method-sub-num">17 — Data Sources</span>
             <h3 class="method-sub-h">Data Sources</h3>
             <div class="method-table-wrap">
               <table class="method-table">
@@ -1368,15 +1344,11 @@
                   <tr><td>MIT Election Data and Science Lab</td><td>County-level 2024 presidential margins. Powers electoral leverage.</td><td>2024</td></tr>
                   <tr><td>U.S. Census Bureau — District Relationship Files</td><td>Congressional + state legislative district to county mapping.</td><td>Decennial</td></tr>
                   <tr><td>National Conference of State Legislatures</td><td>State legislative chamber seat counts. Powers chamber tipping weight.</td><td>Post-election</td></tr>
-                  <tr><td>ProPublica Congress API</td><td>Federal voting records on defined key votes.</td><td>Per vote</td></tr>
-                  <tr><td>VoteSmart</td><td>State legislative voting records where available.</td><td>Per vote</td></tr>
-                  <tr><td>OpenSecrets</td><td>Federal campaign finance — business-to-labor contribution ratios.</td><td>Per cycle</td></tr>
-                  <tr><td>FollowTheMoney</td><td>State campaign finance — business-to-labor contribution ratios.</td><td>Per cycle</td></tr>
                   <tr><td>NAICS</td><td>Sector definitions and industry codes.</td><td>Current</td></tr>
-                  <tr><td>Congress.gov API</td><td>Federal voting records, verified against House Clerk + Senate.gov XML.</td><td>Per vote</td></tr>
+                  <tr><td>Congress.gov API</td><td>Federal voting records on defined key votes, verified against House Clerk + Senate.gov XML.</td><td>Per vote</td></tr>
                   <tr><td>GovTrack Bulk Data</td><td>Federal legislator ideology from sponsorship patterns. 119th Congress.</td><td>Per Congress</td></tr>
-                  <tr><td>Open States API</td><td>Current state legislators matched to DIME CFscores. 50 states + DC.</td><td>Ongoing</td></tr>
-                  <tr><td>DIME (Stanford)</td><td>Candidate ideology (CFscores). 850M+ contribution records, 1979–2024.</td><td>2024</td></tr>
+                  <tr><td>DIME (Stanford)</td><td>Federal legislator ideology (CFscores), blended with GovTrack for the federal P2 ideology component. 850M+ contribution records, 1979–2024.</td><td>2024</td></tr>
+                  <tr><td>Open States API</td><td>Current state-legislative party rosters. Powers state P2 (party composition of each county's seats). 50 states + DC.</td><td>Ongoing</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1384,7 +1356,7 @@
 
           <!-- ── Theoretical Foundations (literature table; pending → review) ── -->
           <div class="method-sub" id="m-literature">
-            <span class="method-sub-num">17 — Literature</span>
+            <span class="method-sub-num">18 — Literature</span>
             <h3 class="method-sub-h">Theoretical Foundations</h3>
             <p class="method-prose">
               The works below ground the model. Citations marked
@@ -1414,7 +1386,7 @@
 
           <!-- ── Further Research (conceptual prose) ── -->
           <div class="method-sub" id="m-research">
-            <span class="method-sub-num">18 — Roadmap</span>
+            <span class="method-sub-num">19 — Roadmap</span>
             <h3 class="method-sub-h">Further Research and Future Updates</h3>
             <p class="method-prose">Seven near-term priorities shape the model's roadmap:</p>
             <p class="method-prose">
@@ -1439,7 +1411,7 @@
 
           <!-- ── About (conceptual prose) ── -->
           <div class="method-sub" id="m-about">
-            <span class="method-sub-num">19 — About</span>
+            <span class="method-sub-num">20 — About</span>
             <h3 class="method-sub-h">About This Project</h3>
             <p class="method-prose">
               Terrain was created by
