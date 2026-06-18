@@ -566,7 +566,7 @@
       + '.method-summary { font-family: var(--font-serif, Georgia, serif); font-size: 1.15rem; line-height: 1.5; color: var(--color-text, #1a1a1a); margin: 0 0 18px; }'
       + '.method-flow { border: 1px solid var(--color-border, #e5e5e5); border-radius: 8px; padding: 14px 16px; margin: 0 0 20px; background: var(--color-bg-card, #fafafa); }'
       + '.method-flow--empty { border-style: dashed; }'
-      + '.method-flow-row { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }'
+      + '.method-flow-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }'
       + '.method-flow-col { flex: 1 1 0; min-width: 140px; }'
       + '.method-flow-this { flex: 0 0 auto; }'
       + '.method-flow-cap, .method-constants-cap, .method-seealso-cap { display: block; font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted, #888); margin-bottom: 6px; }'
