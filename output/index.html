@@ -417,7 +417,7 @@
           <span style="border-bottom: 2px solid var(--color-accent);
                        padding-bottom: 1px;">
             <strong style="color: var(--color-text);">When workers organize, they win.</strong>
-            When workers win, we all win.
+            <strong style="color: var(--color-text);">When workers win, we all win.</strong>
           </span>
         </p>
         <p class="about-body">
@@ -504,6 +504,10 @@
       .scatter-axis-x { bottom: -1.2rem; left: 50%; transform: translateX(-50%); }
       /* hide the map status/footer line — clutter below the framed map box (alignment cleanup) */
       #status-bar { display: none; }
+      /* expanded-map gated sidebar starts below the fixed nav (was clipped under it) */
+      #sidebar { top: var(--nav-height) !important; }
+      /* scatter lens badge — mirrors the map's #lens-badge (top-left of the panel) */
+      .scatter-lens-badge { position: absolute; top: var(--space-3); left: var(--space-3); z-index: 6; background: rgba(26,26,24,0.80); color: var(--color-bg); font-family: var(--font-mono); font-size: 10px; font-weight: 600; padding: 5px 10px; border-radius: 20px; pointer-events: none; letter-spacing: 0.03em; }
       .results-fullscreen-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-accent); background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
       .results-fullscreen-btn:hover { border-color: var(--color-accent); }
       .results-fullscreen-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
@@ -512,9 +516,9 @@
       /* matched, framed preview boxes + single corner expand arrow */
       #map-section .map-figure { border-radius: var(--radius-lg, 12px); }
       .results-panel-scatter .results-panel-body { border: 1px solid var(--color-border); border-radius: var(--radius-lg, 12px); background: var(--color-bg); }
-      .panel-expand-btn { position: absolute; top: var(--space-3); right: var(--space-3); z-index: 6; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); background: var(--color-bg); border: 1px solid var(--color-accent); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
-      .panel-expand-btn:hover { background: var(--color-accent); color: #fff; }
-      .panel-expand-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      #map-section .panel-expand-btn { position: absolute; top: var(--space-3); right: var(--space-3); z-index: 6; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); background: var(--color-bg); border: 1px solid var(--color-accent); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+      #map-section .panel-expand-btn:hover { background: var(--color-accent); color: #fff; }
+      #map-section .panel-expand-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
       /* the map expand button also carries .map-expand-btn (so expandMap() can flip its label); re-assert the accent look over terrain.css's !important muted rule */
       #map-section .panel-expand-btn.map-expand-btn { font-family: var(--font-mono) !important; font-size: 10px !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--color-accent) !important; background: var(--color-bg) !important; border: 1px solid var(--color-accent) !important; padding: var(--space-1) var(--space-2) !important; border-radius: var(--radius-sm) !important; }
       #map-section .panel-expand-btn.map-expand-btn:hover { color: #fff !important; background: var(--color-accent) !important; border-color: var(--color-accent) !important; }
@@ -645,7 +649,7 @@
         </div>
 
         <div class="map-figure frozen" id="map-figure">
-          <button class="panel-expand-btn map-expand-btn" onclick="expandMap()" title="Expand to full screen" aria-label="Expand map to full screen">Expand ↗</button>
+          <button class="panel-expand-btn map-expand-btn" onclick="expandMap()" title="Expand to full screen" aria-label="Expand map to full screen">↗ Expand</button>
           <div class="map-figure-body">
             <div id="lens-badge">Viewing: National lens</div>
             <div id="awaken-hint">Awakened — scroll zooms the map. Click “Freeze” to scroll the page again.</div>
@@ -690,8 +694,9 @@
           <section class="results-panel results-panel-scatter" aria-labelledby="results-title-scatter">
             <div class="results-panel-title" id="results-title-scatter">Distribution view</div>
             <div class="results-panel-body">
+              <div class="scatter-lens-badge">Viewing: National lens</div>
               <button class="panel-expand-btn" id="scatter-fullscreen-btn" type="button"
-                      title="Open the full-screen explorer" aria-label="Open the full-screen scatter explorer">Expand ↗</button>
+                      title="Open the full-screen explorer" aria-label="Open the full-screen scatter explorer">↗ Expand</button>
               <!--
                 v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
                 capital(raw) vs community(share) measure different things; a single Y may
