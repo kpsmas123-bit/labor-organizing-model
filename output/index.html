@@ -839,9 +839,9 @@
           </div>
           <button class="spot-clear" type="button" id="spot-clear">✕ Clear spotlight</button>
 
-          <hr class="divider">
-          <h2>Top 10 Counties</h2>
-          <div id="top10-list"></div>
+          <!-- Top 10 list removed from view per request. #top10-list is kept (hidden)
+               so terrain-map.js updateTop10() still has a write target (no null-guard there). -->
+          <div id="top10-list" style="display:none"></div>
         </div>
 
         <hr class="divider">
