@@ -243,7 +243,8 @@
     /* ═══════════ INCUMBENT ALIGNMENT — MIGRATED (verbatim) ═══════════ */
     {
       id: "factor-incumbent-alignment",
-      title: "Incumbent Alignment",
+      // "THIS VARIABLE" flow-box label (the static section heading stays "Incumbent Alignment").
+      title: "Incumbent Alignment Score",
       status: "migrated",
       summary: "How aligned are current elected officials with labor's legislative agenda?",
       flowchart: {
@@ -333,13 +334,14 @@
       status: "migrated",
       summary: "The model classifies every county into one of six categories based on the combination of SLS, P1, and P2.",
       flowchart: {
+        // The 2×2's axes ARE electoral leverage (X) × labor/sectoral leverage (Y).
         inputs: [
-          { label: "Federal lens", href: "#lens-federal" },
-          { label: "State lens", href: "#lens-state" }
+          { label: "Electoral Leverage", href: "#factor-electoral-leverage" },
+          { label: "Labor-Sectoral leverage", href: "#factor-sectoral-leverage" }
         ],
         outputs: [
-          { label: "Tiers & the two pathways", href: "#output-tiers" },
-          { label: "Scatter", href: "#output-scatter" }
+          { label: "6 Tier Distribution", href: "#output-tiers" },
+          { label: "Scatter Plot Distribution", href: "#output-scatter" }
         ],
         dataSources: []
       },
