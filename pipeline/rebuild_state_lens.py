@@ -59,7 +59,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from build_v2_canonical import classify  # reuse the EXISTING 6-tier classifier
+from build_v2_canonical import classify, state_strategy  # reuse the EXISTING classifier + strategy label
 
 ROOT = Path(__file__).parent.parent
 
@@ -273,6 +273,7 @@ def main():
     computed = []  # parallel to scores["counties"]
     st_counts = defaultdict(int)
     sub_counts = defaultdict(int)
+    strat_counts = defaultdict(int)  # flip/protect/assess across Tier-1 (None elsewhere)
     for c in scores["counties"]:
         fips = c["fips"]
         state_abbr = c["state"]
@@ -292,6 +293,11 @@ def main():
 
         quadrant_state = classify(c["sls_capital"], c["sls_community"],
                                   p1_state, p2_state, T_state)
+        # B3 flip/protect re-tier: competitive Tier-1 carries an orthogonal strategy
+        # label (flip/protect/assess); alignment is no longer a tier rank.
+        strategy_state = (state_strategy(p2_state, T_state)
+                          if quadrant_state.startswith("tier1") else None)
+        strat_counts[strategy_state] += 1
 
         # subdivide the NON-competitive (low-P1) band by alignment (additive only).
         if p1_state < T_state["p1"]:
@@ -312,6 +318,7 @@ def main():
             "p1_state_data_tier": data_tier_with_vintage(row),
             "margin_stale": (str(row.get("margin_stale", "False")).lower() == "true"),
             "quadrant_state": quadrant_state,
+            "state_strategy": strategy_state,
             "state_noncomp_priority": sub,
         })
         st_counts[quadrant_state] += 1
@@ -374,6 +381,7 @@ def main():
         "overlay_row_count": len(overlay_fips),
         "p2_fallback_count": len(log["p2_fallback_state_uniform"]),
         "noncomp_subdivision": dict(sub_counts),
+        "tier1_strategy_breakdown": {str(k): v for k, v in strat_counts.items()},
         "national_sls_diffs": len(log["national_sls_diffs"]),
     }
 
@@ -410,6 +418,9 @@ def main():
     print("\nNon-competitive (low-P1) alignment subdivision:")
     for k in sorted(sub_counts, key=lambda x: (x is None, x)):
         print(f"  {str(k):<12} {sub_counts[k]:>5}")
+    print("\nTier-1 strategy breakdown (flip/protect/assess; None = not Tier-1):")
+    for k in sorted(strat_counts, key=lambda x: (x is None, x)):
+        print(f"  {str(k):<12} {strat_counts[k]:>5}")
     print(f"\nNational + SLS field diffs across all {n_total} counties: "
           f"{len(log['national_sls_diffs'])} (expect 0)")
 

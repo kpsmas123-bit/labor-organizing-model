@@ -274,14 +274,33 @@ def classify(sls_capital, sls_community, p1, p2, T):
     if not p1_high:                                     # Tier 2 — Build
         return f"tier2_build_{dim}"
 
-    # high SLS + high P1 — split by P2
+    # high SLS + high P1 — competitive AND high-leverage.
+    # B3 flip/protect re-tier (Sam, option i): this is TIER 1 regardless of
+    # incumbent alignment (p2). Protecting a vulnerable aligned seat is as
+    # important as flipping a hostile one, so alignment is no longer a tier rank —
+    # it becomes an orthogonal STRATEGY label (flip/protect/assess) via
+    # state_strategy(). The retired tier2_activate_* / tier2_unknown_* strings no
+    # longer arise from this branch.
+    return f"tier1_{'capital_community' if both else dim}"
+
+
+def state_strategy(p2, T):
+    """
+    Orthogonal strategy label for a competitive, high-leverage (Tier-1) STATE-lens
+    county. Incumbent alignment selects the strategic posture rather than the tier:
+        hostile incumbent (p2 <  p2_hostile)  -> "flip"
+        aligned incumbent (p2 >= p2_aligned)  -> "protect"
+        in-between, or unknown (p2 None)      -> "assess"
+    Callers apply this only where the county is Tier-1 (competitive + high-leverage);
+    elsewhere the strategy is None.
+    """
     if p2 is None:
-        return f"tier2_unknown_{dim}"
-    if p2 < T["p2_hostile"]:                            # Tier 1 — Transform
-        return f"tier1_{'capital_community' if both else dim}"
-    if p2 >= T["p2_aligned"]:                           # Tier 2 — Activate
-        return f"tier2_activate_{dim}"
-    return f"tier2_unknown_{dim}"                       # Tier 2 — Unknown (neutral)
+        return "assess"
+    if p2 < T["p2_hostile"]:
+        return "flip"
+    if p2 >= T["p2_aligned"]:
+        return "protect"
+    return "assess"
 
 
 def classify_national(sls_capital, sls_community, p1, state_tipping_weight, T):
@@ -410,6 +429,9 @@ def main():
             quadrant_national = classify_national(sls_capital, sls_community,
                                                   p1_national, pres_w, T)
             quadrant_state = classify(sls_capital, sls_community, p1_state, p2_state, T)
+            # Orthogonal flip/protect/assess label for competitive Tier-1 counties.
+            strategy_state = (state_strategy(p2_state, T)
+                              if quadrant_state.startswith("tier1") else None)
 
             results.append({
                 "fips": fips,
@@ -432,6 +454,7 @@ def main():
                 "state_p2_coverage": state_p2_cov,
                 "quadrant_national": quadrant_national,
                 "quadrant_state": quadrant_state,
+                "state_strategy": strategy_state,
                 # backward-compat aliases (older JS reads these)
                 "p1_presidential": p1_national,
                 "p2_alignment": p2_national,
