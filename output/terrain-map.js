@@ -214,7 +214,9 @@ function getCountyNarrative(county) {
   const state = county.state || "";
 
   const capitalHigh = slsCap >= 2.5;
-  const communityHigh = slsComm >= 35;
+  // TODO(config): source these from config/thresholds.json (sls_capital_high_boundary=2.5,
+  // sls_community_high_boundary=25, p1_high_boundary=5). 25 matches current config (was stale 35).
+  const communityHigh = slsComm >= 25;
   const p1High = p1 >= 5;
   const p2Aligned = p2 != null && p2 >= 0.6;
   const p2Hostile = p2 != null && p2 < 0.4;
@@ -279,7 +281,7 @@ function getCountyNarrative(county) {
 
 function getMsaNarrative(msa) {
   const slsType = (msa.capitalScore || 0) >= 2.5 ? "capital"
-    : (msa.communityScore || 0) >= 35 ? "community" : null;
+    : (msa.communityScore || 0) >= 25 ? "community" : null;  // 25 = current config (was stale 35)
   const p1High = (msa.presidential || 0) >= 5;
   if (!slsType && !p1High) {
     return `${msa.msaName} falls below current strategic thresholds `
@@ -402,6 +404,27 @@ const QUADRANT_COLORS = {
   "lower_priority":           "#E0DBD3"   // near-invisible warm gray
 };
 
+// ── Canonical tier palette ────────────────────────────────────
+// EXACT hexes mirrored from the distribution scatter's tierColor() (index.html)
+// and the static map key, so MAP == SCATTER == CARD. Family-based so it covers
+// every tier* value quadrant_national can emit (tier1/2/3/4 × capital/community,
+// including build/activate/unknown variants). This — not QUADRANT_COLORS (legacy
+// deploy_now_*/primary_target_* keys) — drives the base-map fill.
+const TIER_PALETTE = {
+  tier1_capital:   "#BD0026", tier1_community: "#1a3a6b",
+  tier2_capital:   "#E8736B", tier2_community: "#4A7FB5",
+  tier3:           "#7B6B9E", tier4:           "#E0DBD3",
+};
+function tierColor(q) {
+  if (!q) return NO_DATA_COLOR;          // genuinely absent/null -> no-data gray
+  const tn = _tierNum(q);
+  const comm = /community/.test(q), cap = /capital/.test(q);
+  if (tn === 1) return (comm && !cap) ? TIER_PALETTE.tier1_community : TIER_PALETTE.tier1_capital;
+  if (tn === 2) return (comm && !cap) ? TIER_PALETTE.tier2_community : TIER_PALETTE.tier2_capital;
+  if (tn === 3) return TIER_PALETTE.tier3;
+  return TIER_PALETTE.tier4;
+}
+
 const QUADRANT_LABELS = {
   // v2.0 Agent G tier fields
   "tier1_capital":            "Tier 1 — Capital",
@@ -470,8 +493,10 @@ function getGoalFill(c) {
       : NON_SWING_COLOR;
   }
   if (goalFilter === "power") {
-    const q = getLensQuadrant(c);
-    return QUADRANT_COLORS[q] || NO_DATA_COLOR;
+    // One color path for ALL counties: the county's own quadrant_national
+    // (via getLensQuadrant), colored by the shared tier palette. No MSA
+    // re-classification — see the un-merge note in initMap().
+    return tierColor(getLensQuadrant(c));
   }
   if (goalFilter === "senate") return getSenateColor(c.state);
   return NO_DATA_COLOR;
@@ -568,10 +593,19 @@ function updateLegend() {
   }
   if (goalFilter === "power") {
     document.getElementById("legend-title").textContent = "Strategic Terrain";
-    document.getElementById("legend-tiers").innerHTML = Object.entries(QUADRANT_COLORS).map(([key, color]) =>
+    // Canonical tiers, colored by the shared tier palette (matches map + scatter + card).
+    const rows = [
+      { color: TIER_PALETTE.tier1_capital,   label: "Tier 1 — Capital" },
+      { color: TIER_PALETTE.tier1_community, label: "Tier 1 — Community" },
+      { color: TIER_PALETTE.tier2_capital,   label: "Tier 2 — Capital" },
+      { color: TIER_PALETTE.tier2_community, label: "Tier 2 — Community" },
+      { color: TIER_PALETTE.tier3,           label: "Tier 3 — Electoral" },
+      { color: TIER_PALETTE.tier4,           label: "Tier 4 — Lower priority" },
+    ];
+    document.getElementById("legend-tiers").innerHTML = rows.map(t =>
       `<div class="legend-tier">
-        <div class="legend-tier-swatch" style="background:${color}"></div>
-        <div class="legend-tier-label" style="font-size:9px">${QUADRANT_LABELS[key]}</div>
+        <div class="legend-tier-swatch" style="background:${t.color}"></div>
+        <div class="legend-tier-label" style="font-size:9px">${t.label}</div>
       </div>`
     ).join("");
     return;
@@ -587,12 +621,11 @@ const svg = d3.select("#map-svg");
 let g;
 let zoomToCounty = () => {};
 
-function highlightSelection(fips, msaName) {
+function highlightSelection(fips, _msaName) {
+  // Base map is per-county now; always highlight the county shape by fips.
   svg.selectAll(".map-selected").classed("map-selected", false);
-  if (msaName) {
-    svg.selectAll(`.msa-path[data-msa="${CSS.escape(msaName)}"]`).classed("map-selected", true);
-  } else if (fips) {
-    svg.selectAll(`.nonmetro-path[data-fips="${fips}"]`).classed("map-selected", true);
+  if (fips) {
+    svg.selectAll(`.county-path[data-fips="${fips}"]`).classed("map-selected", true);
   }
 }
 
@@ -602,9 +635,14 @@ let msaScoreByFips = {};
 let msaScoreByName = {};
 
 // Classify an MSA into the 7-quadrant system using MSA-level aggregated scores.
+// NOTE: this legacy MSA rollup NO LONGER drives base-map color (the base map is an
+// honest per-county choropleth keyed on quadrant_national — see initMap()). It is
+// retained only for the non-visual MSA aggregate (msaScoreByName) and emits LEGACY
+// quadrant strings; it does not reproduce the canonical national two-pathway lens.
+// TODO(config): community boundary is 25 (current config); was a stale 35.
 function classifyMsaQuadrant(msa) {
   const capHigh  = msa.sls_capital      >= 2.5;
-  const comHigh  = msa.sls_community    >= 35;
+  const comHigh  = msa.sls_community    >= 25;
   const presHigh = msa.p1_presidential  >= 5;
   if (capHigh && comHigh && presHigh) return "deploy_now_both";
   if (capHigh && presHigh)            return "deploy_now_capital";
@@ -723,33 +761,19 @@ async function initMap() {
     const countyByFips = {};
     allCounties.forEach(c => { countyByFips[c.fips] = c; });
 
-    // Group TopoJSON county geometries by MSA name for merging
-    const msaGeomGroups = {};   // msaName → array of county TopoJSON geom objects
-    const nonMetroGeoms = [];   // individual geom objects for non-metro counties
-
-    for (const geom of us.objects.counties.geometries) {
-      const c = countyByFips[geom.id];
-      const msaName = (c && c.msa_name && c.msa_name !== "Non-Metro") ? c.msa_name : null;
-      if (msaName) {
-        if (!msaGeomGroups[msaName]) msaGeomGroups[msaName] = [];
-        msaGeomGroups[msaName].push(geom);
-      } else {
-        nonMetroGeoms.push(geom);
-      }
-    }
-
-    // Merge each MSA's counties into a single GeoJSON Feature (no internal county topology)
-    const msaFeatures = Object.entries(msaGeomGroups).map(([msaName, geoms]) => ({
-      type: "Feature",
-      geometry: topojson.merge(us, geoms),
-      properties: { msaName },
-    }));
-
-    // Non-metro counties stay as individual features
-    const nonMetroFeatures = allCountyFeatures.features.filter(f => {
-      const c = countyByFips[f.id];
-      return !c || !c.msa_name || c.msa_name === "Non-Metro";
-    });
+    // ── HONEST PER-COUNTY CHOROPLETH (metros un-merged) ──────────
+    // Every county (metro + non-metro) renders as its own shape, colored by its
+    // own quadrant_national. We no longer topojson.merge metro counties into a
+    // single MSA polygon — that merge was what forced the separate, stale
+    // classifyMsaQuadrant color path. Now MAP color == SCATTER color == CARD tier
+    // for all 3,143 counties. Only counties present in the data are drawn.
+    //
+    // BOOKMARK (future, do NOT build now): an optional "MSA merge" toggle/overlay
+    // could re-group metro counties into a metro rollup view ON TOP OF this honest
+    // per-county base map (a lens, not the default). The MSA aggregation in
+    // buildMsaScoreLookup()/msaScoreByName is retained for that and for non-visual
+    // use; it must not drive base-map color.
+    const countyFeatures = allCountyFeatures.features.filter(f => countyByFips[f.id]);
 
     const path = d3.geoPath().projection(d3.geoIdentity().fitSize([W, H], allCountyFeatures));
 
@@ -766,62 +790,12 @@ async function initMap() {
 
     const tt = document.getElementById("tooltip");
 
-    // ── Draw merged MSA regions ──────────────────────────────────
-    g.append("g").attr("class", "msa-regions")
+    // ── Draw ALL counties as individual shapes (single color path) ──
+    g.append("g").attr("class", "county-regions")
       .selectAll("path")
-      .data(msaFeatures)
+      .data(countyFeatures)
       .join("path")
-      .attr("class", "msa-path")
-      .attr("d", path)
-      .attr("data-msa", d => d.properties.msaName)
-      .attr("stroke", "#C8C3B8")
-      .attr("stroke-width", "0.4")
-      .attr("stroke-opacity", "0.7")
-      .attr("fill", d => {
-        const msa = msaScoreByName[d.properties.msaName];
-        if (!msa) return NO_DATA_COLOR;
-        return getMsaGoalFill(msa);
-      })
-      .attr("data-msa", d => d.properties.msaName)
-      .on("mousemove", (event, d) => {
-        const msaName = d.properties.msaName;
-        const msa = msaScoreByName[msaName];
-        if (!msa) return;
-        tt.style.opacity = "1";
-        tt.style.left = (event.offsetX + 12) + "px";
-        tt.style.top = (event.offsetY - 10) + "px";
-        const _tc = t => t===1?"#bd0026":t===2?"#1a3a6b":t===3?"#6b4f9e":"#999";
-        let scoreHtml = "";
-        if (goalFilter === "presidential") {
-          if (msa.hasSwingers) {
-            scoreHtml = `<br><span class="tt-opp">P1: ${(msa.presidential||0).toFixed(1)} · Cap: ${(msa.capitalScore||0).toFixed(1)} · Comm: ${(msa.communityScore||0).toFixed(1)}</span>`;
-          } else {
-            scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
-          }
-        } else if (goalFilter === "power") {
-          const q  = msa.dominantQuadrant || "tier4";
-          const tn = _tierNum(q);
-          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${_tc(tn)}">${_tierLabel(q)}</span>`
-            + `<br><span style="font-size:10px;color:#A09385">Cap: ${(msa.capitalScore||0).toFixed(1)} · Comm: ${(msa.communityScore||0).toFixed(1)}</span>`;
-        } else if (goalFilter === "senate") {
-          const tierNums = msa.counties.map(c => SENATE_TIERS[c.state]).filter(Boolean);
-          scoreHtml = tierNums.length
-            ? `<br><span class="tt-opp">${SENATE_TIER_LABELS[Math.min(...tierNums)]}</span>`
-            : `<br><span style="color:#888;font-size:10px">Not competitive</span>`;
-        }
-        tt.innerHTML = `<strong>${msaName}</strong>`
-          + `<br><span style="font-size:10px;color:#A09385">${msa.states}</span>`
-          + scoreHtml;
-      })
-      .on("mouseleave", () => { tt.style.opacity = "0"; })
-      .on("click", (event, d) => { showMsaDetail(d.properties.msaName); });
-
-    // ── Draw non-metro county regions ───────────────────────────
-    g.append("g").attr("class", "nonmetro-regions")
-      .selectAll("path")
-      .data(nonMetroFeatures)
-      .join("path")
-      .attr("class", "nonmetro-path")
+      .attr("class", "county-path")
       .attr("d", path)
       .attr("stroke", "#C8BFB5")
       .attr("stroke-width", "0.3")
@@ -838,6 +812,8 @@ async function initMap() {
         tt.style.left = (event.offsetX + 12) + "px";
         tt.style.top = (event.offsetY - 10) + "px";
         const _tc = t => t===1?"#bd0026":t===2?"#1a3a6b":t===3?"#6b4f9e":"#999";
+        const msa = msaScoreByFips[c.fips];
+        const place = msa ? msa.msaName : "Non-Metro";
         let scoreHtml = "";
         if (goalFilter === "presidential") {
           if (SWING_STATES_PRES.has(c.state)) {
@@ -849,9 +825,8 @@ async function initMap() {
             scoreHtml = `<br><span style="color:#888;font-size:10px">Not a presidential battleground</span>`;
           }
         } else if (goalFilter === "power") {
-          const q  = c.quadrant || "lower_priority";
-          const tn = _tierNum(q);
-          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${_tc(tn)}">${_tierLabel(q)}</span>`
+          const q  = getLensQuadrant(c);
+          scoreHtml = `<br><span style="font-size:11px;font-weight:600;color:${tierColor(q)}">${_tierLabel(q)}</span>`
             + `<br><span style="font-size:10px;color:#A09385">Cap: ${(c.sls_capital||0).toFixed(1)} · Comm: ${(c.sls_community||0).toFixed(1)}</span>`;
         } else if (goalFilter === "senate") {
           const tier = SENATE_TIERS[c.state];
@@ -860,7 +835,7 @@ async function initMap() {
             : `<br><span style="color:#888;font-size:10px">Not competitive</span>`;
         }
         tt.innerHTML = `<strong>${c.county_name}, ${c.state}</strong>`
-          + `<br><span style="font-size:10px;color:#A09385">Non-Metro</span>`
+          + `<br><span style="font-size:10px;color:#A09385">${place}</span>`
           + scoreHtml;
       })
       .on("mouseleave", () => { tt.style.opacity = "0"; })
@@ -889,7 +864,7 @@ async function initMap() {
         .attr("stroke-width", 0.5);
     }
 
-    for (const f of nonMetroFeatures) {
+    for (const f of countyFeatures) {
       const c = countyByFips[f.id];
       if (!c) continue;
       const letter = (c.v1_intervention_type || "").charAt(5);
@@ -897,16 +872,8 @@ async function initMap() {
       const [cx, cy] = path.centroid(f);
       addIntSymbol(cx, cy, letter);
     }
-    for (const f of msaFeatures) {
-      const msa = msaScoreByName[f.properties.msaName];
-      if (!msa) continue;
-      const letter = msa.dominantLetter;
-      if (!["A","B","C"].includes(letter)) continue;
-      const [cx, cy] = path.centroid(f);
-      addIntSymbol(cx, cy, letter);
-    }
 
-    setStatus(`Map loaded · ${msaFeatures.length} metro areas`);
+    setStatus(`Map loaded · ${countyFeatures.length} counties`);
   } catch (e) {
     loadingMsg.text("Map failed to load — check internet connection and reload.");
     setStatus("Map topology failed to load. Check internet connection.");
@@ -918,18 +885,9 @@ function updateMapColors() {
   if (!g) return;
   const visibleFips = new Set(filteredCounties.map(c => c.fips));
 
-  g.selectAll(".msa-path").attr("fill", function() {
-    const msaName = this.dataset.msa;
-    const msa = msaScoreByName[msaName];
-    if (!msa) return NO_DATA_COLOR;
-    const anyVisible = msa.counties.some(c => visibleFips.has(c.fips));
-    if (!anyVisible) return FILTERED_COLOR;
-    return getMsaGoalFill(msa);
-  });
-
   const countyByFips = {};
   allCounties.forEach(c => { countyByFips[c.fips] = c; });
-  g.selectAll(".nonmetro-path").attr("fill", function() {
+  g.selectAll(".county-path").attr("fill", function() {
     const fips = this.dataset.fips;
     const c = countyByFips[fips];
     if (!c) return NO_DATA_COLOR;
@@ -1006,7 +964,7 @@ function showMsaDetail(msaName) {
     <div style="display:flex;justify-content:space-between;align-items:flex-start;
                 margin-bottom:var(--space-3);">
       <div>
-        <span class="card-tier-badge card-tier-${tn}">${_tierLabel(q)}</span>
+        <span class="card-tier-badge" style="background:${tierColor(q)};color:${tn >= 4 ? 'var(--color-text)' : '#fff'};border:none">${_tierLabel(q)}</span>
         <h3 style="font-family:var(--font-serif);font-size:var(--text-lg);
                    color:var(--color-text);margin:0 0 2px;">${msaName}</h3>
         <div style="font-family:var(--font-mono);font-size:var(--text-xs);
@@ -1169,8 +1127,7 @@ function buildMsaLegislatorsHTML(msaCounties) {
 
 // County detail panel (v2.0 — all counties, not just non-metro)
 function showDetail(county) {
-  const msaForCounty = msaScoreByFips[county.fips];
-  highlightSelection(msaForCounty ? null : county.fips, msaForCounty ? msaForCounty.msaName : null);
+  highlightSelection(county.fips, null);
   const panel = document.getElementById("detail-panel");
   panel.scrollTop = 0;
 
@@ -1205,7 +1162,7 @@ function showDetail(county) {
     <div style="display:flex;justify-content:space-between;align-items:flex-start;
                 margin-bottom:var(--space-3);">
       <div>
-        <span class="card-tier-badge card-tier-${tn}">${_tierLabel(q)}</span>
+        <span class="card-tier-badge" style="background:${tierColor(q)};color:${tn >= 4 ? 'var(--color-text)' : '#fff'};border:none">${_tierLabel(q)}</span>
         <h3 style="font-family:var(--font-serif);font-size:var(--text-xl);
                    color:var(--color-text);margin:0 0 2px;">
           ${county.county_name || "County"}
@@ -1380,8 +1337,7 @@ function updateTop10() {
     .slice(0, 10);
   const container = document.getElementById("top10-list");
   container.innerHTML = top.map((c, i) => {
-    const q = c.quadrant || "lower_priority";
-    const scoreColor = QUADRANT_COLORS[q] || "#7A6F64";
+    const scoreColor = tierColor(getLensQuadrant(c));
     return `<div class="top10-row" onclick="showDetail(${JSON.stringify(c).replace(/"/g, '&quot;')}); zoomToCounty('${c.fips}')">
       <span class="top10-name">${i+1}. ${c.county_name}, ${c.state}</span>
       <span class="top10-score" style="color:${scoreColor}">${(c.sls_capital || 0).toFixed(2)}</span>
