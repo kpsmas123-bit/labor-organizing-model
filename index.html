@@ -625,6 +625,16 @@
       .xview.is-pip { position: absolute; right: var(--space-4); bottom: var(--space-4); width: clamp(210px, 27%, 320px); height: clamp(160px, 32%, 250px); z-index: 4; box-shadow: var(--shadow-card-hover) !important; cursor: pointer; }
       .xview.is-pip .xview-expand { display: none; }
       .xview.is-pip .xview-bar { cursor: pointer; }
+      /* PiP matches the in-map legend: sharper corners + a chevron collapse/expand
+         toggle (collapses to just the title bar, like the legend collapses to its header). */
+      .xview.is-pip { border-radius: var(--radius-sm); }
+      .xview-collapse { display: none; }
+      .xview.is-pip .xview-collapse { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; padding: 0; background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; color: var(--color-text-muted); transform: rotate(-90deg); transition: color 0.2s, transform 0.3s ease; }
+      .xview-collapse:hover { color: var(--color-text); }
+      .xview-collapse:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      .xview.is-pip.pip-collapsed { height: auto; }
+      .xview.is-pip.pip-collapsed .xview-collapse { transform: rotate(90deg); }
+      .xview.is-pip.pip-collapsed .xview-body { display: none; }
       /* transparent hit layer makes the WHOLE PiP a swap button regardless of inner SVG interactivity */
       .xview-pip-hit { display: none; }
       .xview.is-pip .xview-pip-hit { display: block; position: absolute; inset: 0; z-index: 6; cursor: pointer; background: transparent; }
@@ -739,7 +749,7 @@
       /* clearly-visible active state: ink + weight + underline */
       #explorer-rail .sidebar-lens-btn.active { color: var(--color-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
       #explorer-rail .sidebar-lens-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-      @media (prefers-reduced-motion: reduce) { .xview { transition: none; } }
+      @media (prefers-reduced-motion: reduce) { .xview, .xview-collapse { transition: none; } }
       @media (max-width: 900px) {
         .explorer { grid-template-columns: 1fr; }
         .explorer-rail { height: auto; max-height: none; overflow: visible; }
@@ -905,6 +915,7 @@
               <div class="xview-bar">
                 <span class="xview-bar-title" id="results-title-map">Map view</span>
                 <div class="xview-actions">
+                  <button class="xview-collapse" type="button" aria-label="Collapse picture-in-picture" title="Collapse / expand">&#8249;</button>
                   <button class="xview-expand" type="button" data-view="map" onclick="setExplorerLayout('map-primary')"
                           title="Expand map (scatter becomes a live picture-in-picture)" aria-label="Expand map to primary">↗ Expand</button>
                 </div>
@@ -951,6 +962,7 @@
               <div class="xview-bar">
                 <span class="xview-bar-title" id="results-title-scatter">Distribution view</span>
                 <div class="xview-actions">
+                  <button class="xview-collapse" type="button" aria-label="Collapse picture-in-picture" title="Collapse / expand">&#8249;</button>
                   <button class="xview-expand" type="button" data-view="scatter" onclick="setExplorerLayout('scatter-primary')"
                           title="Expand scatter (map becomes a live picture-in-picture)" aria-label="Expand scatter to primary">↗ Expand</button>
                 </div>
@@ -2476,6 +2488,9 @@
       // is-pip marks the demoted live view (the other becomes primary).
       mapView.classList.toggle('is-pip', layout === 'scatter-primary');
       scatterView.classList.toggle('is-pip', layout === 'map-primary');
+      // a fresh PiP always starts expanded (clear any prior collapse).
+      mapView.classList.remove('pip-collapsed');
+      scatterView.classList.remove('pip-collapsed');
       // each expand button flips to a Restore control while its view is primary.
       var btns = explorer.querySelectorAll('.xview-expand');
       for (var i = 0; i < btns.length; i++) {
@@ -2513,6 +2528,11 @@
       }
       if (bar) bar.addEventListener('click', function (e) {
         if (view.classList.contains('is-pip') && !e.target.closest('button')) swap();
+      });
+      var collapseBtn = view.querySelector('.xview-collapse');
+      if (collapseBtn) collapseBtn.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();   // don't trigger the bar's swap
+        view.classList.toggle('pip-collapsed');
       });
     });
 
