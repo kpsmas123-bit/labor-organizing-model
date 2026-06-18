@@ -76,7 +76,7 @@
         dataSources: [
           { label: "Census County Business Patterns (CBP, 2023)", href: "#m-data" },
           { label: "BLS QCEW (public-sector supplement)", href: "#m-data" },
-          { label: "Sector reach rubric (repo; NAICS-coded)", href: "#m-data" }
+          { label: "Sector SVS rubric (repo; NAICS-coded)", href: "#m-data" }
         ]
       },
       details: [
@@ -84,28 +84,27 @@
           variant: "County employment",
           gloss: "How many people work in each industry in this county?",
           inputs: "Per-county → per-sector employment, ~3,143 counties.",
-          cleaning: "Used as raw counts at score time; sectors not present in the reach rubric are skipped; counties with zero total employment are guarded to 0 in the community calculation.",
+          cleaning: "Used as raw counts at score time; sectors not present in the SVS rubric are skipped; counties with zero total employment are guarded to 0 in the community calculation.",
           outputField: "not emitted directly; feeds SLS-Capital and SLS-Community",
           notes: "Source: Census County Business Patterns (private sector); BLS QCEW supplements public-sector employment that CBP under-counts. Employment is the rawest available proxy for where workers — and therefore potential organized power — actually are."
         },
         {
-          variant: "Sector strategic score (the reach rubric)",
-          gloss: "How strategically important is each industry — how far does disruption in it reach?",
-          inputs: "Each sector carries a capital-reach and a community-reach ordinal: none / local / state / national.",
-          formula: "points = { none: 0, local: 10, state: 15, national: 25 }\nOnly these two reach ordinals feed Sectoral Leverage.",
-          outputField: "sector-level, not in county output; surfaces in the “top strategic sectors” tooltip",
-          notes: "Not all employment is equal leverage: a sector whose disruption ripples nationally carries more strategic weight than one whose effects stay local. A fuller Sector Strategic Value (SVS) score also exists (adding community-facing, non-offshorability, and bonus terms) but is DISPLAY-ONLY — it does not feed the live model."
+          variant: "Sector strategic score (the composite SVS rubric)",
+          gloss: "How strategically important is each industry — its composite Sector Strategic Value (SVS)?",
+          inputs: "Each sector carries four expert-assigned ratings: a capital-reach and a community-reach ordinal (none / local / state / national), a community-facing ordinal (none / local / state / national), and a non-offshorability level (none / partial / full).",
+          formula: "composite_svs = capital_reach + community_reach + community_facing + non_offshorability\n              + dual_crisis_bonus + whole_worker_bonus\nThe FULL composite SVS (range ~10–60) is the per-sector weight in Sectoral Leverage.",
+          outputField: "sector-level composite SVS; feeds BOTH SLS dimensions and the “top strategic sectors” tooltip",
+          notes: "Not all employment is equal leverage: a sector whose disruption ripples nationally, that faces the community directly, and that can't be offshored carries more strategic weight than one whose effects stay local. The composite SVS captures all of that, and now feeds the live model in full as the per-sector weight in Sectoral Leverage — not just the two reach ordinals."
         }
       ],
       rationale: [
-        "<strong>Employment as the base layer.</strong> Everything in Sectoral Leverage is built on who works where; employment is the rawest available proxy for where organized power could form. The reach rubric then weights that raw employment by how far a sector's disruption travels — turning a headcount into a measure of leverage."
+        "<strong>Employment as the base layer.</strong> Everything in Sectoral Leverage is built on who works where; employment is the rawest available proxy for where organized power could form. The composite SVS then weights that raw employment by how strategically important the sector is — how far its disruption travels, whether it faces the community, and how hard it is to offshore — turning a headcount into a measure of leverage."
       ],
       limitations: [
         "<strong>CBP under-counts some employment</strong> (notably public sector), which is why QCEW supplements it; coverage is good but not complete.",
         "<strong>Vintage.</strong> Employment is a recent annual snapshot, not real-time; sectors shift between releases.",
         "<strong>Counts, not readiness.</strong> Employment size is not the same as organizing readiness — it measures presence, not density or willingness.",
-        "<strong>The rubric is expert judgment, not measurement.</strong> Reach ordinals are assigned from case-study review and labor literature, not derived from disruption data; the four-level ordinal is coarse by design.",
-        "<strong>Only reach feeds the score.</strong> The richer SVS factors and bonuses are computed but unused by SLS — flagged so the rubric isn't over-read."
+        "<strong>The rubric is expert judgment, not measurement.</strong> Every SVS component — the reach ordinals, the community-facing ordinal, the non-offshorability level, and the two bonuses — is assigned from case-study review and labor literature, not derived from observed disruption data; the ordinal scales are coarse by design."
       ],
       seeAlso: [
         { label: "Sectoral Leverage", href: "#factor-sectoral-leverage" },
@@ -242,30 +241,30 @@
         dataSources: [
           { label: "Census County Business Patterns (CBP)", href: "#m-data" },
           { label: "BLS QCEW (public sector)", href: "#m-data" },
-          { label: "Sector reach rubric (repo)", href: "#m-data" }
+          { label: "Sector SVS rubric (repo)", href: "#m-data" }
         ]
       },
       details: [
         {
           variant: "SLS-Capital — magnitude",
           gloss: "The sheer weight of strategically important employment in the county.",
-          inputs: "Per-sector county employment counts; each sector's capital-reach points (10 / 15 / 25, from the reach rubric below).",
+          inputs: "Per-sector county employment counts; each sector's composite Sector Strategic Value (SVS) weight (~10–60, from the rubric below).",
           cleaning: "Sectors absent from the rubric are skipped; no per-county normalization beyond the divisor.",
-          formula: "raw         = Σ_sector ( capital_reach_points × sector_employment )\nSLS-Capital = min(100, raw / {{capital_divisor}})",
+          formula: "raw         = Σ_sector ( composite_svs × sector_employment )\nSLS-Capital = min(100, raw / {{capital_divisor}})",
           constants: [
             { specKey: "capital_divisor", label: "Capital normalization divisor" },
             { specKey: "sls_capital_high_boundary", label: "Capital “high” boundary ≥" }
           ],
           outputField: "sls_capital",
-          notes: "The divisor is calibrated so the largest-employment county (Los Angeles) lands near the top of the 0–100 scale; observed range is roughly 0–84. Counties with major port, logistics, or energy workforces score highest.",
+          notes: "Each sector is weighted by its FULL composite SVS — not just capital reach — so a non-offshorable, community-facing sector carries its full strategic weight into the magnitude score too. The divisor is calibrated so the largest-employment county (Los Angeles) lands near the top of the 0–100 scale; observed range is roughly 0–84. Counties with major port, logistics, or energy workforces score highest.",
           html: '<div class="citation">Silver, B. (2003). Forces of Labor. Cambridge University Press — workplace bargaining power and spatial fixes.</div>'
         },
         {
           variant: "SLS-Community — concentration",
           gloss: "How much of the local economy those strategic sectors make up.",
-          inputs: "Per-sector employment as a SHARE of the county's total employment; each sector's community-reach points (10 / 15 / 25); a confidence ramp on small counties.",
+          inputs: "Per-sector employment as a SHARE of the county's total employment; the SAME composite SVS weight as Capital; a confidence ramp on small counties.",
           cleaning: "Counties with zero total employment → 0. The confidence ramp suppresses noise in tiny labor markets (below).",
-          formula: "weighted      = Σ_sector ( community_reach_points × (sector_employment / total_employment) )\nshare_score   = min(100, weighted × {{community_share_mult}})\nSLS-Community = min(100, share_score × confidence_ramp)\n\nconfidence_ramp = 1.0   if total_employment ≥ {{ramp_full_at}}\n                = 0.0   if total_employment ≤ {{ramp_zero_at}}\n                = (emp − {{ramp_zero_at}}) / ({{ramp_full_at}} − {{ramp_zero_at}})   in between",
+          formula: "weighted      = Σ_sector ( composite_svs × (sector_employment / total_employment) )\nshare_score   = min(100, weighted × {{community_share_mult}})\nSLS-Community = min(100, share_score × confidence_ramp)\n\nconfidence_ramp = 1.0   if total_employment ≥ {{ramp_full_at}}\n                = 0.0   if total_employment ≤ {{ramp_zero_at}}\n                = (emp − {{ramp_zero_at}}) / ({{ramp_full_at}} − {{ramp_zero_at}})   in between",
           constants: [
             { specKey: "community_share_mult", label: "Share → 0–100 multiplier (×)" },
             { specKey: "ramp_full_at", label: "Ramp full weight at ≥" },
@@ -273,30 +272,36 @@
             { specKey: "sls_community_high_boundary", label: "Community “high” boundary ≥" }
           ],
           outputField: "sls_community",
-          notes: "Observed range is roughly 0–56. A hospital employing 40% of a rural county's workforce is structurally central in a way the same hospital cannot be at 2% of a large metro — concentration, not size, drives this score. Counties with concentrated healthcare, education, or public transit workforces score highest.",
+          notes: "The per-sector weight is the SAME composite SVS as Capital — only gross-vs-share differs. Observed range is roughly 0–57. A hospital employing 40% of a rural county's workforce is structurally central in a way the same hospital cannot be at 2% of a large metro — concentration, not size, drives this score. Counties with concentrated healthcare, education, or public transit workforces score highest.",
           html: '<div class="citation">McAlevey, J. (2016). No Shortcuts. Oxford University Press — whole-worker organizing.</div>'
         },
         {
-          variant: "The reach rubric — shared input",
-          gloss: "How far disruption in a sector propagates: none / local / state / national.",
-          html: '<p>Each sector carries a <strong>capital-reach</strong> and a <strong>community-reach</strong> ordinal (none / local / state / national), mapped to points. These two ordinals are the <strong>only</strong> parts of the sector rubric that feed Sectoral Leverage.</p>'
+          variant: "The composite SVS — shared per-sector weight",
+          gloss: "One strategic-value score per sector, used as the weight in BOTH SLS dimensions.",
+          html: '<p>Both SLS dimensions weight each sector by its <strong>composite Sector Strategic Value (SVS)</strong> — a single per-sector score (range ~10–60) the model feeds in <strong>full</strong>. The Capital/Community split comes entirely from how that weight is applied (gross employment vs employment share), <strong>not</strong> from giving the two dimensions different per-sector weights.</p>'
+              + '<div class="formula-card-expr">composite_svs = capital_reach + community_reach + community_facing + non_offshorability\n              + dual_crisis_bonus + whole_worker_bonus</div>'
               + '<div class="method-table-wrap"><table class="method-table">'
-              + '<thead><tr><th>Reach ordinal</th><th>None</th><th>Local</th><th>State</th><th>National</th></tr></thead>'
+              + '<thead><tr><th>Component</th><th>Levels → points</th></tr></thead>'
               + '<tbody>'
-              + '<tr><td>Points</td><td>0</td><td>10</td><td>15</td><td>25</td></tr>'
+              + '<tr><td>Capital reach</td><td>none 0 · local 10 · state 15 · national 25</td></tr>'
+              + '<tr><td>Community reach</td><td>none 0 · local 10 · state 15 · national 25</td></tr>'
+              + '<tr><td>Community-facing reach</td><td>none 0 · local 5 · state 10 · national 15</td></tr>'
+              + '<tr><td>Non-offshorability</td><td>none 0 · partial 3 · full 5</td></tr>'
+              + '<tr><td>Dual-crisis bonus</td><td>+5 if both capital- and community-reach are non-zero</td></tr>'
+              + '<tr><td>Whole-worker bonus</td><td>+5 if community-reach and community-facing are both non-zero</td></tr>'
               + '</tbody></table></div>'
         }
       ],
       rationale: [
         "<strong>Why two scores, not one.</strong> Worker power has two faces. A sector can matter because it is huge — disrupting it disrupts a lot (capital leverage) — or because it dominates a particular place, anchoring the local economy and the community around it (community leverage). A national logistics hub and a single-industry rural county express power differently; collapsing them into one number would hide the difference that matters for strategy. Capital rewards size; Community rewards concentration.",
+        "<strong>Why the composite SVS is the weight (not bare reach).</strong> Both scores weight each sector by its <em>full</em> composite Sector Strategic Value — capital and community reach, plus community-facing reach, non-offshorability, and the dual-crisis and whole-worker bonuses — rather than by a single reach ordinal. So a sector that is hard to offshore or sits at the worker–community boundary carries that strategic weight into <em>both</em> dimensions. The magnitude-vs-concentration distinction is then carried entirely by gross employment vs employment share — not by tilting the per-sector weight differently for Capital and Community.",
         "<strong>Why the different scales.</strong> Because the two measure different things, their “high” thresholds are not comparable. A capital score clears “high” at a low absolute number ({{sls_capital_high_boundary}}) because it is a raw employment-weighted magnitude that only the largest labor markets push high; a community score needs much more ({{sls_community_high_boundary}}) because it is a 0–100 share index where many counties post moderate concentration. Reading them on one scale would make a high-magnitude metro look incomparably more “leveraged” than a county its strategic sector utterly dominates — which is exactly the false equivalence the two scores exist to avoid.",
         "<strong>Why the confidence ramp (Community only).</strong> Employment SHARE is volatile in small counties — a handful of workers can swing the percentage wildly. The ramp discounts community scores in very small labor markets so that concentration signals come from places where the share is meaningful: a county fades in fully above ~{{ramp_full_at}} covered workers and to zero below ~{{ramp_zero_at}}. Capital, being an absolute count, has no such noise problem and gets no ramp."
       ],
       limitations: [
-        "<strong>The full strategic-value score does NOT feed Sectoral Leverage.</strong> The sector rubric also computes a richer Sector Strategic Value (SVS) that adds community-facing and non-offshorability factors plus two bonuses. SLS uses <strong>none</strong> of that — only the two reach ordinals, remapped to 10/15/25. The fuller SVS appears only in a display tooltip (“top strategic sectors”); it does not drive any score. We surface this so the rubric isn't read as doing more work than it does.",
-        "<strong>The community multiplier is hardcoded.</strong> The ×{{community_share_mult}} in the community formula lives in code, not in the config that holds the model's other constants — a single-source-of-truth gap we flag and intend to move to config.",
-        "<strong>Capital and Community are not directly comparable.</strong> Despite the shared “leverage” name, one is an absolute magnitude and the other a share; a county's two SLS numbers should be read as two different questions, not two points on one scale.",
-        "<strong>Reach ordinals are a coarse instrument.</strong> A four-level (none / local / state / national) reach rating is a deliberate simplification of how far a sector's disruption propagates."
+        "<strong>SVS is a composite of expert-assigned ratings, not measured disruption.</strong> The per-sector weight sums ordinal ratings — capital and community reach, community-facing reach, non-offshorability — plus two fixed bonuses, all assigned from case-study review and labor literature rather than derived from observed disruption data. The four-level reach scale is coarse by design.",
+        "<strong>Capital and Community are not directly comparable.</strong> Despite the shared “leverage” name, one is an absolute employment-weighted magnitude and the other a 0–100 share index; a county's two SLS numbers should be read as two different questions, not two points on one scale (their “high” gates, {{sls_capital_high_boundary}} vs {{sls_community_high_boundary}}, are not comparable).",
+        "<strong>Community share is volatile in small labor markets.</strong> Employment share swings wildly where a county has few covered workers, so SLS-Community is gated by the confidence ramp — a noise discount, not a correction; concentration just below the full-weight threshold is still softened."
       ],
       seeAlso: [
         { label: "County employment", href: "#input-sectoral" },
@@ -622,13 +627,13 @@
               + '<div class="method-table-wrap"><table class="method-table">'
               + '<thead><tr><th>Tier</th><th>Meaning</th><th>Counties</th></tr></thead>'
               + '<tbody>'
-              + '<tr><td>tier1_capital</td><td>Capital pathway — top priority</td><td>20</td></tr>'
-              + '<tr><td>tier1_community</td><td>Community pathway — top priority</td><td>40</td></tr>'
-              + '<tr><td>tier1_capital_community</td><td>Both pathways</td><td>1</td></tr>'
-              + '<tr><td>tier2_build_capital</td><td>High capital leverage, not yet decisive — build</td><td>268</td></tr>'
-              + '<tr><td>tier2_build_community</td><td>High community leverage in a lean state — build</td><td>46</td></tr>'
-              + '<tr><td>tier3_electoral</td><td>Decisive geography without a base at scale</td><td>72</td></tr>'
-              + '<tr><td>tier4</td><td>Lower priority under finite resources</td><td>2,696</td></tr>'
+              + '<tr><td>tier1_capital</td><td>Capital pathway — top priority</td><td>15</td></tr>'
+              + '<tr><td>tier1_community</td><td>Community pathway — top priority</td><td>54</td></tr>'
+              + '<tr><td>tier1_capital_community</td><td>Both pathways</td><td>4</td></tr>'
+              + '<tr><td>tier2_build_capital</td><td>High capital leverage, not yet decisive — build</td><td>280</td></tr>'
+              + '<tr><td>tier2_build_community</td><td>High community leverage in a lean state — build</td><td>43</td></tr>'
+              + '<tr><td>tier3_electoral</td><td>Decisive geography without a base at scale</td><td>74</td></tr>'
+              + '<tr><td>tier4</td><td>Lower priority under finite resources</td><td>2,673</td></tr>'
               + '</tbody></table></div>'
               + '<p>Counts are the live <code>quadrant_national</code> distribution; they sum to 3,143.</p>'
         }
@@ -638,7 +643,7 @@
       ],
       limitations: [
         "<strong>Heavily weighted to tier4 by construction</strong> — most counties are not high-leverage, which is the expected shape of a targeting model.",
-        "<strong>tier1_capital_community is currently a single county</strong>; the hybrid case is rare. The largest labor markets sit in states that don't decide national elections, and the counties that do are smaller and community-facing — so almost no county clears both pathways at once."
+        "<strong>tier1_capital_community is only a handful of counties</strong> (currently 4); the hybrid case is rare. The largest labor markets sit in states that don't decide national elections, and the counties that do are smaller and community-facing — so almost no county clears both pathways at once."
       ],
       seeAlso: [
         { label: "Federal lens", href: "#lens-federal" },
