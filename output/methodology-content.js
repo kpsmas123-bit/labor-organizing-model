@@ -420,8 +420,8 @@
           gloss: "How aligned are current elected officials with labor's legislative agenda?",
           formula: "P2 = key_vote_score × 0.60 + inverse_ideology_score × 0.40",
           constants: [
-            { specKey: "p2_hostile_ceiling", label: "Hostile incumbent (Transform): P2 <" },
-            { specKey: "p2_aligned_floor", label: "Aligned incumbent (Activate): P2 ≥" }
+            { specKey: "p2_hostile_ceiling", label: "Hostile incumbent (flip): P2 <" },
+            { specKey: "p2_aligned_floor", label: "Aligned incumbent (protect): P2 ≥" }
           ],
           html: '<p>The key-vote component (60%) scores each legislator on 4 federal key votes relevant to labor organizing rights; all roll-call numbers are verified against House Clerk XML and Senate.gov records. The ideology component (40%) uses legislative-behavior ideology scores from bill sponsorship and cosponsorship patterns (GovTrack, 119th Congress), normalized so progressive = high signal. County P2 aggregates legislator scores weighted by district-county overlap.</p>'
               + '<div class="method-table-wrap"><table class="method-table">'
@@ -483,7 +483,7 @@
             { specKey: "state_tipping_lean_floor", label: "Lean-state floor ≥" },
             { specKey: "state_tipping_swing_floor", label: "Swing-state floor <" }
           ],
-          notes: "P2-driven sublabels (activate / unknown) never appear on the national lens by construction — national strategy does not read incumbent posture."
+          notes: "Incumbent-alignment strategy labels (flip / protect / assess) never appear on the national lens by construction — national strategy does not read incumbent posture."
         }
       ],
       rationale: [
@@ -492,7 +492,7 @@
         "<strong>Why the Community pathway uses STATE swing status, not the county's own margin.</strong> Community Tier-1 turns on whether the county sits in a swing STATE — because a concentrated worker base influences the state-level outcome regardless of the county's own presidential margin. A safe-margin county in a swing state can still be Tier-1 community."
       ],
       limitations: [
-        "<strong>No activate / transform sublabels nationally.</strong> Those depend on incumbent alignment, which is dropped here by design; they appear only on the state lens.",
+        "<strong>No flip / protect / assess strategy nationally.</strong> That label depends on incumbent alignment, which is dropped here by design; it appears only on the state lens.",
         "<strong>The Community pathway ignores the county's own presidential margin entirely</strong> — its electoral value is purely the state's decisiveness."
       ],
       seeAlso: [
@@ -507,7 +507,7 @@
       id: "lens-state",
       title: "State lens",
       status: "populated",
-      summary: "At the STATE-LEGISLATIVE scale, what kind of terrain is this county — and is its incumbent friendly or hostile?",
+      summary: "At the STATE-LEGISLATIVE scale, what kind of terrain is this county — and where it is a Tier-1 target, should labor flip, protect, or assess the seat?",
       flowchart: {
         inputs: [
           { label: "Sectoral Leverage", href: "#factor-sectoral-leverage" },
@@ -521,34 +521,45 @@
       },
       details: [
         {
-          variant: "Tier-1 — competitive, high-leverage, hostile",
-          gloss: "Unlike the federal lens, the state lens DOES use incumbent alignment.",
-          formula: "Tier-1 (both pathways) requires:\n   sls_high  AND  p1_state ≥ {{p1_high_state}}  AND  p2_state < {{p2_hostile_ceiling}}\n   → tier1_{capital|community}  (or tier1_capital_community if both SLS dims high)",
+          variant: "Tier-1 — competitive AND high-leverage (alignment-blind)",
+          gloss: "A competitive, high-leverage state seat is Tier-1 no matter who currently holds it — incumbent alignment does NOT gate the tier.",
+          formula: "Tier-1 (both pathways) requires ONLY:\n   sls_high  AND  p1_state ≥ {{p1_high_state}}\n   → tier1_capital | tier1_community | tier1_capital_community (if both SLS dims clear high)\n\n(sls_high = sls_capital ≥ {{sls_capital_high_boundary}} OR sls_community ≥ {{sls_community_high_boundary}})\nIncumbent alignment (p2_state) is NOT read here — it sets the STRATEGY label below.",
           constants: [
             { specKey: "p1_high_state", label: "Competitive seat (state) ≥" },
-            { specKey: "p2_hostile_ceiling", label: "Hostile incumbent: P2 <" }
+            { specKey: "sls_capital_high_boundary", label: "Capital “high” ≥" },
+            { specKey: "sls_community_high_boundary", label: "Community “high” ≥" }
           ],
-          notes: "The competitive gate differs from the national gate and sits on a DIFFERENT scale — p1_high_state is the state-lens selectivity knob, not comparable to the national p1 gate."
+          notes: "The competitive gate sits on a DIFFERENT scale than the national gate — p1_high_state is the state-lens selectivity knob, not comparable to the national p1 gate."
         },
         {
-          variant: "The cascade — transform vs activate-and-defend",
-          gloss: "Hostile competitive seats are transform targets; aligned competitive seats are to protect.",
-          formula: "not sls_high                         → tier3_electoral if p1_high(state) else tier4\nsls_high AND not competitive         → tier2_build_{dim}\nsls_high AND competitive:\n   hostile  (p2 < {{p2_hostile_ceiling}})  → tier1 (transform)\n   aligned  (p2 ≥ {{p2_aligned_floor}})    → tier2_activate_{dim} (activate-and-defend)\n   in between                              → tier2_unknown_{dim}",
+          variant: "Strategy — flip / protect / assess (orthogonal to the tier)",
+          gloss: "For a Tier-1 seat, incumbent alignment selects the strategic POSTURE, not the rank.",
+          formula: "For a Tier-1 (competitive + high-leverage) county, state_strategy reads p2_state:\n   hostile  (p2_state <  {{p2_hostile_ceiling}})  → flip      (replace a hostile incumbent)\n   aligned  (p2_state ≥  {{p2_aligned_floor}})    → protect   (defend a vulnerable pro-labor seat)\n   in between, or unknown (p2_state absent)         → assess\n\nNon-Tier-1 counties carry no strategy label (null).",
           constants: [
-            { specKey: "p2_hostile_ceiling", label: "Hostile: P2 <" },
-            { specKey: "p2_aligned_floor", label: "Aligned: P2 ≥" }
+            { specKey: "p2_hostile_ceiling", label: "Hostile incumbent (flip): P2 <" },
+            { specKey: "p2_aligned_floor", label: "Aligned incumbent (protect): P2 ≥" }
           ],
-          notes: "A hostile incumbent in a competitive high-leverage seat is a transform target; an aligned incumbent in an equally competitive seat is one to activate and defend — a vulnerable pro-labor seat is as worth protecting as a hostile one is worth flipping."
+          notes: "Protecting a vulnerable aligned seat is treated as exactly as important as flipping a hostile one — both stay Tier-1. Current distribution: 127 state Tier-1 counties = 49 flip · 55 protect · 23 assess."
+        },
+        {
+          variant: "Below Tier-1 — build / electoral / lower priority",
+          gloss: "Counties that miss the Tier-1 gate fall through the same cascade as the federal lens.",
+          formula: "not sls_high                 → tier3_electoral if p1_state ≥ {{p1_high_state}}, else tier4\nsls_high AND not competitive → tier2_build_{capital|community}",
+          constants: [
+            { specKey: "p1_high_state", label: "Competitive seat (state) ≥" }
+          ],
+          notes: "The retired tier2_activate_* / tier2_unknown_* strings no longer arise — alignment never demotes a competitive high-leverage seat below Tier-1."
         }
       ],
       rationale: [
-        "<strong>Why state uses alignment and federal doesn't.</strong> State-legislative outcomes turn on specific, flippable seats where the incumbent's posture is directly actionable — so transform / activate-and-defend is the right axis. National strategy runs on different logic (see Federal lens).",
-        "<strong>Transform AND defend.</strong> The lens treats flipping a hostile seat and protecting a vulnerable aligned one as two halves of the same competitive terrain — both are where organized worker power changes the outcome."
+        "<strong>Why state uses alignment as a STRATEGY, not a rank.</strong> State-legislative outcomes turn on specific, flippable seats where the incumbent's posture is directly actionable. But a competitive high-leverage seat is worth organizing whether the incumbent is hostile or friendly — so alignment chooses the posture (flip vs protect) rather than the tier. National strategy runs on different logic (see Federal lens).",
+        "<strong>Flip and protect are equal priorities.</strong> Flipping a hostile seat and protecting a vulnerable pro-labor one are two halves of the same competitive terrain — both are where organized worker power changes the outcome, so both are Tier-1. (The earlier model ranked “transform” above “activate-and-defend”; B3 corrects that, after an audit found 49 flip seats outranking 55 protect seats by a full tier.)",
+        "<strong>Why a different competitive gate.</strong> State and national Electoral Leverage sit on different scales and are not directly comparable — p1_high_state is the state-lens selectivity knob (see State Electoral Leverage)."
       ],
       limitations: [
-        "<strong>Interim status.</strong> The state lens is computed and shipped on every county (quadrant_state, p1_state, p2_state) but is not yet surfaced in the public map, which currently shows the national lens only; it goes live after a dedicated state-layer audit and un-gating pass.",
-        "<strong>Defensive value may be underweighted.</strong> The classifier ranks transform (Tier 1) above activate-and-defend (Tier 2); the defensive value of a vulnerable aligned seat is arguably higher than that ordering implies — a known limitation bookmarked for a future model refinement.",
-        "<strong>State competitiveness data carries mixed vintages</strong> (mostly 2022 districts, some 2021 gubernatorial and 2024 presidential backfill), flagged but not discounted."
+        "<strong>“Assess” is a residual, not a verdict.</strong> The 23 assess counties are competitive, high-leverage seats whose incumbent alignment falls in the neutral band or is unknown; they are Tier-1, but the flip-vs-protect call needs a human read of the specific seat.",
+        "<strong>State P2 is a party-ID proxy.</strong> State alignment is Democratic seat-share from Open States rosters, not a seat-level labor-vote record; 194 counties fall back to a statewide-uniform value where district rosters are unavailable (see Incumbent Alignment).",
+        "<strong>State competitiveness data carries mixed vintages</strong> (mostly 2022 districts; some 2021–2025 gubernatorial and 2024 presidential backfill), flagged but not discounted."
       ],
       seeAlso: [
         { label: "Federal lens", href: "#lens-federal" },

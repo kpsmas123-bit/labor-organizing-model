@@ -98,14 +98,14 @@
       "value": 0.4,
       "display": "0.4",
       "source_file": "config/thresholds.json",
-      "short_label": "Incumbent Alignment: P2 < this = hostile incumbent (Transform)",
+      "short_label": "Incumbent Alignment: P2 < this = hostile incumbent (state-lens 'flip' strategy)",
       "config_key": "quadrant.p2_hostile_ceiling"
     },
     "p2_aligned_floor": {
       "value": 0.6,
       "display": "0.6",
       "source_file": "config/thresholds.json",
-      "short_label": "Incumbent Alignment: P2 \u2265 this = aligned incumbent (Activate)",
+      "short_label": "Incumbent Alignment: P2 \u2265 this = aligned incumbent (state-lens 'protect' strategy)",
       "config_key": "quadrant.p2_aligned_floor"
     },
     "state_tipping_swing_floor": {

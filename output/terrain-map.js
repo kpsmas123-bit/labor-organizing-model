@@ -5,9 +5,11 @@
    map path only). Dead v1 views (table, gallery, in-page methodology) and the
    panel-navigation system were intentionally excluded — see the merge PR notes.
 
-   GATING (do not change): the state lens is gated to national-only. setLens()
-   ignores any non-'national' request and the #btn-state toggle stays hidden in
-   markup. State fields/quadrants travel along in the data but are never surfaced.
+   LENS (B2b): the state lens is a full peer to national. setLens() accepts
+   'national' or 'state', recolors the map by getLensQuadrant(), updates the
+   stats / top-10 / legend / badge, and broadcasts a 'lens-change' CustomEvent so
+   peer components (the distribution scatter) re-render in lockstep. State fields
+   (quadrant_state, p1_state, p2_state, state_strategy) are surfaced, not recomputed.
 
    DEPENDS ON (must exist in the DOM before this script runs):
      #map-svg #map-figure #detail-panel #close-detail #map-legend #tooltip
@@ -37,17 +39,22 @@ const LENS_DESCRIPTIONS = {
   state:    'State legislative chamber control + state incumbent alignment'
 };
 function setLens(lens) {
-  // State lens gated pending rework — ignore any 'state' request and stay national. State logic below left intact.
-  if (lens !== 'national') return;
+  // B2b: state lens is live. Accept only the two known lenses; ignore anything else.
+  if (lens !== 'national' && lens !== 'state') return;
   _currentLens = lens;
   document.getElementById('btn-national').classList.toggle('active', lens === 'national');
   document.getElementById('btn-state').classList.toggle('active', lens === 'state');
   document.getElementById('lens-desc').textContent = LENS_DESCRIPTIONS[lens];
   const lensLabel = document.getElementById('legend-lens-label');
   if (lensLabel) lensLabel.textContent = lens === 'national' ? 'National lens' : 'State lens';
+  const badge = document.getElementById('lens-badge');
+  if (badge) badge.textContent = lens === 'national' ? 'Viewing: National lens' : 'Viewing: State lens';
   applyFilters();
   updateLegend();
+  // Broadcast so peer components (the distribution scatter) switch lens in lockstep.
+  window.dispatchEvent(new CustomEvent('lens-change', { detail: { lens: lens } }));
 }
+function getLens() { return _currentLens; }
 function getLensQuadrant(county) {
   if (_currentLens === 'state' && county.quadrant_state) return county.quadrant_state;
   if (_currentLens === 'national' && county.quadrant_national) return county.quadrant_national;
@@ -1427,6 +1434,8 @@ window.TerrainMap = {
   getCounties: () => allCounties,
   showDetail,
   zoomToCounty: (f) => zoomToCounty(f),
+  setLens,
+  getLens,
 };
 
 // ──────────────────────────────────────────────────────────────

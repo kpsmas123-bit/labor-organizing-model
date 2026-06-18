@@ -195,12 +195,12 @@ def build_catalog():
         "p2_hostile_ceiling": entry(
             quad["p2_hostile_ceiling"], "config/thresholds.json",
             "quadrant.p2_hostile_ceiling",
-            "Incumbent Alignment: P2 < this = hostile incumbent (Transform)",
+            "Incumbent Alignment: P2 < this = hostile incumbent (state-lens 'flip' strategy)",
         ),
         "p2_aligned_floor": entry(
             quad["p2_aligned_floor"], "config/thresholds.json",
             "quadrant.p2_aligned_floor",
-            "Incumbent Alignment: P2 ≥ this = aligned incumbent (Activate)",
+            "Incumbent Alignment: P2 ≥ this = aligned incumbent (state-lens 'protect' strategy)",
         ),
         "state_tipping_swing_floor": entry(
             quad["state_tipping_swing_floor"], "config/thresholds.json",

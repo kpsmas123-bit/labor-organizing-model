@@ -236,7 +236,8 @@
     .lens-toggle { display: flex; gap: 0; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: var(--space-2); }
     .sidebar-lens-btn { flex: 1; padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; border: none; background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 0.15s, color 0.15s; }
     .sidebar-lens-btn:hover { background: var(--color-bg-subtle); color: var(--color-text); }
-    .sidebar-lens-btn.active { background: var(--color-text); color: var(--color-bg); }
+    /* !important defeats terrain.css's generic button rule (button:not(.pill)... sets background:transparent at higher specificity), so the active lens button stays visible (dark fill, light text) in both the map sidebar and the scatter rail. */
+    .sidebar-lens-btn.active { background: var(--color-text) !important; color: var(--color-bg) !important; }
     .lens-description { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.4; min-height: 32px; }
     .sidebar-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
     #sidebar h2 { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
@@ -623,10 +624,15 @@
             <div class="sidebar-label">LENS</div>
             <div class="lens-toggle">
               <button class="sidebar-lens-btn active" id="btn-national" onclick="setLens('national')">National</button>
-              <!-- State lens intentionally hidden pending state-lens rework (P1 miscalibration + state-uniform P2). Do not remove. -->
-              <button class="sidebar-lens-btn" id="btn-state" onclick="setLens('state')" style="display:none">State</button>
+              <!-- State lens is live (B2b). Drives TerrainMap.setLens, which recolors the map and broadcasts 'lens-change' so the scatter follows in lockstep. -->
+              <button class="sidebar-lens-btn" id="btn-state" onclick="setLens('state')">State</button>
             </div>
             <div class="lens-description" id="lens-desc">Federal electoral tipping points + federal incumbent alignment</div>
+            <div class="lens-vintage" style="font-size:10px;line-height:1.45;color:var(--color-text-muted);margin-top:var(--space-2);">
+              <strong style="font-weight:600;color:var(--color-text-secondary)">State-lens data vintage.</strong>
+              State P1 ≈ 2022 state-leg district returns (MEDSL), with 2021–2025 gubernatorial + 2024 presidential backfill.
+              State P2 = current Open States party rosters (194 counties use a statewide fallback).
+            </div>
           </div>
 
           <hr class="divider">
@@ -723,6 +729,18 @@
                     <button class="scatter-close-btn" id="scatter-close-btn" type="button" title="Close (Esc)">✕ Close</button>
                   </div>
                   <div class="scatter-ctl">
+                    <label>Lens</label>
+                    <div class="lens-toggle">
+                      <button class="sidebar-lens-btn active" id="scatter-lens-national" type="button" onclick="setLens('national')">National</button>
+                      <button class="sidebar-lens-btn" id="scatter-lens-state" type="button" onclick="setLens('state')">State</button>
+                    </div>
+                    <div class="lens-vintage" style="font-size:10px;line-height:1.45;color:var(--color-text-muted);margin-top:6px;">
+                      <strong style="font-weight:600;color:var(--color-text-secondary)">State-lens data vintage.</strong>
+                      State P1 ≈ 2022 state-leg district returns (MEDSL), with 2021–2025 gubernatorial + 2024 presidential backfill.
+                      State P2 = current Open States party rosters (194 counties use a statewide fallback).
+                    </div>
+                  </div>
+                  <div class="scatter-ctl">
                     <label for="hl-state">By state</label>
                     <select id="hl-state"><option value="">— all states —</option></select>
                   </div>
@@ -731,7 +749,7 @@
                     <button class="scatter-toggle" id="hl-swing" type="button" aria-pressed="false">Swing-7 (PA MI WI AZ GA NV NC)</button>
                   </div>
                   <div class="scatter-ctl">
-                    <label for="hl-tier">By tier <span style="text-transform:none;letter-spacing:0">(national lens)</span></label>
+                    <label for="hl-tier">By tier <span style="text-transform:none;letter-spacing:0">(current lens)</span></label>
                     <select id="hl-tier">
                       <option value="">— all tiers —</option>
                       <option value="1">Tier 1 — Transform</option>
@@ -1996,16 +2014,37 @@
     // TODO(config): source this set from config rather than this literal list.
     var SWING7 = { PA:1, MI:1, WI:1, AZ:1, GA:1, NV:1, NC:1 };
 
+    // ── Lens state (B2b) ──────────────────────────────────────────────
+    // The scatter is a full peer to the map: it renders in whichever lens the map
+    // is in and re-renders on the 'lens-change' broadcast. Y (labor leverage) is
+    // lens-INVARIANT — SLS does not change between lenses — so only X (electoral
+    // leverage) and the tier color switch. National: X = p1_national percentile,
+    // color = quadrant_national. State: X = p1_state percentile, color = quadrant_state.
+    var LENS = (window.TerrainMap && window.TerrainMap.getLens && window.TerrainMap.getLens()) || 'national';
+    var lastCounties = null;
+    function lensP1(c) {
+      return LENS === 'state'
+        ? c.p1_state
+        : (c.p1_national != null ? c.p1_national : c.p1_presidential);
+    }
+    function lensQuad(c) {
+      return LENS === 'state'
+        ? (c.quadrant_state || c.quadrant || 'tier4')
+        : (c.quadrant_national || c.quadrant || 'tier4');
+    }
+
     var byFips = {};
     var DOTS = []; // [{el, fips, state, tier, type, swing, name}] — drives the highlight engine
 
     function render(counties) {
       if (!counties || !counties.length) return;
+      lastCounties = counties;
+      // valid = has labor leverage (Y, lens-invariant) AND the current lens's P1 (X).
       var valid = counties.filter(function (c) {
-        return c.sls_capital != null && (c.p1_national != null || c.p1_presidential != null);
+        return c.sls_capital != null && lensP1(c) != null;
       });
       if (!valid.length) return;
-      var elec = valid.map(function (c) { return (c.p1_national != null ? c.p1_national : c.p1_presidential) || 0; });
+      var elec = valid.map(function (c) { return lensP1(c) || 0; });
       var capV = valid.map(function (c) { return c.sls_capital || 0; });
       var commV = valid.map(function (c) { return c.sls_community || 0; });
       var eP = pctRanks(elec), capP = pctRanks(capV), commP = pctRanks(commV);
@@ -2017,7 +2056,7 @@
         var laborP = Math.max(capP[i], commP[i]);
         var x = INSET + eP[i] / 100 * SPAN;
         var y = INSET + (100 - laborP) / 100 * SPAN; // invert so high labor is near the top
-        var q = c.quadrant_national || c.quadrant || 'tier4';
+        var q = lensQuad(c);
         var fips = String(c.fips);
         var st = c.state || '';
         // leverage type = whichever leverage dominates this county (by its own percentile)
@@ -2044,10 +2083,32 @@
       if (c && window.TerrainMap && window.TerrainMap.showDetail) window.TerrainMap.showDetail(c);
     });
 
+    // ── Lens badge + toggle sync (B2b) ────────────────────────────────
+    var scatterBadge = document.querySelector('.scatter-lens-badge');
+    var lensBtnNat = document.getElementById('scatter-lens-national');
+    var lensBtnSt  = document.getElementById('scatter-lens-state');
+    function syncLensUI() {
+      if (scatterBadge) scatterBadge.textContent = LENS === 'state' ? 'Viewing: State lens' : 'Viewing: National lens';
+      if (lensBtnNat) lensBtnNat.classList.toggle('active', LENS === 'national');
+      if (lensBtnSt)  lensBtnSt.classList.toggle('active', LENS === 'state');
+    }
+    syncLensUI();
+
     window.addEventListener('terrain-map-ready', function (e) { render(e.detail.counties); });
     if (window.TerrainMap && window.TerrainMap.getCounties && window.TerrainMap.getCounties().length) {
       render(window.TerrainMap.getCounties());
     }
+    // Re-render in lockstep with the map whenever either lens toggle fires TerrainMap.setLens.
+    window.addEventListener('lens-change', function (e) {
+      var next = e && e.detail && e.detail.lens;
+      if (next !== 'national' && next !== 'state') return;
+      LENS = next;
+      syncLensUI();
+      if (lastCounties) render(lastCounties);
+      // dots were rebuilt — clear any active highlight so the controls UI and the plot agree.
+      if (typeof clearControlsUI === 'function') clearControlsUI();
+      if (typeof applyHighlight === 'function') applyHighlight(null);
+    });
 
     // ===================================================================
     // HIGHLIGHT ENGINE — highlight, never filter. A highlight dims the whole
