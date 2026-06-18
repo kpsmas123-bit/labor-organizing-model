@@ -669,6 +669,13 @@
       #explorer.hide-tier4 #scatter-dots .scatter-dot.is-tier4 { display: none; }
       #explorer.hide-tier4 #map-svg .county-path.is-tier4 { opacity: 0.06; }
 
+      /* ===================================================================
+         PHASE 4 — synced hover (brushing-and-linking): hovering a county in one
+         view lights the SAME county in the other (and in the live PiP).
+         =================================================================== */
+      #scatter-dots .scatter-dot.hover-linked { opacity: 1; r: calc(2.6px / var(--zoom-k, 1)); fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.6; }
+      #map-svg .county-path.hover-linked { stroke: var(--color-ink); stroke-width: 1.4; opacity: 1; }
+
       /* lens-scope label on the Summary counts (scope legibility) */
       .rail-scope { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--color-text-muted); margin-bottom: var(--space-1); }
       .rail-scope strong { color: var(--color-text-secondary); font-weight: 600; }
@@ -2527,6 +2534,42 @@
     function init() { setTimeout(markTier4, 60); }
     window.addEventListener('terrain-map-ready', init);
     if (window.TerrainMap && window.TerrainMap.getCounties && window.TerrainMap.getCounties().length) init();
+  })();
+  </script>
+
+  <!-- ============================================================
+       SYNCED HOVER (Phase 4) — brushing-and-linking. Hovering a county in the
+       map, the scatter, OR a live PiP highlights the SAME county in the other
+       view. The two SVGs are the same elements in split or PiP, so one set of
+       listeners covers every layout. Display-only.
+       ============================================================ -->
+  <script>
+  (function () {
+    var mapSvg     = document.getElementById('map-svg');
+    var scatterSvg = document.getElementById('scatter-svg');
+    var dotsG      = document.getElementById('scatter-dots');
+    if (!mapSvg || !scatterSvg || !dotsG) return;
+
+    var lit = [];   // currently hover-linked elements
+    function clearLink() { for (var i = 0; i < lit.length; i++) lit[i].classList.remove('hover-linked'); lit = []; }
+    function linkHover(fips) {
+      clearLink();
+      if (!fips) return;
+      var pad = fips.length < 5 ? fips.padStart(5, '0') : fips;
+      function match(el) { var f = el.getAttribute('data-fips'); return f === fips || f === pad; }
+      var els = Array.prototype.slice.call(dotsG.querySelectorAll('.scatter-dot')).filter(match)
+        .concat(Array.prototype.slice.call(mapSvg.querySelectorAll('.county-path')).filter(match));
+      els.forEach(function (el) { el.classList.add('hover-linked'); lit.push(el); });
+    }
+
+    function fipsFromTarget(t, sel) {
+      var el = t && t.closest ? t.closest(sel) : null;
+      return el ? el.getAttribute('data-fips') : null;
+    }
+    mapSvg.addEventListener('mouseover', function (e) { var f = fipsFromTarget(e.target, '.county-path'); if (f) linkHover(f); });
+    mapSvg.addEventListener('mouseleave', clearLink);
+    scatterSvg.addEventListener('mouseover', function (e) { var f = fipsFromTarget(e.target, '.scatter-dot'); if (f) linkHover(f); });
+    scatterSvg.addEventListener('mouseleave', clearLink);
   })();
   </script>
 
