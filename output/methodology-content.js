@@ -442,30 +442,157 @@
     return '<span class="method-chip">' + item.label + "</span>";
   }
 
+  // INPUT / OUTPUT cards — large rectangular cards; live link when href present.
+  function flowCard(item, cls) {
+    if (item == null) return "";
+    var label = (typeof item === "string") ? item : item.label;
+    var href = (item && typeof item === "object") ? item.href : null;
+    if (href) {
+      return '<a class="mf2-card ' + cls + ' mf2-card--link" href="' + href + '">' + label + "</a>";
+    }
+    return '<div class="mf2-card ' + cls + '">' + label + "</div>";
+  }
+
+  // SOURCES row — pill-shaped mono chips; preserve the live href wiring.
+  function sourceChip(item) {
+    if (item == null) return "";
+    var label = (typeof item === "string") ? item : item.label;
+    var href = (item && typeof item === "object") ? item.href : null;
+    if (href) {
+      return '<a class="mf2-chip mf2-chip--link" href="' + href + '">' + label + "</a>";
+    }
+    return '<span class="mf2-chip">' + label + "</span>";
+  }
+
   function renderFlow(sec) {
     var f = sec.flowchart || {};
-    var hasInputs = (f.inputs || []).length;
-    var hasOutputs = (f.outputs || []).length;
-    var hasSources = (f.dataSources || []).length;
-    if (!hasInputs && !hasOutputs && !hasSources) {
+    var inputs = f.inputs || [];
+    var outputs = f.outputs || [];
+    var sources = f.dataSources || [];
+    if (!inputs.length && !outputs.length && !sources.length) {
       return '<div class="method-flow method-flow--empty"><span class="method-todo-tag">TODO — mini-flowchart</span></div>';
     }
-    var inputs = (f.inputs || []).map(linkOrLabel).join("") || '<span class="method-chip method-chip--muted">—</span>';
-    var outputs = (f.outputs || []).map(linkOrLabel).join("") || '<span class="method-chip method-chip--muted">—</span>';
-    var sources = (f.dataSources || []).map(linkOrLabel).join("");
-    var html = '<div class="method-flow">'
-      + '<div class="method-flow-row">'
-      + '<div class="method-flow-col"><span class="method-flow-cap">Inputs</span><div class="method-chips">' + inputs + '</div></div>'
-      + '<span class="method-flow-arrow" aria-hidden="true">→</span>'
-      + '<div class="method-flow-col method-flow-this"><span class="method-flow-cap">This variable</span><div class="method-chips"><span class="method-chip method-chip--self">' + sec.title + '</span></div></div>'
-      + '<span class="method-flow-arrow" aria-hidden="true">→</span>'
-      + '<div class="method-flow-col"><span class="method-flow-cap">Outputs</span><div class="method-chips">' + outputs + '</div></div>'
+    var inCards = inputs.length
+      ? inputs.map(function (i) { return flowCard(i, "mf2-card--in"); }).join("")
+      : '<div class="mf2-card mf2-card--in mf2-card--muted">—</div>';
+    var outCards = outputs.length
+      ? outputs.map(function (i) { return flowCard(i, "mf2-card--out"); }).join("")
+      : '<div class="mf2-card mf2-card--out mf2-card--muted">—</div>';
+
+    var html = '<div class="method-flow2" data-flow>'
+      + '<div class="mf2-inner">'
+      + '<div class="method-flow2-grid">'
+      + '<svg class="mf2-connectors" aria-hidden="true" preserveAspectRatio="none"></svg>'
+      + '<div class="mf2-col mf2-col--in"><span class="mf2-cap">Inputs</span><div class="mf2-cards">' + inCards + '</div></div>'
+      + '<div class="mf2-col mf2-col--var"><span class="mf2-cap mf2-cap--var">This variable</span><div class="mf2-varwrap"><div class="mf2-box">' + sec.title + '</div></div></div>'
+      + '<div class="mf2-col mf2-col--out"><span class="mf2-cap">Outputs</span><div class="mf2-cards">' + outCards + '</div></div>'
       + '</div>';
-    if (hasSources) {
-      html += '<div class="method-flow-sources"><span class="method-flow-cap">Data sources</span><div class="method-chips">' + sources + '</div></div>';
+    if (sources.length) {
+      html += '<div class="mf2-sources"><span class="mf2-cap mf2-cap--sources">Sources</span><div class="mf2-chips">'
+        + sources.map(sourceChip).join("") + '</div></div>';
     }
-    html += '</div>';
+    html += '</div></div>';
     return html;
+  }
+
+  /* ──────────────────────────────────────────────────────────────────────────
+     ADAPTIVE ELBOW CONNECTORS — drawn dynamically from the rendered box
+     positions, so the bracket/manifold look holds for ANY number of inputs and
+     outputs. Recomputed on resize and after fonts load (positions shift).
+     ────────────────────────────────────────────────────────────────────────── */
+
+  // A two-corner elbow: horizontal from (x1,y1) to a vertical bus at busX, then
+  // up/down to y2, then horizontal to (x2,y2). Corners rounded by radius r.
+  function bracketPath(x1, y1, x2, y2, busX, r) {
+    if (Math.abs(y2 - y1) < 0.75) {
+      return "M" + x1 + " " + y1 + " H" + x2;
+    }
+    var dy = (y2 > y1) ? 1 : -1;
+    var rr = Math.min(r, Math.abs(y2 - y1) / 2, Math.abs(busX - x1), Math.abs(x2 - busX));
+    if (rr < 0.5) {
+      return "M" + x1 + " " + y1 + " H" + busX + " V" + y2 + " H" + x2;
+    }
+    return "M" + x1 + " " + y1
+      + " H" + (busX - rr)
+      + " Q" + busX + " " + y1 + " " + busX + " " + (y1 + dy * rr)
+      + " V" + (y2 - dy * rr)
+      + " Q" + busX + " " + y2 + " " + (busX + rr) + " " + y2
+      + " H" + x2;
+  }
+
+  function drawConnectors(flow) {
+    var grid = flow.querySelector(".method-flow2-grid");
+    var svg = flow.querySelector(".mf2-connectors");
+    var box = flow.querySelector(".mf2-box");
+    if (!grid || !svg || !box) return;
+    // If the columns have collapsed to a single stack (narrow viewport), the SVG
+    // is hidden by CSS; skip the draw entirely so nothing renders mis-routed.
+    if (getComputedStyle(svg).display === "none") return;
+
+    var ins = grid.querySelectorAll(".mf2-card--in");
+    var outs = grid.querySelectorAll(".mf2-card--out");
+    var gb = grid.getBoundingClientRect();
+    if (!gb.width || !gb.height) return;
+
+    function rel(el) {
+      var r = el.getBoundingClientRect();
+      return {
+        l: r.left - gb.left, r: r.right - gb.left,
+        cy: (r.top + r.bottom) / 2 - gb.top
+      };
+    }
+
+    var W = gb.width, H = gb.height;
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("width", W);
+    svg.setAttribute("height", H);
+
+    var b = rel(box);
+    var radius = 12;
+    var paths = [];
+
+    // INPUTS gather → a single bus, then one line into the box's left-center.
+    var maxInR = 0;
+    ins.forEach(function (el) { var x = rel(el).r; if (x > maxInR) maxInR = x; });
+    if (ins.length) {
+      var inBus = maxInR + (b.l - maxInR) * 0.45;
+      ins.forEach(function (el) {
+        var c = rel(el);
+        paths.push(bracketPath(c.r, c.cy, b.l, b.cy, inBus, radius));
+      });
+    }
+
+    // OUTPUTS fan ← from the box's right-center, one line out to each card.
+    var minOutL = W;
+    outs.forEach(function (el) { var x = rel(el).l; if (x < minOutL) minOutL = x; });
+    if (outs.length) {
+      var outBus = b.r + (minOutL - b.r) * 0.55;
+      outs.forEach(function (el) {
+        var c = rel(el);
+        paths.push(bracketPath(b.r, b.cy, c.l, c.cy, outBus, radius));
+      });
+    }
+
+    var defs = '<defs><marker id="mf2-arrow" markerWidth="7" markerHeight="7" '
+      + 'refX="5.6" refY="3" orient="auto" markerUnits="userSpaceOnUse">'
+      + '<path d="M0,0 L6,3 L0,6 Z" fill="#26251f"></path></marker></defs>';
+    svg.innerHTML = defs + paths.map(function (d) {
+      return '<path d="' + d + '" marker-end="url(#mf2-arrow)"></path>';
+    }).join("");
+  }
+
+  var _drawScheduled = false;
+  function drawAllConnectors() {
+    var flows = document.querySelectorAll(".method-flow2");
+    for (var i = 0; i < flows.length; i++) drawConnectors(flows[i]);
+  }
+  function scheduleConnectorDraw() {
+    if (_drawScheduled) return;
+    _drawScheduled = true;
+    requestAnimationFrame(function () {
+      _drawScheduled = false;
+      drawAllConnectors();
+    });
   }
 
   function renderConstants(constants, spec) {
@@ -566,19 +693,41 @@
       + '.method-status--migrated { background: rgba(189,0,38,0.06); border: 1px solid rgba(189,0,38,0.25); color: var(--color-text-secondary, #555); }'
       + '.method-status--stub { background: rgba(0,0,0,0.03); border: 1px dashed rgba(0,0,0,0.2); color: var(--color-text-muted, #777); }'
       + '.method-summary { font-family: var(--font-serif, Georgia, serif); font-size: 1.15rem; line-height: 1.5; color: var(--color-text, #1a1a1a); margin: 0 0 18px; }'
-      + '.method-flow { border: 1px solid var(--color-border, #e5e5e5); border-radius: 8px; padding: 14px 16px; margin: 0 0 20px; background: var(--color-bg-card, #fafafa); }'
-      + '.method-flow--empty { border-style: dashed; }'
-      + '.method-flow-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }'
-      + '.method-flow-col { flex: 1 1 0; min-width: 140px; }'
-      + '.method-flow-this { flex: 0 0 auto; }'
-      + '.method-flow-cap, .method-constants-cap, .method-seealso-cap { display: block; font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted, #888); margin-bottom: 6px; }'
-      + '.method-chips { display: flex; flex-wrap: wrap; gap: 6px; }'
-      + '.method-chip { display: inline-block; font-size: 12px; line-height: 1.3; padding: 4px 9px; border-radius: 999px; background: #fff; border: 1px solid var(--color-border, #e0e0e0); color: var(--color-text-secondary, #444); text-decoration: none; }'
-      + '.method-chip--link:hover { border-color: var(--color-accent, #BD0026); color: var(--color-accent, #BD0026); }'
-      + '.method-chip--self { background: var(--color-ink, #1a1a1a); color: #fff; border-color: var(--color-ink, #1a1a1a); font-weight: 600; }'
-      + '.method-chip--muted { color: var(--color-text-muted, #aaa); }'
-      + '.method-flow-arrow { align-self: center; color: var(--color-text-muted, #aaa); font-size: 16px; }'
-      + '.method-flow-sources { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--color-border, #e5e5e5); }'
+      /* ── empty-state placeholder (stub sections) ── */
+      + '.method-flow--empty { border: 1px dashed var(--color-border, #C8C3B8); border-radius: 12px; padding: 14px 16px; margin: 0 0 20px; background: var(--color-bg-card, #EFEFEA); }'
+      /* ── mini-flowchart: redesigned manifold (one template → every section) ── */
+      + '.method-flow2 { margin: 0 0 22px; background: var(--color-bg, #F7F5F0); border: 1px solid var(--color-rule, #C8C3B8); border-radius: 16px; padding: 9px; }'
+      + '.mf2-inner { position: relative; background: var(--color-bg-subtle, #EDEAE3); border: 1px solid var(--color-rule, #C8C3B8); border-radius: 12px; padding: 24px 30px; }'
+      + '.method-flow2-grid { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; gap: 40px; align-items: stretch; }'
+      + '.mf2-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }'
+      + '.mf2-connectors path { fill: none; stroke: #26251f; stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }'
+      + '.mf2-col { display: flex; flex-direction: column; min-width: 0; }'
+      + '.mf2-cap { display: block; text-align: center; font-family: var(--font-mono, monospace); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-muted, #5C6B7A); padding-bottom: 9px; margin-bottom: 20px; border-bottom: 1px solid var(--color-rule, #C8C3B8); }'
+      + '.mf2-cap--var { color: var(--color-accent, #BD0026); }'
+      + '.mf2-cards { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 18px; }'
+      + '.mf2-card { position: relative; z-index: 1; display: block; background: #FBFAF6; border: 1px solid var(--color-rule, #C8C3B8); border-radius: 11px; padding: 15px 20px; font-family: var(--font-serif, Georgia, serif); font-size: 15px; line-height: 1.3; color: var(--color-text, #1A1A18); }'
+      + '.mf2-card--link { text-decoration: none; transition: border-color .15s ease, box-shadow .15s ease; }'
+      + '.mf2-card--link:hover { border-color: var(--color-accent, #BD0026); box-shadow: 0 1px 0 rgba(189,0,38,0.12); }'
+      + '.mf2-card--link:focus-visible { outline: 2px solid var(--color-accent, #BD0026); outline-offset: 2px; }'
+      + '.mf2-card--muted { color: var(--color-text-muted, #5C6B7A); font-style: italic; }'
+      + '.mf2-varwrap { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; }'
+      + '.mf2-box { position: relative; z-index: 1; background: var(--color-ink, #1A1A18); color: #fff; font-family: var(--font-display, Georgia, serif); font-size: 21px; line-height: 1.15; letter-spacing: 0.01em; padding: 24px 32px; border-radius: 13px; text-align: center; white-space: nowrap; }'
+      + '.mf2-sources { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px 14px; margin: 20px -30px 0; padding: 17px 30px 0; border-top: 1px dashed var(--color-rule, #C8C3B8); }'
+      + '.mf2-cap--sources { text-align: left; border: none; padding: 0; margin: 0; flex: 0 0 auto; }'
+      + '.mf2-chips { display: flex; flex-wrap: wrap; gap: 8px; }'
+      + '.mf2-chip { display: inline-block; font-family: var(--font-mono, monospace); font-size: 11.5px; line-height: 1.4; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--color-rule, #C8C3B8); background: var(--color-bg, #F7F5F0); color: var(--color-text-secondary, #3D3D3A); text-decoration: none; }'
+      + '.mf2-chip--link { transition: border-color .15s ease, color .15s ease; }'
+      + '.mf2-chip--link:hover { border-color: var(--color-accent, #BD0026); color: var(--color-accent, #BD0026); }'
+      + '.mf2-chip--link:focus-visible { outline: 2px solid var(--color-accent, #BD0026); outline-offset: 2px; }'
+      + '@media (max-width: 680px) {'
+      +   '.method-flow2-grid { grid-template-columns: 1fr; gap: 12px; }'
+      +   '.mf2-connectors { display: none; }'
+      +   '.mf2-cap { text-align: left; margin-bottom: 12px; }'
+      +   '.mf2-varwrap { justify-content: stretch; }'
+      +   '.mf2-box { white-space: normal; width: 100%; padding: 18px 22px; font-size: 19px; }'
+      +   '.mf2-col + .mf2-col::before { content: "\\2193"; display: block; text-align: center; color: var(--color-text-muted, #5C6B7A); font-family: var(--font-mono, monospace); font-size: 16px; margin: 0 0 8px; }'
+      + '}'
+      + '.method-constants-cap, .method-seealso-cap { display: block; font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted, #888); margin-bottom: 6px; }'
       + '.method-constants { font-family: var(--font-mono, monospace); font-size: 12px; line-height: 1.7; margin: 10px 0 4px; padding: 8px 10px; background: rgba(0,0,0,0.02); border-left: 2px solid var(--color-accent, #BD0026); overflow-wrap: anywhere; }'
       + '.method-constants-cap { margin-bottom: 4px; }'
       + '.spec-val { font-weight: 700; color: var(--color-accent, #BD0026); white-space: nowrap; }'
@@ -634,6 +783,13 @@
       }
       host.innerHTML = renderMethodologySection(sec, spec);
     });
+    // Draw the adaptive elbow connectors now that the boxes are laid out, and
+    // redraw on resize / once webfonts settle (both shift box positions).
+    scheduleConnectorDraw();
+    window.addEventListener("resize", scheduleConnectorDraw);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(scheduleConnectorDraw);
+    }
     // Nudge the scroll-spy to recompute offsets now that bodies are in place.
     window.dispatchEvent(new Event("resize"));
   }
