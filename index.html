@@ -583,6 +583,73 @@
         .scatter-stage.fs .scatter-controls { width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; align-items: flex-end; border-right: none; border-bottom: 1px solid var(--color-border); }
         .scatter-stage.fs .scatter-controls-head { width: 100%; }
       }
+
+      /* ===================================================================
+         PHASE 1 — UNIFIED EXPLORER: left rail + content stage + expand/PiP
+         #explorer[data-layout] drives 3 states:
+           split            — rail | [ map | scatter ]  (equal)
+           map-primary      — rail | [ map fills · scatter as LIVE PiP ]
+           scatter-primary  — rail | [ scatter fills · map as LIVE PiP ]
+         The PiP is the SAME live view shrunk + docked bottom-right; both SVGs
+         use a fixed viewBox + preserveAspectRatio so they scale live with no
+         re-projection. Click the PiP (or its bar) to swap primary <-> PiP.
+         =================================================================== */
+      .explorer { display: grid; grid-template-columns: 300px 1fr; gap: var(--space-5); align-items: stretch; }
+      .explorer-rail { min-width: 0; display: flex; flex-direction: column; gap: var(--space-4); height: clamp(460px, 72vh, 780px); overflow-y: auto; padding: var(--space-1) var(--space-3) var(--space-1) 0; }
+      .explorer-stage { position: relative; min-width: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); height: clamp(460px, 72vh, 780px); }
+
+      .xview { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg, 12px); background: var(--color-bg); overflow: hidden; transition: box-shadow 0.2s ease; }
+      .xview-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); flex-shrink: 0; }
+      .xview-bar-title { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text); }
+      .xview-body { position: relative; flex: 1; min-height: 0; }
+      /* the relocated map figure / scatter wrap fill the body */
+      .xview-body #map-figure { height: 100%; margin: 0; border-radius: 0; }
+      .xview-body .scatter-stage { height: 100%; }
+      .xview-actions { display: flex; align-items: center; gap: var(--space-2); }
+      .xview-expand { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); background: var(--color-bg); border: 1px solid var(--color-accent); border-radius: var(--radius-sm); padding: 3px 8px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+      .xview-expand:hover { background: var(--color-accent); color: #fff; }
+      .xview-expand:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+      /* PRIMARY: one view fills the stage, the other becomes an absolutely-docked PiP */
+      #explorer[data-layout="map-primary"] .explorer-stage,
+      #explorer[data-layout="scatter-primary"] .explorer-stage { display: block; }
+      #explorer[data-layout="map-primary"] .xview-map,
+      #explorer[data-layout="scatter-primary"] .xview-scatter { position: absolute; inset: 0; z-index: 1; }
+
+      /* the demoted view → live PiP, bottom-right */
+      .xview.is-pip { position: absolute; right: var(--space-4); bottom: var(--space-4); width: clamp(210px, 27%, 320px); height: clamp(160px, 32%, 250px); z-index: 4; box-shadow: var(--shadow-card-hover) !important; cursor: pointer; }
+      .xview.is-pip .xview-expand { display: none; }
+      .xview.is-pip .xview-bar { cursor: pointer; }
+      /* transparent hit layer makes the WHOLE PiP a swap button regardless of inner SVG interactivity */
+      .xview-pip-hit { display: none; }
+      .xview.is-pip .xview-pip-hit { display: block; position: absolute; inset: 0; z-index: 6; cursor: pointer; background: transparent; }
+      .xview.is-pip .xview-pip-hint { display: block; }
+      .xview-pip-hint { display: none; position: absolute; top: var(--space-2); right: var(--space-2); z-index: 7; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.04em; color: var(--color-bg); background: rgba(26,26,24,0.80); padding: 3px 7px; border-radius: 20px; pointer-events: none; }
+
+      /* relocated controls are always visible inside the rail (override their old hidden/fs-gated state) */
+      .explorer-rail #sidebar { display: flex; flex-direction: column; }
+      .explorer-rail .scatter-controls { display: flex; flex-direction: column; gap: var(--space-4); width: auto; height: auto; padding: 0; background: none; border: none; overflow: visible; }
+      .explorer-rail #status-bar { display: none; }
+      .explorer-rail .scatter-controls-head { border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-2); }
+      /* scatter zoom controls: shown when the scatter is the PRIMARY view (was: only in old .fs) */
+      #explorer[data-layout="scatter-primary"] .xview-scatter .scatter-zoom-ctrls { display: flex; flex-direction: column; gap: 6px; position: absolute; top: 14px; right: 14px; z-index: 5; }
+      /* the shared map legend + lens badge: keep visible inside the framed map view */
+      .xview-map #map-legend { display: block; }
+      /* in PiP, strip heavy overlays so the demoted view reads as a clean live thumbnail
+         (higher specificity than the in-view rules above, so no !important needed) */
+      #explorer .xview.is-pip #map-legend,
+      #explorer .xview.is-pip #senate-banner,
+      #explorer .xview.is-pip #detail-panel,
+      #explorer .xview.is-pip #lens-badge,
+      #explorer .xview.is-pip .scatter-lens-badge,
+      #explorer .xview.is-pip .scatter-axis { display: none; }
+      @media (prefers-reduced-motion: reduce) { .xview { transition: none; } }
+      @media (max-width: 900px) {
+        .explorer { grid-template-columns: 1fr; }
+        .explorer-rail { height: auto; max-height: none; overflow: visible; }
+        .explorer-stage { grid-template-columns: 1fr; grid-auto-rows: 56vh; height: auto; }
+        .xview.is-pip { width: 42%; height: 30%; }
+      }
     </style>
 
     <!-- ════════════════════════════════════════════════════════
@@ -613,13 +680,13 @@
           </div>
         </div>
 
-        <div class="results-panels">
+        <!-- ░░░░ UNIFIED EXPLORER — left control rail + content stage (map + scatter). ░░░░
+             #explorer[data-layout] drives split / map-primary / scatter-primary (PiP). -->
+        <div class="explorer" id="explorer" data-layout="split">
 
-          <!-- ░░░░ LEFT — Geographic view : relocated live map (verbatim below) ░░░░ -->
-          <section class="results-panel results-panel-map" aria-labelledby="results-title-map">
-            <div class="results-panel-title" id="results-title-map">Map view</div>
-            <div class="results-panel-body map-right">
-        <div id="sidebar" style="display:none">
+          <!-- ░░ LEFT CONTROL RAIL — one rail drives BOTH views ░░ -->
+          <aside class="explorer-rail" id="explorer-rail" aria-label="Explorer controls">
+        <div id="sidebar">
           <div class="sidebar-section">
             <div class="sidebar-label">LENS</div>
             <div class="lens-toggle">
@@ -661,84 +728,12 @@
           <div id="top10-list"></div>
         </div>
 
-        <div id="mobile-filter-toggle" style="display:none" onclick="mobileToggleFilters()">
-          <span>Filters</span><span class="mft-arrow">▼</span>
-        </div>
+        <hr class="divider">
 
-        <div class="map-figure frozen" id="map-figure">
-          <button class="panel-expand-btn map-expand-btn" onclick="expandMap()" title="Expand to full screen" aria-label="Expand map to full screen">↗ Expand</button>
-          <div class="map-figure-body">
-            <div id="lens-badge">Viewing: National lens</div>
-            <div id="awaken-hint">Awakened — scroll zooms the map. Click “Freeze” to scroll the page again.</div>
-            <svg id="map-svg"></svg>
-            <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
-              (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
-              target="_blank" rel="noopener noreferrer">Source: NPR — 2026 Senate Races to Watch</a>.</div>
-
-            <div id="detail-panel">
-              <button id="close-detail">×</button>
-              <!-- showDetail() / showMsaDetail() replace this panel's contents with
-                   the Info Card v2 (.card-*) markup on click. -->
-            </div>
-
-            <div class="legend" id="map-legend">
-              <div class="legend-header">
-                <span class="legend-label">Legend</span>
-                <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
-              </div>
-              <div class="legend-body">
-                <div class="legend-title" id="legend-title">Strategic Terrain</div>
-                <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
-                <div id="legend-tiers"></div>
-                <div style="margin-top:8px;border-top:1px solid var(--color-border);padding-top:6px;font-size:8.5px;color:var(--color-text-muted)">Model v2.0 · Data: 2024 · laborterrain.org</div>
-              </div>
-            </div>
-
-            <div class="tooltip" id="tooltip"></div>
-          </div><!-- /map-figure-body -->
-        </div><!-- /map-figure -->
-
-        <div id="status-bar">
-          <span id="loading-indicator" style="display:none">Loading…</span>
-          <span id="status-msg">Ready</span>
-          <span id="data-timestamp"></span>
-        </div>
-
-            </div><!-- /results-panel-body (map) -->
-          </section>
-
-          <!-- ░░░░ RIGHT — Distribution view : NEW percentile scatter ░░░░ -->
-          <section class="results-panel results-panel-scatter" aria-labelledby="results-title-scatter">
-            <div class="results-panel-title" id="results-title-scatter">Distribution view</div>
-            <div class="results-panel-body">
-              <div class="scatter-lens-badge">Viewing: National lens</div>
-              <button class="panel-expand-btn" id="scatter-fullscreen-btn" type="button"
-                      title="Open the full-screen explorer" aria-label="Open the full-screen scatter explorer">↗ Expand</button>
-              <!--
-                v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
-                capital(raw) vs community(share) measure different things; a single Y may
-                blur ~283 capital-driven counties. Revisit twin-plots/encoding later.
-              -->
-              <!-- .scatter-stage goes position:fixed full-screen when .fs is toggled (mirrors
-                   the map's expanded pattern). The SAME #scatter-svg / dots are reused at both
-                   sizes; the controls rail is hidden inline and shown only in full screen. -->
-              <div class="scatter-stage" id="scatter-stage">
-                <aside class="scatter-controls" id="scatter-controls" aria-label="Highlight controls">
+        <!-- Distribution / highlight controls (relocated into the unified rail) -->
+        <aside class="scatter-controls" id="scatter-controls" aria-label="Highlight controls">
                   <div class="scatter-controls-head">
                     <span class="scatter-controls-title">Highlight</span>
-                    <button class="scatter-close-btn" id="scatter-close-btn" type="button" title="Close (Esc)">✕ Close</button>
-                  </div>
-                  <div class="scatter-ctl">
-                    <label>Lens</label>
-                    <div class="lens-toggle">
-                      <button class="sidebar-lens-btn active" id="scatter-lens-national" type="button" onclick="setLens('national')">National</button>
-                      <button class="sidebar-lens-btn" id="scatter-lens-state" type="button" onclick="setLens('state')">State</button>
-                    </div>
-                    <div class="lens-vintage" style="font-size:10px;line-height:1.45;color:var(--color-text-muted);margin-top:6px;">
-                      <strong style="font-weight:600;color:var(--color-text-secondary)">State-lens data vintage.</strong>
-                      State P1 ≈ 2022 state-leg district returns (MEDSL), with 2021–2025 gubernatorial + 2024 presidential backfill.
-                      State P2 = current Open States party rosters (194 counties use a statewide fallback).
-                    </div>
                   </div>
                   <div class="scatter-ctl">
                     <label for="hl-state">By state</label>
@@ -772,8 +767,87 @@
                   </div>
                   <button class="scatter-reset" id="hl-reset" type="button">↺ Show all</button>
                   <div class="scatter-controls-foot"><span id="hl-status">All counties</span></div>
-                </aside>
+        </aside>
 
+        <!-- hidden but DOM-present: status line (loadData writes here) + legacy mobile toggle -->
+        <div id="status-bar">
+          <span id="loading-indicator" style="display:none">Loading…</span>
+          <span id="status-msg">Ready</span>
+          <span id="data-timestamp"></span>
+        </div>
+        <div id="mobile-filter-toggle" style="display:none" onclick="mobileToggleFilters()">
+          <span>Filters</span><span class="mft-arrow">▼</span>
+        </div>
+          </aside><!-- /explorer-rail -->
+
+          <!-- ░░ CONTENT STAGE — map + scatter, expand/PiP ░░ -->
+          <div class="explorer-stage" id="explorer-stage">
+
+            <!-- MAP VIEW -->
+            <section class="xview xview-map" id="xview-map" aria-labelledby="results-title-map">
+              <div class="xview-bar">
+                <span class="xview-bar-title" id="results-title-map">Map view</span>
+                <div class="xview-actions">
+                  <button class="xview-expand" type="button" data-view="map" onclick="setExplorerLayout('map-primary')"
+                          title="Expand map (scatter becomes a live picture-in-picture)" aria-label="Expand map to primary">↗ Expand</button>
+                </div>
+              </div>
+              <div class="xview-body">
+                <span class="xview-pip-hint" aria-hidden="true">⤢ click to swap</span>
+                <div class="xview-pip-hit" role="button" tabindex="0" aria-label="Swap map to primary view"></div>
+        <div class="map-figure frozen" id="map-figure">
+          <div class="map-figure-body">
+            <div id="lens-badge">Viewing: National lens</div>
+            <div id="awaken-hint">Awakened — scroll zooms the map. Click “Freeze” to scroll the page again.</div>
+            <svg id="map-svg"></svg>
+            <div id="senate-banner">Senate competitiveness tiers based on NPR analysis by Domenico Montanaro
+              (May 2, 2026). <a href="https://www.npr.org/2026/05/02/nx-s1-5369898/2026-senate-races-to-watch"
+              target="_blank" rel="noopener noreferrer">Source: NPR — 2026 Senate Races to Watch</a>.</div>
+
+            <div id="detail-panel">
+              <button id="close-detail">×</button>
+              <!-- showDetail() / showMsaDetail() replace this panel's contents with
+                   the Info Card v2 (.card-*) markup on click. -->
+            </div>
+
+            <div class="legend" id="map-legend">
+              <div class="legend-header">
+                <span class="legend-label">Legend</span>
+                <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
+              </div>
+              <div class="legend-body">
+                <div class="legend-title" id="legend-title">Strategic Terrain</div>
+                <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-bottom:var(--space-2);"><span id="legend-lens-label">National lens</span></div>
+                <div id="legend-tiers"></div>
+                <div style="margin-top:8px;border-top:1px solid var(--color-border);padding-top:6px;font-size:8.5px;color:var(--color-text-muted)">Model v2.0 · Data: 2024 · laborterrain.org</div>
+              </div>
+            </div>
+
+            <div class="tooltip" id="tooltip"></div>
+          </div><!-- /map-figure-body -->
+        </div><!-- /map-figure -->
+              </div><!-- /xview-body -->
+            </section>
+
+            <!-- SCATTER VIEW -->
+            <section class="xview xview-scatter" id="xview-scatter" aria-labelledby="results-title-scatter">
+              <div class="xview-bar">
+                <span class="xview-bar-title" id="results-title-scatter">Distribution view</span>
+                <div class="xview-actions">
+                  <button class="xview-expand" type="button" data-view="scatter" onclick="setExplorerLayout('scatter-primary')"
+                          title="Expand scatter (map becomes a live picture-in-picture)" aria-label="Expand scatter to primary">↗ Expand</button>
+                </div>
+              </div>
+              <div class="xview-body">
+                <span class="xview-pip-hint" aria-hidden="true">⤢ click to swap</span>
+                <div class="xview-pip-hit" role="button" tabindex="0" aria-label="Swap scatter to primary view"></div>
+                <div class="scatter-lens-badge">Viewing: National lens</div>
+              <!--
+                v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
+                capital(raw) vs community(share) measure different things; a single Y may
+                blur ~283 capital-driven counties. Revisit twin-plots/encoding later.
+              -->
+              <div class="scatter-stage" id="scatter-stage">
                 <div class="scatter-wrap" id="scatter-wrap">
                   <div class="scatter-plot">
                     <svg id="scatter-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
@@ -792,8 +866,7 @@
                     <span class="scatter-axis scatter-axis-y">labor leverage →</span>
                     <span class="scatter-axis scatter-axis-x">electoral leverage →</span>
                   </div>
-                  <!-- Zoom controls — keyboard-accessible; shown only in the full-screen explorer
-                       (scroll/pinch to zoom + drag to pan also work there). -->
+                  <!-- Zoom controls — keyboard-accessible (scroll/pinch + drag also work in the primary view). -->
                   <div class="scatter-zoom-ctrls" role="group" aria-label="Scatter zoom controls">
                     <button class="scatter-zoom-btn" id="scatter-zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
                     <button class="scatter-zoom-btn" id="scatter-zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
@@ -801,9 +874,11 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </div><!-- /results-panels -->
+              </div><!-- /xview-body -->
+            </section>
+
+          </div><!-- /explorer-stage -->
+        </div><!-- /explorer -->
 
       </div><!-- /results-inner -->
     </section>
@@ -1960,7 +2035,10 @@
         // gate interaction to the full-screen explorer; inline preview is a glance
         // and must let wheel events scroll the page through.
         .filter(function (event) {
-          if (!stage.classList.contains('fs')) return false;
+          // scatter zoom/pan is live only when the scatter is the PRIMARY view
+          // (in split / PiP it's a glance — let wheel events scroll the page through).
+          var ex = document.getElementById('explorer');
+          if (!ex || ex.getAttribute('data-layout') !== 'scatter-primary') return false;
           // mirror d3 defaults otherwise: ignore secondary buttons; allow wheel/touch/primary-drag
           return (!event.ctrlKey || event.type === 'wheel') && !event.button;
         })
@@ -2255,6 +2333,77 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && stage.classList.contains('fs')) closeFS();
     });
+  })();
+  </script>
+
+  <!-- ============================================================
+       EXPLORER LAYOUT — split / map-primary / scatter-primary (PiP).
+       The PiP is the SAME live view shrunk + docked; click it (or its bar) to
+       swap. The expand button on the primary view flips to a Restore control;
+       Esc also restores side-by-side. Both SVGs scale live (viewBox), so no
+       data/scoring is touched — this is pure display layout.
+       ============================================================ -->
+  <script>
+  (function () {
+    var explorer = document.getElementById('explorer');
+    var stage    = document.getElementById('explorer-stage');
+    if (!explorer || !stage) return;
+    var mapView     = document.getElementById('xview-map');
+    var scatterView = document.getElementById('xview-scatter');
+
+    function setExplorerLayout(layout) {
+      if (layout !== 'split' && layout !== 'map-primary' && layout !== 'scatter-primary') return;
+      explorer.setAttribute('data-layout', layout);
+      // is-pip marks the demoted live view (the other becomes primary).
+      mapView.classList.toggle('is-pip', layout === 'scatter-primary');
+      scatterView.classList.toggle('is-pip', layout === 'map-primary');
+      // each expand button flips to a Restore control while its view is primary.
+      var btns = explorer.querySelectorAll('.xview-expand');
+      for (var i = 0; i < btns.length; i++) {
+        var v = btns[i].getAttribute('data-view');        // 'map' | 'scatter'
+        var primary = layout === v + '-primary';
+        btns[i].textContent = primary ? '↙ Restore' : '↗ Expand';
+        btns[i].setAttribute('aria-label', primary ? 'Restore side-by-side view' : ('Expand ' + v + ' to primary'));
+        btns[i].onclick = primary
+          ? function () { setExplorerLayout('split'); }
+          : (function (vv) { return function () { setExplorerLayout(vv + '-primary'); }; })(v);
+      }
+      // both SVGs use viewBox + preserveAspectRatio so they scale live; nudge the
+      // map's d3 layout to re-fit its new container size (harmless for the scatter).
+      setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 60);
+    }
+    window.setExplorerLayout = setExplorerLayout;
+
+    function swap() {
+      var l = explorer.getAttribute('data-layout');
+      if (l === 'map-primary') setExplorerLayout('scatter-primary');
+      else if (l === 'scatter-primary') setExplorerLayout('map-primary');
+    }
+
+    [mapView, scatterView].forEach(function (view) {
+      var hit = view.querySelector('.xview-pip-hit');
+      var bar = view.querySelector('.xview-bar');
+      if (hit) {
+        hit.addEventListener('click', function (e) {
+          if (!view.classList.contains('is-pip')) return;
+          e.preventDefault(); e.stopPropagation(); swap();
+        });
+        hit.addEventListener('keydown', function (e) {
+          if ((e.key === 'Enter' || e.key === ' ') && view.classList.contains('is-pip')) { e.preventDefault(); swap(); }
+        });
+      }
+      if (bar) bar.addEventListener('click', function (e) {
+        if (view.classList.contains('is-pip') && !e.target.closest('button')) swap();
+      });
+    });
+
+    // Esc restores side-by-side from any primary layout.
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && explorer.getAttribute('data-layout') !== 'split') setExplorerLayout('split');
+    });
+
+    // normalize button handlers on load (layout starts 'split').
+    setExplorerLayout('split');
   })();
   </script>
 
