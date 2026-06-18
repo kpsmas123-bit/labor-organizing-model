@@ -37,10 +37,12 @@
   },
 
   "svs_normalization": {
-    "denominator": 210000,
-    "_calibrated": "2026-06-12",
-    "_rationale": "Set to place top county (LA, 06037) at ~84 on 0-100 scale. Based on true per-sector employment × cap_reach formula across all 3,143 counties. Max raw SLS-Capital = 17,673,345. Approved by Sam 2026-06-12.",
-    "_source": "Agent D true scoring run"
+    "denominator": 750000,
+    "community_multiplier": 1.875,
+    "_calibrated": "2026-06-17 (B1 full-composite-SVS rebuild)",
+    "_rationale": "B1: BOTH SLS paths now weight each sector by the FULL composite SVS (svs_formula, range ~10-60), not bare cap/comm reach. denominator (capital divisor) recalibrated 210000 -> 750000 so the top county (LA, 06037) still anchors at ~84 on 0-100 (new max raw SLS-Capital = 63,024,076 with composite weights; 63,024,076/750,000 = 84.03). community_multiplier (the SLS-Community share->0-100 scale factor) LIFTED FROM HARDCODE (was the ×4 literal at build_v2_canonical.py:111) and recalibrated to 1.875 so post-ramp SLS-Community max lands ~57 (≈ the prior ~56), no mass-clamping. PENDING SAM REVIEW — not yet merged.",
+    "_prior": "denominator 210000 + hardcoded ×4 community multiplier, both calibrated to bare-reach weights (Agent D run, 2026-06-12).",
+    "_source": "B1 full-SVS recalibration"
   },
 
   "electoral_composite": {

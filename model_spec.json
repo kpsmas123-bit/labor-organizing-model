@@ -53,18 +53,18 @@
       "config_key": "state_competitiveness.p1_high_state"
     },
     "capital_divisor": {
-      "value": 210000,
-      "display": "210000",
+      "value": 750000,
+      "display": "750000",
       "source_file": "config/weights.json",
-      "short_label": "SLS-Capital normalization denominator (calibrates LA County's raw sum to ~84 on 0\u2013100)",
+      "short_label": "SLS-Capital normalization divisor. B1: SLS now weights each sector by the full composite SVS; divisor recalibrated to 750000 so LA County's raw sum still anchors at ~84 on 0\u2013100.",
       "config_key": "svs_normalization.denominator"
     },
     "community_share_mult": {
-      "value": 4,
-      "display": "4",
-      "source_file": "pipeline/build_v2_canonical.py",
-      "short_label": "SLS-Community share\u21920\u2013100 multiplier (\u00d74). UNNAMED CODE LITERAL \u2014 carried here with provenance until it is named/lifted to config.",
-      "source_line": 111
+      "value": 1.875,
+      "display": "1.875",
+      "source_file": "config/weights.json",
+      "short_label": "SLS-Community share\u21920\u2013100 multiplier. B1: LIFTED FROM HARDCODE (was the \u00d74 literal) to config and recalibrated to 1.875 for the full-composite-SVS scale (post-ramp max ~57).",
+      "config_key": "svs_normalization.community_multiplier"
     },
     "ramp_full_at": {
       "value": 10000,
@@ -81,15 +81,15 @@
       "config_key": "sls_community_confidence_ramp.ramp_zero_at"
     },
     "sls_capital_high_boundary": {
-      "value": 2.5,
-      "display": "2.5",
+      "value": 2.0,
+      "display": "2",
       "source_file": "config/thresholds.json",
       "short_label": "SLS-Capital 'high' boundary (top ~decile of counties)",
       "config_key": "quadrant.sls_capital_high_boundary"
     },
     "sls_community_high_boundary": {
-      "value": 25,
-      "display": "25",
+      "value": 40,
+      "display": "40",
       "source_file": "config/thresholds.json",
       "short_label": "SLS-Community 'high' boundary on the post-ramp (Option D) scale",
       "config_key": "quadrant.sls_community_high_boundary"

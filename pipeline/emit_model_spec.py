@@ -17,11 +17,10 @@ SOURCES (values are pulled from where they actually live — never re-typed):
   * pipeline/build_v2_canonical.py — the P1 formula constants that are HARDCODED
         there as named module constants (_NORM, _MIN_MARGIN_PP, _PRES_DEFAULT_TIP).
         These are IMPORTED, not re-typed, so the spec cannot drift from the code.
-  * The two unnamed code literals (community ×4 share multiplier, line 111; the
-        /denominator capital divisor wiring) are carried with explicit
-        source_file:source_line provenance — they are literals, not named
-        constants, so they cannot be imported; their values are asserted against
-        the live config where one exists.
+  * B1 (2026-06-17): the SLS-Capital divisor AND the SLS-Community share
+        multiplier now BOTH live in config (svs_normalization.denominator /
+        svs_normalization.community_multiplier) — the old ×4 code literal was
+        lifted to config, so neither is a code literal anymore.
 
 GUARANTEE: this script only READS config + code and WRITES model_spec.json. It
 does NOT touch any scoring input, config, or data file. county_scores.json and
@@ -157,13 +156,16 @@ def build_catalog():
         "capital_divisor": entry(
             svs_norm["denominator"], "config/weights.json",
             "svs_normalization.denominator",
-            "SLS-Capital normalization denominator (calibrates LA County's raw sum "
-            "to ~84 on 0–100)",
+            "SLS-Capital normalization divisor. B1: SLS now weights each sector by "
+            "the full composite SVS; divisor recalibrated to 750000 so LA County's "
+            "raw sum still anchors at ~84 on 0–100.",
         ),
         "community_share_mult": entry(
-            4, "pipeline/build_v2_canonical.py", 111,
-            "SLS-Community share→0–100 multiplier (×4). UNNAMED CODE LITERAL — "
-            "carried here with provenance until it is named/lifted to config.",
+            svs_norm["community_multiplier"], "config/weights.json",
+            "svs_normalization.community_multiplier",
+            "SLS-Community share→0–100 multiplier. B1: LIFTED FROM HARDCODE (was the "
+            "×4 literal) to config and recalibrated to 1.875 for the full-composite-SVS "
+            "scale (post-ramp max ~57).",
         ),
         "ramp_full_at": entry(
             thresholds["sls_community_confidence_ramp"]["ramp_full_at"],
