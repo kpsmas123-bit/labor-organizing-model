@@ -30,11 +30,18 @@ import argparse
 import csv
 import json
 import shutil
+import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
+
+# B1: BOTH SLS paths now weight each sector by the FULL composite SVS (svs.py),
+# not bare cap/comm reach. Import the canonical SVS scorer so the weight is the
+# SAME unified composite used everywhere (single source: scoring/svs.py).
+sys.path.insert(0, str(ROOT / "scoring"))
+from svs import score_svs  # noqa: E402
 
 # P1 formula constants (identical to scoring/electoral.py / build_v2_scores_true.py)
 _MIN_MARGIN_PP = 0.5
@@ -67,24 +74,34 @@ def load_csv(rel):
         return list(csv.DictReader(f))
 
 
-# ---------------------------------------------------------------- SLS (unchanged)
+# ---------------------------------------------------------------- SLS (B1: full composite SVS)
 
-def build_sector_points(sectors, weights):
-    reach_map = weights["svs_formula"]["reach_points"]
-    ordinal = {0: "none", 1: "local", 2: "state", 3: "national"}
-    out = {}
-    for sid, s in sectors.items():
-        out[sid] = {
-            "cap": reach_map[ordinal.get(s["cap_reach"], "none")],
-            "comm": reach_map[ordinal.get(s["comm_reach"], "none")],
-        }
-    return out
+def build_sector_svs(sectors, weights):
+    """
+    B1: ONE unified composite SVS per sector, used by BOTH SLS paths.
+
+    composite_svs(sector) = the FULL svs.py formula —
+        reach(cap) + reach(comm) + community_facing + non_offshorability
+        + dual_crisis_bonus + whole_worker_bonus
+    using the SAME svs_formula weights in config/weights.json. Replaces the old
+    per-path bare-reach weight (cap_reach for Capital, comm_reach for Community).
+    The Capital/Community distinction is now carried ENTIRELY by gross-vs-density
+    (employment vs employment-share), NOT by tilting the per-sector weight.
+
+    Returns: sid -> composite_svs (float, ~10-60).
+    """
+    svs_w = weights["svs_formula"]
+    return {
+        sid: score_svs(s["cap_reach"], s["comm_reach"], s["comm_facing"], s["non_off"], svs_w)
+        for sid, s in sectors.items()
+    }
 
 
-def calc_sls_capital(county_sectors, sector_points, denominator):
-    raw = sum(sector_points[sid]["cap"] * emp["total_employment"]
-              for sid, emp in county_sectors.items() if sid in sector_points)
-    return round(min(100.0, raw / denominator), 2)
+def calc_sls_capital(county_sectors, sector_svs, divisor):
+    """MAGNITUDE: raw = Σ_sector(composite_svs × employment); capped at 100 after /divisor."""
+    raw = sum(sector_svs[sid] * emp["total_employment"]
+              for sid, emp in county_sectors.items() if sid in sector_svs)
+    return round(min(100.0, raw / divisor), 2)
 
 
 def confidence_ramp(total_emp, ramp):
@@ -102,13 +119,19 @@ def confidence_ramp(total_emp, ramp):
     return (total_emp - zero_at) / (full_at - zero_at)
 
 
-def calc_sls_community(county_sectors, sector_points, ramp):
+def calc_sls_community(county_sectors, sector_svs, community_mult, ramp):
+    """
+    CONCENTRATION: weighted = Σ_sector(composite_svs × employment-share); the SAME
+    unified composite_svs as Capital — only gross-vs-density differs.
+      share_score = min(100, weighted × community_mult)   (community_mult is config-driven, B1)
+      SLS-Community = min(100, share_score × confidence_ramp)   (Option D ramp unchanged)
+    """
     total = sum(e["total_employment"] for e in county_sectors.values())
     if total == 0:
         return 0.0
-    weighted = sum(sector_points[sid]["comm"] * (emp["total_employment"] / total)
-                   for sid, emp in county_sectors.items() if sid in sector_points)
-    share_score = min(100.0, weighted * 4)               # existing share signal (unchanged)
+    weighted = sum(sector_svs[sid] * (emp["total_employment"] / total)
+                   for sid, emp in county_sectors.items() if sid in sector_svs)
+    share_score = min(100.0, weighted * community_mult)   # B1: config-driven (was hardcoded ×4)
     # Option D: gate the share signal by a soft employment-confidence ramp.
     return round(min(100.0, share_score * confidence_ramp(total, ramp)), 2)
 
@@ -339,7 +362,8 @@ def main():
     v2_existing = load_json("data/county_scores_v2_test.json")
     existing = {c["fips"]: c for c in v2_existing["counties"]}
 
-    denominator = weights["svs_normalization"]["denominator"]
+    denominator = weights["svs_normalization"]["denominator"]            # capital divisor (B1: 750000)
+    community_mult = weights["svs_normalization"]["community_multiplier"]  # B1: config-driven (was ×4 hardcode)
     sls_comm_ramp = thresholds["sls_community_confidence_ramp"]  # Option D noise gate (config-read)
     q = thresholds["quadrant"]
     T = {
@@ -352,7 +376,7 @@ def main():
         "stw_high": q["state_tipping_swing_floor"],
         "stw_moderate": q["state_tipping_lean_floor"],
     }
-    sector_points = build_sector_points(sectors, weights)
+    sector_svs = build_sector_svs(sectors, weights)   # B1: one unified composite SVS per sector
 
     all_fips = sorted(employment.keys())
     fips_list = all_fips if args.full else all_fips[:50]
@@ -366,8 +390,8 @@ def main():
             margin = ex.get("margin_2024")
             county_sectors = employment.get(fips, {})
 
-            sls_capital = calc_sls_capital(county_sectors, sector_points, denominator)
-            sls_community = calc_sls_community(county_sectors, sector_points, sls_comm_ramp)
+            sls_capital = calc_sls_capital(county_sectors, sector_svs, denominator)
+            sls_community = calc_sls_community(county_sectors, sector_svs, community_mult, sls_comm_ramp)
 
             # --- P1: national (presidential) + state (chamber). BUG #1: default applied to both. ---
             pres_w = pres_tip.get(state_abbr, _PRES_DEFAULT_TIP)
@@ -436,6 +460,8 @@ def main():
         "_counties_scored": len(results),
         "_errors": len(errors),
         "_denominator": denominator,
+        "_community_multiplier": community_mult,
+        "_sls_weight": "B1: full composite SVS (svs.py) per sector, unified across both paths",
         "_thresholds": T,
         "_tier_counts_national": dict(nat_counts),
         "_tier_counts_state": dict(st_counts),
