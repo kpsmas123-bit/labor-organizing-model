@@ -139,7 +139,7 @@
     .map-key-details > summary::-webkit-details-marker { display: none; }
     .map-key-details > summary::after { content: ' ▸'; }
     .map-key-details[open] > summary::after { content: ' ▾'; }
-    .map-key { display: grid; grid-template-columns: 1fr; gap: var(--space-2); margin-top: var(--space-3); }
+    .map-key { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-5); margin: 0; }
     .map-key-item { display: flex; align-items: flex-start; gap: var(--space-2); }
     .map-key-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; margin-top: 3px; }
     .map-key-label { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; color: var(--color-text); line-height: 1.2; }
@@ -477,13 +477,13 @@
     <style>
       #map-section.results-section { height: auto; scroll-snap-stop: normal; }
       .results-inner { max-width: var(--screen-max); margin: 0 auto; padding: var(--space-8) var(--screen-pad); display: flex; flex-direction: column; gap: var(--space-6); }
-      .results-head { display: flex; flex-direction: column; gap: var(--space-2); }
+      .results-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-2); }
       .results-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); }
       .results-title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 500; color: var(--color-text); margin: 0; }
       .results-lead { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; max-width: 72ch; margin: 0; }
       .results-panels { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: stretch; }
       .results-panel { display: flex; flex-direction: column; min-width: 0; gap: var(--space-2); }
-      .results-panel-title { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-rule); min-height: 28px; }
+      .results-panel-title { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text); text-align: center; padding-bottom: var(--space-2); border-bottom: 2px solid var(--color-accent); min-height: 28px; }
       .results-panel-body { position: relative; height: clamp(440px, 60vh, 660px); display: flex; flex-direction: column; min-height: 0; }
       /* scatter */
       .scatter-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 4px 6px 18px 20px; }
@@ -505,7 +505,17 @@
       .results-fullscreen-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-accent); background: none; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
       .results-fullscreen-btn:hover { border-color: var(--color-accent); }
       .results-fullscreen-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
-      .results-key { border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
+      .results-key { padding: 0 0 var(--space-2); margin: 0 auto; max-width: 1000px; }
+      .map-key-item { max-width: 320px; }
+      /* matched, framed preview boxes + single corner expand arrow */
+      #map-section .map-figure { border-radius: var(--radius-lg, 12px); }
+      .results-panel-scatter .results-panel-body { border: 1px solid var(--color-border); border-radius: var(--radius-lg, 12px); background: var(--color-bg); }
+      .panel-expand-btn { position: absolute; top: var(--space-3); right: var(--space-3); z-index: 6; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent); background: var(--color-bg); border: 1px solid var(--color-accent); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-2); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+      .panel-expand-btn:hover { background: var(--color-accent); color: #fff; }
+      .panel-expand-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      /* the map expand button also carries .map-expand-btn (so expandMap() can flip its label); re-assert the accent look over terrain.css's !important muted rule */
+      #map-section .panel-expand-btn.map-expand-btn { font-family: var(--font-mono) !important; font-size: 10px !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; color: var(--color-accent) !important; background: var(--color-bg) !important; border: 1px solid var(--color-accent) !important; padding: var(--space-1) var(--space-2) !important; border-radius: var(--radius-sm) !important; }
+      #map-section .panel-expand-btn.map-expand-btn:hover { color: #fff !important; background: var(--color-accent) !important; border-color: var(--color-accent) !important; }
       .results-targets { border-top: 1px solid var(--color-border); padding-top: var(--space-4); }
       .results-targets .target-row { flex-direction: row; flex-wrap: wrap; }
       .results-howto { margin: 0; }
@@ -569,21 +579,27 @@
         <header class="results-head">
           <div class="results-kicker">Where the counties land</div>
           <h2 class="results-title">Explore the Results</h2>
-          <p class="results-lead">
-            Every U.S. county scored on structural labor leverage and political
-            terrain, classified into six strategic categories. Click a target to
-            fly there; <strong>Awaken</strong> the map to explore it directly, or
-            <strong>Expand</strong> for full screen.
-          </p>
           <!-- TODO(prose): optional results-level intro / how the two views relate.
                Leave for the narrative pass — do not write here. -->
         </header>
+
+        <!-- shared tier legend — one row above both panels (map + scatter share this palette) -->
+        <div class="results-key">
+          <div class="map-key">
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
+            <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
+          </div>
+        </div>
 
         <div class="results-panels">
 
           <!-- ░░░░ LEFT — Geographic view : relocated live map (verbatim below) ░░░░ -->
           <section class="results-panel results-panel-map" aria-labelledby="results-title-map">
-            <div class="results-panel-title" id="results-title-map">Geographic view</div>
+            <div class="results-panel-title" id="results-title-map">Map view</div>
             <div class="results-panel-body map-right">
         <div id="sidebar" style="display:none">
           <div class="sidebar-section">
@@ -627,16 +643,7 @@
         </div>
 
         <div class="map-figure frozen" id="map-figure">
-          <div class="map-figure-header">
-            <div class="map-figure-caption">
-              <span class="map-figure-number">Fig. 1</span>
-              County-Level Strategic Terrain — United States, 2024
-            </div>
-            <div class="map-fig-controls">
-              <button class="map-awaken-btn" id="awaken-btn" onclick="toggleAwaken()" aria-pressed="false" title="Make the map directly interactive">▶ Awaken map</button>
-              <button class="map-expand-btn" onclick="expandMap()" title="Expand to full screen">↗ Expand</button>
-            </div>
-          </div>
+          <button class="panel-expand-btn map-expand-btn" onclick="expandMap()" title="Expand to full screen" aria-label="Expand map to full screen">Expand ↗</button>
           <div class="map-figure-body">
             <div id="lens-badge">Viewing: National lens</div>
             <div id="awaken-hint">Awakened — scroll zooms the map. Click “Freeze” to scroll the page again.</div>
@@ -666,9 +673,6 @@
 
             <div class="tooltip" id="tooltip"></div>
           </div><!-- /map-figure-body -->
-          <div class="map-figure-footer" style="padding: var(--space-2) var(--space-4); font-family: var(--font-mono); font-size: 10px; color: var(--color-text-muted); border-top: 1px solid var(--color-border); display: flex; justify-content: space-between;">
-            <span>Terrain v2.0 · 3,143 counties · laborterrain.org</span>
-          </div>
         </div><!-- /map-figure -->
 
         <div id="status-bar">
@@ -682,12 +686,10 @@
 
           <!-- ░░░░ RIGHT — Distribution view : NEW percentile scatter ░░░░ -->
           <section class="results-panel results-panel-scatter" aria-labelledby="results-title-scatter">
-            <div class="results-panel-title" id="results-title-scatter">
-              <span>Distribution view</span>
-              <button class="results-fullscreen-btn" id="scatter-fullscreen-btn" type="button"
-                      title="Open the full-screen explorer">⤢ Explore the plot — full screen</button>
-            </div>
+            <div class="results-panel-title" id="results-title-scatter">Distribution view</div>
             <div class="results-panel-body">
+              <button class="panel-expand-btn" id="scatter-fullscreen-btn" type="button"
+                      title="Open the full-screen explorer" aria-label="Open the full-screen scatter explorer">Expand ↗</button>
               <!--
                 v1 INDEXED AXES — methodological refinement bookmarked: even indexed,
                 capital(raw) vs community(share) measure different things; a single Y may
@@ -755,49 +757,6 @@
           </section>
         </div><!-- /results-panels -->
 
-        <!-- shared tier legend — both the map and the scatter use this palette -->
-        <details class="map-key-details results-key">
-          <summary>Color key</summary>
-          <div class="map-key">
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#BD0026"></span><span><span class="map-key-label">Tier 1 — Capital</span><span class="map-key-desc">High capital leverage + decisive terrain</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#1a3a6b"></span><span><span class="map-key-label">Tier 1 — Community</span><span class="map-key-desc">High community leverage + decisive terrain</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#E8736B"></span><span><span class="map-key-label">Tier 2 — Capital</span><span class="map-key-desc">Capital leverage — build electoral conditions</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#4A7FB5"></span><span><span class="map-key-label">Tier 2 — Community</span><span class="map-key-desc">Community leverage — build electoral conditions</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#7B6B9E"></span><span><span class="map-key-label">Tier 3 — Electoral</span><span class="map-key-desc">Decisive terrain — build the organizing base</span></span></div>
-            <div class="map-key-item"><span class="map-key-swatch" style="background:#E0DBD3"></span><span><span class="map-key-label">Tier 4 — Lower priority</span><span class="map-key-desc">Below current strategic thresholds</span></span></div>
-          </div>
-        </details>
-
-        <!-- How to read this — collapsed by default; TODO slot for the narrative pass -->
-        <details class="toggle-item results-howto">
-          <summary><span class="toggle-item-title">How to read this</span></summary>
-          <div class="toggle-item-detail">
-            <div class="method-todo">
-              <span class="method-todo-tag">TODO — how to read</span>
-              <p>Explain the two views (geographic map vs percentile distribution), the
-              indexed axes, and the tiers. To be written in the narrative pass — not here.</p>
-            </div>
-          </div>
-        </details>
-
-        <!-- Top Tier-1 targets (kept; wired to the map's fly-to via the content layer) -->
-        <div class="results-targets">
-          <div class="target-head">Top Tier-1 targets</div>
-          <p class="target-caption">
-            Double-leverage counties first, then alternating the next-highest
-            Capital and Community Tier-1 counties — each ranked on its own SLS
-            scale, since Capital and Community SLS are different ranges.
-          </p>
-          <div class="target-row" id="targets-list"><div class="target-empty">Loading targets…</div></div>
-        </div>
-
-        <!-- Commentary — TODO slot for the user's observations -->
-        <div class="method-todo results-commentary">
-          <span class="method-todo-tag">TODO — commentary</span>
-          <p>Observations on where the counties land — your notes go here in the
-          narrative pass.</p>
-        </div>
-
       </div><!-- /results-inner -->
     </section>
 
@@ -837,10 +796,12 @@
          content height (≈720px > 58vh) which pinned the diagram to the top. The
          min-height is a floor — on short viewports the panel just grows to content,
          so nothing clips and the connector recompute is unaffected. */
-      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; box-sizing: border-box; width: 100%; margin: 0 0 var(--space-6); padding: var(--space-8) 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--nav-height)); text-align: center; }
-      .imo-diagram .imo-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
-      .imo-diagram .imo-dtitle { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
-      .imo-diagram .imo-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 54ch; margin: 0 auto var(--space-6); line-height: 1.6; }
+      .imo-diagram { --diag-stroke: #9E9890; --diag-stroke-strong: #6f6a62; box-sizing: border-box; width: 100%; margin: 0 0 var(--space-6); padding: var(--space-2) 0 var(--space-6); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+      .method-hero { text-align: center; max-width: var(--screen-max, 1100px); margin: 0 auto; padding: var(--space-10) var(--space-8) var(--space-4); }
+      .method-hero .method-h { margin: 0 auto var(--space-3); }
+      .imo-diagram .imo-kicker, .method-hero .imo-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+      .imo-diagram .imo-dtitle, .method-hero .imo-dtitle { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
+      .imo-diagram .imo-lede, .method-hero .imo-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 60ch; margin: 0 auto var(--space-2); line-height: 1.6; }
       .imo-diagram .diagram-shell { position: relative; width: 100%; }
       .imo-diagram .diagram-grid { position: relative; display: grid; grid-template-columns: minmax(104px,1fr) minmax(116px,1fr) minmax(92px,0.82fr) minmax(188px,1.22fr); column-gap: clamp(24px,4.5vw,68px); row-gap: clamp(22px,3.5vw,40px); align-items: start; text-align: left; }
       .imo-diagram .col-head { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; color: var(--color-text); padding-bottom: 0.5rem; margin-bottom: 0.3rem; border-bottom: 1px solid var(--color-rule); }
@@ -915,6 +876,16 @@
     </style>
 
     <section id="methodology-section">
+      <header class="method-hero">
+        <h2 class="method-h">Methodology</h2>
+        <p class="imo-kicker">The model, end to end</p>
+        <h3 class="imo-dtitle">How the model reads a county</h3>
+        <p class="imo-lede">
+          Raw inputs feed three leverage factors; the factors are read through
+          two lenses; the lenses place each county on a strategic map.
+          <strong>Click any box to jump to its section.</strong>
+        </p>
+      </header>
       <div class="method-layout">
 
         <!-- Scroll-spy rail -->
@@ -944,8 +915,6 @@
         </aside>
 
         <div class="method-body">
-          <div class="section-number">§ 4</div>
-          <h2 class="method-h">Methodology</h2>
 
           <!-- ═══════════════════════════════════════════════════════════════
                FLOWCHART · TABLE OF CONTENTS
@@ -954,14 +923,6 @@
                quadrant clicks remain a stub (scatter view not built — see script).
                ═══════════════════════════════════════════════════════════════ -->
           <div class="imo-diagram" id="imo-diagram">
-            <p class="imo-kicker">The model, end to end</p>
-            <h3 class="imo-dtitle">How the model reads a county</h3>
-            <p class="imo-lede">
-              Raw inputs feed three leverage factors; the factors are read through
-              two lenses; the lenses place each county on a strategic map.
-              <strong>Click any box to jump to its section.</strong>
-            </p>
-
             <div class="diagram-shell">
               <!-- SVG sits UNDER the boxes; endpoints are computed from box rects -->
               <svg class="connector-layer" id="connectors" aria-hidden="true">
