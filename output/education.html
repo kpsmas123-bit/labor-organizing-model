@@ -12,6 +12,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      padding-top: var(--nav-height);
     }
 
     .page-wrap {
@@ -91,26 +92,12 @@
 </head>
 <body>
 
-<nav class="terrain-nav" role="navigation" aria-label="Main navigation">
-  <div class="terrain-nav__inner">
-    <a class="terrain-nav__brand" href="../index.html">TERRAIN</a>
-    <ul class="terrain-nav__links">
-      <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
-      <li><a href="jobs.html">Jobs</a></li>
-      <li><a href="education.html" class="active">Learn</a></li>
-      <li><a href="methodology.html">Method</a></li>
-    </ul>
-    <button class="terrain-nav__hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <div class="terrain-nav__drawer" id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
-    <ul>
-      <li><a href="labor_organizing_national_dashboard.html">Map</a></li>
-      <li><a href="jobs.html">Jobs</a></li>
-      <li><a href="education.html">Learn</a></li>
-      <li><a href="methodology.html">Method</a></li>
-    </ul>
+<nav class="terrain-topnav">
+  <a href="../index.html" class="topnav-wordmark"><span>T</span>errain</a>
+  <div class="topnav-links">
+    <a href="../index.html" class="topnav-link" id="nav-home">Home</a>
+    <a href="education.html" class="topnav-link active" id="nav-learn">Learn</a>
+    <a href="jobs.html" class="topnav-jobs" id="nav-jobs">Jobs</a>
   </div>
 </nav>
 
@@ -137,7 +124,7 @@
   <div class="terrain-footer__inner">
     <span class="terrain-footer__copy">© 2026 Terrain. Open source.</span>
     <ul class="terrain-footer__links">
-      <li><a href="methodology.html">Methodology</a></li>
+      <li><a href="../index.html#methodology-section">Methodology</a></li>
     </ul>
   </div>
 </footer>
