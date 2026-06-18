@@ -1337,8 +1337,8 @@
               <div class="toggle-item-detail"><p>The current P1 formula uses presidential electoral margins as the primary proxy for congressional and state legislative district competitiveness. True district-level margins require separate ingestion of district-level results, which is in progress. Counties spanning multiple competitive districts may be under- or over-scored.</p></div>
             </details>
             <details class="toggle-item">
-              <summary><span class="toggle-item-num">4</span><span class="toggle-item-title">Key vote and campaign finance data coverage is uneven</span></summary>
-              <div class="toggle-item-detail"><p>P2 depends on data sources with uneven coverage across states. VoteSmart and ProPublica cover federal legislators comprehensively but state legislative coverage varies; FollowTheMoney covers state campaign finance broadly but reporting requirements differ by state. The model flags coverage level for each county — full, partial, or unknown.</p></div>
+              <summary><span class="toggle-item-num">4</span><span class="toggle-item-title">Key vote data coverage is uneven</span></summary>
+              <div class="toggle-item-detail"><p>P2 depends on data sources with uneven coverage across states. Federal key votes and ideology cover federal legislators comprehensively, but about half the roster has no non-zero key-vote score and falls back to ideology alone; state legislative alignment uses party composition (Open States) where seat-level voting records aren't available. The model flags coverage level for each county — full, partial, or unknown.</p></div>
             </details>
             <details class="toggle-item">
               <summary><span class="toggle-item-num">5</span><span class="toggle-item-title">Associational and community power are absent</span></summary>
@@ -1369,8 +1369,6 @@
                   <tr><td>National Conference of State Legislatures</td><td>State legislative chamber seat counts. Powers chamber tipping weight.</td><td>Post-election</td></tr>
                   <tr><td>ProPublica Congress API</td><td>Federal voting records on defined key votes.</td><td>Per vote</td></tr>
                   <tr><td>VoteSmart</td><td>State legislative voting records where available.</td><td>Per vote</td></tr>
-                  <tr><td>OpenSecrets</td><td>Federal campaign finance — business-to-labor contribution ratios.</td><td>Per cycle</td></tr>
-                  <tr><td>FollowTheMoney</td><td>State campaign finance — business-to-labor contribution ratios.</td><td>Per cycle</td></tr>
                   <tr><td>NAICS</td><td>Sector definitions and industry codes.</td><td>Current</td></tr>
                   <tr><td>Congress.gov API</td><td>Federal voting records, verified against House Clerk + Senate.gov XML.</td><td>Per vote</td></tr>
                   <tr><td>GovTrack Bulk Data</td><td>Federal legislator ideology from sponsorship patterns. 119th Congress.</td><td>Per Congress</td></tr>
