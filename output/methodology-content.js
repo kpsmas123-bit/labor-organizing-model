@@ -1036,9 +1036,11 @@
       + '.method-flow--empty { border: 1px dashed var(--color-border, #C8C3B8); border-radius: 12px; padding: 14px 16px; margin: 0 0 20px; background: var(--color-bg-card, #EFEFEA); }'
       /* ── mini-flowchart: redesigned manifold (one template → every section) ── */
       + '.method-flow2 { margin: 0 0 22px; background: var(--color-bg, #F7F5F0); border: 1px solid var(--color-rule, #C8C3B8); border-radius: 16px; padding: 9px; }'
-      /* flowchart lives in the shared toggle (open by default); sit flush in the body */
+      /* flowchart lives in the shared toggle (open by default); sit flush in the
+         body — the toggle card is the frame now, so drop the flow2 outer border/
+         background/padding to avoid a redundant nested tan box */
       + '.method-flowtoggle .formula-card-detail { overflow: visible; }'
-      + '.method-flowtoggle .method-flow2 { margin: 0; }'
+      + '.method-flowtoggle .method-flow2 { margin: 0; border: none; background: none; padding: 0; }'
       + '.method-flowtoggle .method-flow--empty { margin: 0; }'
       + '.mf2-inner { position: relative; background: var(--color-bg-subtle, #EDEAE3); border: 1px solid var(--color-rule, #C8C3B8); border-radius: 12px; padding: 24px 30px; }'
       + '.method-flow2-grid { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; gap: 40px; align-items: stretch; }'
