@@ -236,8 +236,13 @@
     .lens-toggle { display: flex; gap: 0; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: var(--space-2); }
     .sidebar-lens-btn { flex: 1; padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; border: none; background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background 0.15s, color 0.15s; }
     .sidebar-lens-btn:hover { background: var(--color-bg-subtle); color: var(--color-text); }
-    /* !important defeats terrain.css's generic button rule (button:not(.pill)... sets background:transparent at higher specificity), so the active lens button stays visible (dark fill, light text) in both the map sidebar and the scatter rail. */
-    .sidebar-lens-btn.active { background: var(--color-text) !important; color: var(--color-bg) !important; }
+    /* Active lens-toggle styling now lives in the Phase 3 rail-scoped rule
+       (#explorer-rail .sidebar-lens-btn.active), which beats terrain.css's generic
+       button:not(...) rule (0,4,1) on specificity via the #explorer-rail id (1,2,0) —
+       so NO !important is needed. The old `background/color: …!important` here was
+       removed because !important beats specificity and was forcing the old dark-fill
+       look to win over the new minimal text active state. */
+    .sidebar-lens-btn.active { font-weight: 600; }
     .lens-description { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.4; min-height: 32px; }
     .sidebar-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
     #sidebar h2 { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
@@ -670,6 +675,23 @@
       /* tier-4 toggle row */
       .rail-toggle-row { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text); cursor: pointer; margin-top: var(--space-1); }
       .rail-toggle-row input { accent-color: var(--color-accent); width: 14px; height: 14px; }
+
+      /* ===================================================================
+         PHASE 3 — minimal TEXT lens toggles (quiet inline text, not buttons).
+         Scoped under #explorer-rail (an id) so the active state wins WITHOUT
+         !important — id (1,2,0) outranks terrain.css's generic
+         button:not(.pill):not(.lens-btn):not(.seg-btn):not(.rail-item) (0,4,1)
+         that previously forced the old .active to need !important.
+         =================================================================== */
+      #explorer-rail .lens-toggle { display: inline-flex; align-items: baseline; gap: 0; border: none; border-radius: 0; overflow: visible; margin-bottom: var(--space-2); }
+      /* transition:none — snap the active color instantly. A color transition here gets
+         frame-starved by the heavy lens-change re-render (3,143 dots) and visibly lags. */
+      #explorer-rail .sidebar-lens-btn { flex: 0 0 auto; width: auto; padding: 2px 0; margin: 0; font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.07em; text-transform: uppercase; background: none; border: none; color: var(--color-text-muted); cursor: pointer; transition: none; }
+      #explorer-rail .sidebar-lens-btn:hover { background: none; color: var(--color-text); }
+      #explorer-rail .sidebar-lens-btn + .sidebar-lens-btn::before { content: '·'; margin: 0 8px; color: var(--color-border-strong); font-weight: 400; }
+      /* clearly-visible active state: ink + weight + underline */
+      #explorer-rail .sidebar-lens-btn.active { color: var(--color-ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+      #explorer-rail .sidebar-lens-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
       @media (prefers-reduced-motion: reduce) { .xview { transition: none; } }
       @media (max-width: 900px) {
         .explorer { grid-template-columns: 1fr; }
