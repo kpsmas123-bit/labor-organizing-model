@@ -503,6 +503,12 @@
       .scatter-axis { position: absolute; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: lowercase; color: var(--color-text-muted); white-space: nowrap; pointer-events: none; }
       .scatter-axis-y { left: -0.4rem; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
       .scatter-axis-x { bottom: -1.2rem; left: 50%; transform: translateX(-50%); }
+      /* zoom controls — only in the full-screen explorer (inline preview is a glance) */
+      .scatter-zoom-ctrls { display: none; }
+      .scatter-stage.fs .scatter-zoom-ctrls { display: flex; flex-direction: column; gap: 6px; position: absolute; top: clamp(20px, 3.5vw, 56px); right: clamp(28px, 4vw, 72px); z-index: 5; }
+      .scatter-zoom-btn { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 17px; line-height: 1; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+      .scatter-zoom-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+      .scatter-zoom-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
       /* hide the map status/footer line — clutter below the framed map box (alignment cleanup) */
       #status-bar { display: none; }
       /* expanded-map gated sidebar starts below the fixed nav (was clipped under it) */
@@ -750,14 +756,26 @@
                   <div class="scatter-plot">
                     <svg id="scatter-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
                          role="img" aria-label="All counties plotted by electoral leverage on the x axis and labor leverage on the y axis, both percentile-indexed 0 to 100, colored by tier">
+                      <!-- Everything zoomable lives in this one group; d3-zoom transforms it
+                           (points + gridlines + frame scale/translate together). Axis labels
+                           (HTML, outside the SVG) stay fixed and legible. -->
+                      <g id="scatter-zoom-layer">
                       <line class="scatter-grid" x1="50" y1="4" x2="50" y2="96"></line>
                       <line class="scatter-grid" x1="4" y1="50" x2="96" y2="50"></line>
                       <rect class="scatter-frame" x="4" y="4" width="92" height="92"></rect>
                       <g id="scatter-dots"></g>
                       <g id="scatter-found-layer"></g>
+                      </g>
                     </svg>
                     <span class="scatter-axis scatter-axis-y">labor leverage →</span>
                     <span class="scatter-axis scatter-axis-x">electoral leverage →</span>
+                  </div>
+                  <!-- Zoom controls — keyboard-accessible; shown only in the full-screen explorer
+                       (scroll/pinch to zoom + drag to pan also work there). -->
+                  <div class="scatter-zoom-ctrls" role="group" aria-label="Scatter zoom controls">
+                    <button class="scatter-zoom-btn" id="scatter-zoom-in" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+                    <button class="scatter-zoom-btn" id="scatter-zoom-out" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+                    <button class="scatter-zoom-btn" id="scatter-zoom-reset" type="button" aria-label="Reset to full view" title="Reset to full view">↻</button>
                   </div>
                 </div>
               </div>
@@ -1895,6 +1913,43 @@
 
     var INSET = 4, SPAN = 92; // viewBox plot area runs 4..96
 
+    // ===================================================================
+    // ZOOM / PAN (full-screen explorer) — mirrors the map's d3-zoom UX:
+    // scroll/pinch to zoom, drag to pan, buttons + reset to full extent.
+    // LENS-AGNOSTIC: this operates purely on the plotting group's transform and
+    // makes NO assumption about which axes/data are shown. B2 will add a STATE-LENS
+    // mode (state axes p1_state / quadrant_state, state tiers) to this SAME scatter
+    // — zoom must keep working unchanged when the data/axes switch, so do not bake
+    // any national-only logic in here. Perf: a single <g> transform (3,143 static
+    // circles ride along) is GPU-cheap and stays smooth.
+    var zoomLayer = document.getElementById('scatter-zoom-layer');
+    var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var resetZoom = function () {};            // no-op until wired (guards missing d3)
+    if (window.d3 && d3.zoom && zoomLayer) {
+      var zsel = d3.select(svg);
+      var d3zoom = d3.zoom().scaleExtent([1, 12])
+        // gate interaction to the full-screen explorer; inline preview is a glance
+        // and must let wheel events scroll the page through.
+        .filter(function (event) {
+          if (!stage.classList.contains('fs')) return false;
+          // mirror d3 defaults otherwise: ignore secondary buttons; allow wheel/touch/primary-drag
+          return (!event.ctrlKey || event.type === 'wheel') && !event.button;
+        })
+        .on('zoom', function (e) { zoomLayer.setAttribute('transform', e.transform.toString()); });
+      zsel.call(d3zoom);
+      // Programmatic zoom is applied instantly (no transition) — reliable across
+      // engines and the right behavior for prefers-reduced-motion. Scroll/pinch is
+      // the primary, smooth interactive path.
+      resetZoom = function () { d3zoom.transform(zsel, d3.zoomIdentity); };
+      var zoomByK = function (k) { d3zoom.scaleBy(zsel, k); };
+      var zIn = document.getElementById('scatter-zoom-in');
+      var zOut = document.getElementById('scatter-zoom-out');
+      var zHome = document.getElementById('scatter-zoom-reset');
+      if (zIn) zIn.addEventListener('click', function () { zoomByK(1.6); });
+      if (zOut) zOut.addEventListener('click', function () { zoomByK(1 / 1.6); });
+      if (zHome) zHome.addEventListener('click', function () { resetZoom(true); });
+    }
+
     // tier number from a quadrant string (mirrors terrain-map.js _tierNum).
     function tierNum(q) {
       if (!q) return 4;
@@ -2106,12 +2161,14 @@
     var paper   = document.getElementById('paper-scroll');
     function openFS() {
       stage.classList.add('fs');
+      resetZoom(false);
       document.body.classList.add('scatter-fs-open');
       if (paper) paper.style.overflow = 'hidden';
       if (closeBtn) closeBtn.focus();
     }
     function closeFS() {
       stage.classList.remove('fs');
+      resetZoom(false);
       document.body.classList.remove('scatter-fs-open');
       if (paper) paper.style.overflow = '';
       if (fsBtn) fsBtn.focus();
