@@ -748,7 +748,19 @@ async function initMap() {
   svg.attr("viewBox", `0 0 ${W} ${H}`).attr("preserveAspectRatio", "xMidYMid meet");
   g = svg.append("g");
 
-  const zoom = d3.zoom().scaleExtent([1, 12]).on("zoom", e => g.attr("transform", e.transform));
+  const zoom = d3.zoom().scaleExtent([1, 12])
+    // DISPLAY-ONLY gating (explorer): wheel/drag/dblclick zoom-pan is live only when the
+    // map is the PRIMARY explorer view; in split/PiP it's a glance, so wheel events fall
+    // through to page scroll. Single click + hover are NOT zoom gestures and stay active
+    // in every layout (so synced-hover + click-readout work in the side-by-side view).
+    .filter(function (event) {
+      var ex = document.getElementById('explorer');
+      var primary = ex && ex.getAttribute('data-layout') === 'map-primary';
+      if (!primary && (event.type === 'wheel' || event.type === 'mousedown' ||
+                       event.type === 'dblclick' || event.type === 'touchstart')) return false;
+      return (!event.ctrlKey || event.type === 'wheel') && !event.button;
+    })
+    .on("zoom", e => g.attr("transform", e.transform));
   svg.call(zoom);
 
   buildMsaScoreLookup();

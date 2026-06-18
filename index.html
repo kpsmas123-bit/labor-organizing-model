@@ -643,6 +643,34 @@
       #explorer .xview.is-pip #lens-badge,
       #explorer .xview.is-pip .scatter-lens-badge,
       #explorer .xview.is-pip .scatter-axis { display: none; }
+
+      /* ===================================================================
+         PHASE 2 — coordinated controls: lens/filter/highlight drive BOTH views.
+         =================================================================== */
+      /* The map is interactive inside the explorer (hover/click in every layout;
+         wheel/drag-zoom is gated to map-primary by the map's d3.zoom filter).
+         Override the legacy frozen pointer-block (3 ids > frozen's 2). */
+      #explorer #map-figure #map-svg { pointer-events: auto; }
+      #explorer #awaken-hint { display: none; }   /* no awaken affordance in the explorer */
+      /* the legacy map Filters (state + swing) are superseded by the unified Highlight
+         controls below — kept in the DOM (terrain-map.js binds them) but hidden. */
+      #rail-map-filters { display: none; }
+
+      /* MAP highlight (mirrors the scatter): dim non-matching counties, emphasize the subset.
+         A coordinator syncs these classes to whatever the shared controls highlight. */
+      #map-svg .county-path.map-dim { opacity: 0.12; }
+      #map-svg .county-path.map-hot { opacity: 1; stroke: var(--color-ink); stroke-width: 0.6; }
+
+      /* SHOW / HIDE TIER 4 — when off, tier-4 fades out of BOTH views together. */
+      #explorer.hide-tier4 #scatter-dots .scatter-dot.is-tier4 { display: none; }
+      #explorer.hide-tier4 #map-svg .county-path.is-tier4 { opacity: 0.06; }
+
+      /* lens-scope label on the Summary counts (scope legibility) */
+      .rail-scope { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--color-text-muted); margin-bottom: var(--space-1); }
+      .rail-scope strong { color: var(--color-text-secondary); font-weight: 600; }
+      /* tier-4 toggle row */
+      .rail-toggle-row { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text); cursor: pointer; margin-top: var(--space-1); }
+      .rail-toggle-row input { accent-color: var(--color-accent); width: 14px; height: 14px; }
       @media (prefers-reduced-motion: reduce) { .xview { transition: none; } }
       @media (max-width: 900px) {
         .explorer { grid-template-columns: 1fr; }
@@ -702,6 +730,9 @@
             </div>
           </div>
 
+          <!-- legacy map-only Filters: kept in DOM (terrain-map.js binds these) but
+               hidden — superseded by the unified Highlight controls that drive BOTH views. -->
+          <div id="rail-map-filters">
           <hr class="divider">
           <h2>Filters</h2>
           <div class="filter-group">
@@ -711,9 +742,11 @@
           <div class="filter-group">
             <label class="toggle-btn"><input type="checkbox" id="filter-swing"> Swing States Only</label>
           </div>
+          </div>
 
           <hr class="divider">
           <h2>Summary</h2>
+          <div class="rail-scope">Counts reflect the <strong id="rail-scope-lens">national</strong> lens</div>
           <div id="summary-stats">
             <div><span class="stat-label">Total counties: </span><span class="stat-total" id="stat-total">–</span></div>
             <div><span class="stat-label">Tier 1: </span><span id="stat-tier1">–</span></div>
@@ -722,6 +755,7 @@
             <div><span class="stat-label">Tier 4: </span><span id="stat-tier4">–</span></div>
             <div><span class="stat-label">Visible: </span><span class="stat-total" id="stat-visible">–</span></div>
           </div>
+          <label class="rail-toggle-row"><input type="checkbox" id="toggle-tier4" checked> Show Tier 4 (both views)</label>
 
           <hr class="divider">
           <h2>Top 10 Counties</h2>
@@ -2404,6 +2438,74 @@
 
     // normalize button handlers on load (layout starts 'split').
     setExplorerLayout('split');
+  })();
+  </script>
+
+  <!-- ============================================================
+       EXPLORER COORDINATION (Phase 2) — make the shared controls drive BOTH
+       views in lockstep, label counts by lens, and show/hide Tier 4 together.
+       The map mirrors whatever the scatter highlights via a MutationObserver on
+       #scatter-dots (no edits to the scatter engine). Display-only.
+       ============================================================ -->
+  <script>
+  (function () {
+    var explorer = document.getElementById('explorer');
+    var dotsG    = document.getElementById('scatter-dots');
+    if (!explorer || !dotsG) return;
+    var T4 = '#E0DBD3';   // tier-4 fill (shared palette) — used to tag tier-4 in both views
+
+    // ── map mirrors the scatter's highlight (dim cloud + emphasize subset) ──
+    function syncMapToScatter() {
+      var paths = document.querySelectorAll('#map-svg .county-path');
+      if (!dotsG.classList.contains('dimmed')) {
+        paths.forEach(function (p) { p.classList.remove('map-dim', 'map-hot'); });
+        return;
+      }
+      var hot = {};
+      dotsG.querySelectorAll('.scatter-dot.hot, .scatter-dot.found').forEach(function (d) {
+        var f = d.getAttribute('data-fips'); if (f) { hot[f] = 1; hot[f.padStart(5, '0')] = 1; }
+      });
+      paths.forEach(function (p) {
+        var f = p.getAttribute('data-fips') || '';
+        var on = hot[f] || hot[f.padStart(5, '0')];
+        p.classList.toggle('map-hot', !!on);
+        p.classList.toggle('map-dim', !on);
+      });
+    }
+
+    // ── tag tier-4 elements in BOTH views (by shared-palette fill) ──
+    function markTier4() {
+      dotsG.querySelectorAll('.scatter-dot').forEach(function (d) {
+        d.classList.toggle('is-tier4', (d.getAttribute('fill') || '').toUpperCase() === T4);
+      });
+      document.querySelectorAll('#map-svg .county-path').forEach(function (p) {
+        p.classList.toggle('is-tier4', (p.getAttribute('fill') || '').toUpperCase() === T4);
+      });
+    }
+
+    // debounce burst mutations (applyHighlight toggles .hot on many dots at once)
+    var pending = false;
+    function schedule() { if (pending) return; pending = true; setTimeout(function () { pending = false; syncMapToScatter(); }, 30); }
+    new MutationObserver(schedule).observe(dotsG, { attributes: true, attributeFilter: ['class'], subtree: true });
+
+    // ── lens-scope label + re-tag on lens switch ──
+    var scopeLens = document.getElementById('rail-scope-lens');
+    window.addEventListener('lens-change', function (e) {
+      var lens = e && e.detail && e.detail.lens;
+      if (scopeLens) scopeLens.textContent = lens === 'state' ? 'state' : 'national';
+      setTimeout(function () { markTier4(); syncMapToScatter(); }, 90);
+    });
+
+    // ── show / hide Tier 4 across both views ──
+    var t4 = document.getElementById('toggle-tier4');
+    if (t4) t4.addEventListener('change', function () {
+      explorer.classList.toggle('hide-tier4', !t4.checked);
+    });
+
+    // initial tagging once the map + dots exist
+    function init() { setTimeout(markTier4, 60); }
+    window.addEventListener('terrain-map-ready', init);
+    if (window.TerrainMap && window.TerrainMap.getCounties && window.TerrainMap.getCounties().length) init();
   })();
   </script>
 
