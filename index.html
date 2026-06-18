@@ -703,6 +703,27 @@
       #why-here .wh-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
       /* ===================================================================
+         PHASE 6 — spotlight a tier/strategy across BOTH views: ghost everything,
+         full-color one group. Independent, quiet control. Clearing restores all.
+         =================================================================== */
+      .spot-chips { display: flex; flex-wrap: wrap; gap: 6px 8px; margin-bottom: var(--space-2); }
+      .spot-strategies { margin-top: 2px; }
+      #explorer:not(.lens-state) .spot-strategies { display: none; }   /* strategies only mean something in the state lens */
+      .spot-chip { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.04em; color: var(--color-text-muted); background: none; border: 1px solid var(--color-border); border-radius: 20px; padding: 3px 10px; cursor: pointer; transition: none; }
+      .spot-chip:hover { border-color: var(--color-border-strong); color: var(--color-text); }
+      .spot-chip.active { background: var(--color-ink); color: var(--color-bg); border-color: var(--color-ink); }
+      .spot-chip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      .spot-clear { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--color-accent); background: none; border: none; cursor: pointer; padding: 2px 0; display: none; }
+      .spot-clear:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+      #explorer.spotlighting .spot-clear { display: inline-block; }
+
+      /* dim everything, reveal the .spot-on group, in BOTH views */
+      #explorer.spotlighting #scatter-dots .scatter-dot { opacity: 0.08; }
+      #explorer.spotlighting #map-svg .county-path { opacity: 0.10; }
+      #explorer.spotlighting #scatter-dots .scatter-dot.spot-on { opacity: 1; fill-opacity: 0.95; }
+      #explorer.spotlighting #map-svg .county-path.spot-on { opacity: 1; stroke: var(--color-ink); stroke-width: 0.5; }
+
+      /* ===================================================================
          PHASE 3 — minimal TEXT lens toggles (quiet inline text, not buttons).
          Scoped under #explorer-rail (an id) so the active state wins WITHOUT
          !important — id (1,2,0) outranks terrain.css's generic
@@ -803,6 +824,21 @@
             <div><span class="stat-label">Visible: </span><span class="stat-total" id="stat-visible">–</span></div>
           </div>
           <label class="rail-toggle-row"><input type="checkbox" id="toggle-tier4" checked> Show Tier 4 (both views)</label>
+
+          <hr class="divider">
+          <h2>Spotlight</h2>
+          <div class="spot-chips" id="spot-tiers" role="group" aria-label="Spotlight a tier across both views">
+            <button class="spot-chip" type="button" data-group="tier1">Tier 1</button>
+            <button class="spot-chip" type="button" data-group="tier2">Tier 2</button>
+            <button class="spot-chip" type="button" data-group="tier3">Tier 3</button>
+            <button class="spot-chip" type="button" data-group="tier4">Tier 4</button>
+          </div>
+          <div class="spot-chips spot-strategies" id="spot-strategies" role="group" aria-label="Spotlight a state strategy across both views">
+            <button class="spot-chip" type="button" data-group="flip">Flip</button>
+            <button class="spot-chip" type="button" data-group="protect">Protect</button>
+            <button class="spot-chip" type="button" data-group="assess">Assess</button>
+          </div>
+          <button class="spot-clear" type="button" id="spot-clear">✕ Clear spotlight</button>
 
           <hr class="divider">
           <h2>Top 10 Counties</h2>
@@ -2659,6 +2695,81 @@
       var c = fips ? county(fips) : null;
       if (c) setTimeout(function () { appendWhyHere(c); }, 0);
     }, false);
+  })();
+  </script>
+
+  <!-- ============================================================
+       SPOTLIGHT (Phase 6) — full-color one group (tier 1-4, or, in the state
+       lens, flip/protect/assess), ghost the rest, across BOTH views at once.
+       Membership is computed per-county and lens-correct. Clearing restores all.
+       Display-only.
+       ============================================================ -->
+  <script>
+  (function () {
+    var explorer = document.getElementById('explorer');
+    var dotsG    = document.getElementById('scatter-dots');
+    var mapSvg   = document.getElementById('map-svg');
+    if (!explorer || !dotsG || !mapSvg) return;
+
+    var idx = null;
+    function getIdx() {
+      if (!idx && window.TerrainMap && window.TerrainMap.getCounties) {
+        idx = {}; window.TerrainMap.getCounties().forEach(function (c) { var f = String(c.fips); idx[f] = c; idx[f.padStart(5, '0')] = c; });
+      }
+      return idx;
+    }
+    function lens() { return (window.TerrainMap && window.TerrainMap.getLens) ? window.TerrainMap.getLens() : 'national'; }
+    function tierOf(c, l) {
+      var q = l === 'state' ? (c.quadrant_state || c.quadrant || 'tier4') : (c.quadrant_national || c.quadrant || 'tier4');
+      if (q.indexOf('tier1') === 0 || q.indexOf('deploy_now') === 0) return 1;
+      if (q.indexOf('tier2') === 0 || q.indexOf('primary_target') === 0) return 2;
+      if (q.indexOf('tier3') === 0 || q === 'power_building') return 3;
+      return 4;
+    }
+    function member(c, group, l) {
+      if (!c) return false;
+      if (group.indexOf('tier') === 0) return tierOf(c, l) === +group.slice(4);
+      return c.state_strategy === group;   // flip / protect / assess
+    }
+
+    var active = null;
+    function apply() {
+      var i = getIdx(); if (!i) return;
+      var l = lens();
+      if (!active) {
+        explorer.classList.remove('spotlighting');
+        dotsG.querySelectorAll('.scatter-dot.spot-on').forEach(function (e) { e.classList.remove('spot-on'); });
+        mapSvg.querySelectorAll('.county-path.spot-on').forEach(function (e) { e.classList.remove('spot-on'); });
+        return;
+      }
+      explorer.classList.add('spotlighting');
+      var dots = dotsG.querySelectorAll('.scatter-dot');
+      for (var k = 0; k < dots.length; k++) { dots[k].classList.toggle('spot-on', member(i[dots[k].getAttribute('data-fips')], active, l)); }
+      var paths = mapSvg.querySelectorAll('.county-path');
+      for (var m = 0; m < paths.length; m++) { paths[m].classList.toggle('spot-on', member(i[paths[m].getAttribute('data-fips')], active, l)); }
+    }
+    function setSpotlight(group) {
+      active = group || null;
+      explorer.querySelectorAll('.spot-chip').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-group') === active); });
+      apply();
+    }
+
+    explorer.querySelectorAll('.spot-chip').forEach(function (b) {
+      b.addEventListener('click', function () { var g = b.getAttribute('data-group'); setSpotlight(active === g ? null : g); });
+    });
+    var clearBtn = document.getElementById('spot-clear');
+    if (clearBtn) clearBtn.addEventListener('click', function () { setSpotlight(null); });
+
+    function syncLensClass(l) { explorer.classList.toggle('lens-state', l === 'state'); }
+    syncLensClass(lens());
+    window.addEventListener('lens-change', function (e) {
+      var l = e && e.detail && e.detail.lens;
+      syncLensClass(l);
+      // a strategy spotlight only makes sense in the state lens — drop it on leaving.
+      if (active && active.indexOf('tier') !== 0 && l !== 'state') { setSpotlight(null); return; }
+      // tiers shift with lens + the scatter rebuilds its dots — re-tag after that.
+      if (active) setTimeout(apply, 120);
+    });
   })();
   </script>
 
