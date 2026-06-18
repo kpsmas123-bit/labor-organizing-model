@@ -10,7 +10,7 @@
    ============================================================ */
 
 html {
-  scroll-padding-top: 88px;
+  scroll-padding-top: var(--nav-height);
 }
 
 :root {
