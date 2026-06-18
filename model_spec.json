@@ -74,8 +74,8 @@
       "config_key": "quadrant.sls_capital_high_boundary"
     },
     "sls_community_high_boundary": {
-      "value": 41,
-      "display": "41",
+      "value": 40,
+      "display": "40",
       "source_file": "config/thresholds.json",
       "short_label": "SLS-Community 'high' boundary on the post-ramp (Option D) scale",
       "config_key": "quadrant.sls_community_high_boundary"
