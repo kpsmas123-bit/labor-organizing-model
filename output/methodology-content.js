@@ -399,8 +399,9 @@
         ],
         dataSources: [
           { label: "Congress.gov / House Clerk + Senate.gov XML", href: "#m-data" },
-          { label: "GovTrack (ideology)", href: "#m-data" },
-          { label: "DIME CFscores (state)", href: "#m-data" }
+          { label: "GovTrack (federal ideology)", href: "#m-data" },
+          { label: "DIME CFscores (federal ideology)", href: "#m-data" },
+          { label: "Open States (state-leg party rosters)", href: "#m-data" }
         ]
       },
       details: [
@@ -421,7 +422,7 @@
               + '<tr><td>Abruzzo NLRB General Counsel Confirmation</td><td>Senate Roll Call 273</td><td>July 21, 2021</td></tr>'
               + '<tr><td>National Apprenticeship Act</td><td>House Roll Call 31</td><td>February 5, 2021</td></tr>'
               + '</tbody></table></div>'
-              + '<p>Coverage: Federal P2 — 533 legislators scored, 3,142 counties with alignment data. State P2 — in progress, using DIME CFscores (Stanford) for current state legislators where available. Low P2 + high SLS + high P1 identifies the highest-value organizing targets: leverage, decisive geography, and a hostile incumbent.</p>'
+              + '<p>Coverage: Federal P2 — 533 legislators scored, 3,142 counties with alignment data. State P2 is a different measure entirely — the partisan composition of each county\'s state-legislative seats (Σ Democratic seat-share / Σ all-party share, from Open States rosters), because seat-level labor voting records aren\'t uniformly available at the state level; it uses no key votes and no CFscores. Low P2 + high SLS + high P1 identifies the highest-value organizing targets: leverage, decisive geography, and a hostile incumbent.</p>'
               + '<p><strong>Sources considered and rejected:</strong> AFL-CIO legislative scorecards (they encode the institutional AFL-CIO\'s strategic priorities) and labor PAC contributions as a positive signal (they reflect existing labor leadership targeting — the status quo this model complements and occasionally challenges).</p>'
               + '<div class="citation">Harvard Center for Labor and a Just Economy (2024). The Varied Voice of Labor. clje.law.harvard.edu</div>'
         }
@@ -608,7 +609,7 @@
           { label: "Federal lens", href: "#lens-federal" }
         ],
         outputs: [
-          { label: "Interactive map" },
+          { label: "Map", href: "#output-map" },
           { label: "Scatter", href: "#output-scatter" }
         ],
         dataSources: []
@@ -643,7 +644,58 @@
         { label: "Federal lens", href: "#lens-federal" },
         { label: "State lens", href: "#lens-state" },
         { label: "The 2×2", href: "#output-2x2" },
+        { label: "Map", href: "#output-map" },
         { label: "Scatter", href: "#output-scatter" }
+      ]
+    },
+
+    /* ═══════════════════ MAP — POPULATED (Draft 2) ═══════════════════ */
+    {
+      id: "output-map",
+      title: "Map",
+      status: "populated",
+      summary: "Where do the tiers fall geographically — and what does the map actually show, and not show?",
+      flowchart: {
+        inputs: [
+          { label: "6 Tier Distribution", href: "#output-tiers" }
+        ],
+        outputs: [
+          { label: "The interactive map" }
+        ],
+        dataSources: []
+      },
+      details: [
+        {
+          variant: "Per-county choropleth, colored by national-lens tier",
+          gloss: "Every county filled by its own tier, using the shared palette so map, scatter, and county card all agree.",
+          html: '<p>The map colors every county by its own national-lens tier value (<code>quadrant_national</code>), drawing each county as its own shape — metros are <strong>not</strong> merged in the base view. The fill uses the <strong>shared tier palette</strong>, so a county reads the same color on the map, in the scatter, and on its detail card.</p>'
+              + '<div class="method-table-wrap"><table class="method-table">'
+              + '<thead><tr><th>Swatch</th><th>Tier</th><th>Reading</th></tr></thead>'
+              + '<tbody>'
+              + '<tr><td><span class="map-swatch" style="background:#BD0026"></span></td><td>Tier 1 — Capital</td><td>Capital pathway, top priority</td></tr>'
+              + '<tr><td><span class="map-swatch" style="background:#1a3a6b"></span></td><td>Tier 1 — Community</td><td>Community pathway, top priority</td></tr>'
+              + '<tr><td><span class="map-swatch" style="background:#E8736B"></span></td><td>Tier 2 — Capital</td><td>High capital leverage, not yet decisive — build</td></tr>'
+              + '<tr><td><span class="map-swatch" style="background:#4A7FB5"></span></td><td>Tier 2 — Community</td><td>High community leverage in a lean state — build</td></tr>'
+              + '<tr><td><span class="map-swatch" style="background:#7B6B9E"></span></td><td>Tier 3 — Electoral</td><td>Decisive geography without a base at scale</td></tr>'
+              + '<tr><td><span class="map-swatch" style="background:#E0DBD3"></span></td><td>Tier 4 — Lower priority</td><td>Not a current priority under finite resources</td></tr>'
+              + '</tbody></table></div>'
+              + '<p>The one county that clears both Tier-1 pathways (<code>tier1_capital_community</code>) takes the Tier-1 capital color. Counties with no tier value render in a neutral no-data gray.</p>'
+        }
+      ],
+      rationale: [
+        "<strong>Geography is how organizers navigate.</strong> The tiers answer “what kind of terrain”; the map answers “where.” Seeing the categories laid down on actual counties turns the model from a table into something you can plan a deployment around — which states, which metros, which rural counties light up.",
+        "<strong>One palette, three views.</strong> The map, the scatter, and the county card all read from the same tier colors, so a county that is Tier-1 community blue on the map is the same blue everywhere else. The color is the model's output vocabulary made visual."
+      ],
+      limitations: [
+        "<strong>National lens only (for now).</strong> The base map shows the national-lens tier; the state lens (<code>quadrant_state</code>) is computed and shipped on every county but not yet surfaced here — it goes live after a dedicated state-layer audit and un-gating pass.",
+        "<strong>A few counties aren't drawable.</strong> Counties with no matching geometry — notably the Connecticut planning-region FIPS, which replaced its counties — can't be rendered and simply don't appear, though they still exist in the data.",
+        "<strong>Metros are un-merged by design.</strong> Each county is its own shape; a metro that spans several counties shows as several shapes, not one. An optional MSA-merge overlay (grouping a metro into a single region) is bookmarked as a future view, not the default."
+      ],
+      seeAlso: [
+        { label: "Tiers & the two pathways", href: "#output-tiers" },
+        { label: "Scatter", href: "#output-scatter" },
+        { label: "Federal lens", href: "#lens-federal" },
+        { label: "The 2×2", href: "#output-2x2" }
       ]
     },
     {
@@ -678,6 +730,7 @@
       ],
       seeAlso: [
         { label: "Tiers & the two pathways", href: "#output-tiers" },
+        { label: "Map", href: "#output-map" },
         { label: "The 2×2", href: "#output-2x2" },
         { label: "Electoral Leverage", href: "#factor-electoral-leverage" },
         { label: "Sectoral Leverage", href: "#factor-sectoral-leverage" }
@@ -739,13 +792,24 @@
     return '<span class="mf2-chip">' + label + "</span>";
   }
 
+  // Wrap the mini-flowchart in the SAME collapsible toggle as Details and
+  // Rationale & Limitations — but OPEN by default. The adaptive elbow connectors
+  // need measurable box geometry, which hidden (display:none) <details> bodies
+  // don't have; a `toggle` listener (see renderAll) recomputes them on re-expand.
+  function wrapFlow(inner) {
+    return '<details class="formula-card method-flowtoggle" open>'
+      + '<summary><span class="formula-card-name">Flowchart</span>'
+      + '<span class="formula-card-gloss">Inputs, this variable, outputs, and data sources.</span></summary>'
+      + '<div class="formula-card-detail">' + inner + "</div></details>";
+  }
+
   function renderFlow(sec) {
     var f = sec.flowchart || {};
     var inputs = f.inputs || [];
     var outputs = f.outputs || [];
     var sources = f.dataSources || [];
     if (!inputs.length && !outputs.length && !sources.length) {
-      return '<div class="method-flow method-flow--empty"><span class="method-todo-tag">TODO — mini-flowchart</span></div>';
+      return wrapFlow('<div class="method-flow method-flow--empty"><span class="method-todo-tag">TODO — mini-flowchart</span></div>');
     }
     var inCards = inputs.length
       ? inputs.map(function (i) { return flowCard(i, "mf2-card--in"); }).join("")
@@ -767,7 +831,7 @@
         + sources.map(sourceChip).join("") + '</div></div>';
     }
     html += '</div></div>';
-    return html;
+    return wrapFlow(html);
   }
 
   /* ──────────────────────────────────────────────────────────────────────────
@@ -972,6 +1036,10 @@
       + '.method-flow--empty { border: 1px dashed var(--color-border, #C8C3B8); border-radius: 12px; padding: 14px 16px; margin: 0 0 20px; background: var(--color-bg-card, #EFEFEA); }'
       /* ── mini-flowchart: redesigned manifold (one template → every section) ── */
       + '.method-flow2 { margin: 0 0 22px; background: var(--color-bg, #F7F5F0); border: 1px solid var(--color-rule, #C8C3B8); border-radius: 16px; padding: 9px; }'
+      /* flowchart lives in the shared toggle (open by default); sit flush in the body */
+      + '.method-flowtoggle .formula-card-detail { overflow: visible; }'
+      + '.method-flowtoggle .method-flow2 { margin: 0; }'
+      + '.method-flowtoggle .method-flow--empty { margin: 0; }'
       + '.mf2-inner { position: relative; background: var(--color-bg-subtle, #EDEAE3); border: 1px solid var(--color-rule, #C8C3B8); border-radius: 12px; padding: 24px 30px; }'
       + '.method-flow2-grid { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; gap: 40px; align-items: stretch; }'
       + '.mf2-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }'
@@ -1016,7 +1084,8 @@
       + '.method-limitations li { margin-bottom: 8px; }'
       + '.method-seealso { margin-top: 8px; font-size: 13px; }'
       + '.method-seealso a { color: var(--color-accent, #BD0026); text-decoration: none; }'
-      + '.method-seealso a:hover { text-decoration: underline; }';
+      + '.method-seealso a:hover { text-decoration: underline; }'
+      + '.map-swatch { display: inline-block; width: 18px; height: 18px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.18); vertical-align: middle; }';
     var style = document.createElement("style");
     style.id = "method-content-styles";
     style.textContent = css;
@@ -1057,6 +1126,14 @@
         return;
       }
       host.innerHTML = renderMethodologySection(sec, spec);
+    });
+    // The flowchart toggle starts open, so geometry is measurable at first draw.
+    // When collapsed then re-expanded, recompute — a hidden <details> body has no
+    // measurable box positions, so the initial draw inside it would be void.
+    document.querySelectorAll("details.method-flowtoggle").forEach(function (d) {
+      d.addEventListener("toggle", function () {
+        if (d.open) scheduleConnectorDraw();
+      });
     });
     // Draw the adaptive elbow connectors now that the boxes are laid out, and
     // redraw on resize / once webfonts settle (both shift box positions).

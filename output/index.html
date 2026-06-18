@@ -934,6 +934,7 @@
           <a href="#lens-state" data-spy="lens-state">State lens</a>
           <a href="#output-2x2" data-spy="output-2x2">The 2×2</a>
           <a href="#output-tiers" data-spy="output-tiers">Tiers &amp; the two pathways</a>
+          <a href="#output-map" data-spy="output-map">Map</a>
           <a href="#output-scatter" data-spy="output-scatter">Scatter</a>
           <a href="#m-limitations" data-spy="m-limitations">Known Limitations</a>
           <a href="#m-data" data-spy="m-data">Data Sources</a>
@@ -1302,12 +1303,19 @@
             <div class="method-render" data-section="output-tiers"></div>
           </div>
 
-          <!-- ── Scatter — TODO STUB. The scatter view is not built yet; the diagram's
-               quadrant clicks remain a stub pointing here / to a toast. ── -->
-          <div class="method-sub" id="output-scatter">
+          <!-- ── Map — per-county choropleth of the national-lens tiers. ── -->
+          <div class="method-sub" id="output-map">
             <span class="method-sub-num">14 — Output</span>
+            <h3 class="method-sub-h">Map</h3>
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-map"]. -->
+            <div class="method-render" data-section="output-map"></div>
+          </div>
+
+          <!-- ── Scatter — every county on the two leverage axes, colored by tier. ── -->
+          <div class="method-sub" id="output-scatter">
+            <span class="method-sub-num">15 — Output</span>
             <h3 class="method-sub-h">Scatter</h3>
-            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-scatter"] (stub). -->
+            <!-- BODY is data-driven: METHODOLOGY_SECTIONS["output-scatter"]. -->
             <div class="method-render" data-section="output-scatter"></div>
           </div>
 
@@ -1317,7 +1325,7 @@
 
           <!-- ── Known Limitations (toggle list) ── -->
           <div class="method-sub" id="m-limitations">
-            <span class="method-sub-num">15 — Limitations</span>
+            <span class="method-sub-num">16 — Limitations</span>
             <h3 class="method-sub-h">Known Limitations</h3>
             <p class="method-prose">
               These are not disclaimers. They are specifications of where the data
@@ -1350,13 +1358,13 @@
             </details>
             <details class="toggle-item">
               <summary><span class="toggle-item-num">7</span><span class="toggle-item-title">P2 incumbent alignment coverage is uneven</span></summary>
-              <div class="toggle-item-detail"><p>Federal P2 is complete for all 533 current federal legislators across 3,142 counties. State P2 uses DIME CFscores (Stanford, 1979–2024) matched to current state legislators via Open States; data is most reliable for 2010–2020, with sparse 2022–2024 state coverage, flagged as <code>coverage_type = cfscore_only</code>.</p></div>
+              <div class="toggle-item-detail"><p>Federal P2 is complete for all 533 current federal legislators across 3,142 counties. State P2 is a different measure — the partisan composition of each county's state-legislative seats (Σ Democratic seat-share / Σ all-party share, from Open States rosters), used because seat-level labor voting records aren't uniformly available at the state level; it carries no key votes and no CFscores, and is flagged as <code>coverage_type = party_proxy</code> (with <code>party_proxy_state_uniform</code> / <code>party_proxy_unavailable</code> fallbacks).</p></div>
             </details>
           </div>
 
           <!-- ── Data Sources (table) ── -->
           <div class="method-sub" id="m-data">
-            <span class="method-sub-num">16 — Data Sources</span>
+            <span class="method-sub-num">17 — Data Sources</span>
             <h3 class="method-sub-h">Data Sources</h3>
             <div class="method-table-wrap">
               <table class="method-table">
@@ -1367,13 +1375,11 @@
                   <tr><td>MIT Election Data and Science Lab</td><td>County-level 2024 presidential margins. Powers electoral leverage.</td><td>2024</td></tr>
                   <tr><td>U.S. Census Bureau — District Relationship Files</td><td>Congressional + state legislative district to county mapping.</td><td>Decennial</td></tr>
                   <tr><td>National Conference of State Legislatures</td><td>State legislative chamber seat counts. Powers chamber tipping weight.</td><td>Post-election</td></tr>
-                  <tr><td>ProPublica Congress API</td><td>Federal voting records on defined key votes.</td><td>Per vote</td></tr>
-                  <tr><td>VoteSmart</td><td>State legislative voting records where available.</td><td>Per vote</td></tr>
                   <tr><td>NAICS</td><td>Sector definitions and industry codes.</td><td>Current</td></tr>
-                  <tr><td>Congress.gov API</td><td>Federal voting records, verified against House Clerk + Senate.gov XML.</td><td>Per vote</td></tr>
+                  <tr><td>Congress.gov API</td><td>Federal voting records on defined key votes, verified against House Clerk + Senate.gov XML.</td><td>Per vote</td></tr>
                   <tr><td>GovTrack Bulk Data</td><td>Federal legislator ideology from sponsorship patterns. 119th Congress.</td><td>Per Congress</td></tr>
-                  <tr><td>Open States API</td><td>Current state legislators matched to DIME CFscores. 50 states + DC.</td><td>Ongoing</td></tr>
-                  <tr><td>DIME (Stanford)</td><td>Candidate ideology (CFscores). 850M+ contribution records, 1979–2024.</td><td>2024</td></tr>
+                  <tr><td>DIME (Stanford)</td><td>Federal legislator ideology (CFscores), blended with GovTrack for the federal P2 ideology component. 850M+ contribution records, 1979–2024.</td><td>2024</td></tr>
+                  <tr><td>Open States API</td><td>Current state-legislative party rosters. Powers state P2 (party composition of each county's seats). 50 states + DC.</td><td>Ongoing</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1381,7 +1387,7 @@
 
           <!-- ── Theoretical Foundations (literature table; pending → review) ── -->
           <div class="method-sub" id="m-literature">
-            <span class="method-sub-num">17 — Literature</span>
+            <span class="method-sub-num">18 — Literature</span>
             <h3 class="method-sub-h">Theoretical Foundations</h3>
             <p class="method-prose">
               The works below ground the model. Citations marked
@@ -1411,7 +1417,7 @@
 
           <!-- ── Further Research (conceptual prose) ── -->
           <div class="method-sub" id="m-research">
-            <span class="method-sub-num">18 — Roadmap</span>
+            <span class="method-sub-num">19 — Roadmap</span>
             <h3 class="method-sub-h">Further Research and Future Updates</h3>
             <p class="method-prose">Seven near-term priorities shape the model's roadmap:</p>
             <p class="method-prose">
@@ -1436,7 +1442,7 @@
 
           <!-- ── About (conceptual prose) ── -->
           <div class="method-sub" id="m-about">
-            <span class="method-sub-num">19 — About</span>
+            <span class="method-sub-num">20 — About</span>
             <h3 class="method-sub-h">About This Project</h3>
             <p class="method-prose">
               Terrain was created by
