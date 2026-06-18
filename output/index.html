@@ -491,14 +491,18 @@
       #scatter-svg { width: 100%; height: 100%; display: block; overflow: visible; }
       .scatter-frame { fill: none; stroke: var(--color-border); stroke-width: 0.5; }
       .scatter-grid { stroke: var(--color-rule); stroke-width: 0.5; stroke-dasharray: 1.2 2.4; stroke-linecap: round; }
-      .scatter-dot { cursor: pointer; transition: r 140ms ease, fill-opacity 140ms ease, opacity 140ms ease; }
-      .scatter-dot:hover { r: 1.7; fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.3; }
+      /* Counter-scale point radius by the live zoom factor (--zoom-k, set on #scatter-svg
+         during zoom) so dots keep a constant ON-SCREEN size: positions still spread apart
+         as you zoom in, but the markers don't balloon/overlap. vector-effect keeps outlines
+         crisp. r is NOT transitioned, so zoom radius changes are instant (no trailing). */
+      .scatter-dot { cursor: pointer; r: calc(0.85px / var(--zoom-k, 1)); vector-effect: non-scaling-stroke; transition: fill-opacity 140ms ease, opacity 140ms ease; }
+      .scatter-dot:hover { r: calc(1.7px / var(--zoom-k, 1)); fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.3; }
       /* HIGHLIGHT (not filter): when a highlight is active the whole cloud dims; the
          matching subset gets .hot (re-appended on top) to stay full-color + larger. */
       #scatter-dots.dimmed .scatter-dot { opacity: 0.10; }
-      #scatter-dots .scatter-dot.hot { opacity: 1; r: 1.5; fill-opacity: 0.95; }
-      #scatter-dots .scatter-dot.found { opacity: 1; r: 2.6; fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.5; }
-      .scatter-found-label { font-family: var(--font-mono); font-size: 2.4px; fill: var(--color-ink); paint-order: stroke; stroke: var(--color-bg); stroke-width: 0.8px; pointer-events: none; }
+      #scatter-dots .scatter-dot.hot { opacity: 1; r: calc(1.5px / var(--zoom-k, 1)); fill-opacity: 0.95; }
+      #scatter-dots .scatter-dot.found { opacity: 1; r: calc(2.6px / var(--zoom-k, 1)); fill-opacity: 1; stroke: var(--color-ink); stroke-width: 0.5; }
+      .scatter-found-label { font-family: var(--font-mono); font-size: calc(2.4px / var(--zoom-k, 1)); fill: var(--color-ink); paint-order: stroke; stroke: var(--color-bg); stroke-width: 0.8px; pointer-events: none; }
       .scatter-axis { position: absolute; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: lowercase; color: var(--color-text-muted); white-space: nowrap; pointer-events: none; }
       .scatter-axis-y { left: -0.4rem; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
       .scatter-axis-x { bottom: -1.2rem; left: 50%; transform: translateX(-50%); }
@@ -537,7 +541,7 @@
         .results-panels { grid-template-columns: 1fr; }
         .results-panel-body { height: 62vh; }
       }
-      @media (prefers-reduced-motion: reduce) { .scatter-dot { transition: none; } .scatter-dot:hover { r: 0.85; } }
+      @media (prefers-reduced-motion: reduce) { .scatter-dot { transition: none; } .scatter-dot:hover { r: calc(0.85px / var(--zoom-k, 1)); } }
 
       /* ===== SCATTER FULL-SCREEN EXPLORER (mirrors the map's expanded pattern) ===== */
       .scatter-stage { position: relative; display: flex; width: 100%; height: 100%; min-height: 0; }
@@ -1923,6 +1927,7 @@
     // circles ride along) is GPU-cheap and stays smooth.
     var zoomLayer = document.getElementById('scatter-zoom-layer');
     var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var lastK = 1;                             // last applied zoom scale (drives --zoom-k)
     var resetZoom = function () {};            // no-op until wired (guards missing d3)
     if (window.d3 && d3.zoom && zoomLayer) {
       var zsel = d3.select(svg);
@@ -1934,7 +1939,12 @@
           // mirror d3 defaults otherwise: ignore secondary buttons; allow wheel/touch/primary-drag
           return (!event.ctrlKey || event.type === 'wheel') && !event.button;
         })
-        .on('zoom', function (e) { zoomLayer.setAttribute('transform', e.transform.toString()); });
+        .on('zoom', function (e) {
+          zoomLayer.setAttribute('transform', e.transform.toString());
+          // publish the scale so the dots can counter-scale their radius (CSS calc).
+          // Only on scale change — pan (k unchanged) stays a pure GPU group transform.
+          if (e.transform.k !== lastK) { lastK = e.transform.k; svg.style.setProperty('--zoom-k', lastK); }
+        });
       zsel.call(d3zoom);
       // Programmatic zoom is applied instantly (no transition) — reliable across
       // engines and the right behavior for prefers-reduced-motion. Scroll/pinch is
