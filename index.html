@@ -94,25 +94,43 @@
     @keyframes bounce-hint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
     @media (prefers-reduced-motion: reduce) { .cover-scroll-hint { animation: none; } }
 
-    /* === ABOUT / ABSTRACT PANEL === */
+    /* === ABOUT / AUTHOR'S LETTER PANEL ===
+       The letter runs taller than the scrollport, so #panel-about is an
+       OVERSIZED snap area: scroll-snap-stop:normal lets the reader snap to its
+       TOP and then free-scroll through the whole letter without the snap
+       fighting them mid-read; snap re-engages at the boundary to the next
+       panel. Same pattern the methodology section uses (#methodology-section). */
     #panel-about {
-      display: grid; grid-template-columns: 1fr 280px; gap: var(--space-12);
-      align-items: center; max-width: var(--screen-max); margin: 0 auto;
-      padding: var(--space-10) var(--screen-pad); width: 100%; background: var(--color-bg);
+      display: block;
+      scroll-snap-stop: normal;            /* don't force-snap mid-letter */
+      max-width: var(--screen-max); margin: 0 auto;
+      padding: var(--space-16) var(--screen-pad) var(--space-12);
+      width: 100%; background: var(--color-bg);
     }
-    .about-main { max-width: 560px; }
-    .about-heading { font-family: var(--font-display); font-size: 2.5rem; font-weight: 500; color: var(--color-text); margin-bottom: 1.5rem; line-height: 1.15; }
-    .about-body { font-family: var(--font-body); font-size: 1rem; color: var(--color-text-secondary); line-height: 1.75; margin-bottom: 1.25rem; }
-    .about-nav { padding-top: 12px; }
+    .letter { max-width: 640px; margin: 0 auto; }
+    .letter-eyebrow { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-4); }
+    .about-main { max-width: 640px; margin: 0 auto; }
+    .about-heading { font-family: var(--font-display); font-size: 2.75rem; font-weight: 500; color: var(--color-text); margin: 0 0 1.75rem; line-height: 1.12; }
+    .about-body { font-family: var(--font-body); font-size: 1.075rem; color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 1.4rem; }
+    .letter-signoff { font-family: var(--font-body); font-size: 1.075rem; color: var(--color-text-secondary); line-height: 1.7; margin-top: 2rem; }
+    .letter-sign-name { font-family: var(--font-display); font-size: 1.6rem; color: var(--color-text); display: block; margin-top: 0.15rem; }
+    .letter-rule { width: 64px; height: 2px; background: var(--color-accent); border: 0; margin: var(--space-12) 0 var(--space-8); }
+    .letter-subhead { font-family: var(--font-display); font-size: 1.85rem; font-weight: 500; color: var(--color-text); margin: 0 0 1.25rem; line-height: 1.15; }
+    .letter-email { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid var(--color-accent); }
+    .letter-email:hover { opacity: 0.75; }
+    /* EXPLORE links — relocated from the side rail to the BOTTOM of the letter. */
+    .about-nav { max-width: 640px; margin: var(--space-12) auto 0; padding-top: 0; }
     .about-nav-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 1rem; }
     .about-link { display: flex; align-items: baseline; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--color-border); text-decoration: none; color: var(--color-text); transition: color 0.15s; }
+    .about-link:first-of-type { border-top: 1px solid var(--color-border); }
     .about-link:hover { color: var(--color-accent); }
     .about-link-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-text-muted); min-width: 22px; }
     .about-link-title { font-family: var(--font-body); font-size: 1rem; font-weight: 600; display: block; }
     .about-link-desc { font-family: var(--font-body); font-size: 0.8rem; color: var(--color-text-muted); display: block; margin-top: 2px; line-height: 1.4; }
 
     @media (max-width: 768px) {
-      #panel-about { grid-template-columns: 1fr; gap: 40px; padding: 40px 20px; }
+      #panel-about { padding: var(--space-10) 20px; }
+      .about-heading { font-size: 2.25rem; }
       .cover-title { font-size: 2.5rem; }
       #panel-cover { padding: var(--space-8); }
       .cover-scroll-hint { left: var(--space-8); }
@@ -411,35 +429,144 @@
     <!-- ════════════════════════════════════════════════════════
          PANEL 2 — ABOUT / THEORY OF CHANGE
          ════════════════════════════════════════════════════════ -->
+    <!-- ════════════════════════════════════════════════════════
+         ARCHIVED — previous short "About This Project" copy (replaced by the
+         author's letter below). Preserved here so it is recoverable; not live.
+         ────────────────────────────────────────────────────────
+         <h2 class="about-heading">About This Project</h2>
+         <p class="about-body">
+           Our theory of change rests on two claims. First, that durable
+           power is built through well-placed, interpersonal, organized
+           solidarity — irrespective of institutional permission. Second,
+           that winning material gains for workers in the workplace is the
+           fastest and most effective way to build a movement capable of
+           addressing our broader social and political needs.
+           When workers organize, they win. When workers win, we all win.
+         </p>
+         <p class="about-body">
+           Terrain is an open-source research tool that operationalizes
+           McAlevey's strategic targeting framework at national scale —
+           scoring every U.S. county on two independent dimensions:
+           Strategic Leverage Score (how much power would organized workers
+           have?) and Political Terrain Score (how much does organizing
+           here change the political environment?).
+         </p>
+         <p class="about-body">
+           The model shows terrain. The organizer brings the goal.
+         </p>
+         (Explore rail had: 01 The Map → #map-section · 02 Methodology →
+          #methodology-section · 03 Jobs Board → output/jobs.html ·
+          04 Learn → output/education.html)
+         ════════════════════════════════════════════════════════ -->
     <div class="paper-panel" id="panel-about">
       <div class="about-main">
-        <h2 class="about-heading">About This Project</h2>
+        <div class="letter-eyebrow">A letter from the author</div>
+        <h2 class="about-heading">About the Project</h2>
         <p class="about-body">
-          Our theory of change rests on two claims. First, that durable
-          power is built through well-placed, interpersonal, organized
-          solidarity — irrespective of institutional permission. Second,
-          that winning material gains for workers in the workplace is the
-          fastest and most effective way to build a movement capable of
-          addressing our broader social and political needs.
-          <span style="border-bottom: 2px solid var(--color-accent);
-                       padding-bottom: 1px;">
-            <strong style="color: var(--color-text);">When workers organize, they win.</strong>
-            <strong style="color: var(--color-text);">When workers win, we all win.</strong>
-          </span>
+          This project has been a labor of love and an incredible learning
+          opportunity. While labor organizing has not been the focus of my
+          academic work, as our traditional electoral political methods have
+          proven increasingly ineffective at meeting the moment, I became ever
+          more convinced of the inescapable fact that the most powerful force of
+          political resistance are organized workers. I was deeply inspired by
+          Jane McAlevey's laying out of the factors required for an effective and
+          urgent labor movement that was radically visionary and unshakably
+          grounded. I sought to take her profound theoretical and historical
+          arguments and operationalize that theory with data. I see this as a
+          natural extension of her argument: that what matters is to win, and we
+          should use whatever tools we can to make that happen. At the same time,
+          I believe we need to approach the use of data in politics and organizing
+          with real caution. Too often the lived experiences and wisdom of those
+          on the ground and in the field are overlooked by those who claim data,
+          polls, and algorithms are the only answer. My hope and commitment with
+          this project is to add to, and not detract from, the deep real-world
+          organizing that is currently happening.
         </p>
         <p class="about-body">
-          Terrain is an open-source research tool that operationalizes
-          McAlevey's strategic targeting framework at national scale —
-          scoring every U.S. county on two independent dimensions:
-          Strategic Leverage Score (how much power would organized workers
-          have?) and Political Terrain Score (how much does organizing
-          here change the political environment?).
+          We need to be honest about the state of the labor movement in this
+          country and the urgency that is required of us. With fascism knocking at
+          the door, we must be endlessly strategic in our resistance. This
+          requires recognizing that some terrain and some sectors in the country
+          will have more leverage than others, and if we can identify those
+          pressure points and opportunities, we can force real change.
         </p>
         <p class="about-body">
-          The model shows terrain. The organizer brings the goal.
+          My theory of change diverges from many of those who seek data-backed
+          answers to our social questions. I believe that change rests on deep
+          interpersonal worker organizing that produces solidarity across our
+          communities — and I believe that it is only from that that we can see
+          larger-scale political and electoral goals accomplished. I believe that
+          the wins of worker-focused organizing will not just trickle down, but
+          direct the macro political change we demand in this country.
+        </p>
+        <p class="about-body">
+          I hope to communicate two fundamental priorities in this project: 1)
+          that there should be a national strategy to deploy resources to the
+          highest-leverage campaigns — not just based on my research, but on the
+          vast amount of knowledge and wisdom in the labor movement; and 2) that
+          the mechanism of social and political change is real worker organizing,
+          not performative activism or mobilization that does not fundamentally
+          change the balance of power.
+        </p>
+        <p class="about-body">
+          I will continue to update and grow this project with new features and
+          layers of research. I look forward to feedback, criticism, and peer
+          review. I am working to make this as collaborative, open-source, and
+          replicable as possible. Feel free to reach out with questions at
+          <a class="letter-email" href="mailto:sam.kp@berkeley.edu">sam.kp@berkeley.edu</a>.
+        </p>
+        <p class="about-body">
+          Thank you to anyone who spends some time exploring this project.
+        </p>
+        <p class="letter-signoff">
+          In solidarity,
+          <span class="letter-sign-name">Sam</span>
+        </p>
+
+        <hr class="letter-rule">
+        <h3 class="letter-subhead">A note on AI</h3>
+        <p class="about-body">
+          I would not have been able to do this project without AI. I do not have
+          the technical skills or the time required to write the scraping tools,
+          data software, models, and front-end code to do what I have done in this
+          project. This is a reality that makes me both very uncomfortable and
+          incredibly inspired. I made every theoretical and methodological decision
+          in this study, I double-checked every source and fact, and I spent dozens
+          of hours a week painstakingly working through every component step and
+          outcome — many that did not make it to the V2 that is currently
+          published.
+        </p>
+        <p class="about-body">
+          I believe that we need to see AI as both an existential risk to our
+          economic and social system and an inspiring tool that can be directed for
+          social good. It could give us a three-day work week or mass unemployment,
+          but it does not change the fundamental balance of power in our world. The
+          problem is still capitalism's distribution of power and ownership, and we
+          must continue to fight to change that system in every way we can.
+        </p>
+
+        <hr class="letter-rule">
+        <h3 class="letter-subhead">A note on the jobs board</h3>
+        <p class="about-body">
+          The results of this project are in many ways about how national and state
+          coalitions could or should focus their resources, but for individuals who
+          want to get involved, I made the jobs board. Most of the data is drawn
+          from the incredible resource of unionjobs.com, but I've made an updated
+          interface that brings in contextual and personal information to help users
+          find a good fit for them.
+        </p>
+        <p class="about-body">
+          It is also an evolving part of this project. My goal is to showcase not
+          only union staff roles but also job openings in key rank-and-file sectors
+          — this is our real opportunity to bring the insights of this research to
+          the jobs market. I want users to get an idea of how to have the most
+          leverage as a worker in any sector, and understand how their power can fit
+          into a larger movement.
         </p>
       </div>
 
+      <!-- EXPLORE links — relocated to the BOTTOM of the letter (read first, then
+           go deeper). Same four targets as the previous side rail. -->
       <div class="about-nav">
         <div class="about-nav-label">Explore</div>
         <a href="#map-section" class="about-link">
