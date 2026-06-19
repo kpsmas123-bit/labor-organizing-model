@@ -1019,7 +1019,8 @@
                    the Info Card v2 (.card-*) markup on click. -->
             </div>
 
-            <div class="legend" id="map-legend">
+            <!-- starts collapsed on load (just the header bar); click to expand -->
+            <div class="legend collapsed" id="map-legend">
               <div class="legend-header">
                 <span class="legend-label">Legend</span>
                 <button class="legend-toggle" onclick="toggleLegend()" id="legend-toggle-btn">&#8249;</button>
@@ -1366,30 +1367,18 @@
       <div class="method-layout">
 
         <!-- Scroll-spy rail -->
+        <!-- Six top-level sections. Each item jumps to the anchor of the FIRST
+             sub-section in its group; the scroll-spy (data-spy = group key)
+             keeps the group active while the viewport is within ANY of its
+             sub-sections. The sub-sections themselves are unchanged on the page. -->
         <aside class="method-rail" id="method-rail">
           <div class="method-rail-label">Methodology</div>
-          <a href="#theory-diagram" data-spy="theory-diagram">Theory of Change</a>
-          <a href="#imo-diagram" data-spy="imo-diagram">Flowchart</a>
-          <a href="#m-stakes" data-spy="m-stakes">The Stakes</a>
-          <a href="#m-assumptions" data-spy="m-assumptions">Core Assumptions</a>
-          <a href="#m-model" data-spy="m-model">What the Model Does</a>
-          <a href="#input-sectoral" data-spy="input-sectoral">Inputs: Sectoral</a>
-          <a href="#input-electoral" data-spy="input-electoral">Inputs: Electoral</a>
-          <a href="#input-alignment" data-spy="input-alignment">Inputs: Alignment</a>
-          <a href="#factor-sectoral-leverage" data-spy="factor-sectoral-leverage">Sectoral Leverage</a>
-          <a href="#factor-electoral-leverage" data-spy="factor-electoral-leverage">Electoral Leverage</a>
-          <a href="#factor-incumbent-alignment" data-spy="factor-incumbent-alignment">Incumbent Alignment</a>
-          <a href="#lens-federal" data-spy="lens-federal">Federal lens</a>
-          <a href="#lens-state" data-spy="lens-state">State lens</a>
-          <a href="#output-2x2" data-spy="output-2x2">The 2×2</a>
-          <a href="#output-tiers" data-spy="output-tiers">Tiers &amp; the two pathways</a>
-          <a href="#output-map" data-spy="output-map">Map</a>
-          <a href="#output-scatter" data-spy="output-scatter">Scatter</a>
-          <a href="#m-limitations" data-spy="m-limitations">Known Limitations</a>
-          <a href="#m-data" data-spy="m-data">Data Sources</a>
-          <a href="#m-literature" data-spy="m-literature">Theoretical Foundations</a>
-          <a href="#m-research" data-spy="m-research">Further Research</a>
-          <a href="#m-about" data-spy="m-about">About</a>
+          <a href="#theory-diagram" data-spy="g-argument">The Argument</a>
+          <a href="#input-sectoral" data-spy="g-inputs">Inputs</a>
+          <a href="#factor-sectoral-leverage" data-spy="g-leverage">Leverage Scores</a>
+          <a href="#lens-federal" data-spy="g-lenses">The Lenses</a>
+          <a href="#output-tiers" data-spy="g-results">Results</a>
+          <a href="#m-limitations" data-spy="g-appendix">Appendix</a>
         </aside>
 
         <div class="method-body">
@@ -2097,28 +2086,48 @@
       if (!scroller || !rail) return;
       var links = {};
       rail.querySelectorAll('a[data-spy]').forEach(function (a) { links[a.dataset.spy] = a; });
-      var subs = Array.prototype.slice.call(document.querySelectorAll('.method-sub'));
-      if (!subs.length) return;
-      var LINE = 140; // px below the scroller's top edge that defines "current"
-      var lastId = null, scheduled = false;
 
-      function setActive(id) {
-        if (id === lastId) return;
-        lastId = id;
-        Object.keys(links).forEach(function (k) { links[k].classList.toggle('active', k === id); });
+      // Six top-level groups. Each group's members are the in-page anchors it
+      // covers, in document order; the rail item is active while the viewport
+      // is within ANY member. (theory-diagram / imo-diagram are the two diagrams
+      // above the first .method-sub, so The Argument lights up on them too.)
+      var GROUPS = [
+        { key: 'g-argument', members: ['theory-diagram', 'imo-diagram', 'm-stakes', 'm-assumptions', 'm-model'] },
+        { key: 'g-inputs',   members: ['input-sectoral', 'input-electoral', 'input-alignment'] },
+        { key: 'g-leverage', members: ['factor-sectoral-leverage', 'factor-electoral-leverage', 'factor-incumbent-alignment'] },
+        { key: 'g-lenses',   members: ['lens-federal', 'lens-state', 'output-2x2'] },
+        { key: 'g-results',  members: ['output-tiers', 'output-map', 'output-scatter'] },
+        { key: 'g-appendix', members: ['m-limitations', 'm-data', 'm-literature', 'm-research', 'm-about'] }
+      ];
+      // Flatten to an ordered list of {el, group} (document order = members order).
+      var nodes = [];
+      GROUPS.forEach(function (g) {
+        g.members.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) nodes.push({ el: el, group: g.key });
+        });
+      });
+      if (!nodes.length) return;
+      var LINE = 140; // px below the scroller's top edge that defines "current"
+      var lastKey = null, scheduled = false;
+
+      function setActive(key) {
+        if (key === lastKey) return;
+        lastKey = key;
+        Object.keys(links).forEach(function (k) { links[k].classList.toggle('active', k === key); });
       }
 
       function update() {
         scheduled = false;
         var scTop = scroller.getBoundingClientRect().top;
         var current = null;
-        for (var i = 0; i < subs.length; i++) {
-          var top = subs[i].getBoundingClientRect().top - scTop;
-          if (top - LINE <= 0) current = subs[i].id; else break;
+        for (var i = 0; i < nodes.length; i++) {
+          var top = nodes[i].el.getBoundingClientRect().top - scTop;
+          if (top - LINE <= 0) current = nodes[i].group; else break;
         }
         // Before the methodology block scrolls into view, nothing is current.
         if (current) setActive(current);
-        else { lastId = null; Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); }); }
+        else { lastKey = null; Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); }); }
       }
 
       // Throttle without rAF (rAF is paused when the tab is backgrounded).
