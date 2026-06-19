@@ -755,6 +755,74 @@
         .explorer-stage { grid-template-columns: 1fr; grid-auto-rows: 56vh; height: auto; }
         .xview.is-pip { width: 42%; height: 30%; }
       }
+
+      /* ===================================================================
+         EXPLORE-OVERLAY LAUNCHER — two states sharing ONE .explorer:
+           STATE 1 (default): a COMPACT launcher that fits one desktop viewport
+             so scroll-snap lands on it cleanly — title + tier guide + map/
+             scatter previews (lens toggle works) + an Explore button. The
+             heavy control rail is removed from this state.
+           STATE 2 (body.explorer-overlay-open): the SAME #explorer lifts to a
+             near-fullscreen overlay carrying the FULL rail + stage + a
+             persistent top-corner collapse button.
+         The map + scatter nodes are NEVER duplicated — they only change size/
+         context, so lens state is one source of truth (TerrainMap.setLens).
+         =================================================================== */
+
+      /* launcher control row (STATE 1 only) — a single centered Explore CTA. The
+         button is id-scoped (#map-section …) so it outranks terrain.css's generic
+         button reset (button:not(.pill)… , 0,4,1) WITHOUT !important. */
+      .launcher-controls { display: flex; align-items: center; justify-content: center; gap: var(--space-4); flex-wrap: wrap; flex-shrink: 0; }
+      #map-section .launcher-explore { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: #fff; background: var(--color-accent); border: 1px solid var(--color-accent); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-4); cursor: pointer; transition: filter 0.15s; }
+      #map-section .launcher-explore:hover { filter: brightness(1.08); background: var(--color-accent); color: #fff; }
+      #map-section .launcher-explore:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
+
+      /* overlay chrome bar + collapse button (STATE 2 only) */
+      .overlay-bar { display: none; }
+      .overlay-bar-title { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); }
+      #map-section .overlay-collapse { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+      #map-section .overlay-collapse:hover { border-color: var(--color-accent); color: var(--color-accent); background: var(--color-bg); }
+      #map-section .overlay-collapse:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+      /* ---- STATE 1: compact launcher fits one viewport (clean snap stop) ---- */
+      body:not(.explorer-overlay-open) #map-section.results-section {
+        height: calc(100vh - var(--nav-height)); min-height: 0; overflow: hidden; scroll-snap-stop: always;
+      }
+      body:not(.explorer-overlay-open) #map-section .results-inner {
+        height: 100%; min-height: 0; padding-top: var(--space-5); padding-bottom: var(--space-5); gap: var(--space-3); overflow: hidden;
+      }
+      body:not(.explorer-overlay-open) #map-section .results-key { padding-bottom: 0; }
+      /* drop the rail column; the stage fills the leftover height as two previews */
+      body:not(.explorer-overlay-open) #map-section .explorer { display: flex; flex: 1 1 auto; min-height: 0; }
+      body:not(.explorer-overlay-open) #map-section .explorer-rail { display: none; }
+      body:not(.explorer-overlay-open) #map-section .explorer-stage { flex: 1 1 auto; min-height: 0; height: auto; }
+      /* previews are a glance — hide per-view expand/collapse (full manipulation lives in the overlay) */
+      body:not(.explorer-overlay-open) #map-section .xview-actions { display: none; }
+
+      /* ---- STATE 2: near-fullscreen overlay (full explorer) ---- */
+      body.explorer-overlay-open { overflow: hidden; }
+      body.explorer-overlay-open #map-section .launcher-controls { display: none; }
+      body.explorer-overlay-open #explorer {
+        position: fixed; top: var(--nav-height); left: 0; right: 0; bottom: 0; z-index: 1000;
+        background: var(--color-bg);
+        grid-template-columns: 300px 1fr; grid-template-rows: auto 1fr;
+        gap: 0; padding: 0; overflow: hidden; align-items: stretch;
+        animation: explorer-overlay-in 160ms ease;
+      }
+      @keyframes explorer-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { body.explorer-overlay-open #explorer { animation: none; } }
+      body.explorer-overlay-open #explorer .overlay-bar {
+        display: flex; grid-column: 1 / -1; grid-row: 1; align-items: center; justify-content: space-between;
+        gap: var(--space-3); padding: var(--space-3) var(--space-5);
+        border-bottom: 1px solid var(--color-border); background: var(--color-bg-card);
+      }
+      body.explorer-overlay-open #explorer .explorer-rail {
+        grid-column: 1 / 2; grid-row: 2; height: auto; min-height: 0; overflow-y: auto;
+        padding: var(--space-5) var(--space-4); border-right: 1px solid var(--color-border);
+      }
+      body.explorer-overlay-open #explorer .explorer-stage {
+        grid-column: 2 / 3; grid-row: 2; height: auto; min-height: 0; padding: var(--space-5);
+      }
     </style>
 
     <!-- ════════════════════════════════════════════════════════
@@ -785,9 +853,23 @@
           </div>
         </div>
 
+        <!-- ░░░░ LAUNCHER CONTROL (STATE 1 only) — the Explore button that opens
+             the full explorer overlay. ░░░░ -->
+        <div class="launcher-controls">
+          <button class="launcher-explore" id="btn-explore" type="button" aria-haspopup="dialog">Explore the full map &amp; data ↗</button>
+        </div>
+
         <!-- ░░░░ UNIFIED EXPLORER — left control rail + content stage (map + scatter). ░░░░
-             #explorer[data-layout] drives split / map-primary / scatter-primary (PiP). -->
+             #explorer[data-layout] drives split / map-primary / scatter-primary (PiP).
+             STATE 1: rail hidden, stage shown as compact previews in the launcher.
+             STATE 2 (body.explorer-overlay-open): lifts to a near-fullscreen overlay. -->
         <div class="explorer" id="explorer" data-layout="split">
+
+          <!-- ░░ OVERLAY CHROME (STATE 2 only) — persistent top-corner collapse ░░ -->
+          <div class="overlay-bar" id="overlay-bar">
+            <span class="overlay-bar-title">Explore the Results</span>
+            <button class="overlay-collapse" id="overlay-collapse" type="button">↙ Collapse</button>
+          </div>
 
           <!-- ░░ LEFT CONTROL RAIL — one rail drives BOTH views ░░ -->
           <aside class="explorer-rail" id="explorer-rail" aria-label="Explorer controls">
@@ -2820,6 +2902,76 @@
 
     // normalize button handlers on load (layout starts 'split').
     setExplorerLayout('split');
+  })();
+  </script>
+
+  <!-- ============================================================
+       EXPLORE-OVERLAY LAUNCHER — open/close the full explorer overlay.
+       STATE 1 (default) shows compact previews; the Explore button lifts the
+       SAME #explorer to a near-fullscreen overlay (STATE 2). A persistent
+       top-corner collapse button (+ Escape) returns to the page scroll.
+       Display-only: no data/scoring touched; lens stays one source of truth.
+       ============================================================ -->
+  <script>
+  (function () {
+    var body        = document.body;
+    var explorer    = document.getElementById('explorer');
+    var exploreBtn  = document.getElementById('btn-explore');
+    var collapseBtn = document.getElementById('overlay-collapse');
+    if (!explorer || !exploreBtn || !collapseBtn) return;
+    var lastFocus = null;
+
+    // both SVGs re-fit on a window 'resize' — nudge after the layout settles.
+    function refit() { setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 90); }
+
+    function focusables() {
+      var sel = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      return Array.prototype.filter.call(explorer.querySelectorAll(sel), function (el) {
+        return el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement;
+      });
+    }
+
+    function openOverlay() {
+      if (body.classList.contains('explorer-overlay-open')) return;
+      lastFocus = document.activeElement;
+      body.classList.add('explorer-overlay-open');
+      explorer.setAttribute('role', 'dialog');
+      explorer.setAttribute('aria-modal', 'true');
+      explorer.setAttribute('aria-label', 'Explore the Results — full map and data');
+      document.addEventListener('keydown', onKeydown, true);
+      // move focus into the overlay (the persistent collapse control).
+      collapseBtn.focus();
+      refit();
+    }
+
+    function closeOverlay() {
+      if (!body.classList.contains('explorer-overlay-open')) return;
+      body.classList.remove('explorer-overlay-open');
+      explorer.removeAttribute('aria-modal');
+      explorer.removeAttribute('role');
+      document.removeEventListener('keydown', onKeydown, true);
+      refit();
+      // return focus to the Explore button (where the user was).
+      if (exploreBtn && exploreBtn.focus) exploreBtn.focus();
+    }
+
+    function onKeydown(e) {
+      if (e.key === 'Escape') {
+        // let the inner handler restore split first if a view is expanded.
+        if (explorer.getAttribute('data-layout') !== 'split') return;
+        e.preventDefault(); closeOverlay(); return;
+      }
+      if (e.key === 'Tab') {
+        var f = focusables();
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+
+    exploreBtn.addEventListener('click', openOverlay);
+    collapseBtn.addEventListener('click', closeOverlay);
   })();
   </script>
 
