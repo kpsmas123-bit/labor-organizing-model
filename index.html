@@ -1128,6 +1128,148 @@
     </style>
 
     <section id="methodology-section">
+
+      <!-- ════════════════════════════════════════════════════════
+           THEORY OF CHANGE — the argument, ABOVE the model flowchart.
+           Reuses the model flowchart's visual language (node boxes, rounded
+           elbow connectors, arrow markers, stroke, open-by-default) in a
+           full-width horizontal band. Two parallel sector pathways reach
+           INTENTIONALLY DIFFERENT impact endpoints (community → electoral;
+           capital → material → wins), both feeding the flywheel that loops
+           back to the premise. Context/argument only — NO hyperlinks.
+           Identical markup in both index.html files (no path-dependent content).
+           ════════════════════════════════════════════════════════ -->
+      <style>
+        .toc-diagram { --toc-stroke: #9E9890; --toc-stroke-strong: #6f6a62; --toc-community: #1a3a6b; --toc-capital: #BD0026; box-sizing: border-box; width: 100%; max-width: 1180px; margin: 0 auto var(--space-6); padding: var(--space-10) var(--space-6) var(--space-8); text-align: center; border-bottom: 1px solid var(--color-border); }
+        .toc-diagram .toc-kicker { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: var(--space-2); }
+        .toc-diagram .toc-title { font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); line-height: 1.1; margin: 0 0 var(--space-2); color: var(--color-text); }
+        .toc-diagram .toc-lede { font-family: var(--font-body); font-size: var(--text-sm); color: var(--color-text-secondary); max-width: 74ch; margin: 0 auto var(--space-8); line-height: 1.6; }
+        .toc-diagram .toc-shell { position: relative; width: 100%; padding-top: 38px; }
+        .toc-diagram .toc-connectors { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+        .toc-diagram .toc-connectors path { fill: none; stroke: var(--toc-stroke); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
+        .toc-diagram .toc-connectors path.toc-feedback { stroke: var(--toc-stroke-strong); stroke-width: 1.5; stroke-dasharray: 5 4; }
+        .toc-diagram .toc-connectors text { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; fill: var(--color-text-muted); }
+        .toc-diagram .toc-grid { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(116px,1fr) minmax(150px,1.22fr) minmax(112px,1fr) minmax(112px,1fr) minmax(106px,0.95fr) minmax(112px,1fr) minmax(126px,1.04fr); column-gap: clamp(20px,2.8vw,44px); row-gap: clamp(42px,6vh,72px); align-items: center; text-align: left; }
+        .toc-diagram .node { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: center; width: 100%; min-height: 56px; font: inherit; background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: 6px; padding: 0.6rem 0.7rem; color: var(--color-text); }
+        .toc-diagram .node .node-label { font-family: var(--font-body); font-weight: 600; font-size: 0.9rem; line-height: 1.18; }
+        .toc-diagram .node .node-sub { display: block; font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.3rem; }
+        .toc-diagram .node--premise, .toc-diagram .node--fly { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-bg); }
+        .toc-diagram .node--premise .node-sub, .toc-diagram .node--fly .node-sub { color: rgba(255,255,255,0.62); }
+        .toc-diagram .node--claim { border: 1.5px solid var(--color-border-strong); border-left: 3px solid var(--color-accent); }
+        .toc-diagram .node--lever { border: 1.5px solid var(--color-border-strong); border-left: 3px solid var(--color-border-strong); }
+        .toc-diagram .lever--community { border-left-color: var(--toc-community); }
+        .toc-diagram .lever--capital { border-left-color: var(--toc-capital); }
+        .toc-diagram .node--step { background: transparent; border: 1.5px dashed var(--color-border-strong); }
+        .toc-diagram .node--impact { border: 1.5px solid var(--color-border-strong); }
+        .toc-diagram .impact--community { border-left: 3px solid var(--toc-community); }
+        .toc-diagram .impact--capital { border-left: 3px solid var(--toc-capital); }
+        .toc-diagram .node--win { border: 1px solid var(--color-border); border-left: 3px solid var(--toc-capital); }
+        .toc-diagram .wins-stack { display: flex; flex-direction: column; gap: 10px; }
+        /* desktop grid placement */
+        .toc-diagram .c-premise { grid-column: 1; grid-row: 1 / span 2; }
+        .toc-diagram .c-claim { grid-column: 2; grid-row: 1 / span 2; }
+        .toc-diagram .c-comm-lever { grid-column: 3; grid-row: 1; }
+        .toc-diagram .c-comm-org { grid-column: 4; grid-row: 1; }
+        .toc-diagram .c-comm-strike { grid-column: 5; grid-row: 1; }
+        .toc-diagram .c-electoral { grid-column: 6; grid-row: 1; }
+        .toc-diagram .c-fly { grid-column: 7; grid-row: 1; }
+        .toc-diagram .c-cap-lever { grid-column: 3; grid-row: 2; }
+        .toc-diagram .c-cap-org { grid-column: 4; grid-row: 2; }
+        .toc-diagram .c-cap-strike { grid-column: 5; grid-row: 2; }
+        .toc-diagram .c-material { grid-column: 6; grid-row: 2; }
+        .toc-diagram .c-wins { grid-column: 7; grid-row: 2; }
+        @media (prefers-reduced-motion: reduce) { .toc-diagram *, .toc-diagram *::before, .toc-diagram *::after { transition: none !important; } }
+        /* narrow: stack in DOM order, drop the (now meaningless) connectors */
+        @media (max-width: 880px) {
+          .toc-diagram { padding: var(--space-8) var(--space-4) var(--space-6); }
+          .toc-diagram .toc-shell { padding-top: 0; }
+          .toc-diagram .toc-connectors { display: none; }
+          .toc-diagram .toc-grid { display: flex; flex-direction: column; gap: 12px; }
+          .toc-diagram .wins-stack { gap: 12px; }
+        }
+      </style>
+
+      <div class="toc-diagram" id="theory-diagram">
+        <p class="toc-kicker">The argument</p>
+        <h2 class="toc-title">Theory of change</h2>
+        <p class="toc-lede">
+          All workers deserve a union — so we organize where it builds the most
+          power. Two sector pathways run the same deep-organizing playbook but
+          win different kinds of impact, and both feed the flywheel that grows
+          the movement.
+        </p>
+
+        <div class="toc-shell">
+          <!-- SVG sits UNDER the boxes; endpoints computed from box rects -->
+          <svg class="toc-connectors" aria-hidden="true">
+            <defs>
+              <marker id="toc-arrow" viewBox="0 0 10 10" refX="8.5" refY="5"
+                      markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0.5,1 L9,5 L0.5,9" fill="none"
+                      stroke="var(--toc-stroke-strong)" stroke-width="1.4"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
+          </svg>
+
+          <div class="toc-grid">
+            <!-- DOM order = sensible narrow-screen stacking -->
+            <div class="node node--premise c-premise" data-toc="premise">
+              <span class="node-label">All workers deserve a union</span>
+              <span class="node-sub">moral premise</span>
+            </div>
+            <div class="node node--claim c-claim" data-toc="claim">
+              <span class="node-label">Some sectors are more strategic than others</span>
+              <span class="node-sub">strategic claim</span>
+            </div>
+
+            <!-- community pathway -->
+            <div class="node node--lever lever--community c-comm-lever" data-toc="comm-lever">
+              <span class="node-label">Community-sector leverage</span>
+            </div>
+            <div class="node node--step c-comm-org" data-toc="comm-org">
+              <span class="node-label">Deep labor organizing</span>
+            </div>
+            <div class="node node--step c-comm-strike" data-toc="comm-strike">
+              <span class="node-label">Super-majority strike</span>
+            </div>
+            <div class="node node--impact impact--community c-electoral" data-toc="electoral">
+              <span class="node-label">Electoral impact</span>
+            </div>
+
+            <!-- capital pathway -->
+            <div class="node node--lever lever--capital c-cap-lever" data-toc="cap-lever">
+              <span class="node-label">Capital-sector leverage</span>
+            </div>
+            <div class="node node--step c-cap-org" data-toc="cap-org">
+              <span class="node-label">Deep labor organizing</span>
+            </div>
+            <div class="node node--step c-cap-strike" data-toc="cap-strike">
+              <span class="node-label">Super-majority strike</span>
+            </div>
+            <div class="node node--impact impact--capital c-material" data-toc="material">
+              <span class="node-label">Material impact</span>
+            </div>
+
+            <!-- capital endpoint wins -->
+            <div class="wins-stack c-wins" data-toc="wins-group">
+              <div class="node node--win" data-toc="worker-wins">
+                <span class="node-label">Worker wins</span>
+              </div>
+              <div class="node node--win" data-toc="community-wins">
+                <span class="node-label">Community wins</span>
+              </div>
+            </div>
+
+            <!-- flywheel -->
+            <div class="node node--fly c-fly" data-toc="flywheel">
+              <span class="node-label">Grow the movement</span>
+              <span class="node-sub">the flywheel</span>
+            </div>
+          </div>
+        </div>
+      </div><!-- /toc-diagram -->
+
       <header class="method-hero">
         <h2 class="method-h">Methodology</h2>
         <p class="imo-kicker">The model, end to end</p>
@@ -1143,6 +1285,7 @@
         <!-- Scroll-spy rail -->
         <aside class="method-rail" id="method-rail">
           <div class="method-rail-label">Methodology</div>
+          <a href="#theory-diagram" data-spy="theory-diagram">Theory of Change</a>
           <a href="#imo-diagram" data-spy="imo-diagram">Flowchart</a>
           <a href="#m-stakes" data-spy="m-stakes">The Stakes</a>
           <a href="#m-assumptions" data-spy="m-assumptions">Core Assumptions</a>
@@ -2120,6 +2263,141 @@
     window.addEventListener('load', schedule);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
     // the diagram lives inside a scroll container that may lay out late — nudge once more
+    setTimeout(schedule, 300);
+    schedule();
+  })();
+  </script>
+
+  <!-- ============================================================
+       THEORY OF CHANGE — connector routing (scoped to #theory-diagram).
+       Reuses the model flowchart's rounded-elbow + arrow-marker visual
+       language. Forward edges run left→right via a vertical bus; the capital
+       endpoint feeds UP into the flywheel; the flywheel loops BACK along the
+       top into the premise (the feedback arc). No clicks / no hyperlinks.
+       ============================================================ -->
+  <script>
+  (function () {
+    var root = document.getElementById('theory-diagram');
+    if (!root) return;
+    var svg = root.querySelector('.toc-connectors');
+    var shell = svg ? svg.parentElement : null;   // .toc-shell
+    if (!svg || !shell) return;
+    var SVGNS = 'http://www.w3.org/2000/svg';
+    var R = 8;
+
+    function rectOf(id) {
+      var el = root.querySelector('[data-toc="' + id + '"]');
+      if (!el) return null;
+      var r = el.getBoundingClientRect();
+      var base = shell.getBoundingClientRect();
+      return {
+        left: r.left - base.left, right: r.right - base.left,
+        top: r.top - base.top, bottom: r.bottom - base.top,
+        cx: r.left - base.left + r.width / 2,
+        cy: r.top - base.top + r.height / 2
+      };
+    }
+    function path(d, opts) {
+      opts = opts || {};
+      var p = document.createElementNS(SVGNS, 'path');
+      p.setAttribute('d', d);
+      if (opts.arrow) p.setAttribute('marker-end', 'url(#toc-arrow)');
+      if (opts.cls) p.setAttribute('class', opts.cls);
+      svg.appendChild(p);
+    }
+    function label(x, y, text) {
+      var t = document.createElementNS(SVGNS, 'text');
+      t.setAttribute('x', x); t.setAttribute('y', y);
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = text;
+      svg.appendChild(t);
+    }
+
+    // Two-corner rounded elbow: horizontal from (x1,y1) to a vertical bus at
+    // busX, down/up to y2, then horizontal to (x2,y2).
+    function elbow(x1, y1, busX, y2, x2, arrow) {
+      var dir = y2 >= y1 ? 1 : -1;
+      var r1 = Math.min(R, Math.abs(busX - x1), Math.abs(y2 - y1) / 2 || R);
+      var r2 = Math.min(R, Math.abs(x2 - busX), Math.abs(y2 - y1) / 2 || R);
+      var d = 'M ' + x1 + ' ' + y1 + ' ';
+      if (Math.abs(y2 - y1) < 0.5) {
+        d += 'L ' + x2 + ' ' + y2;
+      } else {
+        d += 'H ' + (busX - r1) + ' ';
+        d += 'Q ' + busX + ' ' + y1 + ' ' + busX + ' ' + (y1 + dir * r1) + ' ';
+        d += 'V ' + (y2 - dir * r2) + ' ';
+        d += 'Q ' + busX + ' ' + y2 + ' ' + (busX + r2) + ' ' + y2 + ' ';
+        d += 'H ' + x2;
+      }
+      path(d, { arrow: arrow });
+    }
+
+    // Forward left→right edges (target right of source). busFrac places the bus.
+    var LINKS = [
+      { s: ['premise'],     t: ['claim'] },
+      { s: ['claim'],       t: ['comm-lever', 'cap-lever'], busFrac: 0.5 },
+      { s: ['comm-lever'],  t: ['comm-org'] },
+      { s: ['comm-org'],    t: ['comm-strike'] },
+      { s: ['comm-strike'], t: ['electoral'] },
+      { s: ['cap-lever'],   t: ['cap-org'] },
+      { s: ['cap-org'],     t: ['cap-strike'] },
+      { s: ['cap-strike'],  t: ['material'] },
+      { s: ['material'],    t: ['worker-wins', 'community-wins'], busFrac: 0.5 },
+      { s: ['electoral'],   t: ['flywheel'] }
+    ];
+
+    function draw() {
+      // clear previous paths/labels (keep <defs>)
+      Array.prototype.slice.call(svg.querySelectorAll('path, text')).forEach(function (n) {
+        if (!n.closest('defs')) n.remove();
+      });
+      // connectors only meaningful in the multi-column layout
+      if (getComputedStyle(svg).display === 'none') return;
+
+      LINKS.forEach(function (link) {
+        var src = link.s.map(rectOf).filter(Boolean);
+        var tgt = link.t.map(rectOf).filter(Boolean);
+        if (!src.length || !tgt.length) return;
+        var srcRight = Math.max.apply(null, src.map(function (r) { return r.right; }));
+        var tgtLeft = Math.min.apply(null, tgt.map(function (r) { return r.left; }));
+        var frac = (link.busFrac == null) ? 0.5 : link.busFrac;
+        var busX = srcRight + (tgtLeft - srcRight) * frac;
+        var ys = src.map(function (r) { return r.cy; }).concat(tgt.map(function (r) { return r.cy; }));
+        var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+        if (maxY - minY > 0.5) path('M ' + busX + ' ' + minY + ' V ' + maxY);
+        src.forEach(function (r) { elbow(r.right, r.cy, busX, r.cy, busX, false); });
+        tgt.forEach(function (r) { elbow(busX, r.cy, busX, r.cy, r.left, true); });
+      });
+
+      // capital endpoint → flywheel (the wins feed UP into the flywheel)
+      var wins = rectOf('wins-group'), fly = rectOf('flywheel');
+      if (wins && fly) {
+        var ux = (wins.cx + fly.cx) / 2;
+        path('M ' + ux + ' ' + wins.top + ' V ' + fly.bottom, { arrow: true });
+      }
+
+      // feedback arc: flywheel → premise, looping along the reserved top band
+      var pre = rectOf('premise');
+      if (fly && pre) {
+        var topY = 12, rr = R;
+        var sx = fly.cx, ex = pre.cx;
+        var d = 'M ' + sx + ' ' + fly.top
+          + ' V ' + (topY + rr)
+          + ' Q ' + sx + ' ' + topY + ' ' + (sx - rr) + ' ' + topY
+          + ' H ' + (ex + rr)
+          + ' Q ' + ex + ' ' + topY + ' ' + ex + ' ' + (topY + rr)
+          + ' V ' + pre.top;
+        path(d, { arrow: true, cls: 'toc-feedback' });
+        label((sx + ex) / 2, topY - 4, 'feeds back · the flywheel');
+      }
+    }
+
+    function schedule() {
+      requestAnimationFrame(function () { requestAnimationFrame(draw); });
+    }
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
     setTimeout(schedule, 300);
     schedule();
   })();
