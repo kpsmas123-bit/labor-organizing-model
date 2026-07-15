@@ -1700,7 +1700,7 @@
               we can build a winning coalition.
             </p>
             <div class="citation">McAlevey, J. (2016). No Shortcuts: Organizing for Power in the New Gilded Age. Oxford University Press.</div>
-            <div class="citation">Silver, B. (2003). Forces of Labor: Workers' Movements and Globalization since 1870. Cambridge University Press.</div>
+            <!-- non-McAlevey citation temporarily removed pending verification (recoverable via git history) -->
           </div>
 
           <!-- ── What the Model Does (conceptual prose) ── -->
@@ -1941,35 +1941,14 @@
             </div>
           </div>
 
-          <!-- ── Theoretical Foundations (literature table; pending → review) ── -->
-          <div class="method-sub" id="m-literature">
-            <span class="method-sub-num">18 — Literature</span>
-            <h3 class="method-sub-h">Theoretical Foundations</h3>
-            <p class="method-prose">
-              The works below ground the model. Citations marked
-              <span class="lit-status review">under review</span> are part of an
-              ongoing manual citation pass and are not yet finalized.
-            </p>
-            <div class="method-table-wrap">
-              <table class="method-table">
-                <thead><tr><th>Author</th><th>Year</th><th>Work</th><th>Status</th></tr></thead>
-                <tbody>
-                  <tr><td>McAlevey, J.</td><td>2016</td><td>No Shortcuts: Organizing for Power in the New Gilded Age</td><td><span class="lit-status ok">complete</span></td></tr>
-                  <tr><td>Silver, B.</td><td>2003</td><td>Forces of Labor: Workers' Movements and Globalization since 1870</td><td><span class="lit-status ok">complete</span></td></tr>
-                  <tr><td>Wright, E.O.</td><td>2000</td><td>Working-Class Power, Capitalist-Class Interests, and Class Compromise</td><td><span class="lit-status review">under review</span></td></tr>
-                  <tr><td>Womack, J.</td><td>2005</td><td>Working the Machine: The Logic of Industrial Technology and Labor Power</td><td><span class="lit-status review">under review</span></td></tr>
-                  <tr><td>Fox-Hodess, K.</td><td>2023</td><td>Comparative analysis of dockworker organizing</td><td><span class="lit-status review">under review</span></td></tr>
-                  <tr><td>Feigenbaum, Hertel-Fernandez &amp; Williamson</td><td>2018</td><td>From the Bargaining Table to the Ballot Box (NBER WP 24259)</td><td><span class="lit-status ok">complete</span></td></tr>
-                  <tr><td>Kolerman</td><td>2024</td><td>Regression Discontinuity Aggregation — unionization &amp; commuting-zone vote</td><td><span class="lit-status review">under review</span></td></tr>
-                  <tr><td>Leighley, J. &amp; Nagler, J.</td><td>2007</td><td>Unions, Voter Turnout, and Class Bias in the U.S. Electorate</td><td><span class="lit-status ok">complete</span></td></tr>
-                  <tr><td>Rosenfeld, J.</td><td>2014</td><td>What Unions No Longer Do</td><td><span class="lit-status ok">complete</span></td></tr>
-                  <tr><td>Banzhaf, J.F.</td><td>1968</td><td>One Man, 3.312 Votes (Villanova Law Review 13(2))</td><td><span class="lit-status ok">complete</span></td></tr>
-                  <tr><td>Lalisse, M.</td><td>2022</td><td>Measuring the Impact of Campaign Finance on Congressional Voting</td><td><span class="lit-status review">under review</span></td></tr>
-                  <tr><td>Harvard CLJE</td><td>2024</td><td>The Varied Voice of Labor</td><td><span class="lit-status ok">complete</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <!-- Theoretical Foundations (#m-literature, "18 — Literature") — SECTION
+               TEMPORARILY HIDDEN pending a citation-verification pass. The full
+               author/works table has been removed from the live page and from the
+               appendix scroll-spy nav (see GROUPS below). Recoverable in full from
+               git history; restore this section and its 'm-literature' nav member
+               when citations are verified. Per current direction, no literature is
+               cited on the live site except McAlevey. -->
+          <!-- HIDDEN:m-literature -->
 
           <!-- ── Further Research (conceptual prose) ── -->
           <div class="method-sub" id="m-research">
@@ -2225,7 +2204,7 @@
         { key: 'g-leverage', members: ['factor-sectoral-leverage', 'factor-electoral-leverage', 'factor-incumbent-alignment'] },
         { key: 'g-lenses',   members: ['lens-federal', 'lens-state', 'output-2x2'] },
         { key: 'g-results',  members: ['output-tiers', 'output-map', 'output-scatter'] },
-        { key: 'g-appendix', members: ['m-limitations', 'm-data', 'm-literature', 'm-research', 'm-about'] }
+        { key: 'g-appendix', members: ['m-limitations', 'm-data', 'm-research', 'm-about'] }  /* 'm-literature' temporarily removed — section hidden pending citation verification */
       ];
       // Flatten to an ordered list of {el, group} (document order = members order).
       var nodes = [];

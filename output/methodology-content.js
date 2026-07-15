@@ -257,7 +257,7 @@
           ],
           outputField: "sls_capital",
           notes: "Each sector is weighted by its FULL composite SVS — not just capital reach — so a non-offshorable, community-facing sector carries its full strategic weight into the magnitude score too. The divisor is calibrated so the largest-employment county (Los Angeles) lands near the top of the 0–100 scale; observed range is roughly 0–84. Counties with major port, logistics, or energy workforces score highest.",
-          html: '<div class="citation">Silver, B. (2003). Forces of Labor. Cambridge University Press — workplace bargaining power and spatial fixes.</div>'
+          html: ''  /* non-McAlevey citation temporarily removed pending verification (recoverable via git history) */
         },
         {
           variant: "SLS-Community — concentration",
@@ -434,7 +434,7 @@
               + '</tbody></table></div>'
               + '<p>Coverage: Federal P2 — 533 legislators scored, 3,142 counties with alignment data. State P2 is a different measure entirely — the partisan composition of each county\'s state-legislative seats (Σ Democratic seat-share / Σ all-party share, from Open States rosters), because seat-level labor voting records aren\'t uniformly available at the state level; it uses no key votes and no CFscores. Low P2 + high SLS + high P1 identifies the highest-value organizing targets: leverage, decisive geography, and a hostile incumbent.</p>'
               + '<p><strong>Sources considered and rejected:</strong> AFL-CIO legislative scorecards (they encode the institutional AFL-CIO\'s strategic priorities) and labor PAC contributions as a positive signal (they reflect existing labor leadership targeting — the status quo this model complements and occasionally challenges).</p>'
-              + '<div class="citation">Harvard Center for Labor and a Just Economy (2024). The Varied Voice of Labor. clje.law.harvard.edu</div>'
+              /* non-McAlevey citation temporarily removed pending verification (recoverable via git history) */
         }
       ],
       rationale: [],
