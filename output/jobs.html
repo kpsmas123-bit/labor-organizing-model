@@ -90,7 +90,10 @@ body {
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; }
+/* .terrain-topnav is position:fixed, so it's out of flow. Clear it ONCE here, on
+   the first thing in the document, rather than on #page-wrap — the beta banner
+   sits above #page-wrap and was rendering underneath the nav. */
+body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: #2C2C2C; min-height: 100vh; padding-top: var(--nav-height); }
 
 /* === BETA BANNER === */
 #beta-banner {
@@ -136,7 +139,8 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #FAF7F2; color: 
 .top-nav-tab.active { color: #2C2C2C; border-bottom-color: #bd0026; }
 
 /* === PAGE WRAP === */
-#page-wrap { max-width: 1280px; margin: 0 auto; padding: var(--nav-height, 72px) var(--space-6) 80px; }
+/* Top padding is plain spacing now — body clears the fixed nav (see above). */
+#page-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) 80px; }
 
 /* === PAGE INTRO === */
 #page-intro {
