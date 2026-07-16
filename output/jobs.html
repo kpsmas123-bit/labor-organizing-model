@@ -853,12 +853,13 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 .qs-chip::after { content: '✎'; font-size: 8.5px; opacity: 0.32; margin-left: 2px; }
 .qs-chip:hover { background: rgba(189,0,38,0.28); border-color: rgba(189,0,38,0.8); color: #fff; }
 .qs-chip:hover::after { opacity: 1; }
-#qs-path {
+/* First summary chip (sectors, now the opening question) */
+#qs-sectors {
   background: #bd0026; border-color: #bd0026; color: #fff;
   font-weight: 600; font-size: 13.5px; padding: 7px 18px;
 }
-#qs-path::after { content: ''; }
-#qs-path:hover { background: #8b0019; border-color: #8b0019; }
+#qs-sectors::after { content: ''; }
+#qs-sectors:hover { background: #8b0019; border-color: #8b0019; }
 .qs-retake {
   margin-left: auto; background: none; border: none; font-size: 12px;
   color: rgba(255,255,255,0.32); cursor: pointer; padding: 3px 0;
@@ -1182,10 +1183,10 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
 <!-- QUIZ SUMMARY BAR -->
 <div id="quiz-summary-bar">
   <div id="quiz-summary-inner">
-    <button class="qs-chip" id="qs-path" onclick="quizEditStep('qstep-path')">
+    <button class="qs-chip" id="qs-sectors" onclick="quizEditStep('qstep-sectors')">
       <span class="qs-arrow">←</span><span class="qs-val"></span>
     </button>
-    <button class="qs-chip" id="qs-step2" onclick="quizEditStep('qstep-path')" style="display:none">
+    <button class="qs-chip" id="qs-step2" onclick="quizEditStep('qstep-experience')" style="display:none">
       <span class="qs-arrow">←</span><span class="qs-val"></span>
     </button>
     <button class="qs-chip" id="qs-loc" onclick="quizEditStep('qstep-location')">
@@ -1194,7 +1195,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
     <button class="qs-chip" id="qs-rftype" style="display:none" onclick="quizEditStep('qstep-rftype')">
       <span class="qs-arrow">←</span><span class="qs-val"></span>
     </button>
-    <button class="qs-retake" onclick="quizEditStep('qstep-path')">Start over</button>
+    <button class="qs-retake" onclick="quizEditStep('qstep-sectors')">Start over</button>
   </div>
 </div>
 
@@ -1281,37 +1282,15 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
   <div id="intake-wizard">
   <div id="quiz-scroll-area">
 
-    <!-- STEP 1: Path -->
-    <div class="quiz-step active" id="qstep-path">
-      <div class="quiz-q">What kind of organizer do you want to be?</div>
-      <div class="quiz-cards-row">
+    <!-- The "What kind of organizer do you want to be?" path step (#qstep-path)
+         was removed: Rank & File has not launched, so Staff was the only
+         selectable answer. The wizard now opens on the sectors step and the path
+         defaults to 'staff' (see the `quiz` object). The RF machinery
+         (quizPickPath, #qstep-rftype, rfToggle) is kept dormant for relaunch —
+         restore this step from git history when Rank & File ships. -->
 
-        <div class="terrain-card featured entry-card" id="qcard-rf" style="opacity:0.5;cursor:not-allowed;position:relative;">
-          <span style="position:absolute;top:var(--space-4);right:var(--space-4);font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;background:#e0d8d0;color:var(--color-text-muted);padding:3px 8px;border-radius:20px;">Coming Soon</span>
-          <svg class="entry-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 7v4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M14 9h-4"/><path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/><path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/>
-          </svg>
-          <span class="section-label entry-card__label">Rank &amp; File</span>
-          <h2 class="entry-card__heading">Organize from the Inside</h2>
-          <p class="entry-card__body">Take a union job and build power from the inside — the tradition of workplace organizing that built the American labor movement.</p>
-          <span class="btn-primary" style="opacity:0.5;">Find Rank &amp; File Jobs →</span>
-        </div>
-
-        <div class="terrain-card clickable entry-card" id="qcard-staff" onclick="quizPickPath('staff')">
-          <svg class="entry-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"/><path d="M8 6v8"/>
-          </svg>
-          <span class="section-label entry-card__label">Staff Organizer</span>
-          <h2 class="entry-card__heading">Work for the Movement</h2>
-          <p class="entry-card__body">Keep unions running and help execute their political goals — find staff roles at unions and labor organizations.</p>
-          <span class="btn-primary">Find Staff Jobs →</span>
-        </div>
-
-      </div>
-    </div><!-- /step-path -->
-
-    <!-- STEP 2a: Sectors (RF path only) -->
-    <div class="quiz-step" id="qstep-sectors">
+    <!-- STEP 1: Sectors -->
+    <div class="quiz-step active" id="qstep-sectors">
       <div class="quiz-q">Which sectors interest you?</div>
       <div class="quiz-q-sub">Select any that apply — or skip for all sectors</div>
       <div class="sectors-grid" id="qsectors-grid">
@@ -1329,7 +1308,7 @@ hr.section-divider { border: none; border-top: 1px solid #DDD5C8; margin: 8px 0;
       </div>
     </div><!-- /step-sectors -->
 
-    <!-- STEP 2b: Experience (Staff path only) -->
+    <!-- STEP 2: Experience (staff path only) -->
     <div class="quiz-step" id="qstep-experience">
       <div class="quiz-q">What's your experience level?</div>
       <div class="exp-pill-row">
@@ -2280,6 +2259,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('intake-wizard').style.display = 'none';
     if (state.userLat != null) computeAllDistances();
     applyPath(state.path, false);
+  } else {
+    quizInitFirstStep();
   }
   closeAllDropdowns();
   document.addEventListener('click', closeAllDropdowns);
@@ -2469,7 +2450,10 @@ function formatSalary(salary_min, salaryRaw, salary_period) {
 // ============================================================
 // INTAKE QUIZ
 // ============================================================
-const quiz = { path: null, exp: null, sectors: [], roleTypes: [], locType: null, myState: null, radius: 25, rfType: null, city: null, cityState: null, userLat: null, userLng: null, remote: false };
+// path defaults to 'staff': the path question was removed because Rank & File
+// has not launched, so staff is the only live path. Set back to null (and
+// restore #qstep-path) when RF ships.
+const quiz = { path: 'staff', exp: null, sectors: [], roleTypes: [], locType: null, myState: null, radius: 25, rfType: null, city: null, cityState: null, userLat: null, userLng: null, remote: false };
 
 const ROLE_TYPE_GROUPS = {
   'Organizing':          ['Internal organizer', 'External organizer'],
@@ -2519,8 +2503,17 @@ function quizToggleSector(sector) {
 
 function quizConfirmSectors() {
   quizHistory.push('qstep-sectors');
-  _quizShow('qstep-roletype');
-  _quizDots(3);
+  // Sectors is now the first question, so it takes over hiding the page intro
+  // (the removed path step used to do this).
+  const intro = document.getElementById('page-intro');
+  if (intro) intro.style.display = 'none';
+  if (quiz.path === 'rf') {
+    _quizShow('qstep-roletype');
+    _quizDots(3);
+  } else {
+    _quizShow('qstep-experience');
+    _quizDots(2);
+  }
 }
 
 function quizPickExp(exp) {
@@ -2746,7 +2739,6 @@ function quizStateInput(val) {
 
 
 function quizUpdateSummary() {
-  const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
   const expLabels = { 'new-to-labor': 'Early Career', 'early-career': 'Early Career', 'experienced': 'Experienced', 'leadership': 'Leadership' };
   const rfLabels = { strategic: 'Strategic hire', apprenticeship: 'Apprenticeship', salt: 'Salt a shop' };
   const chip = (id, val, step) => {
@@ -2756,20 +2748,15 @@ function quizUpdateSummary() {
     el.onclick = () => quizEditStep(step);
     el.style.display = val ? '' : 'none';
   };
-  chip('qs-path', pathLabels[quiz.path] || '', 'qstep-path');
-  // step 2 chip: sectors for RF, experience for staff
+  // step 1 chip: sectors (the opening question on every path)
+  const sLabel = quiz.sectors.length ? quiz.sectors.map(s => s.split('/')[0]).join(', ') : 'Any sector';
+  chip('qs-sectors', sLabel, 'qstep-sectors');
+  // step 2 chip: experience (staff path only — RF doesn't ask it)
   const step2El = document.getElementById('qs-step2');
   if (step2El) {
-    if (quiz.path === 'rf') {
-      const sLabel = quiz.sectors.length ? quiz.sectors.map(s => s.split('/')[0]).join(', ') : 'Any sector';
-      step2El.querySelector('.qs-val').textContent = sLabel;
-      step2El.onclick = () => quizEditStep('qstep-sectors');
-      step2El.style.display = '';
-    } else {
-      step2El.querySelector('.qs-val').textContent = expLabels[quiz.exp] || '';
-      step2El.onclick = () => quizEditStep('qstep-experience');
-      step2El.style.display = quiz.exp ? '' : 'none';
-    }
+    step2El.querySelector('.qs-val').textContent = expLabels[quiz.exp] || '';
+    step2El.onclick = () => quizEditStep('qstep-experience');
+    step2El.style.display = (quiz.path !== 'rf' && quiz.exp) ? '' : 'none';
   }
   const locLabel = quiz.city ? `Near ${quiz.city}, ${quiz.cityState}` : (quiz.locType === 'anywhere' ? 'Anywhere US' : (quiz.myState || 'Local'));
   chip('qs-loc', locLabel, 'qstep-location');
@@ -2795,13 +2782,11 @@ function renderActivePills() {
   const inner = document.getElementById('active-pills-inner');
   if (!row || !inner) return;
 
-  const pathLabels = { rf: 'Rank & File', staff: 'Staff Organizer' };
   const expLabels  = { staff: 'Union Staff', 1: 'Entry Level', 2: 'Organizer', 3: 'Lead / Coordinator', 4: 'Director / Manager' };
 
   const defs = [];
 
-  if (state.path)
-    defs.push({ label: pathLabels[state.path] || state.path, step: 'qstep-path', clear: null });
+  // No path pill: the path question was removed and path is always 'staff'.
 
   if (state.exp && state.path === 'staff')
     defs.push({
@@ -2871,7 +2856,8 @@ function quizResetAll() {
   state.userLat = null; state.userLng = null; state.page = 1; state.remote = false;
   const row = document.getElementById('active-pills-row');
   if (row) row.style.display = 'none';
-  quizEditStep('qstep-path');
+  quiz.path = 'staff';
+  quizEditStep('qstep-sectors');
 }
 
 function quizEditStep(stepId) {
@@ -2884,7 +2870,7 @@ function quizEditStep(stepId) {
   document.getElementById('results-section').classList.add('hidden');
   quizHistory = [];
   _quizShow(stepId);
-  const stepNums = { 'qstep-path': 1, 'qstep-sectors': 2, 'qstep-experience': 2, 'qstep-roletype': 3, 'qstep-location': 4, 'qstep-rftype': 5 };
+  const stepNums = { 'qstep-sectors': 1, 'qstep-experience': 2, 'qstep-roletype': 3, 'qstep-location': 4, 'qstep-rftype': 5 };
   _quizDots(stepNums[stepId] || 1);
   document.getElementById('intake-wizard').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -2918,8 +2904,7 @@ function _quizShow(stepId) {
 
   // Nav visibility
   const nav = document.getElementById('quiz-nav');
-  const onPath = stepId === 'qstep-path';
-  nav.style.display = onPath ? 'none' : 'flex';
+  nav.style.display = 'flex';   // every remaining step uses the nav
   document.getElementById('quiz-back-btn').style.display = quizHistory.length > 0 ? 'inline-block' : 'none';
   const skipBtn = document.getElementById('quiz-skip-btn');
   if (skipBtn) {
@@ -2947,16 +2932,36 @@ function quizSkipExp() {
 }
 
 function _quizDots(step) {
-  // Path step (1) is hidden; adjust to 0-based relative progress
-  const adjustedStep = step - 1;
-  const isRF = quiz.path === 'rf';
-  const totalDots = isRF ? 4 : 3;
+  // Step numbers map 1:1 onto dots now that the path step is gone.
+  // Staff: sectors(1) → experience(2) → roletype(3) → location(4).
+  // RF (dormant): sectors(1) → roletype(3) → location(4) → rftype(5).
+  const adjustedStep = step;
+  const totalDots = 4;
   [1, 2, 3, 4].forEach(i => {
     const d = document.getElementById('qdot-' + i);
     if (!d) return;
     d.style.display = i <= totalDots ? 'inline-block' : 'none';
     d.classList.toggle('active', i <= adjustedStep);
   });
+}
+
+// Set up the opening step on load. #qstep-sectors is marked active in the
+// markup, but _quizShow() never runs on load, so the nav, skip button, dots and
+// the RF-only step need wiring up here. (Deliberately does NOT touch the URL,
+// so ?path=/?sectors= deep links survive.)
+function quizInitFirstStep() {
+  const rft = document.getElementById('qstep-rftype');
+  if (rft) rft.classList.add('bypassed');   // RF-only; staff never sees it
+  const nav = document.getElementById('quiz-nav');
+  if (nav) nav.style.display = 'flex';
+  const backBtn = document.getElementById('quiz-back-btn');
+  if (backBtn) backBtn.style.display = 'none';   // nothing to go back to
+  const skipBtn = document.getElementById('quiz-skip-btn');
+  if (skipBtn) {
+    skipBtn.style.display = 'inline-block';
+    skipBtn.textContent = _quizSkipLabel('qstep-sectors');
+  }
+  _quizDots(1);
 }
 
 function quizFinish() {
